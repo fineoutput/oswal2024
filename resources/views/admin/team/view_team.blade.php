@@ -129,6 +129,7 @@
                             @endif
                             <a href="javascript:();" class="dCnf" mydata="<?php echo $a ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
                           </div>
+                          
                           <div style="display:none" id="cnfbox<?php echo $a ?>">
                             <p> Are you sure delete this </p>
                             <a href="{{route('deleteTeam',base64_encode($team->id))}}" class="btn btn-danger">Yes</a>

@@ -15,128 +15,129 @@ use App\adminmodel\ProductModal;
 class TeamController extends Controller
 {
 	public function admin_index(Request $req)
-	{             $admin_id = $req->session()->get('admin_id');
-			$services = json_decode($req->session()->get('services'));
-			
-			if (in_array(1, $services) || in_array(999, $services)) {
-				
-				return view('admin/index');
+	{
+		$admin_id = $req->session()->get('admin_id');
+		$services = json_decode($req->session()->get('services'));
+
+		if (in_array(1, $services) || in_array(999, $services)) {
+
+			return view('admin/index');
+		} else {
+			$service = AdminSidebar::where('id', $services[0])->first();
+			if ($service->url == "#") {
+				$serviceDetials = AdminSidebar2::where('main_id', $services[0])->first();
+				return redirect()->route($serviceDetials->url);
 			} else {
-				$service = AdminSidebar::where('id', $services[0])->first();
-				if ($service->url == "#") {
-					$serviceDetials = AdminSidebar2::where('main_id', $services[0])->first();
-					return redirect()->route($serviceDetials->url);
-				} else {
-					return redirect()->route($service->url);
-				}
+				return redirect()->route($service->url);
 			}
+		}
 	}
 	public function add_team_view(Request $req)
 	{
-			$service_data = AdminSidebar::get();
-			return view('admin/team/add_team', compact('service_data'));
+		$service_data = AdminSidebar::get();
+		return view('admin/team/add_team', compact('service_data'));
 	}
 	public function view_team(Request $req)
 	{
-			$Team_data = Team::wherenull('deleted_at')->orderBy('id', 'desc')->get();
-			return view('admin/team/view_team', ['teamdetails' => $Team_data]);
+		$Team_data = Team::wherenull('deleted_at')->orderBy('id', 'desc')->get();
+		return view('admin/team/view_team', ['teamdetails' => $Team_data]);
 	}
 	public function UpdateTeamStatus($status, $idd, Request $req)
 	{
-			$id = base64_decode($idd);
-			$admin_id = $req->session()->get('admin_id');
-			$admin_position = $req->session()->get('position');
-			if ($id == $admin_id) {
-				return Redirect('/view_team')->with('error', "Sorry You can't change status of yourself.");
-			}
-			if ($admin_position == "Super Admin") {
-				if ($status == "active") {
-					$teamStatusInfo = [
-						'is_active' => 1,
-					];
-					$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
-					$TeamData->update($teamStatusInfo);
-				} else {
-					$teamStatusInfo = [
-						'is_active' => 0,
-					];
-					$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
-					$TeamData->update($teamStatusInfo);
-				}
-				return Redirect('/view_team')->with('success', 'Status Updated Successfully.');
+		$id = base64_decode($idd);
+		$admin_id = $req->session()->get('admin_id');
+		$admin_position = $req->session()->get('position');
+		if ($id == $admin_id) {
+			return Redirect('/view_team')->with('error', "Sorry You can't change status of yourself.");
+		}
+		if ($admin_position == "Super Admin") {
+			if ($status == "active") {
+				$teamStatusInfo = [
+					'is_active' => 1,
+				];
+				$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
+				$TeamData->update($teamStatusInfo);
 			} else {
-				return Redirect('/view_team')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+				$teamStatusInfo = [
+					'is_active' => 0,
+				];
+				$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
+				$TeamData->update($teamStatusInfo);
 			}
+			return Redirect('/view_team')->with('success', 'Status Updated Successfully.');
+		} else {
+			return Redirect('/view_team')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+		}
 	}
 	public function deleteTeam($idd, Request $req)
 	{
-			$id = base64_decode($idd);
-			$admin_id = $req->session()->get('admin_id');
-			$admin_position = $req->session()->get('position');
-			if ($id == $admin_id) {
-				return Redirect('/view_team')->with('error', "Sorry You can't delete yourself.");
-			}
-			if ($admin_position == "Super Admin") {
-				$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
-				if (!empty($TeamData)) {
-					$img = $TeamData->image;
-					$TeamData->delete();
-					// if (!empty($img)) {
-					// 	unlink($img);
-					// }
-					return Redirect('/view_team')->with('success', 'Data Deleted Successfully.');
-				} else {
-					return Redirect('/view_team')->with('error', 'Some Error Occurred.');
-				}
+		$id = base64_decode($idd);
+		$admin_id = $req->session()->get('admin_id');
+		$admin_position = $req->session()->get('position');
+		if ($id == $admin_id) {
+			return Redirect('/view_team')->with('error', "Sorry You can't delete yourself.");
+		}
+		if ($admin_position == "Super Admin") {
+			$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
+			if (!empty($TeamData)) {
+				$img = $TeamData->image;
+				$TeamData->delete();
+				// if (!empty($img)) {
+				// 	unlink($img);
+				// }
+				return Redirect('/view_team')->with('success', 'Data Deleted Successfully.');
 			} else {
-				return Redirect('/view_team')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
+				return Redirect('/view_team')->with('error', 'Some Error Occurred.');
 			}
+		} else {
+			return Redirect('/view_team')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
+		}
 	}
 	public function add_team_process(Request $req)
 	{
-			$admin_id = $req->session()->get('admin_id');
-			$req->validate([
-				'name' => 'required',
-				'email' => 'required|unique:admin_teams|email',
-				'password' => 'required',
-				'power' => 'required '
-			]);
-			// dd($req);
-			$service = $req->input('service');
-			$services = $req->input('services');
-			if ($service == 999) {
-				$ser = '["999"]';
+		$admin_id = $req->session()->get('admin_id');
+		$req->validate([
+			'name' => 'required',
+			'email' => 'required|unique:admin_teams|email',
+			'password' => 'required',
+			'power' => 'required '
+		]);
+		// dd($req);
+		$service = $req->input('service');
+		$services = $req->input('services');
+		if ($service == 999) {
+			$ser = '["999"]';
+		} else {
+			$ser = json_encode($services);
+		}
+		$fullimagepath = '';
+		if (!empty($req->img)) {
+			$allowedFormats = ['jpeg', 'jpg', 'webp'];
+			$extension = strtolower($req->img->getClientOriginalExtension());
+			if (in_array($extension, $allowedFormats)) {
+				$file = time() . '.' . $req->img->extension();
+				$req->img->move(public_path('uploads/image/Teams/'), $file);
+				$fullimagepath = 'uploads/image/Teams/' . $file;
 			} else {
-				$ser = json_encode($services);
+				// Handle invalid file format (not allowed)
+				return redirect()->back()->with('error', 'Invalid file format. Only jpeg, jpg, and webp files are allowed.');
 			}
-			$fullimagepath = '';
-			if (!empty($req->img)) {
-				$allowedFormats = ['jpeg', 'jpg', 'webp'];
-				$extension = strtolower($req->img->getClientOriginalExtension());
-				if (in_array($extension, $allowedFormats)) {
-					$file = time() . '.' . $req->img->extension();
-					$req->img->move(public_path('uploads/image/Teams/'), $file);
-					$fullimagepath = 'uploads/image/Teams/' . $file;
-				} else {
-					// Handle invalid file format (not allowed)
-					return redirect()->back()->with('error', 'Invalid file format. Only jpeg, jpg, and webp files are allowed.');
-				}
-			}
-			$teamInfo = [
-				'name' => ucwords($req->input('name')),
-				'email' => $req->input('email'),
-				'phone' => $req->input('phone'),
-				'password' => bcrypt($req->input('password')),
-				'address' => $req->input('address'),
-				'services' => $ser,
-				'power' => $req->input('power'),
-				'image' => $fullimagepath,
-				'ip' => $req->ip(),
-				'added_by' => $req->input('admin_id'),
-				'is_active' => 1,
-			];
-			$last_id = Team::create($teamInfo);
-			return Redirect('/view_team')->with('success', 'Data Added Successfully.');
+		}
+		$teamInfo = [
+			'name' => ucwords($req->input('name')),
+			'email' => $req->input('email'),
+			'phone' => $req->input('phone'),
+			'password' => bcrypt($req->input('password')),
+			'address' => $req->input('address'),
+			'services' => $ser,
+			'power' => $req->input('power'),
+			'image' => $fullimagepath,
+			'ip' => $req->ip(),
+			'added_by' => $req->input('admin_id'),
+			'is_active' => 1,
+		];
+		$last_id = Team::create($teamInfo);
+		return Redirect('/view_team')->with('success', 'Data Added Successfully.');
 		//return response()->json(['response' => 'OK']);
 	}
 	//
@@ -184,5 +185,5 @@ class TeamController extends Controller
 	//        //return Redirect('/adminList')->with('status', 'Admin Deleted Successfully.');
 	//
 	//     }
-	
+
 }

@@ -3463,4 +3463,17 @@ margin-right: 11px !important;
     height: calc(2.7rem + 2px) !important;
 }
 
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive input[type="text"] {
+    width: auto;
+    min-width: 50px; 
+    max-width: 100%;
+}
+
+.table-responsive th, .table-responsive td {
+    white-space: nowrap;
+}
 

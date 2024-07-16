@@ -1,0 +1,337 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Admin\TeamController;
+
+use App\Http\Controllers\Admin\CrmController;
+
+use App\Http\Controllers\Auth\AdminLoginController;
+
+use App\Http\Controllers\Admin\Ecommerce\CategoryController;
+
+use App\Http\Controllers\Admin\Ecommerce\ProductController;
+
+use App\Http\Controllers\Admin\Ecommerce\TypeController;
+
+use App\Http\Controllers\Admin\Ecommerce\ShipingChargeController;
+
+use  App\Http\Controllers\Admin\Major\MajorCategoryController;
+
+use App\Http\Controllers\Admin\Major\MajorProductController;
+
+use App\Http\Controllers\Admin\Dealer\DealerController;
+
+use App\Http\Controllers\Admin\RetailShopController;
+
+use App\Http\Controllers\Admin\EmailController;
+
+use App\Http\Controllers\Admin\BlogController;
+
+use App\Http\Controllers\Admin\ContactusController;
+
+use App\Http\Controllers\Admin\HomeController;
+
+use App\Http\Controllers\Admin\AchievementsController;
+
+use App\Http\Controllers\Admin\PromocodeController;
+
+/*========= Home Routes ========*/
+
+Route::prefix('home')->name('home.')->group(function () {
+
+    Route::get('career', [HomeController::class, 'career'])->name('career');
+
+    Route::get('carrer-destroy/{id}', [HomeController::class, 'destroy'])->name('destroy');
+
+});
+
+
+Route::get('/index', [TeamController::class, 'admin_index'])->name('admin_index');
+
+Route::get('/logout', [AdminLoginController::class, 'admin_logout'])->name('admin_logout');
+
+Route::get('/profile', [AdminLoginController::class, 'admin_profile'])->name('admin_profile');
+
+Route::get('/view_change_password', [AdminLoginController::class, 'admin_change_pass_view'])->name('view_change_password');
+
+Route::post('/admin_change_password', [AdminLoginController::class, 'admin_change_password'])->name('admin_change_password');
+
+
+// Admin Team routes
+
+Route::get('/view_team', [TeamController::class, 'view_team'])->name('view_team');
+
+Route::get('/add_team_view', [TeamController::class, 'add_team_view'])->name('add_team_view');
+
+Route::post('/add_team_process', [TeamController::class, 'add_team_process'])->name('add_team_process');
+
+Route::get('/UpdateTeamStatus/{status}/{id}', [TeamController::class, 'UpdateTeamStatus'])->name('UpdateTeamStatus');
+
+Route::get('/deleteTeam/{id}', [TeamController::class, 'deleteTeam'])->name('deleteTeam');
+
+
+// Admin CRM settings routes
+
+Route::get('/add_settings', [CrmController::class, 'add_settings'])->name('add_settings');
+
+Route::get('/view_settings', [CrmController::class, 'view_settings'])->name('view_settings');
+
+Route::get('/update_settings/{id}', [CrmController::class, 'update_settings'])->name('update_settings');
+
+Route::post('/add_settings_process', [CrmController::class, 'add_settings_process'])->name('add_settings_process');
+
+Route::post('/update_settings_process/{id}', [CrmController::class, 'update_settings_process'])->name('update_settings_process');
+
+Route::get('/deletesetting/{id}', [CrmController::class, 'deletesetting'])->name('deletesetting');
+
+/*=========Ecommerce Category Routes ========*/
+
+Route::prefix('ecom/category')->name('category.')->group(function () {
+
+    Route::get('index', [CategoryController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [CategoryController::class, 'create'])->name('create');
+
+    Route::post('store', [CategoryController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [CategoryController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Ecommerce Products Routes ========*/
+
+Route::prefix('ecom/product')->name('product.')->group(function () {
+
+    Route::get('category', [ProductController::class, 'category'])->name('category');
+
+    Route::get('index/{id?}', [ProductController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [ProductController::class, 'create'])->name('create');
+
+    Route::post('store', [ProductController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [ProductController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [ProductController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Ecommerce Type Routes ========*/
+
+Route::prefix('ecom/type')->name('type.')->group(function () {
+
+    Route::get('index/{pid}/{cid}/{pcid}', [TypeController::class, 'index'])->name('index');
+
+    Route::get('create/{pid}/{cid}/{pcid}', [TypeController::class, 'create'])->name('create');
+
+    Route::get('edit/{pid}/{cid}/{pcid}', [TypeController::class, 'edit'])->name('edit');
+  
+    Route::post('store', [TypeController::class, 'store'])->name('store');
+
+    Route::get('update-status/{pid}/{cid}/{pcid}/{tid}/{status}', [TypeController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'destroy'])->name('destroy');
+
+    Route::post('update-city-type' , [TypeController::class , 'updateCityType'])->name('update_city_type');
+
+    Route::get('update-all/{pid}/{cid}/{pcid}' , [TypeController::class , 'updateAll'])->name('update_all');
+
+    Route::post('update-all-data' ,[TypeController::class, 'updateAllData'])->name('update-all-data');
+
+    Route::get('change-product-price' ,[TypeController::class, 'changeProductPrice'])->name('change-product-price');
+    
+});
+
+/*=========Ecommerce Shiping Charges Routes ========*/
+
+Route::prefix('ecom/shipping-charge')->name('shipping-charge.')->group(function () {
+
+    Route::get('index', [ShipingChargeController::class, 'index'])->name('index');
+
+    Route::get('create', [ShipingChargeController::class, 'create'])->name('create');
+
+    Route::get('get-city', [ShipingChargeController::class, 'getCity'])->name('getcity');
+
+    Route::get('edit/{id}', [ShipingChargeController::class, 'edit'])->name('edit');
+  
+    Route::post('store', [ShipingChargeController::class, 'store'])->name('store');
+
+    Route::get('update-status/{id}/{status}', [ShipingChargeController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [ShipingChargeController::class, 'destroy'])->name('destroy');
+
+    Route::get('create-city', [ShipingChargeController::class, 'create_city'])->name('create-city');
+
+    Route::post('store-city', [ShipingChargeController::class, 'store_city'])->name('store-city');
+
+    Route::get('set-all-shipping-charges' , [ShipingChargeController::class , 'setAllshippingCharges'])->name('set-all-shipping-charges');
+
+    Route::post('shipping-charges-store' , [ShipingChargeController::class , 'store_shipping_charge'])->name('shipping-charges-store');
+
+});
+
+/*=========Ecommerce view Cart Route ========*/
+
+Route::get('ecom/cart/view-cart' , [ProductController::class, 'view_cart'])->name('cart.view-cart');
+
+/*=========Major Categor  Route ========*/
+
+Route::prefix('major/category')->name('majorcategory.')->group(function () {
+
+    Route::get('index', [MajorCategoryController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [MajorCategoryController::class, 'create'])->name('create');
+
+    Route::post('store', [MajorCategoryController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [MajorCategoryController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [MajorCategoryController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Major Products Routes ========*/
+
+Route::prefix('major/product')->name('majorproduct.')->group(function () {
+
+    Route::get('index', [MajorProductController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [MajorProductController::class, 'create'])->name('create');
+
+    Route::post('store', [MajorProductController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [MajorProductController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [MajorProductController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Dealer  Routes ========*/
+
+Route::prefix('dealer')->name('dealer.')->group(function () {
+
+    Route::get('index', [DealerController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [DealerController::class, 'create'])->name('create');
+
+    Route::post('store', [DealerController::class, 'store'])->name('store');
+
+    Route::get('destroy/{id}', [DealerController::class, 'destroy'])->name('destroy');
+
+    Route::get('dealer-enquiry', [DealerController::class, 'dealer_enquiry'])->name('dealer-enquiry');
+
+});
+
+
+/*=========Major Retails Routes ========*/
+
+Route::prefix('shops')->name('shop.')->group(function () {
+
+    Route::get('index', [RetailShopController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [RetailShopController::class, 'create'])->name('create');
+
+    Route::post('store', [RetailShopController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [RetailShopController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [RetailShopController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Emails Routes ========*/
+
+Route::prefix('emailer')->name('email.')->group(function () {
+
+    Route::get('index', [EmailController::class, 'index'])->name('index');
+
+    Route::get('send-mail', [EmailController::class, 'send_mail'])->name('send-mail');
+
+    Route::post('store', [EmailController::class, 'store'])->name('store');
+
+    Route::get('destroy/{id}', [EmailController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Blog Routes ========*/
+
+Route::prefix('blogs')->name('blog.')->group(function () {
+
+    Route::get('index', [BlogController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [BlogController::class, 'create'])->name('create');
+
+    Route::post('store', [BlogController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [BlogController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [BlogController::class, 'destroy'])->name('destroy');
+
+    Route::get('view-desc/{id}', [BlogController::class, 'view_desc'])->name('view-desc');
+
+    Route::get('comments' , [BlogController::class, 'view_comment'])->name('view-comment');
+
+    Route::get('add-replay/{id?}', [BlogController::class, 'add_replay'])->name('add-replay');
+
+    Route::get('edit-replay/{id?}', [BlogController::class, 'edit_replay'])->name('edit-replay');
+
+    Route::post('replay-store', [BlogController::class, 'replay_store'])->name('replay-store');
+
+    Route::get('comment-destroy/{id}', [BlogController::class, 'comment_destroy'])->name('comment-destroy');
+
+    Route::get('comment-update-status/{status}/{id}', [BlogController::class, 'commentUpdatestatus'])->name('comment-update-status');
+    
+});
+
+
+/*=========Contact us Routes ========*/
+
+Route::prefix('contact-us')->name('contact-us.')->group(function () {
+
+    Route::get('index', [ContactusController::class, 'index'])->name('index');
+
+    Route::get('send-reply/{id}', [ContactusController::class, 'send_reply'])->name('send-reply');
+
+    Route::post('store', [ContactusController::class, 'store'])->name('store');
+
+    Route::get('destroy/{id}', [ContactusController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Achievements Routes ========*/
+
+Route::prefix('achievements')->name('achievements.')->group(function () {
+
+    Route::get('index', [AchievementsController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [AchievementsController::class, 'create'])->name('create');
+
+    Route::post('store', [AchievementsController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [AchievementsController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [AchievementsController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Promocode Routes ========*/
+
+Route::prefix('promocode')->name('promocode.')->group(function () {
+
+    Route::get('index', [PromocodeController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [PromocodeController::class, 'create'])->name('create');
+
+    Route::post('store', [PromocodeController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [PromocodeController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [PromocodeController::class, 'destroy'])->name('destroy');
+
+});
+

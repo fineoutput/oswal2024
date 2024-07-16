@@ -69,6 +69,13 @@
 
      <!-- App js -->
      <script src="{{asset('admin/assets/js/app.js')}}"></script>
+     
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+     
+     <script src="{{asset('admin/assets/js/script.js')}}"></script>
+
+     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
      <!-- <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> -->
 
      <script>
@@ -144,7 +151,9 @@
        //   }
        // });
      </script>
-
+    <script>
+        CKEDITOR.replace('.ckeditor');
+    </script>
      </body>
 
      </html>
