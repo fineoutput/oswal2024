@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Popup;
 
 class HomeController extends Controller
 {
@@ -18,7 +19,7 @@ class HomeController extends Controller
         return view('admin.career', compact('careers'));
     }
 
-    public function destroy($id, Request $request)
+    public function carrerDestroy($id, Request $request)
 
     {
 
@@ -44,6 +45,120 @@ class HomeController extends Controller
 
         // }
 
+    }   
+
+    public function view_popup()
+    {
+
+        $popups = Popup::orderby('id', 'desc')->get();
+
+        return view('admin.Popup.view-popup', compact('popups'));
     }
 
+    public function popupCreate($id=null ,Request $request)
+    {
+
+        $popup = null;
+
+        if ($id !== null) {
+
+            $admin_position = $request->session()->get('position');
+
+            if ($admin_position !== "Super Admin") {
+
+                return redirect()->route('home.view-popup')->with('error', "Sorry You Don't Have Permission To edit Anything.");
+
+            }
+
+            $popup = Popup::find(base64_decode($id));
+            
+        }
+
+        return view('admin.Popup.add-popup', compact('popup'));
+    }
+
+    public function popupStore(Request $request)  {
+
+        $rules = [
+            'name'         => 'required|string',
+            'img'         => 'nullable|file|mimes:xlsx,csv,xls,pdf,doc,docx,txt,jpg,jpeg,png|max:25000',
+        ];
+        
+        $request->validate($rules);
+
+        if (!isset($request->popup_id)) {
+
+            $popup = new Popup;
+
+        } else {
+
+            $popup = Popup::find($request->popup_id);
+            
+            if (!$popup) {
+                
+                return redirect()->route('home.view-popup')->with('error', 'notifaction not found.');
+                
+            }
+
+        }
+        
+        $popup->fill($request->all());
+
+        if($request->hasFile('img')){
+
+            $popup->image = uploadImage($request->file('img'), 'popup');
+
+        }
+
+        $popup->ip = $request->ip();
+
+        $popup->date = now();
+
+        $popup->added_by = Auth::user()->id;
+
+        $popup->is_active = 1;
+
+        if ($popup->save()) {
+
+            $message = isset($request->popup_id) ? 'Popup updated successfully.' : 'Popup inserted successfully.';
+            
+            return redirect()->route('home.view-popup')->with('success', $message);
+
+        } else {
+
+            return redirect()->route('home.view-popup')->with('error', 'Something went wrong. Please try again later.');
+
+        }
+
+    }
+
+    public function Popup_update_status($status, $id, Request $request)
+
+    {
+
+        $id = base64_decode($id);
+
+        $admin_position = $request->session()->get('position');
+
+        $popup = Popup::find($id);
+
+        // if ($admin_position == "Super Admin") {
+
+        if ($status == "active") {
+
+            $popup->updateStatus(strval(1));
+        } else {
+
+            $popup->updateStatus(strval(0));
+        }
+
+        return  redirect()->route('home.view-popup')->with('success', 'Status Updated Successfully.');
+
+        // } else {
+
+        // 	return  redirect()->route('shop.index')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+
+        // }
+
+    }
 }
