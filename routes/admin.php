@@ -36,13 +36,23 @@ use App\Http\Controllers\Admin\AchievementsController;
 
 use App\Http\Controllers\Admin\PromocodeController;
 
+use App\Http\Controllers\Admin\PushNotificationController;
+
 /*========= Home Routes ========*/
 
 Route::prefix('home')->name('home.')->group(function () {
 
     Route::get('career', [HomeController::class, 'career'])->name('career');
 
-    Route::get('carrer-destroy/{id}', [HomeController::class, 'destroy'])->name('destroy');
+    Route::get('carrer-destroy/{id}', [HomeController::class, 'carrerDestroy'])->name('destroy');
+
+    Route::get('Popup/view-popup', [HomeController::class, 'view_popup'])->name('view-popup');
+
+    Route::get('Popup/create/{id?}', [HomeController::class, 'popupCreate'])->name('create-popup');
+
+    Route::post('Popup/store', [HomeController::class, 'popupStore'])->name('store-popup');
+
+    Route::get('Popup/update-status/{status}/{id}', [HomeController::class, 'Popup_update_status'])->name('popup-update-status');
 
 });
 
@@ -335,3 +345,31 @@ Route::prefix('promocode')->name('promocode.')->group(function () {
 
 });
 
+/*=========Notifaction Routes ========*/
+
+Route::prefix('notification')->name('notification.')->group(function () {
+
+    Route::get('index', [PushNotificationController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [PushNotificationController::class, 'create'])->name('create');
+
+    Route::post('store', [PushNotificationController::class, 'store'])->name('store');
+
+});
+
+
+// /*=========Sliders Routes ========*/
+
+// Route::prefix('slider')->name('slider.')->group(function () {
+
+//     Route::get('index', [CategoryController::class, 'index'])->name('index');
+
+//     Route::get('create/{id?}', [CategoryController::class, 'create'])->name('create');
+
+//     Route::post('store', [CategoryController::class, 'store'])->name('store');
+
+//     Route::get('update-status/{status}/{id}', [CategoryController::class, 'update_status'])->name('update-status');
+
+//     Route::get('destroy/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+
+// });
