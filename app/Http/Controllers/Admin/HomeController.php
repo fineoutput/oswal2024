@@ -81,7 +81,7 @@ class HomeController extends Controller
 
         $rules = [
             'name'         => 'required|string',
-            'img'         => 'nullable|file|mimes:xlsx,csv,xls,pdf,doc,docx,txt,jpg,jpeg,png|max:25000',
+            'img'         =>  'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
         
         $request->validate($rules);

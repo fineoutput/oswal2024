@@ -32,10 +32,6 @@ class CreateTblEcomProductsTable extends Migration
             $table->string('ip', 100);
             $table->unsignedInteger('added_by'); // Assuming this references a user table
             $table->boolean('is_hot')->nullable();
-
-            // Foreign key constraints with cascading deletes
-            $table->foreign('category_id')->references('id')->on('ecom_categories')->onDelete('cascade');
-            $table->foreign('product_category_id')->references('id')->on('ecom_product_categories')->onDelete('cascade');
             
             $table->timestamps();
         });

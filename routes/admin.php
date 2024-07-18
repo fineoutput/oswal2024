@@ -38,6 +38,19 @@ use App\Http\Controllers\Admin\PromocodeController;
 
 use App\Http\Controllers\Admin\PushNotificationController;
 
+use App\Http\Controllers\Admin\SliderController;
+
+use App\Http\Controllers\Admin\OfferSliderfirstController;
+
+use App\Http\Controllers\Admin\OfferSliderSecoundController;
+
+use App\Http\Controllers\Admin\FooterImageController;
+
+use App\Http\Controllers\Admin\WebSliderController;
+
+use App\Http\Controllers\Admin\WebSliderSecoundController;
+
+
 /*========= Home Routes ========*/
 
 Route::prefix('home')->name('home.')->group(function () {
@@ -125,7 +138,7 @@ Route::prefix('ecom/product')->name('product.')->group(function () {
 
     Route::get('update-status/{status}/{id}', [ProductController::class, 'update_status'])->name('update-status');
 
-    Route::get('destroy/{id}', [ProductController::class, 'destroy'])->name('destroy');
+    Route::get('destroy/{pid}/{id}', [ProductController::class, 'destroy'])->name('destroy');
 
 });
 
@@ -358,18 +371,103 @@ Route::prefix('notification')->name('notification.')->group(function () {
 });
 
 
-// /*=========Sliders Routes ========*/
+/*=========Sliders Routes ========*/
 
-// Route::prefix('slider')->name('slider.')->group(function () {
+Route::prefix('slider')->name('slider.')->group(function () {
 
-//     Route::get('index', [CategoryController::class, 'index'])->name('index');
+    Route::get('index', [SliderController::class, 'index'])->name('index');
 
-//     Route::get('create/{id?}', [CategoryController::class, 'create'])->name('create');
+    Route::get('create/{id?}', [SliderController::class, 'create'])->name('create');
 
-//     Route::post('store', [CategoryController::class, 'store'])->name('store');
+    Route::get('get-product',[SliderController::class ,'GetProduct'])->name('get-product');
 
-//     Route::get('update-status/{status}/{id}', [CategoryController::class, 'update_status'])->name('update-status');
+    Route::post('store', [SliderController::class, 'store'])->name('store');
 
-//     Route::get('destroy/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+    Route::get('update-status/{status}/{id}', [SliderController::class, 'update_status'])->name('update-status');
 
-// });
+    Route::get('destroy/{id}', [SliderController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Offer Sliders First Routes ========*/
+
+Route::prefix('offer-slider-1')->name('offersliderfirst.')->group(function () {
+
+    Route::get('index', [OfferSliderfirstController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [OfferSliderfirstController::class, 'create'])->name('create');
+
+    Route::post('store', [OfferSliderfirstController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [OfferSliderfirstController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [OfferSliderfirstController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Offer Sliders Secound Routes ========*/
+
+Route::prefix('offer-slider-2')->name('offerslidersecound.')->group(function () {
+
+    Route::get('index', [OfferSliderSecoundController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [OfferSliderSecoundController::class, 'create'])->name('create');
+
+    Route::post('store', [OfferSliderSecoundController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [OfferSliderSecoundController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [OfferSliderSecoundController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Footer Image Routes ========*/
+
+Route::prefix('footer-image')->name('footerimage.')->group(function () {
+
+    Route::get('index', [FooterImageController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [FooterImageController::class, 'create'])->name('create');
+
+    Route::post('store', [FooterImageController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [FooterImageController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [FooterImageController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Web Slider Routes ========*/
+
+Route::prefix('web-slider')->name('webslider.')->group(function () {
+
+    Route::get('index', [WebSliderController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [WebSliderController::class, 'create'])->name('create');
+
+    Route::post('store', [WebSliderController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [WebSliderController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [WebSliderController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Web Slider Secound Routes ========*/
+
+Route::prefix('web-slider-2')->name('webslidersecound.')->group(function () {
+
+    Route::get('index', [WebSliderSecoundController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [WebSliderSecoundController::class, 'create'])->name('create');
+
+    Route::post('store', [WebSliderSecoundController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [WebSliderSecoundController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [WebSliderSecoundController::class, 'destroy'])->name('destroy');
+
+});

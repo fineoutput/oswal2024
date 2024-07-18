@@ -176,7 +176,7 @@
 
                                                         <div style="display:none" id="cnfbox<?php echo $key ?>">
                                                             <p> Are you sure delete this </p>
-                                                            <a href="{{route('category.destroy', base64_encode($product->id))}}" class="btn btn-danger">Yes</a>
+                                                            <a href="{{route('product.destroy',['pid' => encrypt($product->id),'id'=>base64_encode($product->id)])}}" class="btn btn-danger">Yes</a>
                                                             <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
                                                         </div>
                                                     </td>

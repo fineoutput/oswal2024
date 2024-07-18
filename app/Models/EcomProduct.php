@@ -27,6 +27,12 @@ class EcomProduct extends Model
         return $this->belongsTo(EcomCategory::class);
     }
 
+
+    public function isSoftDeleted()
+    {
+        return $this->is_cat_delete == 1;
+    }
+
     public function type()  {
 
         return $this->hasOne(Type::class);
@@ -36,5 +42,20 @@ class EcomProduct extends Model
     public function carts()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class, 'product_id');
+    }
+
+    public function offers2()
+    {
+        return $this->hasMany(Offer2::class, 'product_id');
+    }
+
+    public function sliders()
+    {
+        return $this->hasMany(Slider::class, 'product_id');
     }
 }

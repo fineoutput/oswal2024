@@ -87,3 +87,53 @@ function getCity(url) {
 
     }
 }
+
+function getProduct(url) {
+
+    let selectedId = $('#category_id').val();
+
+    if (selectedId !== '') {
+
+        $.ajax({
+
+            url: url,
+
+            type: "get",
+
+            data: {
+
+                category_id: selectedId,
+
+            },
+
+            success: function(response){
+
+
+                $('#product-container').html();
+
+                let $html = '<option value="">----- Select Product ----- </option>'; 
+
+                $.each(response, function(key, value){
+                    
+                    $html += `<option value="${value.id}">${value.name}</option>`;
+
+                });
+
+                $('#product-container').html($html);
+
+            },
+
+            error: function(xhr){
+
+                console.log(xhr.responseText); 
+
+            }
+
+        });
+
+    } else {
+
+        $('#city-dropdown').empty(); 
+
+    }
+}

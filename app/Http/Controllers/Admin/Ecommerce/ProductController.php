@@ -223,6 +223,31 @@ class ProductController extends Controller
 
     }
 
+    public function destroy($pid ,$id, Request $request)
+
+    {
+
+        $id = base64_decode($id);
+
+        $admin_position = $request->session()->get('position');
+
+        // if ($admin_position == "Super Admin") {
+
+        if (EcomProduct::where('id', $id)->delete()) {
+
+            return  redirect()->route('product.index',$pid)->with('success', 'Product Deleted Successfully.');
+        } else {
+            return redirect()->route('product.index',$pid)->with('error', 'Some Error Occurred.');
+
+        }
+
+        // } else {
+
+        // 	return  redirect()->route('category.index')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
+
+        // }
+
+    }
     public function view_cart() {
         
         $carts = Cart::with('user' ,'product','type')->where('user_id', '!=' , null)->OrderBy('id', 'Desc')->get();

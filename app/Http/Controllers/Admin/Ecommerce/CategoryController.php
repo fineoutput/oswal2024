@@ -105,8 +105,6 @@ class CategoryController extends Controller
 
             'name_hi'       => lang_change($request->name),
 
-            'short_disc_hi' => lang_change($request->input('short-description')),
-
             'long_desc_hi'  => lang_change($request->input('long-description')),
 
             'url'           => str_replace(' ', '-', trim($request->name)),
@@ -120,6 +118,8 @@ class CategoryController extends Controller
         ]);
 
         $category->short_disc = $request->input('short-description');
+
+        $category->short_disc_hi = lang_change($request->input('short-description'));
 
         if ($request->hasFile('image')) {
             $category->image = uploadImage($request->file('image'), 'ecomm', 'category', 'img');

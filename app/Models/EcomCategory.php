@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EcomCategory extends Model
 {
-    use HasFactory;
+    use HasFactory ;
 
     protected $fillable = [
         'name', 'short_dis', 'long_desc', 'sequence', 'name_hi', 
@@ -45,4 +46,18 @@ class EcomCategory extends Model
         return $this->hasMany(Cart::class);
     }
     
+    public function offers()
+    {
+        return $this->hasMany(Offer::class, 'category_id');
+    }
+
+    public function offers2()
+    {
+        return $this->hasMany(Offer2::class, 'category_id');
+    }
+
+    public function sliders()
+    {
+        return $this->hasMany(Slider::class, 'category_id');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
+use App\Models\EcomCategory;
+use App\Models\EcomProduct;
 
 
 if (!function_exists('lang_change')) {
@@ -80,4 +81,36 @@ if(!function_exists('uploadImage')){
     
         return "$directory/$imageName";
     }
+}
+
+if(!function_exists('sendProduct')){
+
+    function sendProduct($cid = false, $pid = false, $pcid = false ) {
+        
+        $products =  EcomProduct::OrderBy('id' , 'Desc')->where('is_active', 1);
+
+        if($cid){ $products = $products->where('category_id', $cid);}
+
+        if($pid) { $products = $products->where('id', $pid); }
+
+        if($pcid) { $products = $products->where('product_category_id', $pcid); }
+
+        return $products->get();
+
+    }
+
+}
+
+if(!function_exists('sendCategory')){
+
+    function sendCategory($cid = false) {
+        
+        $categorys =  EcomCategory::OrderBy('id' , 'Desc')->where('is_active', 1);
+
+        if($cid){ $categorys = $categorys->where('category_id', $cid);}
+
+        return $categorys->get();
+
+    }
+    
 }
