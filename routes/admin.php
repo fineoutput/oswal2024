@@ -50,6 +50,22 @@ use App\Http\Controllers\Admin\WebSliderController;
 
 use App\Http\Controllers\Admin\WebSliderSecoundController;
 
+use App\Http\Controllers\Admin\RecentController;
+
+use App\Http\Controllers\Admin\TrendingController;
+
+use App\Http\Controllers\Admin\ThemeTrendingController;
+
+use App\Http\Controllers\Admin\StickerController;
+
+use App\Http\Controllers\Admin\UsersController;
+
+use App\Http\Controllers\Admin\GiftCardController;
+
+use App\Http\Controllers\Admin\GiftCardSecController;
+
+use App\Http\Controllers\Admin\ComboProductController;
+
 
 /*========= Home Routes ========*/
 
@@ -66,6 +82,11 @@ Route::prefix('home')->name('home.')->group(function () {
     Route::post('Popup/store', [HomeController::class, 'popupStore'])->name('store-popup');
 
     Route::get('Popup/update-status/{status}/{id}', [HomeController::class, 'Popup_update_status'])->name('popup-update-status');
+
+    Route::get('view-gift-promo', [HomeController::class, 'view_gift_promo'])->name('view-gift-promo');
+
+    Route::get('view-gift-promo/status//{status}/{id}', [HomeController::class, 'gift_promo_status'])->name('gift-promo-status');
+
 
 });
 
@@ -469,5 +490,143 @@ Route::prefix('web-slider-2')->name('webslidersecound.')->group(function () {
     Route::get('update-status/{status}/{id}', [WebSliderSecoundController::class, 'update_status'])->name('update-status');
 
     Route::get('destroy/{id}', [WebSliderSecoundController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Recent Routes ========*/
+
+Route::prefix('recent')->name('recent.')->group(function () {
+
+    Route::get('index', [RecentController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [RecentController::class, 'create'])->name('create');
+
+    Route::post('store', [RecentController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [RecentController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [RecentController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Trending Routes ========*/
+
+Route::prefix('trending')->name('trending.')->group(function () {
+
+    Route::get('index', [TrendingController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [TrendingController::class, 'create'])->name('create');
+
+    Route::post('store', [TrendingController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [TrendingController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [TrendingController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========ThemeTrending Routes ========*/
+
+Route::prefix('theme-trending')->name('theme-trending.')->group(function () {
+
+    Route::get('index', [ThemeTrendingController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [ThemeTrendingController::class, 'create'])->name('create');
+
+    Route::post('store', [ThemeTrendingController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [ThemeTrendingController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [ThemeTrendingController::class, 'destroy'])->name('destroy');
+
+    Route::get('destroy/{id}', [ThemeTrendingController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Stickers Routes ========*/
+
+Route::prefix('stickers')->name('sticker.')->group(function () {
+
+    Route::get('index', [StickerController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [StickerController::class, 'create'])->name('create');
+
+    Route::post('store', [StickerController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [StickerController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [StickerController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Users Routes ========*/
+
+Route::prefix('user')->name('user.')->group(function () {
+
+    Route::get('index', [UsersController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [UsersController::class, 'create'])->name('create');
+
+    Route::post('store', [UsersController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [UsersController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [UsersController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Gift Cards Routes ========*/
+
+Route::prefix('gift-card')->name('gift-card.')->group(function () {
+
+    Route::get('index', [GiftCardController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [GiftCardController::class, 'create'])->name('create');
+
+    Route::post('store', [GiftCardController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [GiftCardController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [GiftCardController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Gift Cards Routes ========*/
+
+Route::prefix('gift-card-1')->name('gift-card-1.')->group(function () {
+
+    Route::get('index', [GiftCardSecController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [GiftCardSecController::class, 'create'])->name('create');
+
+    Route::get('get-type', [GiftCardSecController::class, 'getType'])->name('get-type');
+
+    Route::post('store', [GiftCardSecController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [GiftCardSecController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [GiftCardSecController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Combo Product Routes ========*/
+
+Route::prefix('combo-product')->name('comboproduct.')->group(function () {
+
+    Route::get('index', [ComboProductController::class, 'index'])->name('index');
+
+    Route::get('create/{id?}', [ComboProductController::class, 'create'])->name('create');
+
+    Route::get('get-type', [ComboProductController::class, 'getType'])->name('get-type');
+
+    Route::post('store', [ComboProductController::class, 'store'])->name('store');
+
+    Route::get('update-status/{status}/{id}', [ComboProductController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [ComboProductController::class, 'destroy'])->name('destroy');
 
 });

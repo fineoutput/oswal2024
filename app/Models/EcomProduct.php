@@ -58,4 +58,35 @@ class EcomProduct extends Model
     {
         return $this->hasMany(Slider::class, 'product_id');
     }
+
+    public function recent()
+    {
+        return $this->hasMany(Recent::class, 'product_id' , 'id');
+    }
+
+    public function trending()
+    {
+        return $this->hasMany(Trending::class, 'product_id' , 'id');
+    }
+
+    public function themetrending()
+    {
+        return $this->hasMany(ThemeTrending::class, 'product_id' , 'id');
+    }
+
+    public function giftcardsec()
+    {
+        return $this->hasMany(GiftCardSec::class, 'product_id' , 'id');
+    }
+
+    public function comboproduct() {
+        
+        return $this->hasMany(ComboProduct::class, 'product_id' , 'id');
+        
+    }
+    public function comboproduct2() {
+        
+        return $this->hasMany(ComboProduct::class, 'main_product' , 'id');
+        
+    }
 }

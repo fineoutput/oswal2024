@@ -161,4 +161,42 @@ class HomeController extends Controller
         // }
 
     }
+
+    public function view_gift_promo()
+    
+    {
+
+        $view_gift_promos = DB::table('gift_promo_status')->orderby('id', 'desc')->get();
+
+        return view('admin.view-gift-promo', compact('view_gift_promos'));
+
+    }
+
+    public function gift_promo_status($status, $id, Request $request)
+
+    {
+        $id = base64_decode($id); 
+
+        $admin_position = $request->session()->get('position');
+
+        if ($admin_position !== "Super Admin") {
+
+            return redirect()->route('home.view-gift-promo')->with('error', "Sorry, you don't have permission to change the status. Only Super Admin can change status.");
+
+        }
+
+        try {
+
+            DB::table('gift_promo_status')->where('id', $id)->update(['is_active' => ($status == "active") ? 1 : 0]);
+
+            return redirect()->route('home.view-gift-promo')->with('success', 'Status updated successfully.');
+
+        } catch (\Exception $e) {
+
+            return redirect()->route('home.view-gift-promo')->with('error', 'Error updating status: ' . $e->getMessage());
+
+        }
+
+    }
+
 }

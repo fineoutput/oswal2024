@@ -58,4 +58,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class, 'user_id', 'id');
     }
+
+    public function updateStatus($status) {
+        
+        $this->is_active = $status;
+
+        return $this->save();
+    }
 }

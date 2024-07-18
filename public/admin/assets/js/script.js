@@ -133,7 +133,57 @@ function getProduct(url) {
 
     } else {
 
-        $('#city-dropdown').empty(); 
+        $('#product-container').empty(); 
+
+    }
+}
+
+function getType(url , pid , cid) {
+
+    let selectedId = $(`#${pid}`).val();
+
+    if (selectedId !== '') {
+
+        $.ajax({
+
+            url: url,
+
+            type: "get",
+
+            data: {
+
+                product_id: selectedId,
+
+            },
+
+            success: function(response){
+
+
+                $(`#${cid}`).html();
+
+                let $html = '<option value="">----- Select Type ----- </option>'; 
+
+                $.each(response, function(key, value){
+                    
+                    $html += `<option value="${value.id}">${value.type_name}</option>`;
+
+                });
+
+                $(`#${cid}`).html($html);
+
+            },
+
+            error: function(xhr){
+
+                console.log(xhr.responseText); 
+
+            }
+
+        });
+
+    } else {
+
+        $(`#${cid}`).empty(); 
 
     }
 }

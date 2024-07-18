@@ -67,4 +67,21 @@ class Type extends Model
     public function cart()  {
         return $this->hasMany(Cart::class ,'type_id' ,'id');
     }
+
+    public function giftcardsec()
+    {
+        return $this->hasMany(GiftCardSec::class, 'type_id' , 'id');
+    }
+
+
+    public function comboproduct() {
+        
+        return $this->hasMany(ComboProduct::class, 'main_type' , 'id');
+        
+    }
+    public function comboproduct2() {
+        
+        return $this->hasMany(ComboProduct::class, 'combo_type' , 'id');
+        
+    }
 }

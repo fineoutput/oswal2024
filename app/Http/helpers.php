@@ -2,7 +2,7 @@
 use Carbon\Carbon;
 use App\Models\EcomCategory;
 use App\Models\EcomProduct;
-
+use App\Models\Type;
 
 if (!function_exists('lang_change')) {
 
@@ -107,9 +107,49 @@ if(!function_exists('sendCategory')){
         
         $categorys =  EcomCategory::OrderBy('id' , 'Desc')->where('is_active', 1);
 
-        if($cid){ $categorys = $categorys->where('category_id', $cid);}
+        if($cid){ $categorys = $categorys->where('id', $cid);}
 
         return $categorys->get();
+
+    }
+    
+}
+
+if(!function_exists('formatPrice')){
+
+    function formatPrice($amount) {
+
+        $formatted_amount = number_format((float)$amount, 2, '.', '');
+
+        $parts = explode('.', $formatted_amount);
+
+        $integer_part = $parts[0];
+
+        $decimal_part = isset($parts[1]) ? '.' . $parts[1] : '';
+
+        $formatted_integer_part = implode(',', str_split(strrev($integer_part), 3));
+
+        $formatted_amount = '₹' . strrev($formatted_integer_part) . $decimal_part;
+
+        return $formatted_amount;
+
+    }
+    
+}
+
+if(! function_exists('sendType')){
+
+    function sendType($cid = false, $pid = false , $id = false ) {
+        
+        $types =  Type::OrderBy('id' , 'Desc')->where('is_active', 1);
+
+        if($cid) { $types = $types->where('category_id', $cid);}
+
+        if($pid) { $types = $types->where('product_id', $pid); }
+
+        if($id) { $types = $types->where('id', $pid); }
+
+        return $types->get();
 
     }
     
