@@ -59,10 +59,25 @@ class User extends Authenticatable
         return $this->hasMany(Cart::class, 'user_id', 'id');
     }
 
+    public function userdevicetoken()
+    {
+        return $this->belongsTo(User::class, 'user_id' , 'id');
+    }
+
     public function updateStatus($status) {
         
         $this->is_active = $status;
 
         return $this->save();
+    }
+    
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(OrderInvoice::class);
     }
 }

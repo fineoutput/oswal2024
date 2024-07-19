@@ -29,4 +29,9 @@ class State extends Model
 
         return $this->hasmany(ShippingCharge::class , 'state_id', 'id');
     }
+
+    public function address() {
+
+        return $this->hasMany(Address::class, 'state', 'id');
+    }
 }

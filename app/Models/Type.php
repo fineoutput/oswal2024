@@ -84,4 +84,9 @@ class Type extends Model
         return $this->hasMany(ComboProduct::class, 'combo_type' , 'id');
         
     }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 }

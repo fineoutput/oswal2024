@@ -66,6 +66,8 @@ use App\Http\Controllers\Admin\GiftCardSecController;
 
 use App\Http\Controllers\Admin\ComboProductController;
 
+use App\Http\Controllers\Admin\OrderController;
+
 
 /*========= Home Routes ========*/
 
@@ -626,6 +628,31 @@ Route::prefix('combo-product')->name('comboproduct.')->group(function () {
     Route::post('store', [ComboProductController::class, 'store'])->name('store');
 
     Route::get('update-status/{status}/{id}', [ComboProductController::class, 'update_status'])->name('update-status');
+
+    Route::get('destroy/{id}', [ComboProductController::class, 'destroy'])->name('destroy');
+
+});
+
+
+/*=========Order Routes ========*/
+
+Route::prefix('order')->name('order.')->group(function () {
+
+    Route::get('new', [OrderController::class, 'index'])->name('new-order');
+
+    Route::get('dispatched', [OrderController::class, 'index'])->name('dispatched-order');
+
+    Route::get('completed', [OrderController::class, 'index'])->name('completed-order');
+
+    Route::get('rejected', [OrderController::class, 'index'])->name('rejected-order');
+
+    Route::get('update-status/{status}/{id}', [OrderController::class, 'update_status'])->name('update-status');
+
+    Route::get('view-product/{id}', [OrderController::class, 'view_product'])->name('view-product');
+
+    Route::get('view-bill/{id}', [OrderController::class, 'view_bill'])->name('view-bill');
+
+    Route::get('view-delivery-challan/{id}', [OrderController::class, 'deliveryChallan'])->name('vview-delivery-challan');
 
     Route::get('destroy/{id}', [ComboProductController::class, 'destroy'])->name('destroy');
 

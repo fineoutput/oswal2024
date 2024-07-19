@@ -32,4 +32,9 @@ class City extends Model
         return $this->hasOne(ShippingCharge::class, 'city_id', 'id');
 
     }
+
+    public function address() {
+
+        return $this->hasMany(Address::class, 'city', 'id');
+    }
 }
