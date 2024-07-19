@@ -109,10 +109,11 @@
                                             <tbody>
 
                                                 @foreach ($trendings as $key => $trending)
+                                                {{-- @dd($trending->product); --}}
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
 
-                                                    <td>{{ $trending->product->name }}</td>
+                                                    <td>{{ $trending->product['name'] }}</td>
 
                                                     <td>{{ $trending->trending }}</td>
 
