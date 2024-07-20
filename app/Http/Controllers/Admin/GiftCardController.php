@@ -48,7 +48,7 @@ class GiftCardController extends Controller
         $rules = [
             'name'              => 'required',
             'description'       => 'required',
-            'price'             => 'required',
+            'price'             => 'required|integer|min:1',
             'img'               => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ];
 

@@ -17,6 +17,7 @@ class TeamController extends Controller
 	public function admin_index(Request $req)
 	{
 		$admin_id = $req->session()->get('admin_id');
+
 		$services = json_decode($req->session()->get('services'));
 
 		if (in_array(1, $services) || in_array(999, $services)) {
@@ -32,11 +33,13 @@ class TeamController extends Controller
 			}
 		}
 	}
+
 	public function add_team_view(Request $req)
 	{
 		$service_data = AdminSidebar::get();
 		return view('admin/team/add_team', compact('service_data'));
 	}
+
 	public function view_team(Request $req)
 	{
 		$Team_data = Team::wherenull('deleted_at')->orderBy('id', 'desc')->get();
@@ -48,7 +51,7 @@ class TeamController extends Controller
 		$admin_id = $req->session()->get('admin_id');
 		$admin_position = $req->session()->get('position');
 		if ($id == $admin_id) {
-			return Redirect('/view_team')->with('error', "Sorry You can't change status of yourself.");
+			return Redirect('/admin/view_team')->with('error', "Sorry You can't change status of yourself.");
 		}
 		if ($admin_position == "Super Admin") {
 			if ($status == "active") {
@@ -64,9 +67,9 @@ class TeamController extends Controller
 				$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
 				$TeamData->update($teamStatusInfo);
 			}
-			return Redirect('/view_team')->with('success', 'Status Updated Successfully.');
+			return Redirect('/admin/view_team')->with('success', 'Status Updated Successfully.');
 		} else {
-			return Redirect('/view_team')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+			return Redirect('/admin/view_team')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
 		}
 	}
 	public function deleteTeam($idd, Request $req)
@@ -75,7 +78,7 @@ class TeamController extends Controller
 		$admin_id = $req->session()->get('admin_id');
 		$admin_position = $req->session()->get('position');
 		if ($id == $admin_id) {
-			return Redirect('/view_team')->with('error', "Sorry You can't delete yourself.");
+			return Redirect('/admin/view_team')->with('error', "Sorry You can't delete yourself.");
 		}
 		if ($admin_position == "Super Admin") {
 			$TeamData = Team::wherenull('deleted_at')->where('id', $id)->first();
@@ -85,17 +88,18 @@ class TeamController extends Controller
 				// if (!empty($img)) {
 				// 	unlink($img);
 				// }
-				return Redirect('/view_team')->with('success', 'Data Deleted Successfully.');
+				return Redirect('admin/view_team')->with('success', 'Data Deleted Successfully.');
 			} else {
-				return Redirect('/view_team')->with('error', 'Some Error Occurred.');
+				return Redirect('admin/view_team')->with('error', 'Some Error Occurred.');
 			}
 		} else {
-			return Redirect('/view_team')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
+			return Redirect('admin/view_team')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
 		}
 	}
 	public function add_team_process(Request $req)
 	{
 		$admin_id = $req->session()->get('admin_id');
+
 		$req->validate([
 			'name' => 'required',
 			'email' => 'required|unique:admin_teams|email',
@@ -133,11 +137,11 @@ class TeamController extends Controller
 			'power' => $req->input('power'),
 			'image' => $fullimagepath,
 			'ip' => $req->ip(),
-			'added_by' => $req->input('admin_id'),
+			'added_by' => $admin_id,
 			'is_active' => 1,
 		];
 		$last_id = Team::create($teamInfo);
-		return Redirect('/view_team')->with('success', 'Data Added Successfully.');
+		return Redirect('/admin/view_team')->with('success', 'Data Added Successfully.');
 		//return response()->json(['response' => 'OK']);
 	}
 	//
