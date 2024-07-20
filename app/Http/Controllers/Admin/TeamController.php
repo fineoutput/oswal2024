@@ -99,6 +99,7 @@ class TeamController extends Controller
 	public function add_team_process(Request $req)
 	{
 		$admin_id = $req->session()->get('admin_id');
+
 		$req->validate([
 			'name' => 'required',
 			'email' => 'required|unique:admin_teams|email',
@@ -136,7 +137,7 @@ class TeamController extends Controller
 			'power' => $req->input('power'),
 			'image' => $fullimagepath,
 			'ip' => $req->ip(),
-			'added_by' => $req->input('admin_id'),
+			'added_by' => $admin_id,
 			'is_active' => 1,
 		];
 		$last_id = Team::create($teamInfo);
