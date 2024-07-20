@@ -161,7 +161,7 @@
                                                 <input class="form-control" type="file" id="img" name="img"
                                                     placeholder="img">
 
-                                                @if ($giftcard != null)
+                                                @if ($giftcard != null && $giftcard->image != null )
                                                     <img src="{{ asset($giftcard->image) }}" width="100px" height="100px">
                                                 @endif
 
