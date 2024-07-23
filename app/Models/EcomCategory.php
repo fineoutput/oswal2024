@@ -4,16 +4,52 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EcomCategory extends Model
 {
-    use HasFactory ;
+    use HasFactory, SoftDeletes;
+
 
     protected $fillable = [
         'name', 'short_dis', 'long_desc', 'sequence', 'name_hi', 
         'short_dis_hi', 'long_desc_hi', 'url', 'image', 'app_image', 'slide_img1', 'slide_img2', 'slide_img3', 'is_active', 'ip', 'added_by', 'cur_date'
     ];
+
+    protected static function boot()
+    {
+       
+        parent::boot();
+
+
+        static::deleting(function (EcomCategory $ecomCategory) {
+           
+             $ecomCategory->products()->delete();
+
+             $ecomCategory->footerimages()->delete();
+
+            foreach ($ecomCategory->type as $type) {
+                $type->delete();
+            }
+
+            foreach ($ecomCategory->carts as $cart) {
+                $cart->delete();
+            }
+
+            foreach ($ecomCategory->offers as $offer) {
+                $offer->delete();
+            }
+
+            foreach ($ecomCategory->offers2 as $offer2) {
+                $offer2->delete();
+            }
+
+            foreach ($ecomCategory->sliders as $slider) {
+                $slider->delete();
+            }
+        });
+    }
+
 
      /**
      * Update the status of the Category.
@@ -33,17 +69,17 @@ class EcomCategory extends Model
     
     public function products()
     {
-        return $this->hasMany(EcomProduct::class);
+        return $this->hasMany(EcomProduct::class , 'category_id' , 'id');
     }
 
     public function type()
     {
-        return $this->hasMany(Type::class);
+        return $this->hasMany(Type::class ,'category_id' , 'id');
     }
 
     public function carts()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Cart::class ,'category_id' , 'id');
     }
     
     public function offers()
@@ -59,5 +95,10 @@ class EcomCategory extends Model
     public function sliders()
     {
         return $this->hasMany(Slider::class, 'category_id');
+    }
+
+    public function footerimages()
+    {
+        return $this->hasMany(FooterImage::class, 'category_id');
     }
 }

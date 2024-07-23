@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Type extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'product_id',
@@ -30,6 +31,23 @@ class Type extends Model
         'update_date'
     ];
 
+    protected static function boot()
+    {
+       
+        parent::boot();
+
+
+        static::deleting(function (Type $type) {
+
+            $type->giftcardsec()->delete();
+
+            $type->comboproduct()->delete();
+
+            $type->comboproduct2()->delete();
+            
+        });
+    }
+
     public function updateStatus(string $newStatus)
     
     {
@@ -46,12 +64,12 @@ class Type extends Model
 
     public function product()
     {
-        return $this->belongsTo(EcomProduct::class);
+        return $this->belongsTo(EcomProduct::class ,'product_id' ,'id');
     }
 
     public function category()
     {
-        return $this->belongsTo(EcomCategory::class);
+        return $this->belongsTo(EcomCategory::class ,'category_id' ,'id');
     }
 
     public function state()
@@ -73,12 +91,12 @@ class Type extends Model
         return $this->hasMany(GiftCardSec::class, 'type_id' , 'id');
     }
 
-
     public function comboproduct() {
         
         return $this->hasMany(ComboProduct::class, 'main_type' , 'id');
         
     }
+
     public function comboproduct2() {
         
         return $this->hasMany(ComboProduct::class, 'combo_type' , 'id');

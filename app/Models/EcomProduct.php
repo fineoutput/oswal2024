@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EcomProduct extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'category_id ', 'product_category_id ', 'name', 'long_desc', 'name_hi', 
@@ -24,24 +25,61 @@ class EcomProduct extends Model
 
     public function category()
     {
-        return $this->belongsTo(EcomCategory::class);
+        return $this->belongsTo(EcomCategory::class, 'category_id', 'id');
     }
 
-
-    public function isSoftDeleted()
+    protected static function boot()
     {
-        return $this->is_cat_delete == 1;
-    }
+       
+        parent::boot();
 
+
+        static::deleting(function (EcomProduct $ecomProduct) {
+
+            $ecomProduct->type()->delete();
+
+            foreach ($ecomProduct->carts as $cart) {
+                $cart->delete();
+            }
+
+            foreach ($ecomProduct->offers as $offer) {
+                $offer->delete();
+            }
+
+            foreach ($ecomProduct->offers2 as $offer2) {
+                $offer2->delete();
+            }
+
+            foreach ($ecomProduct->sliders as $slider) {
+                $slider->delete();
+            }
+
+            $ecomProduct->recent()->delete();
+
+            $ecomProduct->trending()->delete();
+
+            $ecomProduct->themetrending()->delete();
+
+            $ecomProduct->giftcardsec()->delete();
+
+            $ecomProduct->comboproduct()->delete();
+
+            $ecomProduct->comboproduct2()->delete();
+
+            $ecomProduct->footerimages()->delete();
+            
+        });
+    }
+    
     public function type()  {
 
-        return $this->hasOne(Type::class);
+        return $this->hasOne(Type::class ,'product_id' ,'id');
 
     }
 
     public function carts()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Cart::class ,'product_id' ,'id');
     }
 
     public function offers()
@@ -81,12 +119,18 @@ class EcomProduct extends Model
 
     public function comboproduct() {
         
-        return $this->hasMany(ComboProduct::class, 'product_id' , 'id');
-        
-    }
-    public function comboproduct2() {
-        
         return $this->hasMany(ComboProduct::class, 'main_product' , 'id');
         
+    }
+
+    public function comboproduct2() {
+        
+        return $this->hasMany(ComboProduct::class, 'combo_product' , 'id');
+        
+    }
+
+    public function footerimages()
+    {
+        return $this->hasMany(FooterImage::class, 'product_id' , 'id');
     }
 }

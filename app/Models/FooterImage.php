@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class FooterImage extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'footer_images';
 
@@ -33,7 +33,7 @@ class FooterImage extends Model
 
     public function product()
     {
-        return $this->belongsTo(EcomProduct::class, 'product_id');
+        return $this->belongsTo(EcomProduct::class, 'product_id' , 'id');
     }
 
     public function updateStatus($status) {

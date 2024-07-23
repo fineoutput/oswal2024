@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Crm_settings extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     use SoftDeletes;
     protected $fillable = [
         'sitename','instagram_link','facebook_link','youtube_link','phone','address','power','logo','ip','added' 

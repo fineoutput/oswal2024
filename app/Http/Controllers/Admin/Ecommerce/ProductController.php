@@ -231,9 +231,10 @@ class ProductController extends Controller
 
         $admin_position = $request->session()->get('position');
 
+        $ecomproduct = EcomProduct::find($id);
         // if ($admin_position == "Super Admin") {
 
-        if (EcomProduct::where('id', $id)->delete()) {
+        if ($ecomproduct->delete()) {
 
             return  redirect()->route('product.index',$pid)->with('success', 'Product Deleted Successfully.');
         } else {

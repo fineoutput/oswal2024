@@ -117,9 +117,10 @@ class MajorCategoryController extends Controller
 
         $admin_position = $request->session()->get('position');
 
+        $majorCategory = MajorCategory::find($id);
         // if ($admin_position == "Super Admin") {
 
-        if (MajorCategory::where('id', $id)->delete()) {
+        if ($majorCategory->delete()) {
 
             return  redirect()->route('majorcategory.index')->with('success', 'Category Deleted Successfully.');
         } else {

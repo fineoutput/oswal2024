@@ -3,6 +3,8 @@ use Carbon\Carbon;
 use App\Models\EcomCategory;
 use App\Models\EcomProduct;
 use App\Models\Type;
+use Illuminate\Support\Facades\Log;
+
 
 if (!function_exists('lang_change')) {
 
@@ -137,7 +139,7 @@ if(!function_exists('formatPrice')){
     
 }
 
-if(! function_exists('sendType')){
+if(!function_exists('sendType')){
 
     function sendType($cid = false, $pid = false , $id = false ) {
         
@@ -153,4 +155,78 @@ if(! function_exists('sendType')){
 
     }
     
+}
+
+if(!function_exists('sendOtpSms')){
+
+    function sendOtpSms($msg, $contact_no) {
+
+        $url = env('SMS_API_URL');
+        $key = env('SMS_API_KEY');
+        $sender_id = env('SMS_SENDER_ID');
+        $message = $msg;
+
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query([
+                'route' => 4,
+                'sender' => $sender_id,
+                'mobiles' => $contact_no,
+                'authkey' => $key,
+                'message' => $message,
+                'country' => 91,
+            ]),
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+        ]);
+
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+
+        curl_close($ch);
+
+        dd($response);
+        
+        if ($err) {
+            // Log the error or handle it appropriately
+            Log::error("cURL Error #:" . $err);
+        } else {
+            // Process the response if needed
+            Log::info("cURL Response: " . $response);
+        }
+    }
+}
+
+if(!function_exists('generateRandomString')){
+
+    function generateRandomString($length = 20){
+
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%$@*!';
+
+		$charactersLength = strlen($characters);
+
+		$randomString = '';
+
+		for ($i = 0; $i < $length; $i++) {
+
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+
+		}
+
+		return $randomString;
+
+	}
+}
+
+if(!function_exists('generateOtp')){
+
+    function generateOtp() {
+
+        return rand(100000, 999999);
+
+    }
 }

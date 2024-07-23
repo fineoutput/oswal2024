@@ -161,11 +161,11 @@ class CategoryController extends Controller
         $id = base64_decode($id);
 
         $admin_position = $request->session()->get('position');
-
+        $category =   EcomCategory::find($id);
         // if ($admin_position == "Super Admin") {
 
-        if (EcomCategory::where('id', $id)->delete()) {
-
+        if ($category->delete()) {
+            
             return  redirect()->route('category.index')->with('success', 'Category Deleted Successfully.');
         } else {
             return redirect()->route('category.index')->with('error', 'Some Error Occurred.');

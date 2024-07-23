@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ApiManagement\UserAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('register', [UserAuthController::class, 'register']);
+Route::post('login', [UserAuthController::class, 'login']);
+Route::post('registrat-otp', [UserAuthController::class, 'verifyOtpProcess']);
+Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess']);
+
+
+Route::middleware('auth:sanctum')->prefix('user')->group(function () {
+    Route::get('logout', [UserAuthController::class, 'logout']);
+    Route::get('/', function (Request $request) {
+        return $request->user();
+    });
 });

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cart extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'device_id',
@@ -25,12 +26,12 @@ class Cart extends Model
 
     public function category()
     {
-        return $this->belongsTo(EcomCategory::class);
+        return $this->belongsTo(EcomCategory::class ,'category_id' ,'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(EcomProduct::class);
+        return $this->belongsTo(EcomProduct::class ,'product_id' ,'id');
     }
 
     public function user()
