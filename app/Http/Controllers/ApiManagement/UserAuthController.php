@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log; 
 use App\Models\User;
+use App\Models\UserDeviceToken;
 use App\Models\Otp;
 
 class UserAuthController extends Controller
@@ -40,6 +41,12 @@ class UserAuthController extends Controller
 
         $user = User::create($date);
 
+        UserDeviceToken::create([
+            'device_id'    => $request->device_id,
+            'device_token' => $request->device_token,
+            'user_id'      => $user->id,
+        ]);
+        
         $OTP = generateOtp();
 
         $msg="Welcome to fineoutput and Your OTP is".$OTP."for Register." ;
