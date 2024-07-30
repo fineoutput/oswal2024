@@ -232,7 +232,7 @@ class AppController extends Controller {
        return response()->json(['success' => true, 'data' =>  $address_data ],200);
     }
 
-    public function footerSlider()  {
+    public function headerSlider()  {
         
        $sliders =  Websliders2::where('is_active', 1)->get();
 
@@ -250,7 +250,7 @@ class AppController extends Controller {
 
     }
 
-    public function headerSlider(Request $request)  {
+    public function footerSlider(Request $request)  {
 
         $validator = Validator::make($request->all(), [
             'lang'      => 'required|string'
