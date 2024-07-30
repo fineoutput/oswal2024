@@ -17,7 +17,7 @@ class UserAuthController extends Controller
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
             'email'        => 'nullable|string|email',
-            'phone_no'      => 'required|digits:10|unique:users,contact',
+            'phone_no'     => 'required|digits:10|unique:users,contact',
             'password'     => 'required|string|min:6',
             'device_id'    => 'required|string',
             'device_token' => 'required|string',
@@ -69,11 +69,11 @@ class UserAuthController extends Controller
             
             session()->put('user_id', $user->id);
 
-            return response()->json([ 'status' => true, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]]);
+            return response()->json([ 'status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]]);
 
         } else {
            
-            return response()->json(['status' => false,'message' => 'Error occurred while saving OTP, please try again'], 500);
+            return response()->json(['status' => 500,'message' => 'Error occurred while saving OTP, please try again'], 500);
         }
     
     }
@@ -110,11 +110,11 @@ class UserAuthController extends Controller
 
             session()->forget('user_id');
 
-            return response()->json([ 'status' => true, 'token' => $token, 'user' => $user ,'message' => 'You have Login successfully'], 200);
+            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' => 'You have Login successfully'], 200);
 
         } else {
 
-            return response()->json(['status' => false, 'message' => 'Invalid OTP. Please try again.'], 401);
+            return response()->json(['status' => 401, 'message' => 'Invalid OTP. Please try again.'], 401);
 
         }
 
@@ -152,15 +152,15 @@ class UserAuthController extends Controller
                 
                 session()->put('user_id', $user->id);
 
-                return response()->json([ 'status' => true, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]]);
+                return response()->json([ 'status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]],200);
 
             } else {
             
-                return response()->json(['status' => false,'message' => 'Error occurred while saving OTP, please try again'], 500);
+                return response()->json(['status' => 500,'message' => 'Error occurred while saving OTP, please try again'], 500);
             }
         }else{
 
-            return response()->json(['message' => 'The provided credentials do not match our records.'], 401);
+            return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.'], 401);
 
         }
 
@@ -172,7 +172,7 @@ class UserAuthController extends Controller
     {
         $request->user()->tokens()->delete();
 
-        return response()->json(['message' => 'Logged out'], 200);
+        return response()->json(['status' => 200, 'message' => 'Logged out'], 200);
     }
 
 }
