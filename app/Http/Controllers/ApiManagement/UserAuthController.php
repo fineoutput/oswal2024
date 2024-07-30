@@ -18,17 +18,52 @@ class UserAuthController extends Controller
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
             'email'        => 'nullable|string|email',
-            'phone_no'     => 'required|digits:10|unique:users,contact',
             'password'     => 'nullable|string|min:6',
             'device_id'    => 'required|string',
             'device_token' => 'nullable|string',
         ];
         
+        if (session()->has('user_otp_id') && session()->has('user_id')) {
+
+            $rules['phone_no'] = 'required|digits:10';
+
+        }else{
+
+            $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+            
+        }
+
         $validator = Validator::make($request->all(),  $rules);
 
         if ($validator->fails()) {
 
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+        }
+
+        if (session()->has('user_otp_id') && session()->has('user_id')) {
+        
+            $OTP = generateOtp();
+
+            $msg = "Welcome to fineoutput. Your new OTP is {$OTP} for registration.";
+    
+            // sendOtpSms($msg, session()->get('user_contact')); // Uncomment this line to send the OTP SMS
+    
+            // Update the existing OTP record
+            $otpData = Otp::updateOrCreate(
+
+                ['id' => session()->get('user_otp_id')],
+                [
+                    'otp' => $OTP,
+                    'ip'  => $request->ip(),
+                    'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                ]
+            );
+    
+            return response()->json([
+                'status'  => 200,
+                'message' => 'OTP regenerated successfully',
+                'data'    => ['contact_no' => session()->get('user_contact')]
+            ]);
         }
 
         $name =  $request->first_name .' '. $request->last_name;
@@ -46,6 +81,7 @@ class UserAuthController extends Controller
             'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'              => $request->ip(),
         ];
+
 
         $user = User::create($date);
 
@@ -76,6 +112,8 @@ class UserAuthController extends Controller
             session()->put('user_otp_id', $otpData->id);
             
             session()->put('user_id', $user->id);
+            
+            session()->put('user_contact', $user->contact);
 
             return response()->json([ 'status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]]);
 
