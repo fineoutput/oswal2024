@@ -43,7 +43,7 @@ class UserAuthController extends Controller
             'password'        => Hash::make($request->password) ?? null,
             'status'          => 0,
             'added_by'        => 1,
-            'date'            => now(),
+            'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'              => $request->ip(),
         ];
 
@@ -68,7 +68,7 @@ class UserAuthController extends Controller
             'otp' => $OTP,
             'ip' => $request->ip(),
             'added_by' => 1,
-            'date' => now(),
+            'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
         ]);
 
         if ($otpData) {
@@ -159,7 +159,7 @@ class UserAuthController extends Controller
                 'otp' => $OTP,
                 'ip' => $request->ip(),
                 'added_by' => 1,
-                'date' => now(),
+                'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             ]);
 
             if ($otpData) {

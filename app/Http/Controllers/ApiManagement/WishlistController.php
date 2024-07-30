@@ -64,7 +64,7 @@ class WishlistController extends Controller
 
             $wishlist->fill($request->all());
 
-            $wishlist->date = now();
+            $wishlist->date = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
             if($wishlist->save()){
 
@@ -263,7 +263,7 @@ class WishlistController extends Controller
 
         $ip = $request->ip();
 
-        $curDate = now();
+        $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
         $wishlist = Wishlist::where('device_id', $data['device_id'])
                             ->where('id', $data['wishlist_id'])
