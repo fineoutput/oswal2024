@@ -21,7 +21,7 @@ class UserAuthController extends Controller
             'phone_no'     => 'required|digits:10|unique:users,contact',
             'password'     => 'nullable|string|min:6',
             'device_id'    => 'required|string',
-            'device_token' => 'required|string',
+            'device_token' => 'nullable|string',
         ];
         
         $validator = Validator::make($request->all(),  $rules);
