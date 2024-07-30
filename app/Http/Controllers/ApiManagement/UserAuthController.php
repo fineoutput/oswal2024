@@ -22,8 +22,8 @@ class UserAuthController extends Controller
             'device_id'    => 'required|string',
             'device_token' => 'nullable|string',
         ];
-        
-        if (session()->has('user_otp_id') && session()->has('user_id')) {
+      
+        if (session()->has('user_otp_id') && session()->has('user_id') &&  session()->has('user_contact')) {
 
             $rules['phone_no'] = 'required|digits:10';
 
@@ -40,7 +40,7 @@ class UserAuthController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
-        if (session()->has('user_otp_id') && session()->has('user_id')) {
+        if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
         
             $OTP = generateOtp();
 
@@ -160,6 +160,8 @@ class UserAuthController extends Controller
             session()->forget('user_otp_id');
 
             session()->forget('user_id');
+
+            session()->forget('user_contact');
 
             return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' => 'You have Login successfully'], 200);
 
