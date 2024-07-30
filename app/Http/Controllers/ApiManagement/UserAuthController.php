@@ -51,7 +51,7 @@ class UserAuthController extends Controller
 
         UserDeviceToken::create([
             'device_id'    => $request->device_id,
-            'device_token' => $request->device_token,
+            'device_token' => $request->device_token ?? '',
             'user_id'      => $user->id,
         ]);
         
