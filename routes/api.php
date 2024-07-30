@@ -20,9 +20,9 @@ Route::post('register', [UserAuthController::class, 'register']);
 
 Route::post('login', [UserAuthController::class, 'login']);
 
-Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess']);
+Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('register.otp');
 
-Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess']);
+Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('login.otp');
 
 Route::get('state' , [AppController::class , 'GetState']);
 
@@ -95,6 +95,8 @@ Route::prefix('cart')->name('cart.')->group(function () {
 });
 Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
 
+Route::post('orders', [OrderController::class, 'orders'])->name('orders');
+
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::get('user', function (Request $request) {
@@ -109,14 +111,14 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');
 
-    Route::prefix('order')->name('order.')->group(function () {
+    // Route::prefix('order')->name('order.')->group(function () {
 
         
-        Route::post('get-cart-details', [OrderController::class, 'getCartDetails'])->name('get-cart-details');
+    //     Route::post('get-cart-details', [OrderController::class, 'getCartDetails'])->name('get-cart-details');
     
-        Route::post('destroy',[OrderController::class, 'destroy'])->name('destroy');
+    //     Route::post('destroy',[OrderController::class, 'destroy'])->name('destroy');
         
-    });
+    // });
 
     Route::get('promocode' ,[AppController::class, 'getPromoCode']);
 
