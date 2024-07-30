@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UserDeviceToken;
 use App\Models\Otp;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Route;
 
 class UserAuthController extends Controller
 {
@@ -133,6 +134,8 @@ class UserAuthController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
+        $currentRouteName = Route::currentRouteName();
+
         $userOtpId = session()->get('user_otp_id');
 
         $user_id = session()->get('user_id');
@@ -163,7 +166,16 @@ class UserAuthController extends Controller
 
             session()->forget('user_contact');
 
-            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' => 'You have Login successfully'], 200);
+            if($currentRouteName == 'register.otp'){
+
+                $message = 'You have Register successfully';
+               
+            }else if($currentRouteName == 'login.otp'){ 
+    
+                $message = 'You have Login successfully';
+            }
+
+            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' =>  $message], 200);
 
         } else {
 
