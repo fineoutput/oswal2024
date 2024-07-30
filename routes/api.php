@@ -20,7 +20,7 @@ Route::post('register', [UserAuthController::class, 'register']);
 
 Route::post('login', [UserAuthController::class, 'login']);
 
-Route::post('registrat-otp', [UserAuthController::class, 'verifyOtpProcess']);
+Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess']);
 
 Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess']);
 
