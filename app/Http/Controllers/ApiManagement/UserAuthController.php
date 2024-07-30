@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\UserDeviceToken;
 use App\Models\Otp;
+use Illuminate\Support\Facades\Validator;
 
 class UserAuthController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([ 
+        $rules =[ 
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
             'email'        => 'nullable|string|email',
@@ -21,7 +22,14 @@ class UserAuthController extends Controller
             'password'     => 'required|string|min:6',
             'device_id'    => 'required|string',
             'device_token' => 'required|string',
-        ]);
+        ];
+        
+        $validator = Validator::make($request->all(),  $rules);
+
+        if ($validator->fails()) {
+
+            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+        }
 
         $name =  $request->first_name .' '. $request->last_name;
 
@@ -80,7 +88,12 @@ class UserAuthController extends Controller
 
     public function verifyOtpProcess(Request $request) {
 
-        $request->validate([ 'otp' => 'required|numeric' ]);
+        $validator = Validator::make($request->all(), [ 'otp' => 'required|numeric' ]);
+
+        if ($validator->fails()) {
+
+            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+        }
 
         $userOtpId = session()->get('user_otp_id');
 
@@ -122,9 +135,12 @@ class UserAuthController extends Controller
 
     public function login(Request $request){
 
-        Log::info('Login request received', $request->all());
+        $validator = Validator::make($request->all(), ['phone_no'  => 'required|digits:10']);
 
-        $request->validate(['phone_no'      => 'required|digits:10']);
+        if ($validator->fails()) {
+
+            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+        }
 
         $user = User::where('contact', $request->phone_no)->first();
 
