@@ -67,19 +67,21 @@ class EcomProduct extends Model
             $ecomProduct->comboproduct2()->delete();
 
             $ecomProduct->footerimages()->delete();
+
+            $ecomProduct->wishlist()->delete();
             
         });
     }
     
     public function type()  {
 
-        return $this->hasOne(Type::class ,'product_id' ,'id');
+        return $this->hasMany(Type::class ,'product_id' ,'id');
 
     }
 
-    public function carts()
+    public function cart()
     {
-        return $this->hasMany(Cart::class ,'product_id' ,'id');
+        return $this->hasMany(Cart::class ,'type_id' ,'id');
     }
 
     public function offers()
@@ -132,5 +134,15 @@ class EcomProduct extends Model
     public function footerimages()
     {
         return $this->hasMany(FooterImage::class, 'product_id' , 'id');
+    }
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class ,'product_id' , 'id');
+    }
+
+    public function rating()
+    {
+        return $this->hasMany(ProductRating::class ,'product_id' , 'id');
     }
 }

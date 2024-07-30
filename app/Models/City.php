@@ -25,7 +25,7 @@ class City extends Model
 
     public function type()
     {
-        return $this->hasMany(Type::class);
+        return $this->hasMany(Type::class ,'city_id' ,'id');
     }
 
     public function shipingPrice() {

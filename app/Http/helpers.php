@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use App\Models\EcomCategory;
 use App\Models\EcomProduct;
 use App\Models\Type;
+use App\Models\ShippingCharge;
 use Illuminate\Support\Facades\Log;
 
 
@@ -87,9 +88,9 @@ if(!function_exists('uploadImage')){
 
 if(!function_exists('sendProduct')){
 
-    function sendProduct($cid = false, $pid = false, $pcid = false ) {
+    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false) {
         
-        $products =  EcomProduct::OrderBy('id' , 'Desc')->where('is_active', 1);
+        $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1);
 
         if($cid){ $products = $products->where('category_id', $cid);}
 
@@ -97,6 +98,17 @@ if(!function_exists('sendProduct')){
 
         if($pcid) { $products = $products->where('product_category_id', $pcid); }
 
+        if($hid){$products = $products->where('is_hot', 1);}
+
+        if($trid){ 
+            
+            $products = $products->whereHas('trending', function($query) {
+                    $query->where('is_active', 1);
+            });
+        }
+
+        if($search){$products = $products ->where('name', 'LIKE', "%$search%");}
+        
         return $products->get();
 
     }
@@ -229,4 +241,51 @@ if(!function_exists('generateOtp')){
         return rand(100000, 999999);
 
     }
+}
+
+if(!function_exists('calculateShippingCharges')){
+
+ function calculateShippingCharges($total_order_weight , $city_id)  {
+
+    $shippingData = ShippingCharge::where('city_id', $city_id)->first();
+    
+    if (!$shippingData) {
+        return response()->json(['success' => false ,'message' => 'Shipping services not available in this area.','status' => 400]);
+    }
+    
+    $total_weight_charge = null;
+
+    if ($shippingData->weight1 >= $total_order_weight) {
+
+        $total_weight_charge = $shippingData->shipping_charge1;
+
+    } elseif ($shippingData->weight2 >= $total_order_weight) {
+
+        $total_weight_charge = $shippingData->shipping_charge2;
+
+    } elseif ($shippingData->weight3 >= $total_order_weight) {
+
+        $total_weight_charge = $shippingData->shipping_charge3;
+
+    } elseif ($shippingData->weight4 >= $total_order_weight) {
+
+        $total_weight_charge = $shippingData->shipping_charge4;
+
+    } elseif ($shippingData->weight5 >= $total_order_weight) {
+
+        $total_weight_charge = $shippingData->shipping_charge5;
+
+    } else {
+
+        $total_weight_charge = $shippingData->shipping_charge6;
+
+    }
+
+    $total_weight_charge = number_format((float)$total_weight_charge, 2, '.', '');
+    
+    $total_order_weight = number_format((float)$total_order_weight, 1, '.', '');
+
+    return response()->json(['success' => true,  'total_order_weight' => $total_order_weight ,'total_weight_charge' => $total_weight_charge]);
+ }
+
 }

@@ -33,8 +33,8 @@ class Blog extends Model
         return $this->save();
     }
 
-    public function blog()
+    public function comment()
     {
-        return $this->hasMany(Comment::class, 'id', 'blog_id');
+        return $this->hasMany(Comment::class, 'blog_id' , 'id');
     }
 }

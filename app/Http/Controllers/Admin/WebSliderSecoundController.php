@@ -57,7 +57,6 @@ class WebSliderSecoundController extends Controller
     public function store(Request $request)
 
     {
-        // dd($request->all());
 
         $rules = [
             'link'              => 'nullable|url',

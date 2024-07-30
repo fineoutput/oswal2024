@@ -23,12 +23,12 @@ class State extends Model
     
     public function type() 
     {
-        return $this->hasMany(Type::class);
+        return $this->hasMany(Type::class ,'state_id' , 'id');
     }
 
     public function shipingPrice() {
 
-        return $this->hasmany(ShippingCharge::class , 'state_id', 'id');
+        return $this->hasOne(ShippingCharge::class , 'state_id', 'id');
     }
 
     public function address() {

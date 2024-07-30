@@ -35,6 +35,8 @@ class User extends Authenticatable
         'added_by',
         'is_active',
     ];
+ 
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -80,5 +82,15 @@ class User extends Authenticatable
     public function invoices()
     {
         return $this->hasMany(OrderInvoice::class);
+    }
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class ,'user_id' , 'id');
+    }
+    
+    public function rating()
+    {
+        return $this->hasMany(ProductRating ::class ,'user_id' , 'id');
     }
 }

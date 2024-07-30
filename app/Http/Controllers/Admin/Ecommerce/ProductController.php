@@ -56,7 +56,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-
+        // dd($request->all());
         $rules = [
             'name'              => 'required',
             'hsn_code'          => 'required',

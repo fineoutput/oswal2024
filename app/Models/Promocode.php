@@ -10,7 +10,7 @@ class Promocode  extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'promocode';
+    protected $table = 'promocodes';
 
     protected $fillable = [
         'promocode',

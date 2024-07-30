@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Cart extends Model
+class CartOld extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $table = 'old_carts';
 
     protected $fillable = [
         'device_id',
@@ -41,6 +43,6 @@ class Cart extends Model
 
     public function type()
     {
-        return $this->belongsTo(Type::class , 'type_id' , 'id');
+        return $this->belongsTo(Type::class, 'type_id', 'id');
     }
 }

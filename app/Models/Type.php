@@ -10,6 +10,8 @@ class Type extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = "types";
+
     protected $fillable = [
         'product_id',
         'category_id',
@@ -44,6 +46,8 @@ class Type extends Model
             $type->comboproduct()->delete();
 
             $type->comboproduct2()->delete();
+
+            $type->wishlist()->delete();
             
         });
     }
@@ -74,18 +78,18 @@ class Type extends Model
 
     public function state()
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(State::class , 'state_id' , 'id');
     }
 
     public function city()
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(City::class ,'city_id' , 'id');
     }    
 
-    public function cart()  {
-        return $this->hasMany(Cart::class ,'type_id' ,'id');
+    public function cart()
+    {
+        return $this->hasMany(Cart::class ,'type_id' , 'id');
     }
-
     public function giftcardsec()
     {
         return $this->hasMany(GiftCardSec::class, 'type_id' , 'id');
@@ -106,5 +110,10 @@ class Type extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class ,'type_id' , 'id');
     }
 }
