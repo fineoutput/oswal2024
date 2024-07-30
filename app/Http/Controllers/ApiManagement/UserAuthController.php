@@ -19,7 +19,7 @@ class UserAuthController extends Controller
             'last_name'    => 'required|string|max:255',
             'email'        => 'nullable|string|email',
             'phone_no'     => 'required|digits:10|unique:users,contact',
-            'password'     => 'required|string|min:6',
+            'password'     => 'nullable|string|min:6',
             'device_id'    => 'required|string',
             'device_token' => 'required|string',
         ];
@@ -40,7 +40,7 @@ class UserAuthController extends Controller
             'auth'            => generateRandomString(),
             'email'           => $request->email,
             'contact'         => $request->phone_no,
-            'password'        => Hash::make($request->password),
+            'password'        => Hash::make($request->password) ?? null,
             'status'          => 0,
             'added_by'        => 1,
             'date'            => now(),
