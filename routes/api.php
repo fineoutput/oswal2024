@@ -32,6 +32,8 @@ Route::get('footer-slider' , [AppController::class , 'footerSlider']);
 
 Route::get('top-slider' , [AppController::class , 'headerSlider']);
 
+Route::get('popup' , [AppController::class , 'popup']);
+
 // Route::prefix('blog')->name('blog.')->group(function () {
 
 //     Route::get('view-blog',[AppController::class , 'blog'])->name('view-blog');

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\ApiManagement;
 
-use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\ShippingCharge; 
 
@@ -26,11 +26,14 @@ use App\Models\Address;
 
 use App\Models\Comment;
 
+use App\Models\Popup;
+
 use App\Models\State;
 
 use App\Models\Blog;
 
 use App\Models\City;
+
 
 class AppController extends Controller {
 
@@ -326,5 +329,22 @@ class AppController extends Controller {
         }
  
         return response()->json(['success' => true, 'data' =>  $data ],200);
+    }
+
+    public function popup(Request $request) {
+
+      $popups =  Popup::where('is_active', 1)->get();
+
+      $data = [];
+ 
+      foreach ($popups  as $key => $value) {
+        $data[] =[
+           'id'              => $value->id,
+           'name'            => $value->name,
+           'image'           => asset($value->image),
+        ];
+      }
+
+      return response()->json(['success' => true, 'data' =>  $data ],200);
     }
 }
