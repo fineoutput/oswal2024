@@ -177,9 +177,9 @@
 
                                                             @endif
 
-                                                            <a href="{{route('product.create',base64_encode($product->id))}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-edit"></i></a>
+                                                            <a href="{{route('product.create',base64_encode($product->id))}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
-                                                            <a href="{{route('type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Active">Type</a>
+                                                            <a href="{{route('type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Type">Type</a>
 
                                                             <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
 
