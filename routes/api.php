@@ -63,6 +63,8 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 
     Route::post('search-product', [EcommerceController::class, 'products'])->name('search-product');
 
+    Route::post('featured-product', [EcommerceController::class, 'products'])->name('featured-product');
+
     // Route::get('type', [EcommerceController::class, 'type'])->name('type');
 
     // Route::get('shipping-charge', [EcommerceController::class, 'shipping_charges'])->name('shipping-charges');
@@ -93,9 +95,16 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('destroy',[CartController::class, 'destroy'])->name('destroy');
     
 });
+
 Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
 
 Route::post('orders', [OrderController::class, 'orders'])->name('orders');
+
+Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
+
+Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
+
+Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
 
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
