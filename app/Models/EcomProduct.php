@@ -38,22 +38,14 @@ class EcomProduct extends Model
 
             $ecomProduct->type()->delete();
 
-            foreach ($ecomProduct->carts as $cart) {
-                $cart->delete();
-            }
-
-            foreach ($ecomProduct->offers as $offer) {
-                $offer->delete();
-            }
-
-            foreach ($ecomProduct->offers2 as $offer2) {
-                $offer2->delete();
-            }
-
-            foreach ($ecomProduct->sliders as $slider) {
-                $slider->delete();
-            }
-
+            $ecomProduct->cart()->delete();
+                
+            $ecomProduct->offers()->delete();
+            
+            $ecomProduct->offers2() ->delete();
+            
+            $ecomProduct->sliders()->delete();
+            
             $ecomProduct->recent()->delete();
 
             $ecomProduct->trending()->delete();
