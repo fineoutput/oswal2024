@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Route;
 
 use App\Models\EcomProductCategory;
@@ -27,9 +25,6 @@ use App\Models\Wishlist;
 use App\Models\Cart;
 
 use App\Models\ProductRating ;
-
-use Illuminate\Support\Facades\DB;
-
 
 class EcommerceController extends Controller
 {

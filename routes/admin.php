@@ -89,9 +89,15 @@ Route::prefix('home')->name('home.')->group(function () {
 
     Route::get('view-gift-promo/status//{status}/{id}', [HomeController::class, 'gift_promo_status'])->name('gift-promo-status');
 
+    
 
 });
 
+Route::prefix('setting')->name('setting.')->group(function() {
+
+    Route::any('set-constant' ,[HomeController::class, 'constant'])->name('constant');
+
+});
 
 Route::get('/index', [TeamController::class, 'admin_index'])->name('admin_index');
 

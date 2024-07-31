@@ -199,4 +199,24 @@ class HomeController extends Controller
 
     }
 
+    public function constant(Request $request){
+
+        if($request->constant_id != null){    
+
+            DB::table('constants')->where('id', $request->constant_id)->update(   [
+                "cod_charge"        => $request->cod_charge,
+                "wallet_use_amount" => $request->wallet_use_amount,
+                "gift_min_amount"   => $request->gift_min_amount,
+                "gift1_min_amount"  => $request->gift1_min_amount,
+                "quantity"          => $request->quantity
+              ]);
+
+             $request->session()->flash('success', 'Constants updated successfully!');
+        }
+
+        $constant = DB::table('constants')->first();
+
+        
+        return view('admin.Setting.constant' , compact('constant'));
+    }
 }
