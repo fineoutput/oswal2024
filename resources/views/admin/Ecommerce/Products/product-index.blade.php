@@ -167,7 +167,7 @@
                                                         
                                                         <div class="btn-group" id="btns<?php echo $key ?>">
 
-                                                            @if ($product->is_active == 2)
+                                                            @if ($product->is_active == 0)
 
                                                             <a href="{{route('product.update-status',['active',base64_encode($product->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
 
