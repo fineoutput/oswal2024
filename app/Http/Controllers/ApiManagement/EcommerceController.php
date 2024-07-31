@@ -55,6 +55,8 @@ class EcommerceController extends Controller
 
             $app_img = !empty($data->app_image) ? asset($data->app_image) : "";
 
+            $icon_img = !empty($data->icon) ? asset($data->icon) : "";
+
             $category_data[] = [
                 'id' => $data->id,
                 'name' => $lang != "hi" ? $data->name : $data->name_hi,
@@ -62,6 +64,7 @@ class EcommerceController extends Controller
                 'long_desc' => $lang != "hi" ? $data->long_desc : $data->long_desc_hi,
                 'url' => $data->url,
                 'image' => $app_img,
+                'icon' => $icon_img ,
                 'is_active' => $data->is_active,
             ];
         }
@@ -94,6 +97,8 @@ class EcommerceController extends Controller
 
         $search = false;
 
+        $is_fea = false;
+        
         if($currentRouteName == 'ecom.products'){
 
             $rules['category_id'] =  'required|integer';
@@ -111,6 +116,10 @@ class EcommerceController extends Controller
             $rules['string'] =  'required';
 
             $search = $request->string;
+
+        }else if($currentRouteName == 'ecomm.search-product') {
+            
+            $is_fea = true;
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -126,7 +135,7 @@ class EcommerceController extends Controller
         $state_id    = $request->input('state_id');
         $city_id     = $request->input('city_id');
 
-        $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn , $search);
+        $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea);
 
         $product_data = [];
 
