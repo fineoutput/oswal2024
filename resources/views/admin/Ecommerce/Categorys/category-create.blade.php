@@ -203,6 +203,30 @@
 
                                             <div class="form-floating">
 
+                                                <input type="file" class="form-control" value="{{ old('icon') }}" id="icon" name="icon" placeholder="App image" >
+                                                {{-- {{ $category == null ? 'required' : '' }} --}}
+                                                @if ($category != null)
+                                                    
+                                                   <img src="{{asset($category->icon)}}" alt="icon" width="50px" height="50px">
+
+                                                @endif
+
+                                                <label for="app image">App Icon Image &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('icon')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-4">
+
+                                            <div class="form-floating">
+
                                                 <input type="file" class="form-control" value="{{ old('slider-image1') }}" id="slider-image1" name="slider-image1" placeholder="Slider image1">
 
                                                 @if ($category != null && $category->slide_img1 != null)
@@ -270,6 +294,8 @@
                                             @enderror
 
                                         </div>
+
+                                        
 
                                         <div class="col-sm-4">
 

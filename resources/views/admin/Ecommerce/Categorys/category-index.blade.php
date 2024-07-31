@@ -106,6 +106,8 @@
 
                                                     <th data-priority="3">App Image</th>
 
+                                                    <th data-priority="3">Icon Image</th>
+
                                                     <th data-priority="6">Slide Image1</th>
 
                                                     <th data-priority="6">Slide Image2</th>
@@ -137,6 +139,8 @@
                                                     <td> <img src="{{asset($category->image)}}" alt="" width="100px" height="100px"> </td>
                                                     
                                                     <td> <img src="{{asset($category->app_image)}}" alt="" width="100px" height="100px"></td>
+
+                                                    <td> <img src="{{asset($category->icon)}}" alt="" width="100px" height="100px"></td>
                                                     
                                                     <td>
                                                         @if($category->slide_img1)
@@ -184,7 +188,7 @@
 
                                                             @endif
 
-                                                            <a href="{{route('category.create',[base64_encode($category->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-edit"></i></a>
+                                                            <a href="{{route('category.create',[base64_encode($category->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                             <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
 
