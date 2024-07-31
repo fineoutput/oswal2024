@@ -97,6 +97,8 @@ Route::prefix('setting')->name('setting.')->group(function() {
 
     Route::any('set-constant' ,[HomeController::class, 'constant'])->name('constant');
 
+    Route::any('set-crm' ,[HomeController::class, 'crm'])->name('crm');
+
 });
 
 Route::get('/index', [TeamController::class, 'admin_index'])->name('admin_index');

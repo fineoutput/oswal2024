@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Crm_settings;
 use App\Models\Popup;
-
 class HomeController extends Controller
 {
 
@@ -218,5 +218,41 @@ class HomeController extends Controller
 
         
         return view('admin.Setting.constant' , compact('constant'));
+    }
+
+    public function crm(Request $request){
+
+        $crm =  DB::table('admin_settings')->first();
+
+        if($request->crm_id != null){    
+
+            if($request->hasFile('img')){
+
+                $fullImagePath = uploadImage($request->file('img'), 'Crm');
+    
+            }else{
+                $fullImagePath =  $crm->logo;
+            }
+
+            DB::table('admin_settings')->where('id', $request->crm_id)->update([
+
+                'sitename'       => ucwords($request->input('sitename')),
+                'instagram_link' => $request->input('instagram_link'),
+                'facebook_link'  => $request->input('facebook_link'),
+                'youtube_link'   => $request->input('youtube_link'),
+                'twitter_link'   => $request->input('twitter_link'),
+                'linkedin_link'  => $request->input('linkedin_link'),
+                'address'        => $request->input('address'),
+                'phone'          => $request->input('phone'),
+                'logo'           => $fullImagePath,
+                'ip'             => $request->ip(),
+    
+            ]);
+
+             $request->session()->flash('success', 'crm updated successfully!');
+        }
+
+
+        return view('admin.Setting.crm' , compact('crm'));
     }
 }
