@@ -215,10 +215,10 @@ class EcommerceController extends Controller
                 'image4' => asset($product->img_app4),
                 'is_active' => $product->is_active,
                 'type' => $typedata,
-                'selected_type_id' => $typedata[0]['type_id'],
-                'selected_type_name' => $typedata[0]['type_name'],
-                'selected_type_selling_price' => $typedata[0]['selling_price'],
-                'selected_type_percent_off' => $typedata[0]['percent_off'],
+                'selected_type_id' => isset($typedata[0]) ? $typedata[0]['type_id'] : '',
+                'selected_type_name' => isset($typedata[0]) ? $typedata[0]['type_name'] : '',
+                'selected_type_selling_price' => isset($typedata[0]) ? $typedata[0]['selling_price'] : '',
+                'selected_type_percent_off' => isset($typedata[0]) ? $typedata[0]['percent_off'] : '',
             ];
         }
 
