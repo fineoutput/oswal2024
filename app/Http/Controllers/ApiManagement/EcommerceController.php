@@ -249,17 +249,10 @@ class EcommerceController extends Controller
         $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
 
         $typedata = [
-            'type_id'              => $type->id,
-            'type_name'            => $request->lang != "hi" ? $type->type_name : $type->type_name_hi,
-            'type_category_id'     => $type->category_id,
-            'type_product_id'      => $type->product_id,
-            'type_mrp'             => $type->del_mrp,
-            'gst_percentage'       => $type->gst_percentage,
-            'gst_percentage_price' => $type->gst_percentage_price,
-            'selling_price'        => $type->selling_price,
-            'type_weight'          => $type->weight,
-            'type_rate'            => $type->rate,
-            'percent_off'          => $percent_off,
+            'selected_type_id'              => $type->id,
+            'selected_type_name'            => $request->lang != "hi" ? $type->type_name : $type->type_name_hi,
+            'selected_type_selling_price'   => $type->selling_price,
+            'selected_type_percent_off'     => $percent_off,
         ];
     
         return response()->json(['success' => true, 'type' => $typedata], 200);
