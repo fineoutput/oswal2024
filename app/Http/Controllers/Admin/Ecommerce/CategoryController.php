@@ -43,7 +43,7 @@ class CategoryController extends Controller
     public function store(Request $request)
 
     {
-       
+      
         $rules = [
             'name'              => 'required|string|max:100',
             'short-description' => 'required|string|max:300',
@@ -53,18 +53,22 @@ class CategoryController extends Controller
             'slider-image1'     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'slider-image2'     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'slider-image3'     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            
         ];
-
+       
         if (!isset($request->category_id)) {
             
             $rules['image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             
             $rules['app-image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
+            $rules['icon'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            
             
             $category = new EcomCategory;
 
             if($this->checkSequence($request->sequence) != true){
-
+               
                 return back()->with(['error' => 'Add another sequence']);
 
             }
@@ -75,6 +79,8 @@ class CategoryController extends Controller
             
             $rules['app-image'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             
+            $rules['icon'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
             $category = EcomCategory::find($request->category_id);
             
             if (!$category) {
@@ -90,9 +96,10 @@ class CategoryController extends Controller
             }
             
         }
-
+      
         $request->validate($rules);
 
+        // dd($category);
         $category->fill([
 
             'name'          => $request->name,
@@ -127,6 +134,10 @@ class CategoryController extends Controller
 
         if ($request->hasFile('app-image')) {
             $category->app_image = uploadImage($request->file('app-image'), 'ecomm', 'category', 'app_img');
+        }
+
+        if ($request->hasFile('icon')) {
+            $category->icon = uploadImage($request->file('icon'), 'ecomm', 'category', 'icon');
         }
 
         if ($request->hasFile('slider-image1')) {

@@ -23,6 +23,8 @@ use App\Models\Cart;
 
 use App\Models\User;
 
+use App\Models\Type;
+
 class OrderController extends Controller
 {
     protected $cartController;
@@ -224,6 +226,7 @@ class OrderController extends Controller
         $order =  Order::create([
             'user_id'                    => $userId ?? Auth::user()->id,
             'total_amount'               => $totalAmount,
+            'sub_total'                  => $subtotal,
             'address_id'                 => $addressId,
             'promocode'                  => $promocodeId ?? '',
             'promo_deduction_amount'     => $deductionAmount,
@@ -351,4 +354,225 @@ class OrderController extends Controller
         ]);
     }
 
+  
+    public function orderDetail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id'   => 'required',
+            'order_id'  => 'required',
+            'lang'      => 'required',
+            'state_id'  => 'required',
+            'city_id'   => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([ 'message' => $validator->errors()->first(), 'status' => 201]);
+        }
+
+        $user_id = $request->input('user_id');
+        $order_id = $request->input('order_id');
+        $lang = $request->input('lang');
+        $state_id = $request->input('state_id');
+        $city_id = $request->input('city_id');
+
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User does not exist',
+                'status' => 201
+            ]);
+        }
+
+        $order = Order::find($order_id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order does not exist',
+                'status' => 201
+            ]);
+        }
+
+        $orderDetails = $order->orderDetails()->orderBy('id', 'DESC')->get();
+        $dataw = [];
+
+        foreach ($orderDetails as $detail) {
+            $product = $detail->product;
+            $type = Type::where('product_id', $product->id)
+                        ->where('id', $detail->type_id)
+                        ->where('is_active', 1)
+                        ->when($state_id, function ($query, $state_id) {
+                            return $query->where('state_id', $state_id);
+                        })
+                        ->when($city_id, function ($query, $city_id) {
+                            return $query->where('city_id', $city_id);
+                        })
+                        ->first();
+
+            $product_name = $lang != "hi" ? $product->name : $product->name_hi;
+            $type_name = $lang != "hi" ? $type->type_name : $type->type_name_hi;
+
+            $dataw[] = [
+                'order2_id' => $detail->id,
+                'product_name' => $product_name,
+                'product_image' => asset($product->img_app1),
+                'type_name' => $type_name,
+                'quantity' => $detail->quantity,
+                'quantity_price' => $detail->amount,
+                'order_datetime' => $order->date,
+            ];
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $dataw,
+            'status' => 200
+        ]);
+    }
+
+
+    public function cancelOrder(Request $request)
+
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'order_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'status' => 201,
+            ]);
+        }
+
+        $user_id = $request->input('user_id');
+        $order_id = $request->input('order_id');
+
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User does not exist',
+                'status' => 201,
+            ]);
+        }
+
+        $order = Order::find($order_id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order does not exist',
+                'status' => 201,
+            ]);
+        }
+
+        $order->order_status = 5;
+        $order->save();
+
+        return response()->json([
+            'message' => 'success',
+            'status' => 200,
+        ]);
+    }
+
+    
+    public function trackOrder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'order_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'status' => 201,
+            ]);
+        }
+
+        $user_id = $request->input('user_id');
+        $order_id = $request->input('order_id');
+
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User does not exist',
+                'status' => 201,
+            ]);
+        }
+
+        $order = Order::find($order_id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order not found!',
+                'status' => 201,
+                'data' => [],
+            ]);
+        }
+
+        if (empty($order->track_id)) {
+
+            $res4[] = [
+                'date' => $order->date,
+                'title' => 'Ordered',
+                'activity' => 'Order Placed',
+                'location' => '',
+            ];
+
+            return response()->json([
+                'message' => 'Track id not found!',
+                'status' => 201,
+                'data' => $res4,
+            ]);
+        }
+
+        $track_id = $order->track_id;
+
+        $token = getShipRocketToken();
+
+        // Track the order with Shiprocket
+
+        $main_respo = trackOrderApi($token ,$track_id);
+
+        $tracking_data = $main_respo->tracking_data;
+
+        $track_status = $tracking_data->track_status;
+
+        if ($track_status != 0) {
+
+            $res2 = [];
+
+            foreach ($tracking_data->shipment_track_activities as $activity) {
+
+                $activity_parts = explode('-', $activity->activity);
+
+                $activity_title = $activity_parts[0];
+
+                $activity_detail = implode(' ', array_slice($activity_parts, 1));
+                
+                $res2[] = [
+                    'date' => $activity->date,
+                    'title' => $activity_title,
+                    'activity' => $activity_detail,
+                    'location' => $activity->location,
+                ];
+            }
+
+            return response()->json([
+                'message' => 'success',
+                'status' => 200,
+                'data' => $res2,
+            ]);
+            
+        } else {
+            return response()->json([
+                'message' => 'wrong order id',
+                'status' => 201,
+                'data' => [],
+            ]);
+        }
+    }
 }

@@ -226,55 +226,79 @@ class EcommerceController extends Controller
         return response()->json(['message' => 'success', 'status' => 200, 'data' => $product_data]);
     }
     
-    // public function type(Request $request) {
+    public function type(Request $request) {
         
-    //     $validator = Validator::make($request->all(), [
-    //         'pid' => 'required|numeric',
-    //         'cid' => 'required|numeric',
-    //     ]);
+        $validator = Validator::make($request->all(), [
+            'pid'  => 'required|numeric',
+            'cid'  => 'required|numeric',
+            'tid'  => 'required|numeric',
+            'lang' => 'required|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+    
+        $types = sendType($request->cid, $request->pid, $request->tid);
+    
+        if ($types->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No types found'], 404);
+        }
+    
+        $type = $types->first();
+    
+        $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
-    //     }
+        $typedata = [
+            'type_id'              => $type->id,
+            'type_name'            => $request->lang != "hi" ? $type->type_name : $type->type_name_hi,
+            'type_category_id'     => $type->category_id,
+            'type_product_id'      => $type->product_id,
+            'type_mrp'             => $type->del_mrp,
+            'gst_percentage'       => $type->gst_percentage,
+            'gst_percentage_price' => $type->gst_percentage_price,
+            'selling_price'        => $type->selling_price,
+            'type_weight'          => $type->weight,
+            'type_rate'            => $type->rate,
+            'percent_off'          => $percent_off,
+        ];
+    
+        return response()->json(['success' => true, 'type' => $typedata], 200);
+    }
+
+    public function shipping_charges(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'state_id' => 'required|numeric',
+            'city_id' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
         
-    //     $types = DB::table('types')->where('product_id', $request->pid)->where('category_id', $request->cid)->orderBy('id', 'DESC')->paginate(10);
-
-    //     return response()->json([ 'success' => true, 'types' => $types] ,200);
-    // }
-
-    // public function shipping_charges(Request $request) {
-
-    //     $validator = Validator::make($request->all(), [
-    //         'state_id' => 'required|numeric',
-    //         'city_id' => 'required|numeric',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
-    //     }
-        
-    //     $shippingCharge = ShippingCharge::with('state', 'city')->where('is_active', 1);
+        $shippingCharge = ShippingCharge::with('state', 'city')->where('is_active', 1);
  
-    //     if ($request->state_id) {
-    //         $shippingCharge->where('state_id', $request->state_id);
-    //     }
+        if ($request->state_id) {
+            $shippingCharge->where('state_id', $request->state_id);
+        }
 
-    //     if ($request->city_id) {
-    //         $shippingCharge->where('city_id', $request->city_id);
-    //     }
+        if ($request->city_id) {
+            $shippingCharge->where('city_id', $request->city_id);
+        }
         
-    //     $shippingCharge = $shippingCharge->first();
+        $shippingCharge = $shippingCharge->first();
 
-    //     if ($shippingCharge) {
+        if ($shippingCharge) {
             
-    //         return response()->json(['success' => true,'shipping_charge' => $shippingCharge], 200);
+            return response()->json(['success' => true,'shipping_charge' => $shippingCharge], 200);
             
-    //     } else {
+        } else {
             
-    //         return response()->json(['success' => false,'message' => 'Shipping charge not found.'], 404);
+            return response()->json(['success' => false,'message' => 'Shipping charge not found.'], 404);
             
-    //     }
-    // }
+        }
+    }
 
     // public function major_category(Request $request) {
 

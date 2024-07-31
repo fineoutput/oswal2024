@@ -4,6 +4,8 @@ use App\Models\EcomCategory;
 use App\Models\EcomProduct;
 use App\Models\Type;
 use App\Models\ShippingCharge;
+use App\Models\Shiprockettoken;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 
@@ -88,7 +90,7 @@ if(!function_exists('uploadImage')){
 
 if(!function_exists('sendProduct')){
 
-    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false) {
+    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false) {
         
         $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1);
 
@@ -108,6 +110,8 @@ if(!function_exists('sendProduct')){
         }
 
         if($search){$products = $products ->where('name', 'LIKE', "%$search%");}
+
+        if($is_fea){$products = $products->where('is_featured', 1);}
         
         return $products->get();
 
@@ -153,19 +157,25 @@ if(!function_exists('formatPrice')){
 
 if(!function_exists('sendType')){
 
-    function sendType($cid = false, $pid = false , $id = false ) {
-        
-        $types =  Type::OrderBy('id' , 'Desc')->where('is_active', 1);
-
-        if($cid) { $types = $types->where('category_id', $cid);}
-
-        if($pid) { $types = $types->where('product_id', $pid); }
-
-        if($id) { $types = $types->where('id', $pid); }
-
-        return $types->get();
-
+    function sendType($cid = null, $pid = null, $id = null) {
+       
+        $query = Type::orderBy('id', 'desc')->where('is_active', 1);
+    
+        if ($cid) {
+            $query->where('category_id', $cid);
+        }
+    
+        if ($pid) {
+            $query->where('product_id', $pid);
+        }
+    
+        if ($id) {
+            $query->where('id', $id); 
+        }
+    
+        return $query->get();
     }
+    
     
 }
 
@@ -288,4 +298,61 @@ if(!function_exists('calculateShippingCharges')){
     return response()->json(['success' => true,  'total_order_weight' => $total_order_weight ,'total_weight_charge' => $total_weight_charge]);
  }
 
+}
+
+if(! function_exists('getShipRocketToken')){
+
+    function getShipRocketToken() {
+
+        $client = new Client();
+
+        $tokenRecord = Shiprockettoken::latest()->first();
+
+        if ($tokenRecord && Carbon::now()->lt($tokenRecord->expires_at)) {
+            return $tokenRecord->token;
+        }
+    
+        // Authenticate with Shiprocket
+        $response = $client->post('https://apiv2.shiprocket.in/v1/external/auth/login', [
+            'json' => [
+                'email' => 'acc.fineoutput@gmail.com',
+                'password' => 'Aditya@1956',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    
+        $respo = json_decode($response->getBody()->getContents());
+
+        $token = $respo->token;
+    
+        $expiresAt = Carbon::now()->addDays(9);  // Set token expiry to 9 days
+    
+        Shiprockettoken::updateOrCreate(
+            ['id' => $tokenRecord ? $tokenRecord->id : null],
+            ['token' => $token, 'expires_at' => $expiresAt]
+        );
+    
+        return $token;
+    }
+}
+
+if(! function_exists('trackOrderApi')){
+
+    function trackOrderApi($token ,$track_id) {
+
+        $client = new Client();
+
+        $response = $client->get('https://apiv2.shiprocket.in/v1/external/courier/track/awb/' . $track_id, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $token,
+            ],
+        ]);
+    
+        $respo = json_decode($response->getBody()->getContents());
+
+        return  $respo;
+    }
 }
