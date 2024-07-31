@@ -409,7 +409,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
 
                                             <div class="form-floating">
 
@@ -435,7 +435,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
 
                                             <div class="form-floating">
 
@@ -463,7 +463,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
 
                                             <div class="form-floating">
 
@@ -482,6 +482,32 @@
                                             </div>
 
                                             @error('hot_selling')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-3">
+
+                                            <div class="form-floating">
+
+                                                <select class="form-control" name="is_featured" id="is_featured">
+
+                                                    <option value="" {{ (!isset($product) || is_null($product->is_featured)) && is_null(old('is_featured')) ? 'selected' : '' }}>----Please select-----</option>
+
+                                                    <option value="1" {{ (isset($product) && $product->is_featured == 1) || (!isset($product) && old('is_featured') == 1) ? 'selected' : '' }}>Yes</option>
+
+                                                    <option value="0" {{ (isset($product) && $product->is_featured == 0) || (!isset($product) && old('is_featured') == 0) ? 'selected' : '' }}>No</option>
+
+                                                </select>
+
+                                                <label for="-image3">Featured Product &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('is_featured')
 
                                                 <div style="color:red">{{ $message }}</div>
 

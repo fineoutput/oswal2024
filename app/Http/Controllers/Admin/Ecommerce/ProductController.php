@@ -132,6 +132,8 @@ class ProductController extends Controller
 
             'is_hot'        => $request->hot_selling,
 
+            'is_featured'   => $request->is_featured,
+
         ]);
 
         $product->category_id = $request->category;

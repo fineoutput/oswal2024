@@ -112,6 +112,8 @@
 
                                                     <th data-priority="3">Hot Selling</th>
 
+                                                    <th data-priority="3">Featured Product</th>
+
                                                     <th data-priority="6">Status</th>
 
                                                     <th data-priority="6">Action</th>
@@ -143,6 +145,15 @@
                                                            <p class="label pull-right status-inactive">No</p> 
                                                         @endif
                                                     </td>
+
+                                                    <td> 
+                                                        @if($product->is_featured == 1)  
+                                                           <p class="label pull-right status-active">Yes</p>  
+                                                        @else 
+                                                           <p class="label pull-right status-inactive">No</p> 
+                                                        @endif
+                                                    </td>
+                                                    
                                                     
                                                     <td> 
                                                         @if($product->is_active == 1)  
