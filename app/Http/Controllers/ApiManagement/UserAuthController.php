@@ -1,29 +1,42 @@
 <?php
 namespace App\Http\Controllers\ApiManagement;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log; 
-use App\Models\User;
-use App\Models\UserDeviceToken;
-use App\Models\Otp;
 use Illuminate\Support\Facades\Validator;
+
+use App\Models\WalletTransactionHistory;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Log; 
+
+use Illuminate\Support\Facades\DB;
+
+use App\Models\UserDeviceToken;
+
+use Illuminate\Http\Request;
+
+use App\Models\User;
+
+use App\Models\Otp;
 
 class UserAuthController extends Controller
 {
     public function register(Request $request)
     {
         $rules =[ 
-            'first_name'   => 'required|string|max:255',
-            'last_name'    => 'required|string|max:255',
-            'email'        => 'nullable|string|email',
-            'password'     => 'nullable|string|min:6',
-            'device_id'    => 'required|string',
-            'device_token' => 'nullable|string',
+            'first_name'    => 'required|string|max:255',
+            'last_name'     => 'required|string|max:255',
+            'email'         => 'nullable|string|email',
+            'password'      => 'nullable|string|min:6',
+            'device_id'     => 'required|string',
+            'device_token'  => 'nullable|string',
+            'referral_code' => 'nullable|string|exists:users,referral_code'
         ];
-      
+        // session()->forget(['user_otp_id', 'user_id', 'user_contact']);
         if (session()->has('user_otp_id') && session()->has('user_id') &&  session()->has('user_contact')) {
 
             $rules['phone_no'] = 'required|digits:10';
@@ -62,10 +75,11 @@ class UserAuthController extends Controller
     
             return response()->json([
                 'status'  => 200,
-                'message' => 'OTP regenerated successfully',
+                'message' => 'Your OTP has been regenerated successfully. Please check your phone for the new code',
                 'data'    => ['contact_no' => session()->get('user_contact')]
             ]);
         }
+        $newTransaction = null;
 
         $name =  $request->first_name .' '. $request->last_name;
 
@@ -78,6 +92,7 @@ class UserAuthController extends Controller
             'contact'         => $request->phone_no,
             'password'        => Hash::make($request->password) ?? null,
             'status'          => 0,
+            'referral_code'   => User::generateReferralCode(),
             'added_by'        => 1,
             'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'              => $request->ip(),
@@ -85,6 +100,39 @@ class UserAuthController extends Controller
 
 
         $user = User::create($date);
+
+        if ($request->referral_code != null && $request->referral_code != '') {
+
+            $referrer = User::where('referral_code', $request->referral_code)->first();
+
+            $transactionData = [
+                'user_id' =>  $referrer->id,
+                'transaction_type' => 'credit', // or 'debit'
+                'amount' => 10,
+                'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                'status' => WalletTransactionHistory::STATUS_PENDING,
+                'description' => 'reffer transaction',
+            ];
+            
+            $newTransaction = WalletTransactionHistory::createTransaction($transactionData);
+
+            // dd($newTransaction->id);
+            if($newTransaction) {
+
+                DB::table('refferal_histoty')->insert([
+                    'referrer_id'    => $referrer->id,
+                    'referee_id'     => $user->id,
+                    'transaction_id' => $newTransaction->id,
+                    'reward_points'  => 10,
+                    'status'         => 0,
+                ]);
+
+            }else{
+
+                Log::alert('Referral history not created, something went wrong');
+            }
+            
+        }
 
         UserDeviceToken::create([
             'device_id'    => $request->device_id,
@@ -116,6 +164,10 @@ class UserAuthController extends Controller
             
             session()->put('user_contact', $user->contact);
 
+            if ($request->referral_code != null && $request->referral_code != '') {
+                session()->put('transaction_id', $newTransaction->id);
+            }
+
             return response()->json([ 'status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]]);
 
         } else {
@@ -134,13 +186,13 @@ class UserAuthController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
-        $currentRouteName = Route::currentRouteName();
-
         $userOtpId = session()->get('user_otp_id');
 
         $user_id = session()->get('user_id');
 
         $enteredOtp = $request->input('otp');
+
+        $transaction_id = session()->get('transaction_id') ?? null;
 
         $otpRecord = Otp::find($userOtpId);
 
@@ -160,17 +212,26 @@ class UserAuthController extends Controller
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            session()->forget('user_otp_id');
+            session()->forget(['user_otp_id', 'user_id', 'user_contact']);
 
-            session()->forget('user_id');
+            if(Route::currentRouteName() == 'register.otp'){
 
-            session()->forget('user_contact');
+                if($transaction_id != null) {
 
-            if($currentRouteName == 'register.otp'){
+                   $updateTransactionHistory =  WalletTransactionHistory::updateStatus($transaction_id, WalletTransactionHistory::STATUS_COMPLETED);
+
+                   if($updateTransactionHistory){
+
+                     DB::table('refferal_histoty')->where('transaction_id', $transaction_id)->update(['status' => 1]);
+
+                   }
+
+                   session()->forget('transaction_id');
+                }
 
                 $message = 'You have Register successfully';
                
-            }else if($currentRouteName == 'login.otp'){ 
+            }else { 
     
                 $message = 'You have Login successfully';
             }

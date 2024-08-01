@@ -29,6 +29,8 @@ class User extends Authenticatable
         'password',
         'image',
         'status',
+        'wallet_amount',
+        'referral_code',
         'is_hidden',
         'ip',
         'date',
@@ -93,4 +95,30 @@ class User extends Authenticatable
     {
         return $this->hasMany(ProductRating ::class ,'user_id' , 'id');
     }
+
+    public function transactionhistory()
+    {
+        return $this->hasMany(WalletTransactionHistory::class ,'user_id' , 'id');
+    }
+
+    /**
+     * Generate a unique referral code.
+     *
+     * @param int $length
+     * @return string
+     */
+
+    public static function generateReferralCode($length = 5)
+    {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        do {
+            $referralCode = '';
+            for ($i = 0; $i < $length; $i++) {
+                $referralCode .= $characters[rand(0, strlen($characters) - 1)];
+            }
+        } while (self::where('referral_code', $referralCode)->exists());
+
+        return $referralCode;
+    }
+
 }
