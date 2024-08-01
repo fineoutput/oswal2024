@@ -67,6 +67,8 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 
     Route::post('featured-product', [EcommerceController::class, 'products'])->name('featured-product');
 
+    Route::post('related-product', [EcommerceController::class, 'products'])->name('related-product');
+
     Route::get('type', [EcommerceController::class, 'type'])->name('type');
 
     // Route::get('shipping-charge', [EcommerceController::class, 'shipping_charges'])->name('shipping-charges');
