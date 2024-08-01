@@ -209,11 +209,11 @@ class EcommerceController extends Controller
                 'rating' => $rating_avg,
                 'total_reviews' => $total_reviews,
                 'url' => $product->url,
-                'image' => [
-                        'image1' => asset($product->img_app1),
-                        'image2' => asset($product->img_app2),
-                        'image3' => asset($product->img_app3),
-                        'image4' => asset($product->img_app4),
+                'images' => [
+                       ['image' => asset($product->img_app1) ],
+                       ['image' => asset($product->img_app2) ],
+                       ['image' => asset($product->img_app3) ],
+                       ['image' => asset($product->img_app4) ],
                     ],
                 'is_active' => $product->is_active,
                 'type' => $typedata,
