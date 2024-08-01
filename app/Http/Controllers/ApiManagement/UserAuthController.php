@@ -37,14 +37,24 @@ class UserAuthController extends Controller
             'referral_code' => 'nullable|string|exists:users,referral_code'
         ];
         // session()->forget(['user_otp_id', 'user_id', 'user_contact']);
-        if (session()->has('user_otp_id') && session()->has('user_id') &&  session()->has('user_contact')) {
+        if(session()->has('user_contact') && session()->get('user_contact') == $request->phone_no) {
 
-            $rules['phone_no'] = 'required|digits:10';
+            if (session()->has('user_otp_id') && session()->has('user_id')) {
+
+                $rules['phone_no'] = 'required|digits:10';
+
+            }else{
+
+                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+                
+            }
 
         }else{
 
+            session()->flush();
+
             $rules['phone_no'] = 'required|digits:10|unique:users,contact';
-            
+
         }
 
         $validator = Validator::make($request->all(),  $rules);
@@ -79,6 +89,7 @@ class UserAuthController extends Controller
                 'data'    => ['contact_no' => session()->get('user_contact')]
             ]);
         }
+        
         $newTransaction = null;
 
         $name =  $request->first_name .' '. $request->last_name;
