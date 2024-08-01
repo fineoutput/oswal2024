@@ -96,7 +96,7 @@ class EcommerceController extends Controller
         
         if($currentRouteName == 'ecom.products'){
 
-            $rules['category_id'] =  'required|integer';
+            // $rules['category_id'] =  'required|integer';
 
         }else if($currentRouteName == 'ecomm.hot-deals-product'){ 
 
@@ -112,9 +112,13 @@ class EcommerceController extends Controller
 
             $search = $request->string;
 
-        }else if($currentRouteName == 'ecomm.search-product') {
+        }else if($currentRouteName == 'ecomm.featured-product') {
             
             $is_fea = true;
+
+        }else if($currentRouteName == 'ecomm.related-product'){
+
+            $rules['category_id'] =  'required|integer';
         }
 
         $validator = Validator::make($request->all(), $rules);
