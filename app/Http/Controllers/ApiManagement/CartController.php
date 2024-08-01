@@ -37,7 +37,7 @@ class CartController extends Controller
             'product_id'  => 'required|string',
             'type_id'     => 'required|string',
             'type_price'  => 'required|numeric',
-            'quantity'    => 'required|integer|min:1|max:5',
+            'quantity'    => 'required|integer|max:5',
             'cart_from'   => 'required|string',
         ];
 
@@ -103,11 +103,13 @@ class CartController extends Controller
             Cart::create($data);
 
             return response()->json(['success' => true, 'message' => 'Product added to Cart successfully.', 'data' => $data], 201);
+
         } elseif ($data['quantity'] == 0) {
 
             $cartItem->delete();
 
-            return response()->json(['success' => false, 'message' => 'Something went wrong, please try again later.'], 500);
+            return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.'], 200);
+            
         } else {
 
             $cartItem->update($data);

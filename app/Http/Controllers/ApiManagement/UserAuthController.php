@@ -56,7 +56,7 @@ class UserAuthController extends Controller
             $rules['phone_no'] = 'required|digits:10|unique:users,contact';
 
         }
-
+        
         $validator = Validator::make($request->all(),  $rules);
 
         if ($validator->fails()) {
@@ -89,7 +89,6 @@ class UserAuthController extends Controller
                 'data'    => ['contact_no' => session()->get('user_contact')]
             ]);
         }
-        
         $newTransaction = null;
 
         $name =  $request->first_name .' '. $request->last_name;
