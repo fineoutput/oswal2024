@@ -16,6 +16,8 @@ use App\Http\Controllers\ApiManagement\CartController;
 
 use App\Http\Controllers\ApiManagement\OrderController;
 
+// use App\Http\Controllers\ApiManagement\DeliveryBoyController;
+
 Route::post('register', [UserAuthController::class, 'register']);
 
 Route::post('login', [UserAuthController::class, 'login']);
@@ -23,6 +25,11 @@ Route::post('login', [UserAuthController::class, 'login']);
 Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('register.otp');
 
 Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('login.otp');
+
+// Route::post('delivery-boy/login', [DeliveryBoyController::class, 'login']);
+
+// Route::post('delivery-boy/logout', [DeliveryBoyController::class, 'logout'])->middleware('auth:sanctum');
+
 
 Route::get('state' , [AppController::class , 'GetState']);
 
@@ -110,6 +117,8 @@ Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('canc
 
 Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
 
+Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');
+
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::get('user', function (Request $request) {
@@ -122,7 +131,7 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
 
-    Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');
+    
 
     // Route::prefix('order')->name('order.')->group(function () {
 
@@ -140,3 +149,10 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::get('gift-card-sec' ,[AppController::class, 'giftCardSec']);
     
 });
+
+// Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
+
+//     Route::get('dashboard', [DeliveryBoyController::class, 'dashboard'])->name('dashboard');
+
+   
+// });
