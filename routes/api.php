@@ -117,7 +117,7 @@ Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('canc
 
 Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
 
-Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');
+
 
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
@@ -131,7 +131,7 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
 
-    
+    Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
 
     // Route::prefix('order')->name('order.')->group(function () {
 
