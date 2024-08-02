@@ -78,12 +78,14 @@ class EcommerceController extends Controller
     {
         $currentRouteName = Route::currentRouteName();
      
-        $rules =   [
+        $rules = [
             'device_id'   => 'required|string',
             'user_id'     => 'nullable|integer',
             'lang'        => 'required|string',
             'state_id'    => 'nullable|integer',
             'city_id'     => 'nullable|integer',
+            'page'        => 'nullable|integer|min:1',
+            'per_page'    => 'nullable|integer|min:1|max:100',  
         ];
 
         $is_hot = false;
@@ -133,8 +135,14 @@ class EcommerceController extends Controller
         $lang        = $request->input('lang');
         $state_id    = $request->input('state_id');
         $city_id     = $request->input('city_id');
+        $page        = $request->input('page', 1);
+        $per_page    = $request->input('per_page', 15);
 
         $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea);
+
+        $total = $products->count();
+
+        $products = $products->slice(($page - 1) * $per_page, $per_page);
 
         $product_data = [];
 
@@ -228,7 +236,17 @@ class EcommerceController extends Controller
             ];
         }
 
-        return response()->json(['message' => 'success', 'status' => 200, 'data' => $product_data]);
+       return response()->json([
+            'message' => 'success',
+            'status' => 200,
+            'data' => $product_data,
+            'pagination' => [
+                'current_page' => $page,
+                'per_page' => $per_page,
+                'total' => $total,
+                'last_page' => ceil($total / $per_page),
+            ]
+        ]);
     }
     
     public function type(Request $request) {
