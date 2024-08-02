@@ -98,7 +98,11 @@
 
                                                     <th data-priority="3">Contact</th>
 
-                                                    <th data-priority="3">Status</th>
+                                                    <th data-priority="3">Referral Code</th>
+
+                                                    <th data-priority="3">Wallet Amount</th>
+
+                                                    <th data-priority="6">Status</th>
 
                                                     <th data-priority="6">Action</th>
 
@@ -115,6 +119,10 @@
                                                     <td>{{ $user->first_name }}</td>
 
                                                     <td>{{ $user->contact }}</td>
+
+                                                    <td>{{ $user->referral_code }}</td>
+
+                                                    <td>{{ $user->wallet_amount }}</td>
 
                                                     <td> 
                                                         @if($user->is_active == 1)  
@@ -144,11 +152,17 @@
 
                                                         </div>
 
+                                                          <!-- Button to trigger modal -->
+                                                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal" data-id="{{ $user->id }}" data-name="{{ $user->first_name }}" data-wallet="{{ $user->wallet_amount }}">
+                                                            Edit Wallet Amount
+                                                        </button>
+
                                                         <div style="display:none" id="cnfbox<?php echo $key ?>">
                                                             <p> Are you sure delete this </p>
                                                             <a href="{{route('user.destroy', base64_encode($user->id))}}" class="btn btn-danger">Yes</a>
                                                             <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
                                                         </div>
+
                                                     </td>
 
                                                 </tr>
@@ -176,5 +190,104 @@
         </div> <!-- container-fluid -->
 
     </div> <!-- content -->
+
+
+    <div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="walletModalLabel">Edit Wallet Amount</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="walletForm" action="{{ route('user.update-wallet') }}" method="POST">
+
+                        @csrf
+                        <input type="hidden" name="user_id" id="user_id">
+
+                        <div class="form-group row">
+
+                            <div class="col-sm-6 mb-3">
+
+                                <div class="form-floating">
+
+                                    <input type="number" class="form-control" id="wallet_amount" name="wallet_amount" placeholder="Enter Amount" required>
+
+                                    <label for="wallet_amount">Wallet Amount &nbsp;<span style="color:red;">*</span></label>
+
+                                </div>
+
+                                @error('wallet_amount')
+
+                                    <div style="color:red">{{ $message }}</div>
+
+                                @enderror
+
+                            </div>
+
+                            <div class="col-sm-6 mb-3">
+
+                                <div class="form-floating">
+
+                                    <select class="form-select" id="type" name="type" required>
+
+                                        <option value="credit">Credit</option>
+
+                                        <option value="debit">Debit</option>
+
+                                    </select>
+
+                                    <label for="type" class="form-label">Transaction Type &nbsp;<span style="color:red;">*</span></label>
+
+                                </div>
+
+                                @error('type')
+
+                                    <div style="color:red">{{ $message }}</div>
+
+                                @enderror
+
+                            </div>
+
+                            <div class="col-sm-12 mb-3">
+
+                                <div class="form-floating">
+
+                                    <input type="text" class="form-control" id="description" name="description" placeholder="description" required>
+
+                                    <label for="description" class="form-label">Description &nbsp;<span style="color:red;">*</span></label>
+
+                                </div>
+
+                                @error('description')
+
+                                    <div style="color:red">{{ $message }}</div>
+
+                                @enderror
+
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
 @endsection

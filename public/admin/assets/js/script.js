@@ -15,7 +15,20 @@ $(document).ready(function() {
         console.error('Select2 is not loaded properly.');
         
     }
-    
+
+    $('#walletModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); 
+        var userId = button.data('id');
+        var userName = button.data('name');
+        var walletAmount = button.data('wallet');
+        
+        var modal = $(this);
+        modal.find('.modal-title').text('Edit Wallet Amount for ' + userName);
+        modal.find('#wallet_amount').val(walletAmount);
+        modal.find('#user_id').val(userId);
+        // modal.find('#walletForm').attr('action', '/user/' + userId + '/update-wallet');
+    });
+
 });
 
 function calculatePrices ($mrp, $gst_percentage, $gst_percentage_price, $selling_price) {
@@ -187,3 +200,5 @@ function getType(url , pid , cid) {
 
     }
 }
+
+

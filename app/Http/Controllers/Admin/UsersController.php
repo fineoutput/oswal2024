@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\WalletTransactionHistory;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -164,4 +165,35 @@ class UsersController extends Controller
 
     }
 
+    public function updateWallet(Request $request) {
+
+        $request->validate([
+            'wallet_amount' => 'required|numeric',
+            'type'          => 'required|in:credit,debit',
+            'description'   => 'required|string|max:255',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        $transactionData = [
+            'user_id' =>  $user->id,
+            'transaction_type' => $request->type, 
+            'amount' => $request->wallet_amount,
+            'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            'status' => WalletTransactionHistory::STATUS_COMPLETED,
+            'description' => $request->description,
+        ];
+        
+        WalletTransactionHistory::createTransaction($transactionData);
+ 
+        if ($request->type == 'credit') {
+            $user->wallet_amount += $request->wallet_amount;
+        } else {
+            $user->wallet_amount -= $request->wallet_amount;
+        }
+
+        $user->save();
+
+        return redirect()->route('user.index')->with('success', 'Wallet amount updated successfully!');
+    }
 }

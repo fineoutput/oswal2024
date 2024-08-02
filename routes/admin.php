@@ -584,6 +584,9 @@ Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('destroy/{id}', [UsersController::class, 'destroy'])->name('destroy');
 
+   Route::post('update-wallet', [UsersController::class, 'updateWallet'])->name('update-wallet');
+
+
 });
 
 
