@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\ShippingCharge; 
 
 use Illuminate\Http\Request;
@@ -135,7 +137,7 @@ class AppController extends Controller {
     {
         $validator = Validator::make($request->all(), [
 
-            'device_id'      => 'required|string',
+            'device_id'      => 'required|string|exists:users',
             'user_id'        => 'nullable|integer',
             'doorflat'       => 'required|string',
             'landmark'       => 'required|string',
@@ -150,7 +152,7 @@ class AppController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
         $city = City::find($request->city_id);
@@ -159,7 +161,8 @@ class AppController extends Controller {
 
         $addressData = [
             'device_id'        => $request->device_id,
-            'user_id'          => $request->user_id,
+            'user_id'          => $request->user_id ?? Auth::user()->id,
+            'name'             => Auth::user()->first_name,
             'doorflat'         => $request->doorflat,
             'landmark'         => $request->landmark,
             'city'             => strval($city->id),
@@ -200,12 +203,11 @@ class AppController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
-
         $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
+        $user_id   = $request->input('user_id') ;
         $address_data = [];
 
         if (empty($user_id)) {
