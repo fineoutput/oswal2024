@@ -142,11 +142,11 @@ class AppController extends Controller {
             'doorflat'       => 'required|string',
             'landmark'       => 'required|string',
             'city_id'        => 'required|integer',
-            'state_id'       => 'nullable|integer',
-            'zipcode'        => 'nullable|integer',
+            'state_id'       => 'required|integer',
+            'zipcode'        => 'required|integer',
             'address'        => 'nullable|string',
-            'latitude'       => 'nullable|string',
-            'longitude'      => 'nullable|string',
+            'latitude'       => 'required|string',
+            'longitude'      => 'required|string',
             'location_address'  => 'nullable|string',
 
         ]);
