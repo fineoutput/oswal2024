@@ -110,7 +110,7 @@ class EcommerceController extends Controller
 
         }else if($currentRouteName == 'ecomm.search-product') {
 
-            $rules['string'] =  'required';
+            // $rules['string'] =  'required';
 
             $search = $request->string;
 
@@ -232,6 +232,7 @@ class EcommerceController extends Controller
                 'selected_type_id' => isset($typedata[0]) ? $typedata[0]['type_id'] : '',
                 'selected_type_name' => isset($typedata[0]) ? $typedata[0]['type_name'] : '',
                 'selected_type_selling_price' => isset($typedata[0]) ? $typedata[0]['selling_price'] : '',
+                'selected_type_mrp' => isset($typedata[0]) ? $typedata[0]['type_mrp'] : '',
                 'selected_type_percent_off' => isset($typedata[0]) ? $typedata[0]['percent_off'] : '',
             ];
         }
