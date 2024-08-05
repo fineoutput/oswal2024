@@ -89,7 +89,7 @@ class UserAuthController extends Controller
                 'data'    => ['contact_no' => session()->get('user_contact')]
             ]);
         }
-        $newTransaction = null;
+        $referral = [];
 
         $name =  $request->first_name .' '. $request->last_name;
 
@@ -113,35 +113,8 @@ class UserAuthController extends Controller
 
         if ($request->referral_code != null && $request->referral_code != '') {
 
-            $referrer = User::where('referral_code', $request->referral_code)->first();
-
-            $transactionData = [
-                'user_id' =>  $referrer->id,
-                'transaction_type' => 'credit', // or 'debit'
-                'amount' => 10,
-                'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
-                'status' => WalletTransactionHistory::STATUS_PENDING,
-                'description' => 'reffer transaction',
-            ];
-            
-            $newTransaction = WalletTransactionHistory::createTransaction($transactionData);
-
-            // dd($newTransaction->id);
-            if($newTransaction) {
-
-                DB::table('refferal_histoty')->insert([
-                    'referrer_id'    => $referrer->id,
-                    'referee_id'     => $user->id,
-                    'transaction_id' => $newTransaction->id,
-                    'reward_points'  => 10,
-                    'status'         => 0,
-                ]);
-
-            }else{
-
-                Log::alert('Referral history not created, something went wrong');
-            }
-            
+            $referral = handleReferral($request->referral_code , $user->id);
+           
         }
 
         UserDeviceToken::create([
@@ -175,7 +148,11 @@ class UserAuthController extends Controller
             session()->put('user_contact', $user->contact);
 
             if ($request->referral_code != null && $request->referral_code != '') {
-                session()->put('transaction_id', $newTransaction->id);
+
+                session()->put('referrer_tr_id', $referral['referrer_tr_id']); 
+
+                session()->put('referee_tr_id', $referral['referee_tr_id']); 
+
             }
 
             return response()->json([ 'status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]]);
@@ -202,7 +179,9 @@ class UserAuthController extends Controller
 
         $enteredOtp = $request->input('otp');
 
-        $transaction_id = session()->get('transaction_id') ?? null;
+        $referrer_tr_id = session()->get('referrer_tr_id') ?? null;
+
+        $referee_tr_id  = session()->get('referee_tr_id') ?? null;
 
         $otpRecord = Otp::find($userOtpId);
 
@@ -226,17 +205,20 @@ class UserAuthController extends Controller
 
             if(Route::currentRouteName() == 'register.otp'){
 
-                if($transaction_id != null) {
+                if($referrer_tr_id != null) {
 
-                   $updateTransactionHistory =  WalletTransactionHistory::updateStatus($transaction_id, WalletTransactionHistory::STATUS_COMPLETED);
+                   $updateTransactionHistory =  WalletTransactionHistory::updateStatus($referrer_tr_id, WalletTransactionHistory::STATUS_COMPLETED);
 
                    if($updateTransactionHistory){
 
-                     DB::table('refferal_histoty')->where('transaction_id', $transaction_id)->update(['status' => 1]);
+                     WalletTransactionHistory::updateStatus($referee_tr_id, WalletTransactionHistory::STATUS_COMPLETED);
+
+                     DB::table('refferal_histoty')->whereIn('transaction_id', [$referrer_tr_id, $referee_tr_id])->update(['status' => 1]);
 
                    }
 
-                   session()->forget('transaction_id');
+                   session()->forget(['referrer_tr_id' ,'referee_tr_id']);
+                   
                 }
 
                 $message = 'You have Register successfully';
@@ -246,8 +228,10 @@ class UserAuthController extends Controller
                 $message = 'You have Login successfully';
             }
 
-            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' =>  $message], 200);
+            $user = User::find($user->id);
 
+            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' =>  $message], 200);
+            
         } else {
 
             return response()->json(['status' => 401, 'message' => 'Invalid OTP. Please try again.'], 401);

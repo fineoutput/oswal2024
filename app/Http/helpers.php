@@ -7,6 +7,9 @@ use App\Models\ShippingCharge;
 use App\Models\Shiprockettoken;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Models\WalletTransactionHistory;
+use Illuminate\Support\Facades\DB;
 
 
 if (!function_exists('lang_change')) {
@@ -354,5 +357,74 @@ if(! function_exists('trackOrderApi')){
         $respo = json_decode($response->getBody()->getContents());
 
         return  $respo;
+    }
+}
+
+if(! function_exists('handleReferral')) {
+
+     function handleReferral($referrerCode, $newUserId)
+    {
+
+        $referrer = User::where('referral_code', $referrerCode)->first();
+
+        if($referrer) {
+            // Credit the referrer
+            $transactionData = [
+                'user_id' =>  $referrer->id,
+                'transaction_type' => 'credit', // or 'debit'
+                'amount' => 10,
+                'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                'status' => WalletTransactionHistory::STATUS_PENDING,
+                'description' => 'Referral transaction for referrer',
+            ];
+
+            $newTransactionForReferrer = WalletTransactionHistory::createTransaction($transactionData);
+
+            if($newTransactionForReferrer) {
+                DB::table('refferal_histoty')->insert([
+                    'referrer_id'    => $referrer->id,
+                    'referee_id'     => $newUserId,
+                    'transaction_id' => $newTransactionForReferrer->id,
+                    'reward_points'  => 10,
+                    'status'         => 0,
+                ]);
+            } else {
+                Log::alert('Referral history not created for referrer, something went wrong');
+                return false;
+            }
+
+            // Credit the new user (referee)
+            $transactionDataForReferee = [
+                'user_id' => $newUserId,
+                'transaction_type' => 'credit', // or 'debit'
+                'amount' => 10,
+                'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                'status' => WalletTransactionHistory::STATUS_PENDING,
+                'description' => 'Referral transaction for referee',
+            ];
+
+            $newTransactionForReferee = WalletTransactionHistory::createTransaction($transactionDataForReferee);
+
+            if($newTransactionForReferee) {
+                DB::table('refferal_histoty')->insert([
+                    'referrer_id'    => $referrer->id,
+                    'referee_id'     => $newUserId,
+                    'transaction_id' => $newTransactionForReferee->id,
+                    'reward_points'  => 10,
+                    'status'         => 0,
+                ]);
+            } else {
+                Log::alert('Referral history not created for referee, something went wrong');
+                return false;
+            }
+
+        }else{
+
+            return false;
+
+        }
+
+        return ['referrer_tr_id' => $newTransactionForReferrer->id ,'referee_tr_id' => $newTransactionForReferee->id];
+
     }
 }

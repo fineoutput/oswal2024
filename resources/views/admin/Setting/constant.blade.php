@@ -169,6 +169,43 @@
                                             @enderror
 
                                         </div>
+
+                                        <div class="col-sm-4">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="text" value="{{ $constant ? $constant->referrer_amount : old('referrer_amount') }}" id="referrer_amount" name="referrer_amount" placeholder="referrer_amount">
+
+                                                <label for="referrer_amount">Referrer Amount &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('referrer_amount')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-4">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="text" value="{{ $constant ? $constant->referee_amount : old('referee_amount') }}" id="referee_amount" name="referee_amount" placeholder="referee_amount">
+
+                                                <label for="referee_amount">Referee Amount &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('referee_amount')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group row">

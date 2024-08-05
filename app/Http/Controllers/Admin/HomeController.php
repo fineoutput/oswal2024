@@ -208,7 +208,9 @@ class HomeController extends Controller
                 "wallet_use_amount" => $request->wallet_use_amount,
                 "gift_min_amount"   => $request->gift_min_amount,
                 "gift1_min_amount"  => $request->gift1_min_amount,
-                "quantity"          => $request->quantity
+                "quantity"          => $request->quantity,
+                "referrer_amount"   => $request->referrer_amount,
+                "referee_amount"    => $request->referee_amount
               ]);
 
              $request->session()->flash('success', 'Constants updated successfully!');
