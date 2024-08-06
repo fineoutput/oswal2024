@@ -24,6 +24,8 @@ use App\Models\Address;
 
 use App\Models\Cart;
 
+use App\Models\User;
+
 class CartController extends Controller
 {
 
@@ -31,10 +33,10 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'   => 'required|string',
-            'user_id'     => 'nullable|string',
-            'category_id' => 'required|string',
-            'product_id'  => 'required|string',
+            'device_id'   => 'required|string|exists:users,device_id',
+            'user_id'     => 'nullable|string|exists:users,id',
+            'category_id' => 'required|string|exists:ecom_categories,id',
+            'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
             'type_price'  => 'required|numeric',
             'quantity'    => 'required|integer|max:5',
@@ -158,14 +160,15 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'       => 'required|string',
-            'user_id'         => 'nullable|integer',
+            'device_id'       => 'required|string|exists:users,device_id',
+            'user_id'         => 'nullable|integer|exists:users,id',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
             'address_id'      => 'nullable|integer|exists:user_address,id',
             'state_id'        => 'nullable|integer',
             'city_id'         => 'nullable|integer',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards_1,id',
+            'wallet_status'   => 'required|integer',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -183,6 +186,7 @@ class CartController extends Controller
         $state_id        = $request->input('state_id');
         $city_id         = $request->input('city_id');
         $gift_card_id    = $request->input('gift_card_id');
+        $wallet_status   = $request->input('wallet_status');
 
         $cartQuery = Cart::query()->when($user_id, function ($query) use ($user_id) {
             return $query->where('user_id', $user_id);
@@ -221,6 +225,7 @@ class CartController extends Controller
         $promo_discount = 0;
         $extra_discount  = 0;
         $applyGiftCard = [];
+        $promocode_name = '';
 
         if (!empty($address_id)) {
 
@@ -252,9 +257,11 @@ class CartController extends Controller
                 $promo_discount       = $applyPromocode->original['promo_discount'];
 
                 $promocode_id         = $applyPromocode->original['promocode_id'];
+
+                $promocode_name       = $input_promocode;
             } else {
 
-                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $extra_discount, $applyPromocode->original['message'], 400);
+                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 400);
             }
         }
 
@@ -263,7 +270,7 @@ class CartController extends Controller
             $applyGiftCard  = $this->applyGiftCard($cartItemTotal, $gift_card_id);
         }
 
-        return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard);
+        return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard , $wallet_status);
     }
 
     private function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
@@ -373,7 +380,7 @@ class CartController extends Controller
         ];
     }
 
-    private function generateCartResponse($userId, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id, $extraDiscount, $message, $status, $applyGiftCard = null)
+    private function generateCartResponse($userId, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null ,$wallet_status=false)
     {
 
         $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
@@ -398,8 +405,10 @@ class CartController extends Controller
         $totalWeight = 0;
         $totalAmount = 0;
         $productData = [];
+        $walletDescount = 0;
 
         foreach ($cartData as $cartItem) {
+
             $product = $cartItem->product;
 
             if (!$product || !$product->is_active) {
@@ -426,6 +435,7 @@ class CartController extends Controller
             });
 
             $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+
             $totalAmount += $cartItem->total_qty_price;
 
             $productData[] = [
@@ -448,7 +458,15 @@ class CartController extends Controller
             ];
         }
 
-        $finalAmount = $totalAmount + $deliveryCharge - $promo_discount;
+        if($wallet_status){
+            
+          $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
+
+          $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
+
+        }
+
+        $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
 
         $reponse = [
             'message'          => $message,
@@ -458,8 +476,10 @@ class CartController extends Controller
             'shipping_charge'  => (float)$deliveryCharge,
             'promo_discount'   => $promo_discount,
             'promo_id'         => $promo_id,
+            'promo_name'         => $promocode_name,
+            'wallet_discount'  => $walletDescount,
             'extra_discount'   => $extraDiscount,
-            'total_discount'         => $promo_discount + $extraDiscount
+            'total_discount'   => $promo_discount + $extraDiscount + $walletDescount
         ];
 
         if (!empty($applyGiftCard)) {
