@@ -76,6 +76,8 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 
     Route::post('related-product', [EcommerceController::class, 'products'])->name('related-product');
 
+    Route::post('product-details', [EcommerceController::class, 'products'])->name('details-product');
+
     Route::get('type', [EcommerceController::class, 'type'])->name('type');
 
     // Route::get('shipping-charge', [EcommerceController::class, 'shipping_charges'])->name('shipping-charges');
@@ -109,6 +111,8 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
 
+
+
 Route::post('orders', [OrderController::class, 'orders'])->name('orders');
 
 Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
@@ -116,8 +120,6 @@ Route::post('order-details', [OrderController::class, 'orderDetail'])->name('ord
 Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
 
 Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
-
-
 
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
@@ -133,6 +135,7 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
 
+    // Route::post('cod-checkout', [OrderController::class, 'codCheckout'])->name('codCheckout');
     // Route::prefix('order')->name('order.')->group(function () {
 
         
@@ -154,5 +157,12 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
 //     Route::get('dashboard', [DeliveryBoyController::class, 'dashboard'])->name('dashboard');
 
-   
+//     Route::post('order-list', [DeliveryBoyController::class , 'orders'])->name('order-list');
+
+//     Route::post('order-details', [DeliveryBoyController::class , 'orderDetails'])->name('order-details');
+
+//     Route::post('start-delivery', [DeliveryBoyController::class , 'startDelivery'])->name('start-delivery');
+
+//     Route::post('complete-order', [DeliveryBoyController::class , 'completeOrder'])->name('complete-order');
+
 // });

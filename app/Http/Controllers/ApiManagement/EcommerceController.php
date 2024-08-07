@@ -77,54 +77,77 @@ class EcommerceController extends Controller
     public function products(Request $request)
     {
         $currentRouteName = Route::currentRouteName();
-     
+
         $rules = [
-            'device_id'   => 'required|string',
-            'user_id'     => 'nullable|integer',
-            'lang'        => 'required|string',
-            'state_id'    => 'nullable|integer',
-            'city_id'     => 'nullable|integer',
-            'page'        => 'nullable|integer|min:1',
-            'per_page'    => 'nullable|integer|min:1|max:100',  
+            'device_id' => 'required|string',
+            'user_id' => 'nullable|integer',
+            'lang' => 'required|string',
+            'state_id' => 'nullable|integer',
+            'city_id' => 'nullable|integer',
+            'page' => 'nullable|integer|min:1',
+            'per_page' => 'nullable|integer|min:1|max:100',
         ];
-
+    
         $is_hot = false;
-
         $is_trn = false;
-
-        $search = false;
-
         $is_fea = false;
-        
-        if($currentRouteName == 'ecom.products'){
-
-            // $rules['category_id'] =  'required|integer';
-
-        }else if($currentRouteName == 'ecomm.hot-deals-product'){ 
-
-            $is_hot = true;
-
-        }else if($currentRouteName == 'ecomm.tranding-product'){
-
-           $is_trn =true;
-
-        }else if($currentRouteName == 'ecomm.search-product') {
-
-            // $rules['string'] =  'required';
-
-            $search = $request->string;
-
-        }else if($currentRouteName == 'ecomm.featured-product') {
-            
-            $is_fea = true;
-
-        }else if($currentRouteName == 'ecomm.related-product'){
-
-            $rules['category_id'] =  'required|integer';
+        $search = false;
+    
+        switch ($currentRouteName) {
+            case 'ecomm.products':
+                
+                $rules['type'] = 'required|string';
+    
+                switch ($request->type) {
+                    case 'tranding':
+                        $rules['category_id'] = 'required|integer';
+                        $is_trn = true;
+                        break;
+    
+                    case 'featured':
+                        $rules['category_id'] = 'required|integer';
+                        $is_fea = true;
+                        break;
+    
+                    case 'hot-product':
+                        $rules['category_id'] = 'required|integer';
+                        $is_hot = true;
+                        break;
+    
+                    case 'all':
+                    default:
+                        break;
+                }
+                break;
+    
+            case 'ecomm.hot-deals-product':
+                $is_hot = true;
+                break;
+    
+            case 'ecomm.tranding-product':
+                $is_trn = true;
+                break;
+    
+            case 'ecomm.search-product':
+                // $rules['string'] = 'required';
+                $search = $request->string;
+                break;
+    
+            case 'ecomm.featured-product':
+                $is_fea = true;
+                break;
+    
+            case 'ecomm.related-product':
+                $rules['category_id'] = 'required|integer';
+                break;
+    
+            case 'ecomm.details-product':
+                $rules['product_id'] = 'required|integer';
+                break;
         }
-
+    
         $validator = Validator::make($request->all(), $rules);
-
+    
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 201]);
         }
