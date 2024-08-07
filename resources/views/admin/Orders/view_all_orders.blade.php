@@ -1,7 +1,6 @@
 @extends('admin.base_template')
 
 @section('main')
-
     <div class="content">
 
         <div class="container-fluid">
@@ -69,7 +68,9 @@
 
                                 <div class="row">
 
-                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View {{ $pageTitle }}</h4> </div>
+                                    <div class="col-md-9">
+                                        <h4 class="mt-0 header-title">View {{ $pageTitle }}</h4>
+                                    </div>
 
                                     {{-- <div class="col-md-2"> 
 
@@ -148,51 +149,302 @@
 
                                             <tbody>
 
-                                                {{-- @foreach ($orders as $key => $order)
-                                                <tr>
-                                                    <td>{{ ++$key }}</td>
+                                                @foreach ($orders as $key => $order)
+                                                    <tr>
+                                                        <td>{{ ++$key }}</td>
 
-                                                    <td>{{ $order->offer_name }}</td>
+                                                        <td>{{ $order->user->first_name }}</td>
 
-                                               
+                                                        <td>{{ $order->user->first_name }}</td>
 
-                                                    <td> 
-                                                        @if($order->is_active == 1)  
-                                                           <p class="label pull-right status-active">Active</p>  
-                                                        @else 
-                                                           <p class="label pull-right status-inactive">InActive</p> 
-                                                        @endif
-                                                    </td>
+                                                        <td> {{ $order->sub_total }}</td>
 
-                                                    <td>
-                                                        
-                                                        <div class="btn-group" id="btns<?php echo $key ?>">
+                                                        <td> {{ $order->promocodes->promocode }}</td>
+                                                        @php
+                                                            $custom_address =
+                                                                $order->address->doorflat .
+                                                                ' ' .
+                                                                $order->address->landmark .
+                                                                ' ' .
+                                                                $order->address->address .
+                                                                ' ' .
+                                                                $order->address->location_address .
+                                                                ' ' .
+                                                                $order->address->zipcode;
+                                                        @endphp
+                                                        <td> {{ $custom_address }}</td>
 
-                                                            @if ($order->is_active == 0)
+                                                        <td> {{ $custom_address }}</td>
 
-                                                            <a href="{{route('orderfirst.update-status',['active',base64_encode($order->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
+                                                        <td> {{ $order->user->contact }}</td>
 
+                                                        <td> {{ $order->address->citys->city_name }}</td>
+
+                                                        <td> {{ $order->address->states->state_name }}</td>
+
+                                                        <td> {{ $order->address->zipcode }}</td>
+
+                                                        <td>
+                                                            @if ($order->payment_type == 1)
+                                                                Cash On Delivery
                                                             @else
+                                                                Online Payment
+                                                            @endif
+                                                        </td>
 
-                                                            <a href="{{route('orderfirst.update-status',['inactive',base64_encode($order->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
+                                                        <td> {{ $order->cod_charge }}</td>
 
+                                                        <td>
+                                                            @if ($order->order_status == 1)
+                                                                <span class="label label-primary"
+                                                                    style="font-size:13px;">New Order</span>
+                                                            @elseif ($order->order_status == 2)
+                                                                <span class="label label-success"
+                                                                    style="font-size:13px;">Accepted</span>
+                                                            @elseif ($order->order_status == 3)
+                                                                <span class="label label-info"
+                                                                    style="font-size:13px;">Dispatched</span>
+                                                            @elseif ($order->order_status == 4)
+                                                                <span class="label label-success"
+                                                                    style="font-size:13px;">Delivered</span>
+                                                            @elseif ($order->order_status == 5)
+                                                                <span class="label label-danger"
+                                                                    style="font-size:13px;">Rejected</span>
+                                                            @endif
+                                                        </td>
+
+                                                        <td>
+                                                            @if ($order->delivery_status == 0)
+                                                                <span class="label label-warning"
+                                                                    style="font-size:13px;">None</span>
+                                                            @elseif ($order->delivery_status == 1)
+                                                                {{-- @php
+                                                            $transferedDeliveryUser = \App\Models\DeliveryUserOrder::where('order_id', $order->id)->first();
+                                                            $transferedDeliveryUserId = $transferedDeliveryUser ? $transferedDeliveryUser->delivery_user_id : 0;
+                                                            $deliveryUser = $transferedDeliveryUserId ? \App\Models\DeliveryBoy::find($transferedDeliveryUserId) : null;
+                                                            @endphp
+                                                            <span class="label label-primary" style="font-size:13px;">
+                                                            Transfered To {{ $deliveryUser ? $deliveryUser->name : 'N/A' }}
+                                                            </span> --}}
+                                                            @elseif ($order->delivery_status == 2)
+                                                                {{-- @php
+                                                            $transferedDeliveryUser = \App\Models\DeliveryUserOrder::where('order_id', $order->id)->where('status', 1)->first();
+                                                            $transferedDeliveryUserId = $transferedDeliveryUser ? $transferedDeliveryUser->delivery_user_id : 0;
+                                                            $deliveryUser = $transferedDeliveryUserId ? \App\Models\DeliveryBoy::find($transferedDeliveryUserId) : null;
+                                                            @endphp
+                                                            <span class="label label-info" style="font-size:13px;">
+                                                            Accepted By {{ $deliveryUser ? $deliveryUser->name : 'N/A' }}
+                                                            </span> --}}
+                                                            @elseif ($order->delivery_status == 3)
+                                                                <span class="label label-success"
+                                                                    style="font-size:13px;">Delivered</span>
+                                                            @endif
+                                                        </td>
+
+                                                        <td> {{ $order->track_id }}</td>
+
+                                                        <td>
+                                                            @php
+                                                                $rejectedBy = $order->rejected_by;
+                                                                $rejectedById = $order->rejected_by_id;
+
+                                                                $user = null;
+                                                                $team = null;
+
+                                                                if (!empty($rejectedBy)) {
+                                                                    if ($rejectedBy == 1) {
+                                                                        $user = \App\Models\User::where(
+                                                                            'id',
+                                                                            $rejectedById,
+                                                                        )
+                                                                            ->where('is_active', 1)
+                                                                            ->first();
+                                                                    } elseif ($rejectedBy == 2) {
+                                                                        $team = \App\Models\Team::where(
+                                                                            'id',
+                                                                            $rejectedById,
+                                                                        )
+                                                                            ->where('is_active', 1)
+                                                                            ->first();
+                                                                    }
+                                                                }
+                                                            @endphp
+
+                                                            @if ($rejectedBy == 1 && $user)
+                                                                User({{ $user->first_name }})
+                                                            @elseif ($rejectedBy == 2 && $team)
+                                                                @if ($team->power == 1)
+                                                                    SuperAdmin({{ $team->name }})
+                                                                @elseif ($team->power == 2)
+                                                                    Admin({{ $team->name }})
+                                                                @else
+                                                                    Manager({{ $team->name }})
+                                                                @endif
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+
+                                                        <td>
+
+                                                            @php
+                                                                $newDate = \Carbon\Carbon::parse($order->last_update_date);
+                                                            @endphp
+                                                            {{ $newDate->format('j F, Y, g:i a') }}
+
+                                                        </td>
+
+                                                        <td>
+
+                                                            @php
+                                                                $newDate = \Carbon\Carbon::parse($order->date);
+                                                            @endphp
+                                                            {{ $newDate->format('j F, Y, g:i a') }}
+
+                                                        </td>
+
+                                                        <td>
+
+                                                            @if ($order->orderDetails->count() > 0)
+                                                                @foreach ($order->orderDetails as $index => $order2pro)
+                                                                    @php
+                                                                        $typeName = $order2pro->type
+                                                                            ? $order2pro->type->type_name
+                                                                            : '';
+                                                                        $productName = $order2pro->product
+                                                                            ? $order2pro->product->name
+                                                                            : '';
+                                                                        $quantity = $order2pro->quantity;
+                                                                        $output = $productName
+                                                                            ? "{$productName} ({$typeName} x {$quantity})"
+                                                                            : 'N/A';
+                                                                    @endphp
+
+                                                                    {{ $output }}
+
+                                                                    @if ($index < $order->orderDetails->count() - 1)
+                                                                        ,
+                                                                    @endif
+                                                                @endforeach
+                                                            @else
+                                                                N/A
                                                             @endif
 
-                                                            <a href="{{route('orderfirst.create',[base64_encode($order->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+                                                        </td>
 
-                                                            <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
+                                                        <td> {{ $order->order_from }}</td>
 
+                                                        <td>
+                                                             @if(!empty($order->gift_id!=0))
+                                                             {{ $order->gift->name }}
+                                                             @else
+                                                                  No Gift Card
+                                                             @endif
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            @if(!empty($order->gift1_id!=0))
+                                                            {{ $order->gift1->name }}
+                                                            @else
+                                                                 No Gift Card
+                                                            @endif
+                                                       </td>
+
+                                                       <td>{{  $order->remarks }}</td>
+
+                                                       <td>
+                                                        <div class="btn-group" id="btns{{ $key }}">
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                    Action <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu" role="menu">
+                                                    
+                                                                    @if ($order->order_status == 1)
+                                                                        <li>
+                                                                            <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(2)]) }}">
+                                                                                Accept Order Confirm
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(5)]) }}">
+                                                                                Reject
+                                                                            </a>
+                                                                        </li>
+                                                                    @endif
+                                                    
+                                                                    @if ($order->order_status == 2)
+                                                                        <li>
+                                                                            <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(3)]) }}">
+                                                                                Dispatch Order
+                                                                            </a>
+                                                                        </li>
+                                                    
+                                                                        {{-- @if ($order->delivery_status == 0)
+                                                                            <li>
+                                                                                <a href="{{ route('orders.transferToDeliver', ['id' => base64_encode($order->id)]) }}">
+                                                                                    Transfer Order To Delivery User
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif --}}
+                                                                    @endif
+                                                    
+                                                                    @if ($order->order_status == 3)
+                                                                        <li>
+                                                                            <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(4)]) }}">
+                                                                                Deliver Order
+                                                                            </a>
+                                                                        </li>
+                                                                    @endif
+                                                    
+                                                                    <li>
+                                                                        <a href="{{ route('order.view-product', ['id' => base64_encode($order->id)]) }}">
+                                                                            View Products
+                                                                        </a>
+                                                                    </li>
+                                                    
+                                                                    <li>
+                                                                        <a href="{{ route('order.view-bill', ['id' => base64_encode($order->id)]) }}">
+                                                                            View Bill
+                                                                        </a>
+                                                                    </li>
+                                                    
+                                                                    <li>
+                                                                        <a href="{{ route('order.view-delivery-challan', ['id' => base64_encode($order->id)]) }}">
+                                                                            View Delivery Challan
+                                                                        </a>
+                                                                    </li>
+                                                    
+                                                                    {{-- @if (empty($order->track_id))
+                                                                        <li>
+                                                                            <a href="{{ route('order.addTrackOrderView', ['id' => base64_encode($order->id)]) }}">
+                                                                                Track Order
+                                                                            </a>
+                                                                        </li>
+                                                                    @else
+                                                                        <li>
+                                                                            <a href="{{ route('order.updateTrackOrderView', ['id' => base64_encode($order->id)]) }}">
+                                                                                Update Track Order
+                                                                            </a>
+                                                                        </li>
+                                                                    @endif --}}
+                                                    
+                                                                </ul>
+                                                            </div>
                                                         </div>
-
-                                                        <div style="display:none" id="cnfbox<?php echo $key ?>">
-                                                            <p> Are you sure delete this </p>
-                                                            <a href="{{route('orderfirst.destroy', base64_encode($order->id))}}" class="btn btn-danger">Yes</a>
-                                                            <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
+                                                    
+                                                        <div style="display:none" id="cnfbox{{ $key }}">
+                                                            <p> Are you sure you want to delete this? </p>
+                                                            <a href="{{ route('order.destroy', ['id' => base64_encode($order->id)]) }}" class="btn btn-danger">
+                                                                Yes
+                                                            </a>
+                                                            <a href="javascript:;" class="cans btn btn-default" mydatas="{{ $key }}">No</a>
                                                         </div>
                                                     </td>
+                                                    
 
-                                                </tr>
-                                                @endforeach --}}
+                                                    </tr>
+                                                @endforeach
 
                                             </tbody>
 
@@ -215,5 +467,4 @@
         </div> <!-- container-fluid -->
 
     </div> <!-- content -->
-
 @endsection

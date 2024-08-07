@@ -37,15 +37,15 @@ class Address extends Model
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'address_id');
+        return $this->hasOne(Order::class, 'address_id');
     }
 
-    public function city()
+    public function citys()
     {
         return $this->belongsTo(City::class, 'city');
     }
 
-    public function state()
+    public function states()
     {
         return $this->belongsTo(State::class, 'state');
     }

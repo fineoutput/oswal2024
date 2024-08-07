@@ -10,6 +10,8 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\UserDeviceToken;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderStatusMail;
+use App\Models\OrderDetail;
 
 class OrderController extends Controller
 {
@@ -17,6 +19,7 @@ class OrderController extends Controller
     public function index()
 
     {
+        
         $routeName = Route::currentRouteName();
      
         switch ($routeName) {
@@ -60,151 +63,209 @@ class OrderController extends Controller
 
         $orders = is_array($status)? Order::whereIn('order_status', $status)->orderBy('id', 'desc'): Order::where('order_status', $status)->orderBy('id', 'desc');
 
-        $orders->with('orderDetails' ,'user' , 'address' , 'gift' , 'gift1' ,'invoices')->get();
+        $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices' )->get();
 
+        // dd($orders);
         return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle'));
        
     }
 
-    // public function create($id = null, Request $request)
+    public function update_status(Request $request, $id , $status)
 
-    // {
-    //     $achievements = null;
+    {
 
-    //     if ($id !== null) {
+        $id = base64_decode($id);
 
-    //         $admin_position = $request->session()->get('position');
+        $order_status = base64_decode($status);
 
-    //         if ($admin_position !== "Super Admin") {
+        $addedBy = Auth::user()->id;
 
-    //             return redirect()->route('achievements.index')->with('error', "Sorry You Don't Have Permission To edit Anything.");
+        $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');;
 
-    //         }
+        $admin_position = $request->session()->get('position');
 
-    //         $achievements = Achievement::find(base64_decode($id));
+        // if ($admin_position == "Super Admin") {
+
+        $order = Order::find($id);
+
+        $order->order_status = $order_status;
+
+        $order->last_update_date = $curDate;
+
+        if($order_status == 5){
             
-    //     }
-
-    //     return view('admin.Achievements.add-achievements', compact('achievements'));
-    // }
-
-    // public function store(Request $request)
-
-    // {
-    //     // dd($request->all());
-
-    //     $rules = [
-    //         'title'        => 'required|string',
-    //         'short_desc'    => 'required|string',
-    //         'long_desc'     => 'required|string',
-          
-    //     ];
-
-    //     $request->validate($rules);
-
-    //     if (!isset($request->achievements_id)) {
-
-    //         $rules['img'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-
-    //         $achievements = new Achievement;
-
-    //     } else {
-
-    //         $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-
-    //         $achievements = Achievement::find($request->achievements_id);
+            $order->rejected_by = 2;
             
-    //         if (!$achievements) {
-                
-    //             return redirect()->route('achievements.index')->with('error', 'Achievements not found.');
-                
-    //         }
+            $order->rejected_by_id =  $addedBy;
+            
+        }
 
-    //     }
-        
-    //     $achievements->fill($request->all());
+        $order->save();
 
-    //     if ($request->hasFile('img')) {
-    //         $achievements->image = uploadImage($request->file('img'), 'achievements', 'img');
-    //     }
+        if ($order_status == 2 || $order_status == 3 || $order_status == 4) {
 
-    //     $achievements->ip = $request->ip();
+            $user = User::find($order->user_id);
 
-    //     $achievements->url = str_replace( ' ', '-',trim($request->title));
+            $deviceToken = UserDeviceToken::where('user_id', $order->user_id)->first();
+            
+            if ($user && $deviceToken) {
 
-    //     $achievements->date = now();
+                $this->sendPushNotification($deviceToken->device_token, $order_status);
 
-    //     $achievements->added_by = Auth::user()->id;
+                $this->sendEmailNotification($user, $order, $order_status);
 
-    //     $achievements->is_active = 1;
+            }
 
-    //     if ($achievements->save()) {
+        }
 
-    //         $message = isset($request->achievements_id) ? 'Achievements updated successfully.' : 'Achievements inserted successfully.';
+        return redirect()->route('order.new-order')->with('success', 'Order status updated successfully');
 
-    //         return redirect()->route('achievements.index')->with('success', $message);
+        // } else {
 
-    //     } else {
+        // 	return  redirect()->route('achievements.index')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
 
-    //         return redirect()->route('achievements.index')->with('error', 'Something went wrong. Please try again later.');
+        // }
 
-    //     }
-    // }
+    }
 
-    // public function update_status(Request $request, $status, $id)
+    private function sendPushNotification($deviceToken, $type)
+    {
+        $title = '';
+        $message = '';
 
-    // {
+        switch ($type) {
+            case 2:
+                $title = 'Order Accepted';
+                $message = 'Your order has been accepted.';
+                break;
+            case 3:
+                $title = 'Order Dispatched';
+                $message = 'Your order has been dispatched.';
+                break;
+            case 4:
+                $title = 'Order Delivered';
+                $message = 'Your order has been delivered successfully.';
+                break;
+            case 5:
+                $title = 'Order Cancelled';
+                $message = 'Your order has been cancelled.';
+                break;
+            // Add cases for other types if needed
+        }
 
-    //     $id = base64_decode($id);
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $msg = [
+            'body' => $message,
+            'title' => $title,
+            'sound' => 'default',
+        ];
 
-    //     $admin_position = $request->session()->get('position');
+        $fields = [
+            'to' => $deviceToken,
+            'notification' => $msg,
+            'priority' => 'high',
+        ];
 
-    //     $achievements = Order::find($id);
+        $headers = [
+            'Authorization: key=' . env('FCM_SERVER_KEY'),
+            'Content-Type: application/json',
+        ];
 
-    //     // if ($admin_position == "Super Admin") {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+    }
 
-    //     if ($status == "active") {
+    private function sendEmailNotification($user, $order, $type)
+    {
+        $data = [
+            'name' => $user->first_name,
+            'order_id' => $order->id,
+        ];
 
-    //         $achievements->updateStatus(strval(1));
-    //     } else {
+        switch ($type) {
+            case 2:
+                Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.orderaccepted', 'Order Accepted'));
+                break;
+            case 3:
+                Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.dispatch', 'Order Dispatched'));
+                break;
+            case 4:
+                Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.order-delivered', 'Order Successfully Delivered'));
+                break;
+            case 5:
+                Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.order-cancelled', 'Order Cancelled'));
+                break;
+        }
+    }
 
-    //         $achievements->updateStatus(strval(0));
-    //     }
+    public function destroy($id, Request $request)
 
-    //     return  redirect()->route('achievements.index')->with('success', 'Status Updated Successfully.');
+    {
 
-    //     // } else {
+        $id = base64_decode($id);
 
-    //     // 	return  redirect()->route('achievements.index')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+        $admin_position = $request->session()->get('position');
 
-    //     // }
+        // if ($admin_position == "Super Admin") {
 
-    // }
+        if (Order::where('id', $id)->delete()) {
 
-    // public function destroy($id, Request $request)
+            return  redirect()->route('order.new-order')->with('success', 'Order Deleted Successfully.');
 
-    // {
+        } else {
 
-    //     $id = base64_decode($id);
+            return redirect()->route('order.new-order')->with('error', 'Some Error Occurred.');
 
-    //     $admin_position = $request->session()->get('position');
+        }
 
-    //     // if ($admin_position == "Super Admin") {
+        // } else {
 
-    //     if (Achievement::where('id', $id)->delete()) {
+        // 	return  redirect()->route('achievements.index')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
 
-    //         return  redirect()->route('achievements.index')->with('success', 'Blog Deleted Successfully.');
-    //     } else {
-    //         return redirect()->route('achievements.index')->with('error', 'Some Error Occurred.');
+        // }
 
-    //     }
+    }
 
-    //     // } else {
+    public function view_product($id, Request $request) {
 
-    //     // 	return  redirect()->route('achievements.index')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
+        $id = base64_decode($id);
 
-    //     // }
+        $orders = OrderDetail::where('main_id' , $id)->get();
 
-    // }
+        $pageTitle ='Products Details';
 
+        return view('admin.Orders.view_product_details', compact('orders', 'pageTitle'));
+
+    }
+
+    public function view_bill($id, Request $request) {
+        $id = base64_decode($id);
+        $order = Order::with(['user', 'address.citys', 'address.states','orderDetails.product', 'orderDetails.type', 'invoices', 'gift'])->findOrFail( $id );
+        $user = $order->user;
+        $address = $order->address;
+        $city = $address->city ? $address->citys->name : '';
+        $state = $address->state ? $address->states->name : '';
+        $zipcode = $address->zipcode;
+        $orderItems = $order->orderDetails;
+        $invoice = $order->invoices;
+        $giftCard = $order->gift;
+        $promocode = $order->promocodes;
+
+        return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+    }
+    public function deliveryChallan($id, Request $request)  {
+           
+           $id = base64_decode($id);
+           $order1_data = Order::with(['user', 'address.citys', 'address.states'])->findOrFail( $id );
+
+           $user = $order1_data->user;
+           
+           return view('admin.Orders.view_delivery_challan', compact('order1_data', 'user'));
+    }
 }

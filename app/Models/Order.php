@@ -103,8 +103,19 @@ class Order extends Model
         return $this->belongsTo(GiftCardSec::class, 'gift1_id');
     }
 
+    public function promocodes()
+    {
+        return $this->belongsTo(Promocode::class, 'promocode');
+    }
+
     public function invoices()
     {
-        return $this->hasMany(OrderInvoice::class, 'order_id');
+        return $this->hasOne(OrderInvoice::class, 'order_id');
     }
+
+    public function transferOrder()
+    {
+        return $this->hasMany(TransferOrder::class, 'order_id');
+    }
+    
 }

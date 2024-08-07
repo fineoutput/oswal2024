@@ -657,13 +657,13 @@ Route::prefix('order')->name('order.')->group(function () {
 
     Route::get('rejected', [OrderController::class, 'index'])->name('rejected-order');
 
-    Route::get('update-status/{status}/{id}', [OrderController::class, 'update_status'])->name('update-status');
+    Route::get('update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('update-status');
 
     Route::get('view-product/{id}', [OrderController::class, 'view_product'])->name('view-product');
 
     Route::get('view-bill/{id}', [OrderController::class, 'view_bill'])->name('view-bill');
 
-    Route::get('view-delivery-challan/{id}', [OrderController::class, 'deliveryChallan'])->name('vview-delivery-challan');
+    Route::get('view-delivery-challan/{id}', [OrderController::class, 'deliveryChallan'])->name('view-delivery-challan');
 
     Route::get('destroy/{id}', [ComboProductController::class, 'destroy'])->name('destroy');
 

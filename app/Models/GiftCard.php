@@ -33,6 +33,10 @@ class GiftCard extends Model
     // {
     //     return $this->belongsTo(EcomProduct::class, 'product_id');
     // }
+    public function order()
+    {
+        return $this->hasOne(Order::class, 'gift_id' , 'id');
+    }
 
     public function updateStatus($status) {
         

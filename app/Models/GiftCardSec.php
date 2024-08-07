@@ -35,10 +35,16 @@ class GiftCardSec extends Model
     {
         return $this->belongsTo(Type::class, 'type_id' , 'id');
     }
+
+    public function order()
+    {
+        return $this->hasOne(Order::class, 'gift1_id' , 'id');
+    }
     public function updateStatus($status) {
         
         $this->is_active = $status;
 
         return $this->save();
     }
+    
 }

@@ -32,5 +32,9 @@ class Promocode  extends Model
         return $this->save();
     }
 
+    public function order()  {
+        
+      return $this->hasOne(Order::class , 'promocode');
+    }
  
 }

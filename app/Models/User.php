@@ -100,7 +100,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(WalletTransactionHistory::class ,'user_id' , 'id');
     }
-
+    public function address()
+    {
+        return $this->hasMany(Address::class, 'user_id');
+    }
     /**
      * Generate a unique referral code.
      *

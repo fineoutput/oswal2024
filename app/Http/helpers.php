@@ -8,9 +8,10 @@ use App\Models\Shiprockettoken;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\OrderInvoice;
 use App\Models\WalletTransactionHistory;
 use Illuminate\Support\Facades\DB;
-
 
 if (!function_exists('lang_change')) {
 
@@ -426,5 +427,38 @@ if(! function_exists('handleReferral')) {
 
         return ['referrer_tr_id' => $newTransactionForReferrer->id ,'referee_tr_id' => $newTransactionForReferee->id];
 
+    }
+}
+
+if (!function_exists('calculate_wallet_discount')) {
+
+    function calculate_wallet_discount($walletBalance)
+    {
+        $walletPercentage = 5; 
+
+        $walletDiscount = round($walletBalance * $walletPercentage / 100, 2);
+
+        return $walletDiscount;
+    }
+
+}
+
+if (! function_exists('generateInvoiceNumber')){
+    function generateInvoiceNumber($order1Id)
+    {
+     
+        $order = Order::findOrFail($order1Id);
+
+        $orderinvoice = new OrderInvoice;
+        
+        $orderinvoice->user_id    = $order->user_id;
+
+        $orderinvoice->order_id   = $order->id;
+
+        $orderinvoice->invoice_no = date('YmdHis');
+
+        $orderinvoice->save();
+
+        return  $orderinvoice->invoice_no;
     }
 }

@@ -45,6 +45,7 @@ class OrderController extends Controller
             'city_id'      => 'required|exists:all_cities,id',
             'promocode_id' => 'nullable|exists:promocodes,id',
             'gift_card_id' => 'nullable|exists:gift_cards_1,id',
+            'wallet_status'   => 'required|integer',
         ];
  
         // Validate request data
@@ -71,7 +72,7 @@ class OrderController extends Controller
 
         $gift_card_id = $request->input('gift_card_id');
     
-        
+        $wallet_status= $request->input('wallet_status');
 
         // Fetch cart data with related products and types
         $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
@@ -112,7 +113,7 @@ class OrderController extends Controller
                 continue;
             }
 
-            $typeData = $product->type->filter(fn ($type) => $cartItem->type_id == $type->id)
+            $typeData = $product->type
 
                 ->map(function ($type) use ($cartItem) {
 
@@ -205,6 +206,16 @@ class OrderController extends Controller
 
             $totalAmount -= $deductionAmount;
         }
+        // Apply wallet if provided
+        if($wallet_status){
+            
+            $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
+  
+            $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
+  
+            $totalAmount -= $walletDescount;
+
+          }
 
         // Apply Gift Card if provided
         if ($gift_card_id) {
@@ -236,7 +247,7 @@ class OrderController extends Controller
             'gift1_gst_amt'              => $gift_card_gst_amount,
             'delivery_charge'            => $deliveryCharge,
             'order_shipping_amount'      => $deliveryCharge,
-            'extra_discount'             => 0,
+            'extra_discount'             => $walletDescount,
             'total_order_weight'         => $totalWeight,
             'total_order_mrp'            => round($subtotal),
             'total_order_rate_am'        => round($type_rate_amount),
@@ -248,6 +259,7 @@ class OrderController extends Controller
             'payment_type'               => 0,
 			'payment_status'             => 0,
             'ip'                         => $request->ip(),
+            'order_from'                 => 'Application',
 			'date'                       => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
        ]);
 
@@ -267,9 +279,70 @@ class OrderController extends Controller
             'promo_discount'  => $deductionAmount,
             'total_weight'    => $totalWeight,
             'promo_discount'  => $deductionAmount,
+            'order_detail'    => $order,
         ]);
     }
 
+    public function codCheckout(Request $request)
+    {
+        // Validation rules
+        $rules = [
+            'order_id' => 'required|integer|exists:tbl_order1,id',
+            'payment_type' => 'required|integer'
+        ];
+    
+        $validator = Validator::make($request->all(), $rules);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+    
+        // Get authenticated user
+        $user = Auth::user();
+        $orderId = $request->input('order_id');
+        $paymentType = $request->input('payment_type');
+
+        $order = Order::where('id', $orderId)
+                      ->where('order_status', 0)
+                      ->first();
+    
+        if ($order) {
+
+            if ($paymentType == 1) {
+                
+                $order->update([
+                    'order_status' => 1,
+                    'payment_type' => 1,
+                    'payment_status' => 1,
+                ]);
+    
+              $orderinoiceid =  generateInvoiceNumber($orderId);
+    
+                // Empty user cart
+                Cart::where('user_id',  $user->id)->delete();
+
+                // Prepare response
+                $response = [
+                    'order_id' => $order->id,
+                    'amount' => $order->total_amount,
+                    'invoice_number' => $orderinoiceid
+                ];
+    
+                return response()->json(['message' => 'Success', 'status' => 200, 'data' => $response], 200);
+
+            } else {
+                // Invalid payment type
+                return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
+            }
+        } else {
+            // Order not found or incorrect status
+            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+        }
+    }
+    
+  
+    
     public function orders(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -575,4 +648,5 @@ class OrderController extends Controller
             ]);
         }
     }
+
 }

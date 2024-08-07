@@ -52,6 +52,10 @@ return [
             'driver' => 'sanctum',
             'provider' => 'users',
         ],
+        'deliveryboy' => [
+            'driver' => 'sanctum',
+            'provider' => 'deliveryboys',
+        ],
     ],
 
     /*
@@ -79,6 +83,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\adminmodel\Team::class,
+        ],
+        'deliveryboys' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\DeliveryBoy::class,
         ],
 
         // 'users' => [
