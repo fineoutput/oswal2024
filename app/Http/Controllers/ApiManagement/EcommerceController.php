@@ -300,6 +300,7 @@ class EcommerceController extends Controller
             'selected_type_id'              => $type->id,
             'selected_type_name'            => $request->lang != "hi" ? $type->type_name : $type->type_name_hi,
             'selected_type_selling_price'   => $type->selling_price,
+            'selected_type_mrp'             => $type->del_mrp,
             'selected_type_percent_off'     => $percent_off,
         ];
     
