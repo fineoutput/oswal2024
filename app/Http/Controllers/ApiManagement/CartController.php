@@ -12,7 +12,11 @@ use App\Models\PromocodeApplied;
 
 use Illuminate\Http\Request;
 
+use App\Models\ComboProduct;
+
 use App\Models\GiftCardSec;
+
+use App\Models\EcomProduct;
 
 use App\Models\Promocode;
 
@@ -24,7 +28,10 @@ use App\Models\Address;
 
 use App\Models\Cart;
 
+use App\Models\Type;
+
 use App\Models\User;
+
 
 class CartController extends Controller
 {
@@ -167,7 +174,7 @@ class CartController extends Controller
             'address_id'      => 'nullable|integer|exists:user_address,id',
             'state_id'        => 'nullable|integer',
             'city_id'         => 'nullable|integer',
-            'gift_card_id'    => 'nullable|integer|exists:gift_cards_1,id',
+            'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
         ];
 
@@ -219,13 +226,14 @@ class CartController extends Controller
         });
 
         // Calculate totals
-        $cartItemTotal = $cartItems->sum('total_qty_price'); //totalamount
-        $deliveryCharge = 0;
-        $promocode_id = null;
-        $promo_discount = 0;
-        $extra_discount  = 0;
-        $applyGiftCard = [];
-        $promocode_name = '';
+        $cartItemTotal    = $cartItems->sum('total_qty_price'); //totalamount
+        $deliveryCharge   = 0;
+        $promocode_id     = null;
+        $promo_discount   = 0;
+        $extra_discount   = 0;
+        $applyGiftCard    = [];
+        $applyGiftCardSec = [];
+        $promocode_name   = '';
 
         if (!empty($address_id)) {
 
@@ -248,6 +256,7 @@ class CartController extends Controller
                 return $shipingCharges;
             }
         }
+
         if ($input_promocode != null) {
 
             $applyPromocode = $this->applyPromocode($device_id, $user_id,$input_promocode, $cartItemTotal);
@@ -265,12 +274,36 @@ class CartController extends Controller
             }
         }
 
+        // First Gift Card Detail
         if ($gift_card_id != null) {
-
+            
             $applyGiftCard  = $this->applyGiftCard($cartItemTotal, $gift_card_id);
+
+            if (!$applyGiftCard->original['success']) {
+
+                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 400);
+
+            }else{
+                $applyGiftCard = $applyGiftCard->original['data'];
+            }
+
         }
 
-        return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard , $wallet_status);
+        // Secound Gift Card Detail
+    
+        $applyGiftCardSec  = $this->applyGiftCardSec($cartItemTotal);
+
+        if (!$applyGiftCardSec->original['success']) {
+
+            $applyGiftCardSec = [];
+
+        }else{
+
+            $applyGiftCardSec =$applyGiftCardSec->original['gift_detail'];
+
+        }
+        
+        return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
     }
 
     private function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
@@ -320,67 +353,140 @@ class CartController extends Controller
 
     public function applyGiftCard($finalAmount, $gift_card_id)
     {
+        // First Gift Card 
 
-        $giftCard1 = [];
         $giftCardAmount = 0;
+
         $giftCardStatus = 0;
+
         $promoStatus = 1;
 
-        if ($finalAmount > 2000) {
+        if ($finalAmount > 20) {
+
             $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+
             $giftCardStatus  = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+
         } else {
+
             $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+
         }
 
-        if ($finalAmount > 2000) {
+        if ($finalAmount > 20) {
 
-            $giftCard1Data = GiftCard::all();
-
-            foreach ($giftCard1Data as $key) {
-                if ($finalAmount >= $key->price) {
-                    $giftCard1 = [
-                        'id'   => $key->id,
-                        'name' => $key->name,
-                        'image' => asset($key->image),
-                        'price' => $key->price,
-                        'gift_card_1_status' => 1
-                    ];
-                    $giftCardStatus = 1;
-                } else {
-                    if ($giftCardStatus == 0) {
-                        $giftCard1 = [
-                            'id'   => '',
-                            'name' => '',
-                            'image' => '',
-                            'price' => '',
-                            'gift_card_1_status' => 0
-                        ];
-                    }
-                }
-            }
-        }
-
-        if (!empty($gift_card_id)) {
-
-            $giftCard = GiftCardSec::findOrFail($gift_card_id);
+            $giftCard = GiftCard::where('id' , $gift_card_id)->where('is_Active',1)->first();
 
             if ($giftCard) {
+
                 $giftCardAmount = round($giftCard->price + ($giftCard->price * 18 / 100), 2);
+
+            }else{
+                return response()->json(['success' => false, 'message' => 'Gift Card Not Found.'], 400);
             }
+
+        }else{
+            
+            return response()->json(['success' => false, 'message' => 'Your amount is less than the Gift Card minimum amount.'], 400);
         }
 
-        return [
-            's_id' => $gift_card_id,
-            'amount' => $giftCardAmount,
-            'gst_amount' =>  ($giftCard->price * 18 / 100),
-            'gift_card_status' => $giftCardStatus,
-            'promo_card_status' => $promoStatus,
-            'card_1' => $giftCard1
-        ];
+
+        return response()->json([
+            'message' => 'gift card applied successfully.',
+            'success' => true,
+            'data' => [
+                'amount' => $giftCardAmount,
+                'gst_amount'  =>  ($giftCard->price * 18 / 100),
+                'gift_card_status' => $giftCardStatus,
+                'promo_card_status' => $promoStatus,
+                'gift_detail' => [
+                    'id'          => $giftCard->id,
+                    'name'        => $giftCard->name,
+                    'description' => $giftCard->description,
+                    'price'       => $giftCard->price,
+                    'image'       => asset($giftCard->image),
+                    ]
+            ]
+        ], 200);
     }
 
-    private function generateCartResponse($userId, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null ,$wallet_status=false)
+    public function applyGiftCardSec($finalAmount)
+    {
+        $giftCard = GiftCardSec::select('*')
+            ->selectRaw('ABS(price - ?) as price_diff', [$finalAmount])
+            ->where('price', '<=', $finalAmount)  
+            ->where('is_active', 1)  
+            ->orderBy('price_diff')  
+            ->first();  
+
+        if ($giftCard) {
+          
+            return response()->json([
+                'message' => 'gift card applied successfully.',
+                'success' => true,
+                'gift_detail' => [
+                    'id'         => $giftCard->id,
+                    'product_id' => $giftCard->product_id,
+                    'type_id'    => $giftCard->type_id,
+                    'name'       => $giftCard->name,
+                    'image'      => asset($giftCard->appimage),
+                ]
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'gift card not found',
+                'success' => false,
+                'gift_detail' => [],
+            ], 200);
+        }
+    }
+    
+    public function comboProduct($type_id, $product, $lang)
+    {
+        $comboProduct = [];
+
+        $comboDetails = ComboProduct::with(['maintype', 'combotype', 'comboproduct'])
+        ->where('main_product', $product->id)
+        ->first();
+    
+        if (!$comboDetails) {
+            return response()->json(['message' => 'No combo details found for the given product ID.'], 404);
+        }
+
+        $type = Type::find($type_id);
+
+        if ($type && $type->type_name === $comboDetails->maintype->type_name) {
+            $comProduct = $comboDetails->comboproduct;
+            $combotype = $comboDetails->combotype;
+
+            $comboProduct = [
+                'combodetail' => [
+                    'id' => $comboDetails->id,
+                    'main_type_id' => $comboDetails->maintype->id,
+                    'main_type_name' => $comboDetails->maintype->type_name,
+                    'combo_type_name' => $combotype->type_name,
+                    'combo_type_id' => $combotype->id,
+                ],
+                'product' => [
+                    'product_id' => $comProduct->id,
+                    'category_id' => $comProduct->category_id,
+                    'product_name' => $lang !== "hi" ? $comProduct->name : $comProduct->name_hi,
+                    'long_desc' => $lang !== "hi" ? $comProduct->long_desc : $comProduct->long_desc_hi,
+                    'url' => $comProduct->url,
+                    'image1' => asset($comProduct->img1),
+                    'image2' => asset($comProduct->img2),
+                    'image3' => asset($comProduct->img3),
+                    'image4' => asset($comProduct->img4),
+                    'is_active' => $comProduct->is_active,
+                ]
+            ];
+        }
+
+        return $comboProduct;
+
+    }
+    
+    private function generateCartResponse($userId, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null, $applyGiftCardSec =null ,$wallet_status=false)
     {
 
         $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
@@ -414,6 +520,8 @@ class CartController extends Controller
             if (!$product || !$product->is_active) {
                 continue;
             }
+
+            $comboProduct = $this->comboProduct($cartItem->type_id , $product , $lang);
 
             $typeData = $product->type->map(function ($type) use ($cartItem, $lang) {
 
@@ -454,7 +562,8 @@ class CartController extends Controller
                 'image3' => asset($product->img3),
                 'image4' => asset($product->img4),
                 'is_active' => $product->is_active,
-                'type' => $typeData
+                'type' => $typeData,
+                'comboproduct' => $comboProduct
             ];
         }
 
@@ -474,22 +583,40 @@ class CartController extends Controller
             'data'             => $productData,
             'total_weight'     => $totalWeight,
             'shipping_charge'  => (float)$deliveryCharge,
-            'promo_discount'   => $promo_discount,
-            'promo_id'         => $promo_id,
-            'promo_name'         => $promocode_name,
-            'wallet_discount'  => $walletDescount,
-            'extra_discount'   => $extraDiscount,
-            'total_discount'   => $promo_discount + $extraDiscount + $walletDescount
+            // 'promo_discount'   => $promo_discount,
+            // 'promo_id'         => $promo_id,
+            // 'promo_name'       => $promocode_name,
+            // 'wallet_discount'  => $walletDescount,
+            // 'extra_discount'   => $extraDiscount,
+            // 'total_discount'   => $promo_discount + $extraDiscount + $walletDescount,
+            // 'final_amount'     => $finalAmount
         ];
 
+        $reponse['promocode'] = [
+            'promo_id'       => $promo_id,
+            'promo_discount' => $promo_discount,
+            'promo_name'     => $promocode_name,
+        ];
+
+        // First Gift Card Detail
         if (!empty($applyGiftCard)) {
             $reponse['promocode_status'] = $applyGiftCard['promo_card_status'];
-            $reponse['cal_promo_amu']    = $finalAmount + $applyGiftCard['amount'];
-            $reponse['gift_card_amount'] = $applyGiftCard['amount'];
             $reponse['gift_status']      = $applyGiftCard['gift_card_status'];
-            $reponse['gift_card_1']      = $applyGiftCard['card_1'];
-            $reponse['gift_card_2_id']   = $applyGiftCard['s_id'];
+            $reponse['gift_card_1']      = [
+                  'cal_promo_amu'         => $finalAmount + $applyGiftCard['amount'],
+                  'gift_card_amount'      => $applyGiftCard['amount'],
+                  'gift_card_gst_amount'  => $applyGiftCard['gst_amount'],
+                  'gifd_card_detail'      => $applyGiftCard['gift_detail']
+            ];
         }
+        if (!empty($applyGiftCardSec)) {
+            $reponse['gift_card2']      = $applyGiftCardSec;
+        }
+        
+        $reponse['wallet_discount']  = $walletDescount;
+        $reponse['wallet_amount']    = $user->wallet_amount;
+        $reponse['extra_discount' ]  = $extraDiscount;
+        $reponse['total_discount' ]  = $promo_discount + $extraDiscount + $walletDescount;
 
         return response()->json($reponse, $status);
     }
