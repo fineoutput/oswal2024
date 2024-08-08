@@ -512,6 +512,7 @@ class CartController extends Controller
         $totalAmount = 0;
         $productData = [];
         $walletDescount = 0;
+        $totalwalletAmount  = 0;
 
         foreach ($cartData as $cartItem) {
 
@@ -573,6 +574,7 @@ class CartController extends Controller
 
           $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
 
+          $totalwalletAmount = $user->wallet_amount;
         }
 
         $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
@@ -614,7 +616,7 @@ class CartController extends Controller
         }
         
         $reponse['wallet_discount']  = $walletDescount;
-        $reponse['wallet_amount']    = $user->wallet_amount;
+        $reponse['wallet_amount']    = $totalwalletAmount;
         $reponse['extra_discount' ]  = $extraDiscount;
         $reponse['total_discount' ]  = $promo_discount + $extraDiscount + $walletDescount;
 
