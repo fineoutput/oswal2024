@@ -544,10 +544,25 @@ class CartController extends Controller
                 ];
             })->toArray();
 
-            $selectedType = array_filter($typeData, function($item) use ($cartItem) {
-                return $item['type_id'] == $cartItem->type_id;
-            });
+            if ($cartItem->type) {
+                $selectedType = [
+                    'type_id' => $cartItem->type->id,
+                    'type_name' => $lang !== "hi" ? $cartItem->type->type_name : $cartItem->type->type_name_hi,
+                    'type_category_id' => $cartItem->type->category_id,
+                    'type_product_id' => $cartItem->type->product_id,
+                    'type_mrp' => $cartItem->type->del_mrp,
+                    'gst_percentage' => $cartItem->type->gst_percentage,
+                    'gst_percentage_price' => $cartItem->type->gst_percentage_price,
+                    'selling_price' => $cartItem->type->selling_price,
+                    'type_weight' => $cartItem->type->weight,
+                    'type_rate' => $cartItem->type->rate,
+                    'total_typ_qty_price' => $cartItem->quantity * $cartItem->type->selling_price,
+                ];
+            } else {
+                $selectedType = [];
+            }
             
+         
             $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
 
             $totalAmount += $cartItem->total_qty_price;
@@ -556,7 +571,7 @@ class CartController extends Controller
                 'id' => $cartItem->id,
                 'product_id' => $product->id,
                 'category_id' => $cartItem->category_id,
-                'selected_type' =>(!empty($selectedType) && count($selectedType) > 0 ) ? $selectedType[0] : '',
+                'selected_type' =>$selectedType,
                 'quantity' => $cartItem->quantity,
                 'total_qty_price' => round($cartItem->total_qty_price),
                 'product_name' => $lang !== "hi" ? $product->name : $product->name_hi,
