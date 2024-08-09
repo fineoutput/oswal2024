@@ -546,6 +546,7 @@ class CartController extends Controller
 
             if ($cartItem->type) {
                 $selectedType = [
+                    'type_id' => $cartItem->type->id ??'',
                     'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
                     'type_mrp' => $cartItem->type->del_mrp,
                     'selling_price' => $cartItem->type->selling_price ??'',
