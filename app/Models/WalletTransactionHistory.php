@@ -56,7 +56,7 @@ class WalletTransactionHistory extends Model
      * @param int $status
      * @return bool
      */
-    public static function updateStatus($id, $status)
+    public static function updateStatus($id, $status , $point = 0)
     {
         $transaction = self::find($id);
 
@@ -66,7 +66,7 @@ class WalletTransactionHistory extends Model
 
             if ($status === self::STATUS_COMPLETED) {
            
-                self::updateReferralPoints($transaction, 10);
+                self::updateReferralPoints($transaction, $point);
             }
 
             return $transaction->save();

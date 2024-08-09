@@ -92,7 +92,7 @@ if(!function_exists('uploadImage')){
     }
 }
 
-if(!function_exists('sendProduct')){
+if(!function_exists('sendProduct')) {
 
     function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false) {
         
@@ -304,7 +304,7 @@ if(!function_exists('calculateShippingCharges')){
 
 }
 
-if(! function_exists('getShipRocketToken')){
+if(!function_exists('getShipRocketToken')){
 
     function getShipRocketToken() {
 
@@ -342,7 +342,7 @@ if(! function_exists('getShipRocketToken')){
     }
 }
 
-if(! function_exists('trackOrderApi')){
+if(!function_exists('trackOrderApi')){
 
     function trackOrderApi($token ,$track_id) {
 
@@ -361,7 +361,7 @@ if(! function_exists('trackOrderApi')){
     }
 }
 
-if(! function_exists('handleReferral')) {
+if(!function_exists('handleReferral')) {
 
      function handleReferral($referrerCode, $newUserId)
     {
@@ -434,7 +434,7 @@ if (!function_exists('calculate_wallet_discount')) {
 
     function calculate_wallet_discount($walletBalance)
     {
-        $walletPercentage = 5; 
+        $walletPercentage =  getConstant()->wallet_use_amount; 
 
         $walletDiscount = round($walletBalance * $walletPercentage / 100, 2);
 
@@ -443,7 +443,7 @@ if (!function_exists('calculate_wallet_discount')) {
 
 }
 
-if (! function_exists('generateInvoiceNumber')){
+if (!function_exists('generateInvoiceNumber')){
     function generateInvoiceNumber($order1Id)
     {
      
@@ -460,5 +460,15 @@ if (! function_exists('generateInvoiceNumber')){
         $orderinvoice->save();
 
         return  $orderinvoice->invoice_no;
+    }
+}
+
+if (!function_exists('getConstant')){
+
+    function getConstant() {
+
+        $constant = DB::table('constants')->first();
+
+        return $constant;
     }
 }

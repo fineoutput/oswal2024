@@ -3,9 +3,11 @@ namespace App\Http\Controllers\ApiManagement;
 
 use Illuminate\Support\Facades\Validator;
 
-use App\Http\Controllers\Controller;
+use App\Models\WalletTransactionHistory;
 
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
 
@@ -44,7 +46,7 @@ class OrderController extends Controller
             'state_id'     => 'required|exists:all_states,id',
             'city_id'      => 'required|exists:all_cities,id',
             'promocode_id' => 'nullable|exists:promocodes,id',
-            'gift_card_id' => 'nullable|exists:gift_cards_1,id',
+            'gift_card_id' => 'nullable|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
         ];
  
@@ -56,7 +58,7 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
 
         }
-
+       
         // Retrieve request inputs
         $userId       = $request->input('user_id');
 
@@ -104,6 +106,19 @@ class OrderController extends Controller
 
         $type_rate_amount = 0;
 
+        $applyGiftCard = [];
+
+        $applyGiftCardSec = [];
+
+        $order =  Order::create([
+            'order_status'    => 0,
+            'delivery_status' => 0,
+            'payment_type'    => 0,
+			'payment_status'  => 0,
+            'ip'              => $request->ip(),
+            'order_from'      => 'Application',
+			'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
+        ]);
 
         foreach ($cartData as $cartItem) {
 
@@ -113,9 +128,9 @@ class OrderController extends Controller
                 continue;
             }
 
-            $typeData = $product->type
-
-                ->map(function ($type) use ($cartItem) {
+            $typeData = $product->type->filter(function ($type) use ($cartItem) {
+                return $cartItem->type->id == $type->id;
+            })->map(function ($type) use ($cartItem) {
 
                     $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
 
@@ -160,13 +175,21 @@ class OrderController extends Controller
                 'type'              => $typeData
             ];
 
-          $orderdetail =  OrderDetail::create([          
+          // Apply Combo Product if exsit
+          $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en');
+         
+            OrderDetail::create([      
+                'main_id'               => $order->id,
                 'product_id'            =>  $product->id,
                 'type_id'               =>  $cartItem->type_id,
                 'type_mrp'              =>  $cartItem->type->mrp,
                 'gst'                   =>  $cartItem->type->gst_percentage,
                 'gst_percentage_price'  =>  $cartItem->type->gst_percentage_price,
                 'quantity'              =>  $cartItem->quantity,
+                'combo_gst'             =>  0,
+                'combo_product'         =>  (count($comboProduct) > 0) ? $comboProduct['product']['product_name'] : '',
+                'combo_name'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['combo_type_name'] : '',
+                'combo_type'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['id'] : '',
                 'amount'                =>  $cartItem->total_qty_price,
                 'ip'                    =>  $request->ip(),
                 'date'                  =>  now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
@@ -206,6 +229,7 @@ class OrderController extends Controller
 
             $totalAmount -= $deductionAmount;
         }
+        
         // Apply wallet if provided
         if($wallet_status){
             
@@ -215,36 +239,46 @@ class OrderController extends Controller
   
             $totalAmount -= $walletDescount;
 
-          }
+        }
 
-        // Apply Gift Card if provided
+        // Apply Gift first Card if provided
         if ($gift_card_id) {
 
-            $applyGiftCard = $this->cart->applyGiftCard($totalAmount, $gift_card_id);
+            $applyGiftCard = $this->cart->applyGiftCard($subtotal, $gift_card_id);
 
-            if (!empty($applyGiftCard)) {
+            if ($applyGiftCard->original['success']) {
 
-                $gift_card_amount     = $applyGiftCard['amount'];
+                $applyGiftCard = $applyGiftCard->original['data'];
+            
+                $totalAmount += $applyGiftCard['amount'];
 
-                $gift_card_gst_amount = $applyGiftCard['gst_amount'];
-
-                $gift_card_1     = $applyGiftCard['card_1']['id'];
-
-                $gift_card_2_id     = $applyGiftCard['s_id'];
+            }else{
+                $applyGiftCard = [];
             }
         }
-       
-        $order =  Order::create([
+
+        // Apply Gift Sec Card if Exsit
+        $applyGiftCardSec = $this->cart->applyGiftCardSec($subtotal);
+        
+        if ($applyGiftCardSec->original['success']) {
+
+            $applyGiftCardSec = $applyGiftCardSec->original['gift_detail'];
+
+        }else{
+            $applyGiftCardSec = [];
+        }
+
+        Order::where('id', $order->id)->update([
             'user_id'                    => $userId ?? Auth::user()->id,
             'total_amount'               => $totalAmount,
             'sub_total'                  => $subtotal,
             'address_id'                 => $addressId,
             'promocode'                  => $promocodeId ?? '',
             'promo_deduction_amount'     => $deductionAmount,
-            'gift_id'                    => $gift_card_1,
-            'gift_amt'                   => $gift_card_amount,
-            'gift1_id'                   => $gift_card_2_id,
-            'gift1_gst_amt'              => $gift_card_gst_amount,
+            'gift_id'                    => (count($applyGiftCard) > 0) ? $applyGiftCard['gift_detail']['id'] : '',
+            'gift_amt'                   => (count($applyGiftCard) > 0) ? $applyGiftCard['amount'] : '',
+            'gift_gst_amt'               => (count($applyGiftCard) > 0) ? $applyGiftCard['gst_amount'] : '',
+            'gift1_id'                   => (count($applyGiftCardSec) > 0) ? $applyGiftCardSec['id'] : '',
             'delivery_charge'            => $deliveryCharge,
             'order_shipping_amount'      => $deliveryCharge,
             'extra_discount'             => $walletDescount,
@@ -254,20 +288,7 @@ class OrderController extends Controller
             'order_price'                => round($subtotal-$type_rate_amount),
             'ten_percent_of_order_price' => round(($subtotal-$type_rate_amount) * 10 / 100),
             'order_main_price'           => round(($subtotal-$type_rate_amount)-(($subtotal-$type_rate_amount) * 10 / 100)),
-            'order_status'               => 0,
-            'delivery_status'            => 0,
-            'payment_type'               => 0,
-			'payment_status'             => 0,
-            'ip'                         => $request->ip(),
-            'order_from'                 => 'Application',
-			'date'                       => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
-       ]);
-
-       if($order){
-
-          OrderDetail::where('id' ,$orderdetail->id)->update(['main_id' => $order->id]);
-
-       }
+        ]);
 
         // Return the calculated data (or proceed with further processing)
         return response()->json([
@@ -285,64 +306,90 @@ class OrderController extends Controller
 
     public function codCheckout(Request $request)
     {
-        // Validation rules
+        // Define validation rules
         $rules = [
             'order_id' => 'required|integer|exists:tbl_order1,id',
             'payment_type' => 'required|integer'
         ];
-    
+
+        // Validate request data
         $validator = Validator::make($request->all(), $rules);
-    
-        // Check if validation fails
+
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
-    
+
         // Get authenticated user
         $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
+        }
+
         $orderId = $request->input('order_id');
         $paymentType = $request->input('payment_type');
 
+        // Fetch the order
         $order = Order::where('id', $orderId)
-                      ->where('order_status', 0)
-                      ->first();
-    
-        if ($order) {
+                    ->where('order_status', 0)
+                    ->first();
 
-            if ($paymentType == 1) {
-                
-                $order->update([
-                    'order_status' => 1,
-                    'payment_type' => 1,
-                    'payment_status' => 1,
-                ]);
-    
-              $orderinoiceid =  generateInvoiceNumber($orderId);
-    
-                // Empty user cart
-                Cart::where('user_id',  $user->id)->delete();
-
-                // Prepare response
-                $response = [
-                    'order_id' => $order->id,
-                    'amount' => $order->total_amount,
-                    'invoice_number' => $orderinoiceid
-                ];
-    
-                return response()->json(['message' => 'Success', 'status' => 200, 'data' => $response], 200);
-
-            } else {
-                // Invalid payment type
-                return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
-            }
-        } else {
-            // Order not found or incorrect status
+        if (!$order) {
             return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
         }
+
+        if ($paymentType != 1) {
+            return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
+        }
+
+        // Handle COD payment type
+        $codCharge = getConstant()->cod_charge;
+        $order->update([
+            'order_status'   => 1,
+            'payment_type'   => 1,
+            'payment_status' => 1,
+            'cod_charge'     => $codCharge,
+            'total_amount'   => $codCharge + $order->total_amount,
+        ]);
+
+        $invoiceNumber = generateInvoiceNumber($orderId);
+
+        // Ensure invoice number is generated successfully
+        if ($invoiceNumber) {
+
+            Cart::where('user_id', $user->id)->update(['checkout_status' => 1]);
+
+            $cartCleared = Cart::where('user_id', $user->id)->delete();
+
+            if ($user instanceof \App\Models\User) {
+                $user->wallet_amount -= $order->extra_discount;
+                $user->save();
+
+                WalletTransactionHistory::createTransaction([
+                    'user_id' => $user->id,
+                    'transaction_type' => 'debit',
+                    'amount' => $order->extra_discount,
+                    'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                    'status' => WalletTransactionHistory::STATUS_COMPLETED,
+                    'description' => "Used wallet amount for order ID: {$order->id}",
+                ]);
+            }
+
+            // Prepare response
+            $response = [
+                'order_id' => $order->id,
+                'amount' => $order->total_amount,
+                'invoice_number' => $invoiceNumber
+            ];
+
+            return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
+        }
+
+        // Handle case where invoice generation fails
+        return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
+
     
-  
-    
+
     public function orders(Request $request)
     {
         $validator = Validator::make($request->all(), [

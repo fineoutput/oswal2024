@@ -111,16 +111,6 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
 
-
-
-Route::post('orders', [OrderController::class, 'orders'])->name('orders');
-
-Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
-
-Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
-
-Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
-
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::get('user', function (Request $request) {
@@ -135,15 +125,19 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
 
-    // Route::post('cod-checkout', [OrderController::class, 'codCheckout'])->name('codCheckout');
-    // Route::prefix('order')->name('order.')->group(function () {
-
-        
-    //     Route::post('get-cart-details', [OrderController::class, 'getCartDetails'])->name('get-cart-details');
+    Route::prefix('order')->name('order.')->group(function () {
     
-    //     Route::post('destroy',[OrderController::class, 'destroy'])->name('destroy');
+        Route::post('cod-checkout', [OrderController::class, 'codCheckout'])->name('codCheckout');
+
+        Route::post('orders', [OrderController::class, 'orders'])->name('orders');
+    
+        Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
         
-    // });
+        Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
+        
+        Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
+        
+    });
 
     Route::get('promocode' ,[AppController::class, 'getPromoCode']);
 

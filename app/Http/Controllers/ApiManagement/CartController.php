@@ -46,7 +46,7 @@ class CartController extends Controller
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
             'type_price'  => 'required|numeric',
-            'quantity'    => 'required|integer|max:5',
+            'quantity'    => 'required|integer|max:' . getConstant()->quantity, 
             'cart_from'   => 'required|string',
         ];
 
@@ -361,7 +361,7 @@ class CartController extends Controller
 
         $promoStatus = 1;
 
-        if ($finalAmount > 20) {
+        if ($finalAmount > getConstant()->gift_min_amount) {
 
             $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
 
@@ -373,7 +373,7 @@ class CartController extends Controller
 
         }
 
-        if ($finalAmount > 20) {
+        if ($finalAmount > getConstant()->gift_min_amount) {
 
             $giftCard = GiftCard::where('id' , $gift_card_id)->where('is_Active',1)->first();
 
@@ -450,7 +450,8 @@ class CartController extends Controller
         ->first();
     
         if (!$comboDetails) {
-            return response()->json(['message' => 'No combo details found for the given product ID.'], 404);
+            // return response()->json(['message' => 'No combo details found for the given product ID.'], 404);
+            return $comboProduct;
         }
 
         $type = Type::find($type_id);
@@ -541,8 +542,12 @@ class CartController extends Controller
                     'type_rate' => $type->rate,
                     'total_typ_qty_price' => $totalTypeQuantityPrice
                 ];
-            });
+            })->toArray();
 
+            $selectedType = array_filter($typeData, function($item) use ($cartItem) {
+                return $item['type_id'] == $cartItem->type_id;
+            });
+            
             $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
 
             $totalAmount += $cartItem->total_qty_price;
@@ -551,8 +556,7 @@ class CartController extends Controller
                 'id' => $cartItem->id,
                 'product_id' => $product->id,
                 'category_id' => $cartItem->category_id,
-                'type_id' => $cartItem->type_id,
-                'type_price' => $cartItem->type_price,
+                'selected_type' => $selectedType[0],
                 'quantity' => $cartItem->quantity,
                 'total_qty_price' => round($cartItem->total_qty_price),
                 'product_name' => $lang !== "hi" ? $product->name : $product->name_hi,

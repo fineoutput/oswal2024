@@ -206,12 +206,12 @@ class UserAuthController extends Controller
             if(Route::currentRouteName() == 'register.otp'){
 
                 if($referrer_tr_id != null) {
-
-                   $updateTransactionHistory =  WalletTransactionHistory::updateStatus($referrer_tr_id, WalletTransactionHistory::STATUS_COMPLETED);
+                    $constant = getConstant();
+                   $updateTransactionHistory =  WalletTransactionHistory::updateStatus($referrer_tr_id, WalletTransactionHistory::STATUS_COMPLETED , $constant->referrer_amount);
 
                    if($updateTransactionHistory){
 
-                     WalletTransactionHistory::updateStatus($referee_tr_id, WalletTransactionHistory::STATUS_COMPLETED);
+                     WalletTransactionHistory::updateStatus($referee_tr_id, WalletTransactionHistory::STATUS_COMPLETED , $constant->referee_amount);
 
                      DB::table('refferal_histoty')->whereIn('transaction_id', [$referrer_tr_id, $referee_tr_id])->update(['status' => 1]);
 
