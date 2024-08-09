@@ -556,7 +556,7 @@ class CartController extends Controller
                 'id' => $cartItem->id,
                 'product_id' => $product->id,
                 'category_id' => $cartItem->category_id,
-                'selected_type' => $selectedType[0],
+                'selected_type' => $selectedType,
                 'quantity' => $cartItem->quantity,
                 'total_qty_price' => round($cartItem->total_qty_price),
                 'product_name' => $lang !== "hi" ? $product->name : $product->name_hi,
