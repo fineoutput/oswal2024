@@ -546,17 +546,9 @@ class CartController extends Controller
 
             if ($cartItem->type) {
                 $selectedType = [
-                    'type_id' => $cartItem->type->id,
-                    'type_name' => $lang !== "hi" ? $cartItem->type->type_name : $cartItem->type->type_name_hi,
-                    'type_category_id' => $cartItem->type->category_id,
-                    'type_product_id' => $cartItem->type->product_id,
+                    'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
                     'type_mrp' => $cartItem->type->del_mrp,
-                    'gst_percentage' => $cartItem->type->gst_percentage,
-                    'gst_percentage_price' => $cartItem->type->gst_percentage_price,
-                    'selling_price' => $cartItem->type->selling_price,
-                    'type_weight' => $cartItem->type->weight,
-                    'type_rate' => $cartItem->type->rate,
-                    'total_typ_qty_price' => $cartItem->quantity * $cartItem->type->selling_price,
+                    'selling_price' => $cartItem->type->selling_price ??'',
                 ];
             } else {
                 $selectedType = [];
