@@ -544,7 +544,7 @@ class CartController extends Controller
                 ];
             })->toArray();
 
-            dd($cartItem->type);
+            dd($cartItem);
             $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
 
             $totalAmount += $cartItem->total_qty_price;
