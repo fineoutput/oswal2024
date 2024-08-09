@@ -544,6 +544,10 @@ class CartController extends Controller
                 ];
             })->toArray();
 
+            $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+
+            $totalAmount += $cartItem->total_qty_price;
+
             if ($cartItem->type) {
                 $selectedType = [
                     'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
@@ -553,11 +557,6 @@ class CartController extends Controller
             } else {
                 $selectedType = [];
             }
-            
-         
-            $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
-
-            $totalAmount += $cartItem->total_qty_price;
 
             $productData[] = [
                 'id' => $cartItem->id,
