@@ -621,6 +621,8 @@ class CartController extends Controller
                   'gift_card_gst_amount'  => $applyGiftCard['gst_amount'],
                   'gifd_card_detail'      => $applyGiftCard['gift_detail']
             ];
+
+            $finalAmount += $applyGiftCard['amount'];
         }
         if (!empty($applyGiftCardSec)) {
             $reponse['gift_card2']      = $applyGiftCardSec;
@@ -630,6 +632,7 @@ class CartController extends Controller
         $reponse['wallet_amount']    = $totalwalletAmount;
         $reponse['extra_discount' ]  = $extraDiscount;
         $reponse['total_discount' ]  = $promo_discount + $extraDiscount + $walletDescount;
+        $reponse['final_amount' ]    = $finalAmount;
 
         return response()->json($reponse, $status);
     }
