@@ -183,7 +183,7 @@ class AppController extends Controller {
 
         $userAddress = Address::create($addressData);
 
-        $userAddress->load('state', 'city');
+        $userAddress->load('states', 'citys');
 
         $custom_address = $userAddress->doorflat . " " . $userAddress->landmark . " " . $userAddress->address . " " . $userAddress->location_address . " " . $userAddress->zipcode;
 
@@ -198,7 +198,7 @@ class AppController extends Controller {
     {
        
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:user_address',
+            'device_id' => 'required|string|exists:users',
             'user_id'   => 'nullable|integer|exists:users,id'
         ]);
 
@@ -220,7 +220,7 @@ class AppController extends Controller {
 
         foreach ($addresses as $address) {
 
-            $address->load('state', 'city');
+            $address->load('states', 'citys');
 
             $addr_string = "Doorflat {$address->doorflat}, ";
 
