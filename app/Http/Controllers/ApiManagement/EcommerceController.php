@@ -202,12 +202,16 @@ class EcommerceController extends Controller
                 ];
             }
 
-            $wish_status = Wishlist::where('device_id', $device_id)
-                ->when($user_id, function ($query) use ($user_id) {
-                    $query->orWhere('user_id', $user_id);
-                })
-                ->where('product_id', $product->id)
-                ->exists() ? 1 : 0;
+            $wishlist = Wishlist::where('device_id', $device_id)
+            ->when($user_id, function ($query) use ($user_id) {
+                $query->orWhere('user_id', $user_id);
+            })
+            ->where('product_id', $product->id)
+            ->first();
+        
+            $wish_status = $wishlist ? 1 : 0;
+            $wishlist_id = $wishlist ? $wishlist->id : null;
+        
 
             $cart = Cart::where('device_id', $device_id)
                 ->when($user_id, function ($query) use ($user_id) {
@@ -240,6 +244,7 @@ class EcommerceController extends Controller
                 'cart_total_price' => $cart->total_qty_price ?? "",
                 'cart_status' => $cart ? 1 : 0,
                 'wish_status' => $wish_status,
+                'wish_id' =>  $wishlist_id,
                 'rating_status' => $rating_avg > 0 ? 1 : 0,
                 'rating' => $rating_avg,
                 'total_reviews' => $total_reviews,
