@@ -64,10 +64,6 @@ class OrderController extends Controller
 
         $deviceId     = $request->input('device_id');
 
-        $stateId      = $request->input('state_id');
-
-        $cityId       = $request->input('city_id');
-
         $addressId    = $request->input('address_id');
 
         $promocodeId  = $request->input('promocode_id');
@@ -75,6 +71,13 @@ class OrderController extends Controller
         $gift_card_id = $request->input('gift_card_id');
     
         $wallet_status= $request->input('wallet_status');
+
+        // Fetch user address
+        $userAddress = Address::findOrFail($addressId);
+
+        $stateId      = $userAddress->state;
+
+        $cityId       = $userAddress->city;
 
         // Fetch cart data with related products and types
         $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
@@ -109,6 +112,7 @@ class OrderController extends Controller
         $applyGiftCard = [];
 
         $applyGiftCardSec = [];
+        $walletDescount = 0;
 
         $order =  Order::create([
             'order_status'    => 0,
@@ -179,7 +183,7 @@ class OrderController extends Controller
           $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en');
          
             OrderDetail::create([      
-                'main_id'               => $order->id,
+                'main_id'               =>  $order->id,
                 'product_id'            =>  $product->id,
                 'type_id'               =>  $cartItem->type_id,
                 'type_mrp'              =>  $cartItem->type->mrp,
@@ -197,11 +201,8 @@ class OrderController extends Controller
 
         }
 
-        // Fetch user address
-        $userAddress = Address::findOrFail($addressId);
-
         // Calculate shipping charges
-        $shippingChargesResponse = calculateShippingCharges($totalWeight, $userAddress->city);
+        $shippingChargesResponse = calculateShippingCharges($totalWeight,  $cityId);
 
         if (!$shippingChargesResponse->original['success']) {
 
@@ -291,17 +292,8 @@ class OrderController extends Controller
         ]);
 
         // Return the calculated data (or proceed with further processing)
-        return response()->json([
-            'success'         => true,
-            'subtotal'        => $subtotal,
-            'shipping_charge' => $deliveryCharge,
-            'totalAmount'     => $totalAmount,
-            'productData'     => $productData,
-            'promo_discount'  => $deductionAmount,
-            'total_weight'    => $totalWeight,
-            'promo_discount'  => $deductionAmount,
-            'order_detail'    => $order,
-        ]);
+        return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => $totalAmount], 'status'=> 200],200);
+
     }
 
     public function codCheckout(Request $request)
