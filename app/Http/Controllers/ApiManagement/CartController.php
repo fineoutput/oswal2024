@@ -382,7 +382,9 @@ class CartController extends Controller
                 $giftCardAmount = round($giftCard->price + ($giftCard->price * 18 / 100), 2);
 
             }else{
+                
                 return response()->json(['success' => false, 'message' => 'Gift Card Not Found.'], 400);
+                
             }
 
         }else{

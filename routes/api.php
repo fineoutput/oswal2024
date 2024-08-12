@@ -85,7 +85,6 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 });
 
 
-
 Route::prefix('wishlist')->name('wishlist.')->group(function () {
 
     Route::get('/', [WishlistController::class, 'show'])->name('index');
@@ -136,8 +135,14 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
         Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
         
         Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
+
+        Route::post('paid-checkout', [OrderController::class, 'paidCheckout'])->name('paidCheckout');
+
+        Route::post('verify-payment', [OrderController::class, 'verifyPayment'])->name('verifypayment');
         
     });
+
+    Route::post('user/wallet-transaction', [AppController::class, 'walletTransaction'])->name('transaction');
 
     Route::get('promocode' ,[AppController::class, 'getPromoCode']);
 

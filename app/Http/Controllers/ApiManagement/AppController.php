@@ -4,6 +4,8 @@ namespace App\Http\Controllers\ApiManagement;
 
 use Illuminate\Support\Facades\Validator;
 
+use App\Models\WalletTransactionHistory;
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Controller;
@@ -348,5 +350,29 @@ class AppController extends Controller {
       }
 
       return response()->json(['success' => true, 'data' =>  $data ],200);
+    }
+
+
+    public function walletTransaction(Request $request) {
+        
+        $completedTransactions = WalletTransactionHistory::getByStatus(
+            WalletTransactionHistory::STATUS_COMPLETED,
+            Auth::id()
+        );
+
+        $data = [];
+
+        foreach($completedTransactions as $value){
+
+            $data[] = [
+                'user'             => $value->user_id,
+                'transaction_type' => $value->transaction_type,
+                'amount'           => $value->amount,
+                'description'      => $value->description,
+                'date'             => $value->created_at,
+            ];
+        }
+
+        return response()->json(['success' => true, 'data' =>  $data ],200);
     }
 }

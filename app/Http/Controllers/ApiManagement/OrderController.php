@@ -11,6 +11,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Services\RazorpayService;
+
 use Illuminate\Http\Request;
 
 use App\Models\OrderDetail;
@@ -31,9 +33,10 @@ class OrderController extends Controller
 {
     protected $cartController;
 
-    public function __construct(CartController  $cartController)
+    public function __construct(CartController $cartController ,RazorpayService $razorpayService)
     {
         $this->cart = $cartController;
+        $this->razorpayService = $razorpayService;
     }
 
     public function checkout(Request $request)
@@ -353,17 +356,22 @@ class OrderController extends Controller
             $cartCleared = Cart::where('user_id', $user->id)->delete();
 
             if ($user instanceof \App\Models\User) {
-                $user->wallet_amount -= $order->extra_discount;
-                $user->save();
 
-                WalletTransactionHistory::createTransaction([
-                    'user_id' => $user->id,
-                    'transaction_type' => 'debit',
-                    'amount' => $order->extra_discount,
-                    'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
-                    'status' => WalletTransactionHistory::STATUS_COMPLETED,
-                    'description' => "Used wallet amount for order ID: {$order->id}",
-                ]);
+                if($order->extra_discount != null){
+
+                    $user->wallet_amount -= $order->extra_discount;
+                    $user->save();
+    
+                    WalletTransactionHistory::createTransaction([
+                        'user_id' => $user->id,
+                        'transaction_type' => 'debit',
+                        'amount' => $order->extra_discount,
+                        'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                        'status' => WalletTransactionHistory::STATUS_COMPLETED,
+                        'description' => "Used wallet amount for order ID: {$order->id}",
+                    ]);
+
+                }
             }
 
             // Prepare response
@@ -380,7 +388,145 @@ class OrderController extends Controller
         return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
+    public function paidCheckout(Request $request) {
+
+        // Define validation rules
+        $rules = [
+            'order_id' => 'required|integer|exists:tbl_order1,id',
+            'payment_type' => 'required|integer'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        // Get authenticated user
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
+        }
+
+        $orderId = $request->input('order_id');
+
+        $paymentType = $request->input('payment_type');
+
+        // Fetch the order
+        $order = Order::where('id', $orderId)
+                    ->where('order_status', 0)
+                    ->first();
+
+        if (!$order) {
+            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+        }
+
+        if ($paymentType != 2) {
+            return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
+        }
+
+        $razorpayOrder = $this->razorpayService->createOrder($order->total_amount , $order->id);
+
+        $order->update([
+            'payment_type'      => 2,
+            'razorpay_order_id' => $razorpayOrder->id,
+        ]);
+
+        $data = [
+            'razor_order_id' => $razorpayOrder->id,
+            'amount' => $order->total_amount,
+            'email'  => $user->email,
+            'phone'  => $user->contact,
+            'name'   => $user->first_name,
+        ];
+
+        return response()->json(['status'=>true ,'message' => 'Order successfully created', 'data'=> $data],200);   
+    }
+
+    public function verifyPayment(Request $request) {
+        
+        $rules = [
+            'razorpay_signature'  => 'required|string',
+            'razorpay_payment_id' => 'required|string',
+            'razorpay_order_id'   => 'required|string',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        // Get authenticated user
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
+        }
+
+        $razorpaySignature = $request->input('razorpay_signature');
+        $razorpayPaymentId = $request->input('razorpay_payment_id');
+        $razorpayOrderId   = $request->input('razorpay_order_id');
+
+        $order = Order::where('razorpay_order_id', $razorpayOrderId)
+        ->where('order_status', 0)
+        ->first();
+
+        if (!$order) {
+           return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+        }
+
+        $signatureStatus = $this->razorpayService->verifySignature($request->all());
+
+        if ($signatureStatus) {
+
+            $invoiceNumber = generateInvoiceNumber($order->id);
+
+            if ($invoiceNumber) {
     
+                Cart::where('user_id', $user->id)->update(['checkout_status' => 1]);
+    
+                $cartCleared = Cart::where('user_id', $user->id)->delete();
+    
+                if ($user instanceof \App\Models\User) {
+    
+                    if($order->extra_discount != null){
+    
+                        $user->wallet_amount -= $order->extra_discount;
+                        $user->save();
+        
+                        WalletTransactionHistory::createTransaction([
+                            'user_id' => $user->id,
+                            'transaction_type' => 'debit',
+                            'amount' => $order->extra_discount,
+                            'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                            'status' => WalletTransactionHistory::STATUS_COMPLETED,
+                            'description' => "Used wallet amount for order ID: {$order->id}",
+                        ]);
+    
+                    }
+                }
+
+            }
+
+            $order->update([
+                'order_status'        => 1,
+                'payment_status'      => 1,
+                'txn_id'              => 1,
+                'razorpay_payment_id' => $razorpayPaymentId,
+                'razorpay_signature'  => $razorpaySignature,
+            ]);
+            // Prepare response
+            $response = [
+                'order_id' => $order->id,
+                'amount' => $order->total_amount,
+                'invoice_number' => $invoiceNumber
+            ];
+
+            return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
+        } else {
+            return response()->json(['status'=> false, 'message' => 'Payment verification failed' ,'status' => 400,], 400);
+        }
+    }
 
     public function orders(Request $request)
     {
@@ -466,7 +612,6 @@ class OrderController extends Controller
         ]);
     }
 
-  
     public function orderDetail(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -541,7 +686,6 @@ class OrderController extends Controller
             'status' => 200
         ]);
     }
-
 
     public function cancelOrder(Request $request)
 

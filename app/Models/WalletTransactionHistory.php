@@ -33,9 +33,15 @@ class WalletTransactionHistory extends Model
      * @param int $status
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getByStatus($status)
+    public static function getByStatus($status, $userId = null)
     {
-        return self::where('status', $status)->get();
+        $query = self::where('status', $status);
+    
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+    
+        return $query->get();
     }
 
     /**
