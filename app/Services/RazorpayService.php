@@ -15,7 +15,7 @@ class RazorpayService
 
     public function createOrder($amount, $receipt, $currency = 'INR')
     {
-
+        dd($amount);
         $amountInPaise = (float) $amount * 100;
 
         $order = $this->api->order->create([
