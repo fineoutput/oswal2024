@@ -476,7 +476,7 @@ class OrderController extends Controller
         }
 
         $signatureStatus = $this->razorpayService->verifySignature($request->all());
-
+dd( $signatureStatus);
         if ($signatureStatus) {
 
             $invoiceNumber = generateInvoiceNumber($order->id);
@@ -551,8 +551,8 @@ class OrderController extends Controller
 
         if ($user) {
 
-            $orders = Order::where('user_id', $user->id)->orderBy('id', 'DESC')->get();
-
+            $orders = Order::with('orderDetails.product')->where('user_id', $user->id)->orderBy('id', 'DESC')->get();
+            
             if ($orders->isNotEmpty()) {
 
                 foreach ($orders as $order) {
@@ -583,6 +583,19 @@ class OrderController extends Controller
 
                     }
 
+                    $productImage = [];
+                    foreach ($order->orderDetails as  $value) {
+                        
+                        $product = $value->product;
+
+                        $productImage [] = [
+                            ['image' => asset($product->img_app1) ],
+                            ['image' => asset($product->img_app2) ],
+                            ['image' => asset($product->img_app3) ],
+                            ['image' => asset($product->img_app4) ],
+                        ];
+                    }
+               
                     $dataw[] = [
                         'order_id'     => $order->id,
                         'order_status' => $order->order_status,
@@ -593,7 +606,8 @@ class OrderController extends Controller
                         'cod_charge'      => $order->cod_charge,
                         'payment_type'    => $payment_type,
                         'date'            => $order->date,
-                        'promocode'       => $promo
+                        'promocode'       => $promo,
+                        'product_image'   => $productImage,
                     ];
                 }
             }
