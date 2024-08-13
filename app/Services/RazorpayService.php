@@ -31,19 +31,16 @@ class RazorpayService
     }
 
 
-    public function verifySignature($attributes)
+   public function verifySignature($attributes)
     {
         try {
-            
-          $signature = $this->api->utility->verifyPaymentSignature($attributes);
-           dd($signature);
+            $this->api->utility->verifyPaymentSignature($attributes);
+            return true;
         } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
-            dd($e->getMessage());
-            // \Log::error('Razorpay signature verification failed: ' . $e->getMessage());
-            // return false;
+            dd( $e->getMessage());
+            
         } catch (\Exception $e) {
-            // Handle any other exceptions
-            dd($e->getMessage());
+            dd( $e->getMessage());
+        }
     }
-    
 }
