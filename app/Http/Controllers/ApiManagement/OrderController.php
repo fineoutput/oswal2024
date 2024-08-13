@@ -445,7 +445,6 @@ class OrderController extends Controller
 
     public function verifyPayment(Request $request) {
         
-        dd($request->all());
         $rules = [
             'razorpay_signature'  => 'required|string',
             'razorpay_payment_id' => 'required|string',

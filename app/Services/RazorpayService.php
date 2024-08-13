@@ -33,6 +33,7 @@ class RazorpayService
 
     public function verifySignature($attributes)
     {
+        dd($attributes);
         return $this->api->utility->verifyPaymentSignature($attributes);
     }
 }
