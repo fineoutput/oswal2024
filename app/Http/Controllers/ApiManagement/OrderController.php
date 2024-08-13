@@ -445,6 +445,7 @@ class OrderController extends Controller
 
     public function verifyPayment(Request $request) {
         
+        dd($request->all());
         $rules = [
             'razorpay_signature'  => 'required|string',
             'razorpay_payment_id' => 'required|string',
@@ -481,7 +482,7 @@ class OrderController extends Controller
             'razorpay_signature' => $razorpayOrderId
         );
         $signatureStatus = $this->razorpayService->verifySignature($attributes);
-        dd($signatureStatus);
+
         if ($signatureStatus) {
 
             $invoiceNumber = generateInvoiceNumber($order->id);
