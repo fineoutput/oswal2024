@@ -475,8 +475,13 @@ class OrderController extends Controller
            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
         }
 
-        $signatureStatus = $this->razorpayService->verifySignature($request->all());
-dd( $signatureStatus);
+        $attributes = array(
+            'razorpay_order_id' => $razorpaySignature,
+            'razorpay_payment_id' => $razorpayPaymentId,
+            'razorpay_signature' => $razorpayOrderId
+        );
+        $signatureStatus = $this->razorpayService->verifySignature($attributes);
+        dd($signatureStatus);
         if ($signatureStatus) {
 
             $invoiceNumber = generateInvoiceNumber($order->id);
