@@ -10,12 +10,13 @@ class RazorpayService
 
     public function __construct()
     {
-        $this->api = new Api(config('services.razorpay.key_id'), config('services.razorpay.key_secret'));
+        // $this->api = new Api(config('services.razorpay.key_id'), config('services.razorpay.key_secret'));
+        $this->api = new Api(config('rzp_test_nyyE7NA4CoCIbN'), config('U0iJVwdeskvEw7qVstJ7mh1c'));
     }
 
     public function createOrder($amount, $receipt, $currency = 'INR')
     {
-        dd($amount);
+        
         $amountInPaise = (float) $amount * 100;
 
         $order = $this->api->order->create([
