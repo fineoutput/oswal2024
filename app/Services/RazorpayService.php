@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Razorpay\Api\Api;
 
+use function PHPSTORM_META\type;
+
 class RazorpayService
 {
     protected $api;
@@ -16,8 +18,8 @@ class RazorpayService
 
     public function createOrder($amount, $receipt, $currency = 'INR')
     {
-        
         $amountInPaise = (float) $amount * 100;
+        dd(gettype($amountInPaise));
 
         $order = $this->api->order->create([
             'receipt' => strval($receipt),
