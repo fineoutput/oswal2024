@@ -609,7 +609,7 @@ class OrderController extends Controller
                         'delivery_charge' => $order->delivery_charge,
                         'rating_status'   => $rating_avg > 0 ? 1 : 0,
                         'rating'          => $rating_avg,
-                        'cod_charge'      => $order->cod_charge,
+                        'cod_charge'      => $order->cod_charge,     
                         'payment_type'    => $payment_type,
                         'date'            => $order->date,
                         'promocode'       => $promo,
@@ -695,7 +695,7 @@ class OrderController extends Controller
                             return $query->where('city_id', $city_id);
                         })
                         ->first();
-
+dd($type);
             $product_name = $lang != "hi" ? $product->name : $product->name_hi;
             $type_name = $lang != "hi" ? $type->type_name : $type->type_name_hi;
 
