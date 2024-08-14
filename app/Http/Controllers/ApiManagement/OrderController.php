@@ -684,17 +684,17 @@ class OrderController extends Controller
         $productdata = [];
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
-            dd($product , $detail->type);
-            $type = Type::where('product_id', $product->id)
-                        ->where('id', $detail->type_id)
-                        ->where('is_active', 1)
-                        ->when($state_id, function ($query, $state_id) {
-                            return $query->where('state_id', $state_id);
-                        })
-                        ->when($city_id, function ($query, $city_id) {
-                            return $query->where('city_id', $city_id);
-                        })
-                        ->first();
+            $type = $detail->type;
+            // $type = Type::where('product_id', $product->id)
+            //             ->where('id', $detail->type_id)
+            //             ->where('is_active', 1)
+            //             ->when($state_id, function ($query, $state_id) {
+            //                 return $query->where('state_id', $state_id);
+            //             })
+            //             ->when($city_id, function ($query, $city_id) {
+            //                 return $query->where('city_id', $city_id);
+            //             })
+            //             ->first();
 
             $product_name = $lang != "hi" ? $product->name : $product->name_hi;
             $type_name = $lang != "hi" ? $type->type_name : $type->type_name_hi;
