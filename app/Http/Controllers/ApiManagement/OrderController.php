@@ -603,7 +603,7 @@ class OrderController extends Controller
                
                     $dataw[] = [
                         'order_id'     => $order->id,
-                        'order_status' => $order->order_status,
+                        'order_status' => getOrderStatus($order->order_status),
                         'sub_total'    => $order->sub_total,
                         'amount'       => $order->total_amount,
                         'promocode_discount' => $order->promo_deduction_amount,
@@ -637,8 +637,6 @@ class OrderController extends Controller
             'user_id'   => 'required',
             'order_id'  => 'required',
             'lang'      => 'required',
-            'state_id'  => 'required',
-            'city_id'   => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -648,8 +646,7 @@ class OrderController extends Controller
         $user_id = $request->input('user_id');
         $order_id = $request->input('order_id');
         $lang = $request->input('lang');
-        $state_id = $request->input('state_id');
-        $city_id = $request->input('city_id');
+ 
 
         $user = User::find($user_id);
 
@@ -668,7 +665,10 @@ class OrderController extends Controller
                 'status' => 201
             ]);
         }
-
+     
+        $state_id = $order->address->state;
+        $city_id = $order->address->city;
+        
         $orderDetails = $order->orderDetails()->orderBy('id', 'DESC')->get();
         $dataw = [];
 
@@ -695,6 +695,7 @@ class OrderController extends Controller
                 'type_name' => $type_name,
                 'quantity' => $detail->quantity,
                 'quantity_price' => $detail->amount,
+                'order_status' => getOrderStatus($order->order_status),
                 'order_datetime' => $order->date,
             ];
         }
@@ -742,8 +743,7 @@ class OrderController extends Controller
             ]);
         }
 
-        $order->order_status = 5;
-        $order->save();
+        $order->delete();
 
         return response()->json([
             'message' => 'success',

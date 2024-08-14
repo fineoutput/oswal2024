@@ -472,3 +472,33 @@ if (!function_exists('getConstant')){
         return $constant;
     }
 }
+
+if (!function_exists('getOrderStatus')){
+
+    function getOrderStatus($orderstatusId) {
+
+        $orderStatus = 'Pending';
+
+        if($orderstatusId == 1){
+
+            $orderStatus = 'Under Review';
+
+        }else if($orderstatusId == 2){
+
+            $orderStatus = 'Confirmed';
+
+        }else if($orderstatusId == 3){
+
+            $orderStatus = 'Dispatched';
+
+        }else if($orderstatusId == 4) {
+
+            $orderStatus = 'Delivered';
+
+        }else{
+            $orderStatus = 'Rejected';
+        }
+
+        return $orderStatus;
+    }
+}
