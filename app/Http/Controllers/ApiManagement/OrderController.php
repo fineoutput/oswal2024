@@ -668,8 +668,8 @@ class OrderController extends Controller
         }
      
         $address  = $order->address;
-        $state_id = $address->state;
-        $city_id  = $address->city;
+        // $state_id = $address->state;
+        // $city_id  = $address->city;
         
         $address->load('states', 'citys');
 
@@ -717,6 +717,7 @@ class OrderController extends Controller
             'promo_discount'   => $order->promo_deduction_amount,
             'wallet_discount'  => $order->extra_discount,
             'delivery_charge'  => $order->delivery_charge,
+            'gift_amount'      => $order->gift_amt,
             'total_amount'     => $order->total_amount,
             'order_status'     => getOrderStatus($order->order_status),
             'order_datetime'   => $order->date,
