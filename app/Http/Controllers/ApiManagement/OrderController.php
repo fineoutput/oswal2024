@@ -684,7 +684,7 @@ class OrderController extends Controller
         $productdata = [];
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
-            dd($product);
+            dd($product , $detail);
             $type = Type::where('product_id', $product->id)
                         ->where('id', $detail->type_id)
                         ->where('is_active', 1)
