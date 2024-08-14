@@ -139,7 +139,7 @@ if(!function_exists('sendCategory')){
 
 if(!function_exists('formatPrice')){
 
-    function formatPrice($amount) {
+    function formatPrice($amount , $format=true) {
 
         $formatted_amount = number_format((float)$amount, 2, '.', '');
 
@@ -150,8 +150,11 @@ if(!function_exists('formatPrice')){
         $decimal_part = isset($parts[1]) ? '.' . $parts[1] : '';
 
         $formatted_integer_part = implode(',', str_split(strrev($integer_part), 3));
-
-        $formatted_amount = '₹' . strrev($formatted_integer_part) . $decimal_part;
+        if($format){
+            $formatted_amount = '₹' . strrev($formatted_integer_part) . $decimal_part;
+        }else{
+            $formatted_amount;
+        }
 
         return $formatted_amount;
 

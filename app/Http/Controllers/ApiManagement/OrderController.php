@@ -295,7 +295,7 @@ class OrderController extends Controller
         ]);
 
         // Return the calculated data (or proceed with further processing)
-        return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => $totalAmount], 'status'=> 200],200);
+        return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => formatPrice($totalAmount ,false) ], 'status'=> 200],200);
 
     }
 
