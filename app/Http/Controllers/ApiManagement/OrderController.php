@@ -548,7 +548,7 @@ class OrderController extends Controller
         $user = User::find($user_id);
 
         $dataw = [];
-
+        $productImage = [];
         if ($user) {
 
             $orders = Order::with('orderDetails.product')->where('user_id', $user->id)->orderBy('id', 'DESC')->get();
@@ -583,7 +583,6 @@ class OrderController extends Controller
 
                     }
 
-                    $productImage = [];
                     foreach ($order->orderDetails as  $value) {
                         
                         $product = $value->product;
