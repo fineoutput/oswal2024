@@ -453,4 +453,25 @@ class AppController extends Controller {
         }
     }
 
+    public function getWalletAmount(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'device_id'   => 'required|string|exists:users,device_id',
+            'user_id'     => 'required|integer|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+        
+        $data = [
+            'user_id' => $request->user_id,
+            'wallet_amount' =>Auth::user()->wallet_amount,
+        ];
+
+        return response()->json(['success' => true, 'data' => $data]);
+    }
 }

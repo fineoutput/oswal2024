@@ -152,6 +152,8 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('rating' ,[AppController::class, 'giveRating']);
     
+    Route::post('wallet' ,[AppController::class, 'getWalletAmount']);
+    
 });
 
 // Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
