@@ -350,7 +350,7 @@ class OrderController extends Controller
 
         // Ensure invoice number is generated successfully
         if ($invoiceNumber) {
-
+            dd($user->id);
             Cart::where('user_id', $user->id)->update(['checkout_status' => 1]);
 
             $cartCleared = Cart::where('user_id', $user->id)->delete();
