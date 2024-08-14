@@ -149,6 +149,8 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::get('gift-card' ,[AppController::class, 'giftCard']);
 
     Route::get('gift-card-sec' ,[AppController::class, 'giftCardSec']);
+
+    Route::post('rating' ,[AppController::class, 'giveRating']);
     
 });
 
