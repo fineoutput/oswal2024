@@ -583,18 +583,11 @@ class OrderController extends Controller
 
                     }
 
-                    foreach ($order->orderDetails as  $value) {
-                        
-                        $product = $value->product;
-
-                        $productImage [] = [
-                            ['image' => asset($product->img_app1) ],
-                            ['image' => asset($product->img_app2) ],
-                            ['image' => asset($product->img_app3) ],
-                            ['image' => asset($product->img_app4) ],
-                        ];
+                    foreach ($order->orderDetails as $detail) {
+                        $product = $detail->product;
+                        $productImages[] = asset($product->img_app1);
                     }
-               
+                    
                     $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
                     
                     $rating_avg = number_format((float)$rating_avg, 1, '.', '');
