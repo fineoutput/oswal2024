@@ -667,9 +667,9 @@ class OrderController extends Controller
             ]);
         }
      
-        $address = $order->address;
+        $address  = $order->address;
         $state_id = $address->state;
-        $city_id = $address->city;
+        $city_id  = $address->city;
         
         $address->load('states', 'citys');
 
@@ -684,7 +684,7 @@ class OrderController extends Controller
         $productdata = [];
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
-            dd($product , $detail);
+            dd($product , $detail->type);
             $type = Type::where('product_id', $product->id)
                         ->where('id', $detail->type_id)
                         ->where('is_active', 1)
