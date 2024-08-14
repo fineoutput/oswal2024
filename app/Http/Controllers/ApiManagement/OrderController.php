@@ -477,7 +477,7 @@ class OrderController extends Controller
 
         $signatureStatus = $this->razorpayService->verifySignature($request->all());
       
-        if ($signatureStatus) {
+        if ($signatureStatus['status']) {
 
             $invoiceNumber = generateInvoiceNumber($order->id);
 
@@ -524,7 +524,7 @@ class OrderController extends Controller
 
             return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
         } else {
-            return response()->json(['status'=> false, 'message' => 'Payment verification failed' ,'status' => 400,], 400);
+            return response()->json(['status'=> false, 'message' =>  $signatureStatus['message'] ,'status' => 400,], 400);
         }
     }
 
@@ -774,7 +774,6 @@ class OrderController extends Controller
         ]);
     }
 
-    
     public function trackOrder(Request $request)
     {
         $validator = Validator::make($request->all(), [

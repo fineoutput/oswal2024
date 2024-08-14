@@ -18,8 +18,8 @@ class RazorpayService
 
     public function createOrder($amount, $receipt, $currency = 'INR')
     {
-        $amountInPaise = (float) $amount * 100;
-
+        $amountInPaise = (int)($amount * 100);
+       
         $order = $this->api->order->create([
             'receipt' => strval($receipt),
             'amount' => $amountInPaise,
@@ -31,16 +31,29 @@ class RazorpayService
     }
 
 
-   public function verifySignature($attributes)
-    {
+   public function verifySignature($request) {
+        
+        // $payment = $this->api->payment->fetch($request['razorpay_payment_id']);
         try {
-            $this->api->utility->verifyPaymentSignature($attributes);
-            return true;
-        } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
-            dd( $e->getMessage());
-            
+            $attributes = array(
+
+                'razorpay_order_id' => $request['razorpay_order_id'],
+
+                'razorpay_payment_id' => $request['razorpay_payment_id'],
+
+                'razorpay_signature' => $request['razorpay_signature']
+
+            );
+
+             $this->api->utility->verifyPaymentSignature($attributes);
+
+             return ['status' => false , 'message' => 'payment verify sucessfully' ];
+
         } catch (\Exception $e) {
-            dd( $e->getMessage());
+
+            $message =  $e->getMessage();
+
+            return ['status' => false , 'message' => $message ];
         }
     }
 }
