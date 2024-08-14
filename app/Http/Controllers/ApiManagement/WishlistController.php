@@ -135,7 +135,7 @@ class WishlistController extends Controller
             $typedata = [];
     
             // Query type data based on state and city (if provided)
-            $typeQuery = Type::where('product_id', $product_id)
+            $typeQuery = Type::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
                             ->where('is_active', 1);
     
             if (!empty($state_id)) {
@@ -207,7 +207,7 @@ class WishlistController extends Controller
                 'cart_quantity' => $cartInfo['cart_quantity'],
                 'cart_total_price' => $cartInfo['cart_total_price'],
                 'cart_status' => $cartInfo['cart_status'],
-                'type' => $typedata
+                'type' => $typedata[0]
             ];
         }
     
