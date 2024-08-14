@@ -475,13 +475,8 @@ class OrderController extends Controller
            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
         }
 
-        $attributes = array(
-            'razorpay_order_id' => $razorpaySignature,
-            'razorpay_payment_id' => $razorpayPaymentId,
-            'razorpay_signature' => $razorpayOrderId
-        );
-        $signatureStatus = $this->razorpayService->verifySignature($attributes);
-
+        $signatureStatus = $this->razorpayService->verifySignature($request->all());
+      
         if ($signatureStatus) {
 
             $invoiceNumber = generateInvoiceNumber($order->id);
@@ -640,7 +635,7 @@ class OrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([ 'message' => $validator->errors()->first(), 'status' => 201]);
+            return response()->json([ 'message' => $validator->errors()->first(), 'status' => 422],422);
         }
 
         $user_id = $request->input('user_id');
@@ -653,27 +648,37 @@ class OrderController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'User does not exist',
-                'status' => 201
+                'status' => 400
             ]);
         }
 
         $order = Order::find($order_id);
-
+       
         if (!$order) {
             return response()->json([
                 'message' => 'Order does not exist',
-                'status' => 201
+                'status' => 400
             ]);
         }
      
-        $state_id = $order->address->state;
-        $city_id = $order->address->city;
+        $address = $order->address;
+        $state_id = $address->state;
+        $city_id = $address->city;
         
+        $address->load('states', 'citys');
+
+        $addr_string = "Doorflat {$address->doorflat}, ";
+
+        $addr_string = "Doorflat {$address->doorflat}, " .
+                   (!empty($address->landmark) ? "{$address->landmark}, " : '') .
+                   "{$address->address}, {$address->location_address}, {$address->zipcode}";
+
         $orderDetails = $order->orderDetails()->orderBy('id', 'DESC')->get();
-        $dataw = [];
+        $data = [];
 
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
+
             $type = Type::where('product_id', $product->id)
                         ->where('id', $detail->type_id)
                         ->where('is_active', 1)
@@ -688,21 +693,33 @@ class OrderController extends Controller
             $product_name = $lang != "hi" ? $product->name : $product->name_hi;
             $type_name = $lang != "hi" ? $type->type_name : $type->type_name_hi;
 
-            $dataw[] = [
-                'order2_id' => $detail->id,
-                'product_name' => $product_name,
-                'product_image' => asset($product->img_app1),
-                'type_name' => $type_name,
-                'quantity' => $detail->quantity,
-                'quantity_price' => $detail->amount,
-                'order_status' => getOrderStatus($order->order_status),
-                'order_datetime' => $order->date,
+            
+             $productdata[] = [
+                'order_detail_id'  => $detail->id,
+                'product_name'     => $product_name,
+                'product_image'    => asset($product->img_app1),
+                'type_name'        => $type_name,
+                'quantity'         => $detail->quantity,
+                'quantity_price'   => $detail->amount,
             ];
         }
 
+        $data = [
+            'product' => $productdata,
+            'order_id'         => $order->id,
+            'subtotal'         => $order->sub_total,
+            'promo_discount'   => $order->promo_deduction_amount,
+            'wallet_discount'  => $order->extra_discount,
+            'delivery_charge'  => $order->delivery_charge,
+            'total_amount'     => $order->total_amount,
+            'order_status'     => getOrderStatus($order->order_status),
+            'order_datetime'   => $order->date,
+            'address'          => $addr_string
+        ];
+
         return response()->json([
             'message' => 'success',
-            'data' => $dataw,
+            'data' => $data,
             'status' => 200
         ]);
     }
