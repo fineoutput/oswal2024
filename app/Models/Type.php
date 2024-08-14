@@ -109,7 +109,7 @@ class Type extends Model
 
     public function orderDetails()
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->hasOne(OrderDetail::class , 'type_id');
     }
 
     public function wishlist()
