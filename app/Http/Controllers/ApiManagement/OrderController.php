@@ -377,7 +377,7 @@ class OrderController extends Controller
             // Prepare response
             $response = [
                 'order_id' => $order->id,
-                'amount' => $order->total_amount,
+                'amount' => formatPrice($order->total_amount,false),
                 'invoice_number' => $invoiceNumber
             ];
 
@@ -434,7 +434,7 @@ class OrderController extends Controller
 
         $data = [
             'razor_order_id' => $razorpayOrder->id,
-            'amount' => $order->total_amount,
+            'amount' => formatPrice($order->total_amount,false),
             'email'  => $user->email,
             'phone'  => $user->contact,
             'name'   => $user->first_name,
@@ -518,7 +518,7 @@ class OrderController extends Controller
             // Prepare response
             $response = [
                 'order_id' => $order->id,
-                'amount' => $order->total_amount,
+                'amount' => formatPrice($order->total_amount,false),
                 'invoice_number' => $invoiceNumber
             ];
 
@@ -549,8 +549,8 @@ class OrderController extends Controller
 
         $dataw = [];
 
-        $productImage = [];
         
+
         if ($user) {
 
             $orders = Order::with('orderDetails.product')->where('user_id', $user->id)->orderBy('id', 'DESC')->get();
@@ -584,10 +584,10 @@ class OrderController extends Controller
                         $payment_type = $lang != 'hi' ? 'Online Payment' : lang_change('Online Payment');
 
                     }
-
-                    foreach ($order->orderDetails as $detail) {
+                    $productImage = [];
+                    foreach ($order->orderDetails as $key => $detail) {
                         $product = $detail->product;
-                        $productImages[] = asset($product->img_app1);
+                        $productImage[] = asset($product->img_app1);
                     }
                     
                     $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
@@ -597,10 +597,10 @@ class OrderController extends Controller
                     $dataw[] = [
                         'order_id'     => $order->id,
                         'order_status' => getOrderStatus($order->order_status),
-                        'sub_total'    => $order->sub_total,
-                        'amount'       => $order->total_amount,
-                        'promocode_discount' => $order->promo_deduction_amount,
-                        'delivery_charge' => $order->delivery_charge,
+                        'sub_total'    => formatPrice($order->sub_total,false),
+                        'amount'       => formatPrice($order->total_amount,false),
+                        'promocode_discount' => formatPrice($order->promo_deduction_amount,false),
+                        'delivery_charge' => formatPrice($order->delivery_charge,false),
                         'rating_status'   => $rating_avg > 0 ? 1 : 0,
                         'rating'          => $rating_avg,
                         'cod_charge'      => $order->cod_charge,     
@@ -720,11 +720,11 @@ class OrderController extends Controller
         $data = [
             'product'          => $productdata,
             'order_id'         => $order->id,
-            'subtotal'         => $order->sub_total,
-            'promo_discount'   => $order->promo_deduction_amount,
-            'wallet_discount'  => $order->extra_discount,
-            'delivery_charge'  => $order->delivery_charge,
-            'gift_amount'      => $order->gift_amt ?? 0,
+            'subtotal'         => formatPrice($order->sub_total,false),
+            'promo_discount'   => formatPrice($order->promo_deduction_amount,false),
+            'wallet_discount'  => formatPrice($order->extra_discount,false),
+            'delivery_charge'  => formatPrice($order->delivery_charge,false),
+            'gift_amount'      => formatPrice($order->gift_amt) ?? 0,
             'total_amount'     => $order->total_amount,
             'order_status'     => getOrderStatus($order->order_status),
             'address'          => $addr_string,
