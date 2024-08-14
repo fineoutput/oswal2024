@@ -681,10 +681,10 @@ class OrderController extends Controller
 
         $orderDetails = $order->orderDetails()->orderBy('id', 'DESC')->get();
         $data = [];
-
+        $productdata = [];
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
-
+            dd($product);
             $type = Type::where('product_id', $product->id)
                         ->where('id', $detail->type_id)
                         ->where('is_active', 1)
@@ -695,7 +695,7 @@ class OrderController extends Controller
                             return $query->where('city_id', $city_id);
                         })
                         ->first();
-dd($type);
+
             $product_name = $lang != "hi" ? $product->name : $product->name_hi;
             $type_name = $lang != "hi" ? $type->type_name : $type->type_name_hi;
 
@@ -711,7 +711,7 @@ dd($type);
         }
 
         $data = [
-            'product' => $productdata,
+            'product'          => $productdata,
             'order_id'         => $order->id,
             'subtotal'         => $order->sub_total,
             'promo_discount'   => $order->promo_deduction_amount,
