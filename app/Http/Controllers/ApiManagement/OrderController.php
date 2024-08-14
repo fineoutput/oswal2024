@@ -682,6 +682,19 @@ class OrderController extends Controller
         $orderDetails = $order->orderDetails()->orderBy('id', 'DESC')->get();
         $data = [];
         $productdata = [];
+
+        $payment_type = '';
+
+        if ($order->payment_type == 1) {
+
+            $payment_type = $lang != 'hi' ? 'Cash on delivery' : lang_change('Cash on delivery');
+
+        } elseif ($order->payment_type == 2) {
+
+            $payment_type = $lang != 'hi' ? 'Online Payment' : lang_change('Online Payment');
+
+        }
+
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
             $type = $detail->type;
@@ -720,8 +733,9 @@ class OrderController extends Controller
             'gift_amount'      => $order->gift_amt,
             'total_amount'     => $order->total_amount,
             'order_status'     => getOrderStatus($order->order_status),
+            'address'          => $addr_string,
+            'payment_mod'      => $payment_type,
             'order_datetime'   => $order->date,
-            'address'          => $addr_string
         ];
 
         return response()->json([
