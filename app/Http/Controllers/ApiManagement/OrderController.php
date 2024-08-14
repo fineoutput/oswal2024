@@ -596,6 +596,10 @@ class OrderController extends Controller
                         ];
                     }
                
+                    $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
+                    
+                    $rating_avg = number_format((float)$rating_avg, 1, '.', '');
+
                     $dataw[] = [
                         'order_id'     => $order->id,
                         'order_status' => getOrderStatus($order->order_status),
@@ -603,6 +607,8 @@ class OrderController extends Controller
                         'amount'       => $order->total_amount,
                         'promocode_discount' => $order->promo_deduction_amount,
                         'delivery_charge' => $order->delivery_charge,
+                        'rating_status'   => $rating_avg > 0 ? 1 : 0,
+                        'rating'          => $rating_avg,
                         'cod_charge'      => $order->cod_charge,
                         'payment_type'    => $payment_type,
                         'date'            => $order->date,
@@ -653,7 +659,7 @@ class OrderController extends Controller
         }
 
         $order = Order::find($order_id);
-       
+        // dd($order);
         if (!$order) {
             return response()->json([
                 'message' => 'Order does not exist',
