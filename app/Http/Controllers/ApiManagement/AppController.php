@@ -12,9 +12,9 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\ShippingCharge; 
+use Illuminate\Support\Facades\DB;
 
-use App\Models\ProductRating;
+use App\Models\ShippingCharge; 
 
 use Illuminate\Http\Request;
 
@@ -377,13 +377,44 @@ class AppController extends Controller {
         return response()->json(['success' => true, 'data' =>  $data ],200);
     }
 
-    public function giveRating(Request $request) {
+    // public function giveRating(Request $request) {
+        
+    //     $validator = Validator::make($request->all(), [
+    //         'device_id'   => 'required|string|exists:users,device_id',
+    //         'user_id'     => 'required|string|exists:users,id',
+    //         'product_id'  => 'required|integer|exists:ecom_products,id',
+    //         'category_id' => 'required|integer|exists:ecom_categories,id',
+    //         'rating'      => 'required|integer|min:1|max:5',
+    //         'description' => 'required|string|max:1000',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors()->first()
+    //         ], 400);
+    //     }
+
+    //     $productRating = new ProductRating();
+    //     $productRating->device_id   = $request->input('device_id');
+    //     $productRating->product_id  = $request->input('product_id');
+    //     $productRating->category_id = $request->input('category_id');
+    //     $productRating->rating      =  (float) $request->input('rating');
+    //     $productRating->description = $request->input('description');
+    //     $productRating->description_hi = lang_change($request->input('description'));
+    //     $productRating->ip  = $request->ip();
+    //     $productRating->date  = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
+    //     $productRating->save();
+    
+    //     return response()->json(['success' => true,'message' => 'Rating submitted successfully','data' => $productRating], 201);
+    // }
+    public function giveRating(Request $request)
+    {
         
         $validator = Validator::make($request->all(), [
             'device_id'   => 'required|string|exists:users,device_id',
-            'user_id'     => 'required|string|exists:users,id',
-            'product_id'  => 'required|integer|exists:ecom_products,id',
-            'category_id' => 'required|integer|exists:ecom_categories,id',
+            'user_id'     => 'required|integer|exists:users,id',
+            'order_id'    => 'required|integer|exists:tbl_order1,id',
             'rating'      => 'required|integer|min:1|max:5',
             'description' => 'required|string|max:1000',
         ]);
@@ -395,18 +426,31 @@ class AppController extends Controller {
             ], 400);
         }
 
-        $productRating = new ProductRating();
-        $productRating->device_id   = $request->input('device_id');
-        $productRating->product_id  = $request->input('product_id');
-        $productRating->category_id = $request->input('category_id');
-        $productRating->rating      =  (float) $request->input('rating');
-        $productRating->description = $request->input('description');
-        $productRating->description_hi = lang_change($request->input('description'));
-        $productRating->ip  = $request->ip();
-        $productRating->date  = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
-        $productRating->save();
-    
-        return response()->json(['success' => true,'message' => 'Rating submitted successfully','data' => $productRating], 201);
+        $data = [
+            'device_id'     => $request->input('device_id'),
+            'user_id'       => $request->input('user_id'),
+            'order_id'      => $request->input('order_id'),
+            'rating'        => (float) $request->input('rating'),
+            'description'   => $request->input('description'),
+            'description_hi'=> lang_change($request->input('description')),
+            'ip'            => $request->ip(),
+            'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+        ];
+
+        $inserted = DB::table('order_ratings')->insert($data);
+
+        if ($inserted) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Rating submitted successfully',
+                'data'    => $data
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to submit rating'
+            ], 500);
+        }
     }
-    
+
 }
