@@ -47,7 +47,7 @@ class RazorpayService
 
              $this->api->utility->verifyPaymentSignature($attributes);
 
-             return ['status' => false , 'message' => 'payment verify sucessfully' ];
+             return ['status' => true , 'message' => 'payment verify sucessfully'];
 
         } catch (\Exception $e) {
 
