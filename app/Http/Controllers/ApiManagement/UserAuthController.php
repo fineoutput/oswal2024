@@ -64,13 +64,16 @@ class UserAuthController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
+        // $dlt = env('SMS_SIGNUP_DLT');
+        $dlt = '1207166444129174674';
+
         if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
         
             $OTP = generateOtp();
 
-            $msg = "Welcome to fineoutput. Your new OTP is {$OTP} for registration.";
+            $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
     
-            // sendOtpSms($msg, session()->get('user_contact')); // Uncomment this line to send the OTP SMS
+            sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt); // Uncomment this line to send the OTP SMS
     
             // Update the existing OTP record
             $otpData = Otp::updateOrCreate(
@@ -125,9 +128,9 @@ class UserAuthController extends Controller
         
         $OTP = generateOtp();
 
-        $msg="Welcome to fineoutput and Your OTP is".$OTP."for Register." ;
+        $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
 
-        // sendOtpSms($msg , $user->contact);
+        sendOtpSms($msg, $user->contact, $OTP, $dlt);
 
         $otpData = Otp::create([
             'name' =>  $name,
@@ -254,10 +257,11 @@ class UserAuthController extends Controller
         if ($user) {
 
             $OTP = generateOtp();
-
+            // $dlt = env('SMS_LOGIN_DLT');
+            $dlt = '1207166444113966752';
             $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
 
-            // sendOtpSms($msg , $user->contact);
+            sendOtpSms($msg, $user->contact, $OTP, $dlt);
 
             $otpData = Otp::create([
                 'name' =>  $user->first_name,
