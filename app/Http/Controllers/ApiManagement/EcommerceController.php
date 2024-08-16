@@ -96,7 +96,7 @@ class EcommerceController extends Controller
         switch ($currentRouteName) {
             case 'ecomm.products':
                 
-                $rules['type'] = 'required|string';
+                $rules['type'] = 'nullable|string';
     
                 switch ($request->type) {
                     case 'tranding':
