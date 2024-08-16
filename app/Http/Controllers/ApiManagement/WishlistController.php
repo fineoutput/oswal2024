@@ -82,7 +82,6 @@ class WishlistController extends Controller
 
     public function Show(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'device_id' => 'required|string',
             'user_id'   => 'nullable|string',

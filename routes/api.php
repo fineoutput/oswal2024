@@ -84,20 +84,6 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 
 });
 
-
-Route::prefix('wishlist')->name('wishlist.')->group(function () {
-
-    Route::get('/', [WishlistController::class, 'show'])->name('index');
-    
-    Route::post('user', [WishlistController::class, 'show'])->name('user');
-
-    Route::post('store', [WishlistController::class, 'store'])->name('store');
-
-    Route::post('destroy',[WishlistController::class, 'destroy'])->name('destroy');
-    
-    Route::post('move-to-cart',[WishlistController::class, 'moveToCart'])->name('move-to-cart');
-});
-
 Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
@@ -123,6 +109,17 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
+
+    Route::prefix('wishlist')->name('wishlist.')->group(function () {
+
+        Route::post('/', [WishlistController::class, 'Show'])->name('index');
+    
+        Route::post('store', [WishlistController::class, 'store'])->name('store');
+    
+        Route::post('destroy',[WishlistController::class, 'destroy'])->name('destroy');
+        
+        Route::post('move-to-cart',[WishlistController::class, 'moveToCart'])->name('move-to-cart');
+    });
 
     Route::prefix('order')->name('order.')->group(function () {
     
