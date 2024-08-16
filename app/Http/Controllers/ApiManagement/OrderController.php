@@ -775,7 +775,8 @@ class OrderController extends Controller
             ]);
         }
 
-        $order->delete();
+        $order->order_status= 5;
+        $order->rejected_by_id= Auth::user()->id;
 
         return response()->json([
             'message' => 'success',
