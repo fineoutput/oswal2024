@@ -26,17 +26,40 @@
 
         <div class="page-content-wrapper">
             <div class="row">
+                
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-danger mini-stat position-relative">
                         <a href="#">
                             <div class="card-body">
                                 <div class="mini-stat-desc">
-                                    <h6 class="text-uppercase verti-label text-white-50">Total Team</h6>
+                                    <h6 class="text-uppercase verti-label text-white-50">Most Viewed Category</h6>
                                     <div class="text-white">
-                                        <h6 class="text-uppercase mt-0 text-white-50">Total Orders</h6>
+                                        <h6 class="text-uppercase mt-0 text-white-50">Oswal Soap Bars</h6>
                                         <h3 class="mb-3 mt-0">0</h3>
                                         <div class="">
-                                            <span class="ml-2">Total Orders</span>
+                                            <span class="ml-2">Most Viewed Category</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="ion ion-ios-gear-outline"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">TOTAL PAGE VIEWS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">TOTAL PAGE VIEWS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">TOTAL PAGE VIEWS</span>
                                         </div>
                                     </div>
                                     <div class="mini-stat-icon">
@@ -48,7 +71,198 @@
                     </div>
                 </div>
 
-               
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">TODAY`S PAGE VIEWS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">TODAY`S PAGE VIEWS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">TODAY`S PAGE VIEWS</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="mdi mdi-shopping display-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">WEBSITE USERS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">WEBSITE USERS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">WEBSITE USERS</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="mdi mdi-shopping display-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">MOBILE USERS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">MOBILE USERS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">MOBILE USERS</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="mdi mdi-shopping display-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">TODAY`S MOBILE USERS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">TODAY`S MOBILE USERS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">TODAY`S MOBILE USERS</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="mdi mdi-shopping display-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">TODAY`S WEB USERS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">TODAY`S WEB USERS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">TODAY`S WEB USERS</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="mdi mdi-shopping display-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger mini-stat position-relative">
+                        <a href="#">
+                            <div class="card-body">
+                                <div class="mini-stat-desc">
+                                    <h6 class="text-uppercase verti-label text-white-50">TODAY`S ORDERS</h6>
+                                    <div class="text-white">
+                                        <h6 class="text-uppercase mt-0 text-white-50">TODAY`S ORDERS</h6>
+                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <div class="">
+                                            <span class="ml-2">TODAY`S ORDERS</span>
+                                        </div>
+                                    </div>
+                                    <div class="mini-stat-icon">
+                                        <i class="mdi mdi-shopping display-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div> 
+
+                <div class="col-12 table-rep-plugin">
+
+                    <div class="row">
+
+                        <div class="col-12"> <h4 class="mt-0 header-title">Latest Page Views</h4> </div>
+
+                    </div>
+
+                    <div class="table-responsive b-0" data-pattern="priority-columns">
+
+                        <table id="userTable" class="table  table-striped">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>#</th>
+
+                                    <th data-priority="1">Browser</th>
+
+                                    <th data-priority="3">Came From</th>
+
+                                    <th data-priority="3">Platform</th>
+
+                                    <th data-priority="6">Full Detail</th>
+
+                                    <th data-priority="6">date</th>
+
+                                    <th data-priority="6">Web/Mobile</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>1</td>
+
+                                    <td>Chrome	</td>
+
+                                    <td> https://www.fineoutput.co.in/oswalwebsite/ </td>
+
+                                    <td> Unknown Windows OS </td>
+
+                                    <td>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 </td>
+
+                                    <td> 2024-08-16 11:13:38 </td>
+
+                                    <td> WebSite </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
             </div>
             <!-- end page content-->
         </div> <!-- container-fluid -->
