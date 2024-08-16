@@ -150,7 +150,7 @@
                                             <tbody>
 
                                                 @foreach ($orders as $key => $order)
-                                                @dd($order->gift1)
+                                                @dd($order->gift1 ,$order->gift1_id)
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
 
