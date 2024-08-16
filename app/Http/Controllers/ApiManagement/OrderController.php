@@ -776,6 +776,7 @@ class OrderController extends Controller
         }
 
         $order->order_status= 5;
+        $order->rejected_by = 1;
         $order->rejected_by_id= Auth::user()->id;
 
         return response()->json([
