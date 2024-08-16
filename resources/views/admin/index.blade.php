@@ -213,7 +213,7 @@
 
                     <div class="table-responsive b-0" data-pattern="priority-columns">
 
-                        <table id="userTable" class="table  table-striped">
+                        <table id="" class="table  table-striped">
 
                             <thead>
 
@@ -229,7 +229,7 @@
 
                                     <th data-priority="6">Full Detail</th>
 
-                                    <th data-priority="6">date</th>
+                                    <th data-priority="6">Date</th>
 
                                     <th data-priority="6">Web/Mobile</th>
 
