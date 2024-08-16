@@ -194,9 +194,20 @@
 
                                                         <td>{{ $value->type_name }}</td>
 
-                                                        <td>{{ $value->state->state_name }}</td>
-
-                                                        <td>{{ $value->city->city_name }}</td>
+                                                        <td> 
+                                                            @if($value->state_id != null && $value->state != null) 
+                                                            {{ $value->state->state_name }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($value->city_id != null && $value->city != null)  
+                                                            {{ $value->city->city_name }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
 
                                                         <td><input type="text" id="delmrp{{$value->id}}" class="form-control" value="{{ $value->del_mrp }}" name="del_mrp{{$value->id}}"></td>
 
