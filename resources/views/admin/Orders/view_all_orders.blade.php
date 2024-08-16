@@ -150,7 +150,7 @@
                                             <tbody>
 
                                                 @foreach ($orders as $key => $order)
-                                                @dd($order->gift1 ,$order->gift1_id)
+                                               
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
 
@@ -342,7 +342,7 @@
                                                         <td> {{ $order->order_from }}</td>
 
                                                         <td>
-                                                             @if($order->gift_id != null && $order->gift_id != '')
+                                                             @if($order->gift_id != null && $order->gift_id != '' && $order->gift_id != 0)
                                                              {{ $order->gift->name }}
                                                              @else
                                                                   No Gift Card
@@ -350,7 +350,7 @@
                                                         </td>
                                                         
                                                         <td>
-                                                            @if($order->gift1_id != null && $order->gift1_id != '')
+                                                            @if($order->gift1_id != null && $order->gift1_id != '' && $order->gift1_id != 0)
                                                             {{ $order->gift1->name }}
                                                             @else
                                                                  No Gift Card
