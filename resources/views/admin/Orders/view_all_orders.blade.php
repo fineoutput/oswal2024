@@ -350,7 +350,7 @@
                                                         </td>
                                                         
                                                         <td>
-                                                            @if($order->gift1_id != null && $order->gift1_id != '' && $order->gift1_id != 0)
+                                                            @if($order->gift1_id != null && $order->gift1_id != '' && $order->gift1_id != 0 && $order->gift1 != null)
                                                             {{ $order->gift1->name }}
                                                             @else
                                                                  No Gift Card
