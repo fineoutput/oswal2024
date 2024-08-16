@@ -150,6 +150,7 @@
                                             <tbody>
 
                                                 @foreach ($orders as $key => $order)
+                                                @dd($order->gift1)
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
 
