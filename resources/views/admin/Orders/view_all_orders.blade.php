@@ -341,7 +341,7 @@
                                                         <td> {{ $order->order_from }}</td>
 
                                                         <td>
-                                                             @if(!empty($order->gift_id != 0))
+                                                             @if($order->gift_id != null && $order->gift_id != '')
                                                              {{ $order->gift->name }}
                                                              @else
                                                                   No Gift Card
@@ -349,7 +349,7 @@
                                                         </td>
                                                         
                                                         <td>
-                                                            @if(!empty($order->gift1_id!=0))
+                                                            @if($order->gift1_id != null && $order->gift1_id != '')
                                                             {{ $order->gift1->name }}
                                                             @else
                                                                  No Gift Card
