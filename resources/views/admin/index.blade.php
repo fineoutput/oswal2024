@@ -34,14 +34,14 @@
                                 <div class="mini-stat-desc">
                                     <h6 class="text-uppercase verti-label text-white-50">Most Viewed Category</h6>
                                     <div class="text-white">
-                                        <h6 class="text-uppercase mt-0 text-white-50">Oswal Soap Bars</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h6 class="text-uppercase mt-0 text-white-50">Most Viewed Category</h6>
+                                        <h3 class="mb-3 mt-0" style="font-size: 17px">Oswal Soap Bars</h3>
                                         <div class="">
                                             <span class="ml-2">Most Viewed Category</span>
                                         </div>
                                     </div>
                                     <div class="mini-stat-icon">
-                                        <i class="ion ion-ios-gear-outline"></i>
+                                        <i class="mdi mdi-shopping display-2"></i>
                                     </div>
                                 </div>
                             </div>
