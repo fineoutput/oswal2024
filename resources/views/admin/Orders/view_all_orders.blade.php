@@ -267,7 +267,7 @@
                                                                             ->where('is_active', 1)
                                                                             ->first();
                                                                     } elseif ($rejectedBy == 2) {
-                                                                        $team = \App\Models\Team::where(
+                                                                        $team = App\adminmodel\Team::where(
                                                                             'id',
                                                                             $rejectedById,
                                                                         )
