@@ -159,7 +159,13 @@
 
                                                         <td> {{ $order->sub_total }}</td>
 
-                                                        <td> {{ $order->promocodes->promocode }}</td>
+                                                        <td>
+                                                            @if ($order->promocodes != null && $order->promocodes != '' )
+                                                                
+                                                                {{ $order->promocodes->promocode }}
+
+                                                            @endif
+                                                        </td>
                                                         @php
                                                             $custom_address =
                                                                 $order->address->doorflat .
@@ -335,7 +341,7 @@
                                                         <td> {{ $order->order_from }}</td>
 
                                                         <td>
-                                                             @if(!empty($order->gift_id!=0))
+                                                             @if(!empty($order->gift_id != 0))
                                                              {{ $order->gift->name }}
                                                              @else
                                                                   No Gift Card
