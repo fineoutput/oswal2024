@@ -225,23 +225,12 @@
                                                                 <span class="label label-warning"
                                                                     style="font-size:13px;">None</span>
                                                             @elseif ($order->delivery_status == 1)
-                                                                {{-- @php
-                                                            $transferedDeliveryUser = \App\Models\DeliveryUserOrder::where('order_id', $order->id)->first();
-                                                            $transferedDeliveryUserId = $transferedDeliveryUser ? $transferedDeliveryUser->delivery_user_id : 0;
-                                                            $deliveryUser = $transferedDeliveryUserId ? \App\Models\DeliveryBoy::find($transferedDeliveryUserId) : null;
-                                                            @endphp
-                                                            <span class="label label-primary" style="font-size:13px;">
-                                                            Transfered To {{ $deliveryUser ? $deliveryUser->name : 'N/A' }}
-                                                            </span> --}}
+                                                              
                                                             @elseif ($order->delivery_status == 2)
-                                                                {{-- @php
-                                                            $transferedDeliveryUser = \App\Models\DeliveryUserOrder::where('order_id', $order->id)->where('status', 1)->first();
-                                                            $transferedDeliveryUserId = $transferedDeliveryUser ? $transferedDeliveryUser->delivery_user_id : 0;
-                                                            $deliveryUser = $transferedDeliveryUserId ? \App\Models\DeliveryBoy::find($transferedDeliveryUserId) : null;
-                                                            @endphp
+                                                             
                                                             <span class="label label-info" style="font-size:13px;">
-                                                            Accepted By {{ $deliveryUser ? $deliveryUser->name : 'N/A' }}
-                                                            </span> --}}
+                                                            Accepted By 
+                                                            </span>
                                                             @elseif ($order->delivery_status == 3)
                                                                 <span class="label label-success"
                                                                     style="font-size:13px;">Delivered</span>
