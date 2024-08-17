@@ -285,7 +285,7 @@ class CartController extends Controller
 
             if (!$applyGiftCard->original['success']) {
 
-                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 400);
+                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 200);
 
             }else{
                 $applyGiftCard = $applyGiftCard->original['data'];
