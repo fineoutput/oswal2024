@@ -143,6 +143,7 @@ class EcommerceController extends Controller
     
             case 'ecomm.details-product':
                 $rules['product_id'] = 'required|integer';
+                $rules['type_id']    = 'nullable|integer';
                 break;
         }
     
@@ -232,6 +233,26 @@ class EcommerceController extends Controller
                 ->where('category_id', $product->category_id)
                 ->count();
 
+                if(isset($request->type_id)){
+
+                    $getSelectedtype = sendType($product->category_id, $product->id ,$request->type_id)[0];
+    
+                    $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
+    
+                    $selected_type_id = $getSelectedtype->id;
+                    $selected_type_name = $getSelectedtype->type_name;
+                    $selected_type_selling_price = $getSelectedtype->selling_price;
+                    $selected_type_mrp = $getSelectedtype->del_mrp;
+                    $selected_type_percent_off = $percent_off;
+    
+                }else{
+                    $selected_type_id = isset($typedata[0]) ? $typedata[0]['type_id'] : '';
+                    $selected_type_name = isset($typedata[0]) ? $typedata[0]['type_name'] : '';
+                    $selected_type_selling_price = isset($typedata[0]) ? $typedata[0]['selling_price'] : '';
+                    $selected_type_mrp = isset($typedata[0]) ? $typedata[0]['type_mrp'] : '';
+                    $selected_type_percent_off = isset($typedata[0]) ? $typedata[0]['percent_off'] : '';
+                }
+
             $product_data[] = [
                 'id' => $product->id,
                 'category_id' => $product->category_id,
@@ -257,12 +278,13 @@ class EcommerceController extends Controller
                     ],
                 'is_active' => $product->is_active,
                 'type' => $typedata,
-                'selected_type_id' => isset($typedata[0]) ? $typedata[0]['type_id'] : '',
-                'selected_type_name' => isset($typedata[0]) ? $typedata[0]['type_name'] : '',
-                'selected_type_selling_price' => isset($typedata[0]) ? $typedata[0]['selling_price'] : '',
-                'selected_type_mrp' => isset($typedata[0]) ? $typedata[0]['type_mrp'] : '',
-                'selected_type_percent_off' => isset($typedata[0]) ? $typedata[0]['percent_off'] : '',
+                'selected_type_id' => $selected_type_id,
+                'selected_type_name' => $selected_type_name,
+                'selected_type_selling_price' => $selected_type_selling_price,
+                'selected_type_mrp' => $selected_type_mrp,
+                'selected_type_percent_off' => $selected_type_percent_off,
             ];
+          
         }
 
        return response()->json([
