@@ -596,8 +596,15 @@ class OrderController extends Controller
                     
                     foreach ($order->orderDetails as $key => $detail) {
                         $product = $detail->product;
-                        $productImage[] = asset($product->img_app1);
+                        
+                        if ($product) {
+                            $productImage[] = asset($product->img_app1);
+                        } else {
+                            
+                            $productImage[] = null;
+                        }
                     }
+                    
                     
 
                     $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
