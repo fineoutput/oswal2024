@@ -40,7 +40,7 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'   => 'required|string|exists:users,device_id',
+            'device_id'   => 'required|string',
             'user_id'     => 'nullable|string|exists:users,id',
             'category_id' => 'required|string|exists:ecom_categories,id',
             'product_id'  => 'required|string|exists:ecom_products,id',
@@ -136,8 +136,8 @@ class CartController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id'   => 'nullable|integer',
+            'device_id' => 'required|string',
+            'user_id'   => 'nullable|integer|exists:users,id',
             'cart_id'   => 'required|integer|exists:carts,id',
         ]);
 
@@ -171,7 +171,7 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'       => 'required|string|exists:users,device_id',
+            'device_id'       => 'required|string',
             'user_id'         => 'nullable|integer|exists:users,id',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
