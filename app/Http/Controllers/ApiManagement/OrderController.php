@@ -725,7 +725,7 @@ class OrderController extends Controller
             'promo_discount'   => formatPrice($order->promo_deduction_amount,false),
             'wallet_discount'  => formatPrice($order->extra_discount,false),
             'delivery_charge'  => formatPrice($order->delivery_charge,false),
-            'gift_amount'      => formatPrice($order->gift_amt) ?? 0,
+            'gift_amount'      => formatPrice($order->gift_amt,false) ?? 0,
             'total_amount'     => $order->total_amount,
             'order_status'     => getOrderStatus($order->order_status),
             'address'          => $addr_string,
