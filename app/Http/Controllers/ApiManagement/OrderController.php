@@ -595,10 +595,11 @@ class OrderController extends Controller
                     $rating_avg = number_format((float)$rating_avg, 1, '.', '');
 
                     $dataw[] = [
-                        'order_id'     => $order->id,
-                        'order_status' => getOrderStatus($order->order_status),
-                        'sub_total'    => formatPrice($order->sub_total,false),
-                        'amount'       => formatPrice($order->total_amount,false),
+                        'order_id'        => $order->id,
+                        'order_status'    => getOrderStatus($order->order_status),
+                        'order_rejected'  => getRejectedByDetails($order->rejected_by , $order->rejected_by_id),
+                        'sub_total'       => formatPrice($order->sub_total,false),
+                        'amount'          => formatPrice($order->total_amount,false),
                         'promocode_discount' => formatPrice($order->promo_deduction_amount,false),
                         'delivery_charge' => formatPrice($order->delivery_charge,false),
                         'rating_status'   => $rating_avg > 0 ? 1 : 0,

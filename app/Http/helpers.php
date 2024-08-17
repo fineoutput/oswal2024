@@ -12,6 +12,8 @@ use App\Models\Order;
 use App\Models\OrderInvoice;
 use App\Models\WalletTransactionHistory;
 use Illuminate\Support\Facades\DB;
+use App\adminmodel\Team;
+
 
 if (!function_exists('lang_change')) {
 
@@ -500,10 +502,73 @@ if (!function_exists('getOrderStatus')){
 
             $orderStatus = 'Delivered';
 
-        }else{
+        }else if($orderstatusId == 5){
+
             $orderStatus = 'Rejected';
+
+        }else{
+
+            $orderStatus = 'UnPlaced';
         }
 
         return $orderStatus;
+    }
+}
+
+if (!function_exists('getRejectedByDetails')) {
+
+    function getRejectedByDetails($rejectedBy, $rejectedById) {
+
+        $user = null;
+
+        $team = null;
+
+        if (!empty($rejectedBy)) {
+
+            if ($rejectedBy == 1) {
+
+                $user = User::where('id', $rejectedById)
+
+                            ->where('is_active', 1)
+
+                            ->first();
+
+                if ($user) {
+
+                    return "User({$user->first_name})";
+
+                }
+
+            } elseif ($rejectedBy == 2) {
+
+                $team = Team::where('id', $rejectedById)
+
+                            ->where('is_active', 1)
+
+                            ->first();
+
+                if ($team) {
+
+                    if ($team->power == 1) {
+
+                        return "SuperAdmin({$team->name})";
+
+                    } elseif ($team->power == 2) {
+
+                        return "Admin({$team->name})";
+
+                    } else {
+
+                        return "Manager({$team->name})";
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return '-';
     }
 }

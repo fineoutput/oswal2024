@@ -240,45 +240,7 @@
                                                         <td> {{ $order->track_id }}</td>
 
                                                         <td>
-                                                            @php
-                                                                $rejectedBy = $order->rejected_by;
-                                                                $rejectedById = $order->rejected_by_id;
-
-                                                                $user = null;
-                                                                $team = null;
-
-                                                                if (!empty($rejectedBy)) {
-                                                                    if ($rejectedBy == 1) {
-                                                                        $user = \App\Models\User::where(
-                                                                            'id',
-                                                                            $rejectedById,
-                                                                        )
-                                                                            ->where('is_active', 1)
-                                                                            ->first();
-                                                                    } elseif ($rejectedBy == 2) {
-                                                                        $team = App\adminmodel\Team::where(
-                                                                            'id',
-                                                                            $rejectedById,
-                                                                        )
-                                                                            ->where('is_active', 1)
-                                                                            ->first();
-                                                                    }
-                                                                }
-                                                            @endphp
-
-                                                            @if ($rejectedBy == 1 && $user)
-                                                                User({{ $user->first_name }})
-                                                            @elseif ($rejectedBy == 2 && $team)
-                                                                @if ($team->power == 1)
-                                                                    SuperAdmin({{ $team->name }})
-                                                                @elseif ($team->power == 2)
-                                                                    Admin({{ $team->name }})
-                                                                @else
-                                                                    Manager({{ $team->name }})
-                                                                @endif
-                                                            @else
-                                                                -
-                                                            @endif
+                                                            {{ getRejectedByDetails($order->rejected_by, $order->rejected_by_id) }}
                                                         </td>
 
                                                         <td>
