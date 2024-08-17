@@ -109,9 +109,9 @@ class CartController extends Controller
             
             $data['created_at'] = $cur_date;
 
-            $user_imfo =  User::where('device_id',$data['device_id'])->first();
+            // $user_imfo =  User::where('device_id',$data['device_id'])->first();
 
-            $data['user_id'] = $user_imfo->id;
+            // $data['user_id'] = $user_imfo->id;
 
             Cart::create($data);
 
