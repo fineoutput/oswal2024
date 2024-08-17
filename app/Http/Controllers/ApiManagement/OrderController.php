@@ -63,7 +63,7 @@ class OrderController extends Controller
         }
        
         // Retrieve request inputs
-        $userId       = $request->input('user_id');
+        $userId       = $request->input('user_id') ?? Auth::user()->id;
 
         $deviceId     = $request->input('device_id');
 
