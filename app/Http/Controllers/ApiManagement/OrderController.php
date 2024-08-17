@@ -801,18 +801,19 @@ class OrderController extends Controller
         }
 
         $order = Order::find($order_id);
-// dd( $order);
+
         if (!$order) {
             return response()->json([
                 'message' => 'Order does not exist',
                 'status' => 201,
             ]);
         }
-        dd( $order);
+   
         $order->order_status= 5;
         $order->rejected_by = 1;
         $order->rejected_by_id= Auth::user()->id;
-
+        $order->save();
+        
         return response()->json([
             'message' => 'success',
             'status' => 200,
