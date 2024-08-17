@@ -79,7 +79,7 @@ class EcommerceController extends Controller
         $currentRouteName = Route::currentRouteName();
 
         $rules = [
-            'device_id' => 'required|string',
+            'device_id' => 'required|string|exists:users,device_id',
             'user_id' => 'nullable|integer',
             'lang' => 'required|string',
             'state_id' => 'nullable|integer',
