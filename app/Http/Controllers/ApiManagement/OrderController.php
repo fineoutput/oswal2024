@@ -716,7 +716,16 @@ class OrderController extends Controller
 
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
+
+            if (!$product) {
+                continue;
+            }
+
             $type = $detail->type;
+
+            if (!$type) {
+                continue;
+            }
             // $type = Type::where('product_id', $product->id)
             //             ->where('id', $detail->type_id)
             //             ->where('is_active', 1)
@@ -792,14 +801,14 @@ class OrderController extends Controller
         }
 
         $order = Order::find($order_id);
-
+// dd( $order);
         if (!$order) {
             return response()->json([
                 'message' => 'Order does not exist',
                 'status' => 201,
             ]);
         }
-
+        dd( $order);
         $order->order_status= 5;
         $order->rejected_by = 1;
         $order->rejected_by_id= Auth::user()->id;
@@ -824,7 +833,7 @@ class OrderController extends Controller
             ]);
         }
 
-        $user_id = $request->input('user_id');
+        $user_id = $request->input('user_id') ?? Auth::user()->id;
         $order_id = $request->input('order_id');
 
         $user = User::find($user_id);
