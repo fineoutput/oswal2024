@@ -50,6 +50,8 @@ class EcommerceController extends Controller
 
             $app_img = !empty($data->app_image) ? asset($data->app_image) : "";
 
+            $banner_img = !empty($data->image) ? asset($data->image) : "";
+
             $icon_img = !empty($data->icon) ? asset($data->icon) : "";
 
             $category_data[] = [
@@ -59,6 +61,7 @@ class EcommerceController extends Controller
                 'long_desc' => $lang != "hi" ? $data->long_desc : $data->long_desc_hi,
                 'url' => $data->url,
                 'image' => $app_img,
+                'banner_image' => $banner_img,
                 'icon' => $icon_img ,
                 'is_active' => $data->is_active,
             ];
@@ -286,7 +289,7 @@ class EcommerceController extends Controller
             ];
           
         }
-
+       
        return response()->json([
             'message' => 'success',
             'status' => 200,
