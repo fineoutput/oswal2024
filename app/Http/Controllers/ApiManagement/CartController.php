@@ -434,7 +434,7 @@ class CartController extends Controller
                     'id'         => $giftCard->id,
                     'product_id' => $giftCard->product_id,
                     'type_id'    => $giftCard->type_id,
-                    'name'       => $giftCard->name,
+                    'price'       => $giftCard->price,
                     'image'      => asset($giftCard->appimage),
                 ]
             ], 200);
