@@ -243,7 +243,7 @@ class WishlistController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'device_id' => 'required|string|exists:users,device_id',
-            'user_id' => 'nullable|integer|exists:users,id',
+            'user_id'   => 'nullable|integer|exists:users,id',
             'wishlist_id' => 'required|integer',
             'type_id' => 'required|integer',
             'type_price' => 'required|numeric',
@@ -299,6 +299,9 @@ class WishlistController extends Controller
                             if ($data['city_id']) {
                                 $query->where('city_id', $data['city_id']);
                             }
+                        })
+                        ->orWhere(function ($query) use ($data, $wishlist) {
+                            $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
 
