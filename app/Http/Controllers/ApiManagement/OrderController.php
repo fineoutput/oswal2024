@@ -351,9 +351,16 @@ class OrderController extends Controller
         // Ensure invoice number is generated successfully
         if ($invoiceNumber) {
 
-            Cart::where('user_id', $user->id)->update(['checkout_status' => 1]);
+            Cart::where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                      ->orWhere('device_id', $user->device_id);
+            })->update(['checkout_status' => 1]);
+            
 
-            $cartCleared = Cart::where('user_id', $user->id)->delete();
+            Cart::where(function ($query) use ($user) {
+                $query->where('device_id', $user->device_id)
+                      ->orWhere('user_id', $user->id);
+            })->delete();
 
             if ($user instanceof \App\Models\User) {
 
