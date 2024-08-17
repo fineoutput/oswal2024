@@ -593,6 +593,7 @@ class OrderController extends Controller
 
                     }
                     $productImage = [];
+                    dd($order->orderDetails);
                     foreach ($order->orderDetails as $key => $detail) {
                         $product = $detail->product;
                         $productImage[] = asset($product->img_app1);
