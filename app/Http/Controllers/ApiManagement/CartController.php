@@ -642,9 +642,9 @@ class CartController extends Controller
         $reponse['wallet_amount']    = $totalwalletAmount;
         $reponse['extra_discount' ]  = $extraDiscount;
         $reponse['total_discount' ]  = $promo_discount + $extraDiscount + $walletDescount;
-        $reponse['sub_total' ]       = $totalAmount;
-        $reponse['save_total' ]      = $totalSaveAmount - $totalAmount;
-        $reponse['final_amount' ]    = $finalAmount;
+        $reponse['sub_total' ]       = formatPrice($totalAmount,false);
+        $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
+        $reponse['final_amount' ]    = formatPrice($finalAmount,false);
 
         return response()->json($reponse, $status);
     }
