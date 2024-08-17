@@ -51,6 +51,7 @@ class OrderController extends Controller
             'promocode_id' => 'nullable|exists:promocodes,id',
             'gift_card_id' => 'nullable|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
+            'total_amount'  => 'required'
         ];
  
         // Validate request data
