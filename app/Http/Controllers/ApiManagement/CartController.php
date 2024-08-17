@@ -517,6 +517,7 @@ class CartController extends Controller
 
         $totalWeight = 0;
         $totalAmount = 0;
+        $totalSaveAmount = 0;
         $productData = [];
         $walletDescount = 0;
         $totalwalletAmount  = 0;
@@ -551,6 +552,9 @@ class CartController extends Controller
             })->toArray();
 
             if ($cartItem->type) {
+
+                $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
+                
                 $selectedType = [
                     'type_id' => $cartItem->type->id ??'',
                     'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
@@ -638,6 +642,8 @@ class CartController extends Controller
         $reponse['wallet_amount']    = $totalwalletAmount;
         $reponse['extra_discount' ]  = $extraDiscount;
         $reponse['total_discount' ]  = $promo_discount + $extraDiscount + $walletDescount;
+        $reponse['sub_total' ]       = $totalAmount;
+        $reponse['save_total' ]      = $totalSaveAmount;
         $reponse['final_amount' ]    = $finalAmount;
 
         return response()->json($reponse, $status);
