@@ -192,13 +192,9 @@ if (!function_exists('sendOtpSms')) {
 
     function sendOtpSms($msg, $phone, $otp , $dlt) {
 
-        // $url = env('SMS_API_URL');
-        // $authKey = env('SMS_API_KEY'); 
-        // $senderId = env('SMS_SENDER_ID');
-
-        $url = 'http://api.msg91.com/api/sendotp.php';
-        $authKey = '379704A9kcGMskeHG62d4f215P1'; 
-        $senderId = 'TIAOTP';
+        $url = config('constants.SMS_API_URL');
+        $authKey = config('constants.SMS_API_KEY'); 
+        $senderId = config('constants.SMS_SENDER_ID');
 
         $ch = curl_init();
 

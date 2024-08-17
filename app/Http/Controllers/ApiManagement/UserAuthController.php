@@ -64,8 +64,7 @@ class UserAuthController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
-        // $dlt = env('SMS_SIGNUP_DLT');
-        $dlt = '1207166444129174674';
+        $dlt = config('constants.SMS_SIGNUP_DLT');
 
         if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
         
@@ -257,8 +256,9 @@ class UserAuthController extends Controller
         if ($user) {
 
             $OTP = generateOtp();
-            // $dlt = env('SMS_LOGIN_DLT');
-            $dlt = '1207166444113966752';
+
+            $dlt = config('constants.SMS_LOGIN_DLT');
+
             $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
 
             sendOtpSms($msg, $user->contact, $OTP, $dlt);

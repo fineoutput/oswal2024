@@ -167,7 +167,7 @@ class OrderController extends Controller
         ];
 
         $headers = [
-            'Authorization: key=' . env('FCM_SERVER_KEY'),
+            'Authorization: key=' . config('constants.FCM_SERVER_KEY'),
             'Content-Type: application/json',
         ];
 

@@ -58,7 +58,7 @@ class PushNotification extends Notification implements ShouldQueue
     {
         $url = 'https://fcm.googleapis.com/fcm/send';
 
-        $serverKey = env('FCM_SERVER_KEY');
+        $serverKey = config('constants.FCM_SERVER_KEY');
 
         $data = [
             'to' => '/topics/all',
