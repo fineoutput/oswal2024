@@ -274,7 +274,7 @@ class CartController extends Controller
                 $promocode_name       = $input_promocode;
             } else {
 
-                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 400);
+                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 200);
             }
         }
 
@@ -315,12 +315,12 @@ class CartController extends Controller
         $promocode = Promocode::where('promocode', $userInputPromoCode)->first();
 
         if (!$promocode) {
-            return response()->json(['success' => false, 'message' => 'Invalid Promocode.'], 200);
+            return response()->json(['success' => false, 'message' => 'Invalid Promocode.'], 400);
         }
 
         $currentDate = now()->format('Y-m-d');
         if ($currentDate > $promocode->expiry_date) {
-            return response()->json(['success' => false, 'message' => 'This Promocode Has Expired.'], 200);
+            return response()->json(['success' => false, 'message' => 'This Promocode Has Expired.'], 400);
         }
 
         if ($promocode->type == 1) {
@@ -334,12 +334,12 @@ class CartController extends Controller
             })->where('promocode_id', $promocode->id)->where('status', '!=', 1)->exists();
 
             if ($promocodeApplied) {
-                return response()->json(['success' => false, 'message' => 'This Promocode Has Been Already Used.'], 200);
+                return response()->json(['success' => false, 'message' => 'This Promocode Has Been Already Used.'], 400);
             }
         }
 
         if ($totalAmount < $promocode->minimum_amount) {
-            return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.'], 200);
+            return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.'], 400);
         }
 
         $deductionAmount = ($promocode->percent / 100) * $totalAmount;
