@@ -315,12 +315,12 @@ class CartController extends Controller
         $promocode = Promocode::where('promocode', $userInputPromoCode)->first();
 
         if (!$promocode) {
-            return response()->json(['success' => false, 'message' => 'Invalid Promocode.'], 400);
+            return response()->json(['success' => false, 'message' => 'Invalid Promocode.'], 200);
         }
 
         $currentDate = now()->format('Y-m-d');
         if ($currentDate > $promocode->expiry_date) {
-            return response()->json(['success' => false, 'message' => 'This Promocode Has Expired.'], 400);
+            return response()->json(['success' => false, 'message' => 'This Promocode Has Expired.'], 200);
         }
 
         if ($promocode->type == 1) {
@@ -334,12 +334,12 @@ class CartController extends Controller
             })->where('promocode_id', $promocode->id)->where('status', '!=', 1)->exists();
 
             if ($promocodeApplied) {
-                return response()->json(['success' => false, 'message' => 'This Promocode Has Been Already Used.'], 400);
+                return response()->json(['success' => false, 'message' => 'This Promocode Has Been Already Used.'], 200);
             }
         }
 
         if ($totalAmount < $promocode->minimum_amount) {
-            return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.'], 400);
+            return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.'], 200);
         }
 
         $deductionAmount = ($promocode->percent / 100) * $totalAmount;
