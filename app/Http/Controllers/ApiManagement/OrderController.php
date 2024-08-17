@@ -596,7 +596,6 @@ class OrderController extends Controller
                     
                     foreach ($order->orderDetails as $key => $detail) {
                         $product = $detail->product;
-                        dd($product ,$product->img_app1);
                         $productImage[] = asset($product->img_app1);
                     }
                     
