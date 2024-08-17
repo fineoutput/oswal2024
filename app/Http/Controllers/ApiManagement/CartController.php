@@ -643,7 +643,7 @@ class CartController extends Controller
         $reponse['extra_discount' ]  = $extraDiscount;
         $reponse['total_discount' ]  = $promo_discount + $extraDiscount + $walletDescount;
         $reponse['sub_total' ]       = $totalAmount;
-        $reponse['save_total' ]      = $totalSaveAmount;
+        $reponse['save_total' ]      = $totalSaveAmount - $totalAmount;
         $reponse['final_amount' ]    = $finalAmount;
 
         return response()->json($reponse, $status);
