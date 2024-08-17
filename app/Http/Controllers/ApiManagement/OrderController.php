@@ -553,7 +553,7 @@ class OrderController extends Controller
 
         if ($user) {
 
-            $orders = Order::with('orderDetails.product')->where('user_id', $user->id)->orderBy('id', 'DESC')->get();
+            $orders = Order::with('orderDetails.product')->where('user_id', $user->id)->where('order_status', '!=', 0)->orderBy('id', 'DESC')->get();
             
             if ($orders->isNotEmpty()) {
 
