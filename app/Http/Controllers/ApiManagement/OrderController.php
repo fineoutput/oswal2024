@@ -44,7 +44,7 @@ class OrderController extends Controller
         // Validation rules
         $rules = [
             'user_id'      => 'required|exists:users,id',
-            'device_id'    => 'required',
+            'device_id'    => 'required|',
             'address_id'   => 'required|exists:user_address,id',
             // 'state_id'     => 'required|exists:all_states,id',
             // 'city_id'      => 'required|exists:all_cities,id',

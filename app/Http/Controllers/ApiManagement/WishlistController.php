@@ -23,7 +23,7 @@ class WishlistController extends Controller
     public function store(Request $request) {
 
         $rules = [
-            'device_id'  => 'required|string',
+            'device_id'  => 'required|string|exists:users,device_id',
             'user_id'    => 'nullable|exists:users,id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
@@ -83,8 +83,8 @@ class WishlistController extends Controller
     public function Show(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
-            'user_id'   => 'nullable|string',
+            'device_id' => 'required|string|exists:users,device_id',
+            'user_id'   => 'nullable|string|exists:users,id',
             'lang'      => 'required|string',
             'state_id'  => 'nullable|string',
             'city_id'   => 'nullable|string',
@@ -217,8 +217,8 @@ class WishlistController extends Controller
     public function destroy(Request $request) {
    
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
-            'user_id' => 'nullable|integer',
+            'device_id' => 'required|string|exists:users,device_id',
+            'user_id' => 'nullable|integer|exists:users,id',
             'wishlist_id' => 'required|integer|exists:wishlists,id',
         ]);
 
@@ -242,8 +242,8 @@ class WishlistController extends Controller
     public function moveToCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
-            'user_id' => 'nullable|integer',
+            'device_id' => 'required|string|exists:users,device_id',
+            'user_id' => 'nullable|integer|exists:users,id',
             'wishlist_id' => 'required|integer',
             'type_id' => 'required|integer',
             'type_price' => 'required|numeric',

@@ -136,7 +136,7 @@ class CartController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
+            'device_id' => 'required|string|exists:users,device_id',
             'user_id'   => 'nullable|integer',
             'cart_id'   => 'required|integer|exists:carts,id',
         ]);
