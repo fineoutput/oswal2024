@@ -43,8 +43,8 @@ class OrderController extends Controller
     {
 
         $rules = [
-            'user_id'    => 'required|exists:users,id',
-            'device_id'  => 'required',
+            // 'user_id'    => 'required|exists:users,id',
+            // 'device_id'  => 'required',
             'address_id' => 'required|exists:user_address,id',
             'promocode'  => 'nullable|string',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
@@ -57,7 +57,7 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
 
-        $deviceId       = $request->input('device_id');
+        $deviceId       = Auth::user()->device_id ?? $request->input('device_id');
         $userId         = Auth::user()->id ?? $request->input('user_id');
         $promocode      = $request->input('promocode');
         $addressId      = $request->input('address_id');
