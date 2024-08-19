@@ -310,7 +310,7 @@ class CartController extends Controller
         return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
     }
 
-    private function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
+    public function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
     {
         $promocode = Promocode::where('promocode', $userInputPromoCode)->first();
 
