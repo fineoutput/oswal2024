@@ -86,6 +86,7 @@ class OrderController extends Controller
             ->with(['type' => fn($query) => $query->where('state_id', $stateId)->where('city_id', $cityId)])
             ->get();
 
+            dd($cartItems);
         if ($cartItems->isEmpty()) {
             return response()->json(['message' => 'Your cart is empty.', 'status' => 400]);
         }
