@@ -58,7 +58,7 @@ class OrderController extends Controller
         }
 
         $deviceId       = $request->input('device_id');
-        $userId         = $request->input('user_id');
+        $userId         = Auth::user()->id ?? $request->input('user_id');
         $promocode      = $request->input('promocode');
         $addressId      = $request->input('address_id');
         $gift_card_id   = $request->input('gift_card_id');
