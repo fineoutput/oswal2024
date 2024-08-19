@@ -267,7 +267,8 @@ class OrderController extends Controller
             'promocode_id' => 'nullable|exists:promocodes,id',
             'gift_card_id' => 'nullable|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
-            'total_amount'  => 'required'
+            'total_amount'  => 'required',
+            'payment_type'  => 'required|integer'
         ];
  
         // Validate request data
@@ -298,6 +299,8 @@ class OrderController extends Controller
         $stateId      = $userAddress->state;
 
         $cityId       = $userAddress->city;
+ 
+        $payment_type = $request->input('payment_type');
 
         // Fetch cart data with related products and types
         $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
@@ -513,25 +516,31 @@ class OrderController extends Controller
         ]);
 
         // Return the calculated data (or proceed with further processing)
-        return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => formatPrice($totalAmount ,false) ], 'status'=> 200],200);
+        // return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => formatPrice($totalAmount ,false) ], 'status'=> 200],200);
 
+        if($payment_type == 1){
+
+            $this->codCheckout($order->id,$payment_type);
+        }else{
+            $this->paidCheckout($order->id,$payment_type);
+        }
     }
 
 
-    public function codCheckout(Request $request)
+    public function codCheckout($orderId, $paymentType)
     {
-        // Define validation rules
-        $rules = [
-            'order_id' => 'required|integer|exists:tbl_order1,id',
-            'payment_type' => 'required|integer'
-        ];
+        // // Define validation rules
+        // $rules = [
+        //     'order_id' => 'required|integer|exists:tbl_order1,id',
+        //     'payment_type' => 'required|integer'
+        // ];
 
-        // Validate request data
-        $validator = Validator::make($request->all(), $rules);
+        // // Validate request data
+        // $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        // }
 
         // Get authenticated user
         $user = Auth::user();
@@ -539,8 +548,8 @@ class OrderController extends Controller
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
 
-        $orderId = $request->input('order_id');
-        $paymentType = $request->input('payment_type');
+        // $orderId = $request->input('order_id');
+        // $paymentType = $request->input('payment_type');
 
         // Fetch the order
         $order = Order::where('id', $orderId)
@@ -614,19 +623,19 @@ class OrderController extends Controller
         return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
-    public function paidCheckout(Request $request) {
+    public function paidCheckout($orderId , $paymentType) {
 
         // Define validation rules
-        $rules = [
-            'order_id' => 'required|integer|exists:tbl_order1,id',
-            'payment_type' => 'required|integer'
-        ];
+        // $rules = [
+        //     'order_id' => 'required|integer|exists:tbl_order1,id',
+        //     'payment_type' => 'required|integer'
+        // ];
 
-        $validator = Validator::make($request->all(), $rules);
+        // $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        // }
 
         // Get authenticated user
         $user = Auth::user();
@@ -634,9 +643,9 @@ class OrderController extends Controller
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
 
-        $orderId = $request->input('order_id');
+        // $orderId = $request->input('order_id');
 
-        $paymentType = $request->input('payment_type');
+        // $paymentType = $request->input('payment_type');
 
         // Fetch the order
         $order = Order::where('id', $orderId)
