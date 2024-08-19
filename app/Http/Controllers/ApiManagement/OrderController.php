@@ -71,13 +71,13 @@ class OrderController extends Controller
         $cityId       = $userAddress->city;
 
         $addressresponse = [
-            // 'user_name' => Auth::user()->first_name,
+            'user_name' => Auth::user()->first_name,
             'address'   => $userAddress->address,
             'state'     => $userAddress->states->state_name,
             'city'      => $userAddress->citys->city_name,
             'zipcode'   => $userAddress->zipcode,
-            // 'email'     => Auth::user()->email,
-            // 'phone'     => Auth::user()->contact,
+            'email'     => Auth::user()->email,
+            'phone'     => Auth::user()->contact,
         ];
 
         $cartItems = Cart::query()
@@ -180,7 +180,7 @@ class OrderController extends Controller
                 });
         }])
         ->where(function ($query) use ($userId, $deviceId) {
-            $query->Where('device_id', $deviceId)->where('user_id', $userId);
+            $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
         })
         ->get();
 

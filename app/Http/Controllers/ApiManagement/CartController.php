@@ -507,7 +507,7 @@ class CartController extends Controller
                 });
         }])
         ->where(function ($query) use ($userId, $deviceId) {
-            $query->Where('device_id', $deviceId)->where('user_id', $userId);
+            $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
         })
         ->get();
         
