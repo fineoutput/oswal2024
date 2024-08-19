@@ -199,10 +199,10 @@ class CartController extends Controller
         $gift_card_id    = $request->input('gift_card_id');
         $wallet_status   = $request->input('wallet_status');
 
-        $cartQuery = Cart::query()->when($user_id, function ($query) use ($user_id) {
-            return $query->where('user_id', $user_id);
-        })->when(!$user_id && $device_id, function ($query) use ($device_id) {
+        $cartQuery = Cart::query()->when(!$user_id && $device_id, function ($query) use ($device_id) {
             return $query->where('device_id', $device_id);
+        })->when($user_id, function ($query) use ($user_id) {
+            return $query->where('user_id', $user_id);
         });
 
 
