@@ -39,6 +39,220 @@ class OrderController extends Controller
         $this->razorpayService = $razorpayService;
     }
 
+    public function calculate(Request $request)
+    {
+
+        $rules = [
+            'user_id'    => 'required|exists:users,id',
+            'device_id'  => 'required',
+            'address_id' => 'required|exists:user_address,id',
+            'promocode'  => 'nullable|string',
+            'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
+            'wallet_status'   => 'required|integer',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        $deviceId       = $request->input('device_id');
+        $userId         = $request->input('user_id');
+        $promocode      = $request->input('promocode');
+        $addressId      = $request->input('address_id');
+        $gift_card_id   = $request->input('gift_card_id');
+        $wallet_status  = $request->input('wallet_status');
+
+        $userAddress  = Address::findOrFail($addressId);
+
+        $stateId      = $userAddress->state;
+
+        $cityId       = $userAddress->city;
+
+        $addressresponse = [
+            'user_name' => Auth::user()->first_name,
+            'address'   => $userAddress->address,
+            'state'     => $userAddress->states->state_name,
+            'city'      => $userAddress->citys->city_name,
+            'zipcode'   => $userAddress->zipcode,
+            'email'     => Auth::user()->email,
+            'phone'     => Auth::user()->contact,
+        ];
+
+        $cartItems = Cart::query()
+            ->when($userId, fn($query) => $query->where('user_id', $userId))
+            ->when(!$userId && $deviceId, fn($query) => $query->where('device_id', $deviceId))
+            ->with(['type' => fn($query) => $query->where('state_id', $stateId)->where('city_id', $cityId)])
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return response()->json(['message' => 'Your cart is empty.', 'status' => 400]);
+        }
+
+        $cartItems->each(function ($cartItem) {
+            if ($cartItem->type) {
+                $cartItem->type_price = $cartItem->type->selling_price;
+                $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
+                $cartItem->save();
+            }
+        });
+
+        $cartItemTotal    = $cartItems->sum('total_qty_price'); 
+        $deliveryCharge   = 0;
+        $promocode_id     = null;
+        $promo_discount   = 0;
+        $applyGiftCard    = [];
+        $promocode_name   = '';
+        
+        if (!empty($addressId)) {
+
+            $cartItems->load('type');
+
+            $total_order_weight = $cartItems->sum(function ($cartItem) {
+
+                return (float)$cartItem->type->weight * (int)$cartItem->quantity;
+            });
+
+            $shipingCharges =  calculateShippingCharges($total_order_weight, $userAddress->city);
+
+            if ($shipingCharges->original['success']) {
+
+                $deliveryCharge = $shipingCharges->original['total_weight_charge'];
+            } else {
+
+                return $shipingCharges;
+            }
+        }
+
+        if ($promocode != null) {
+
+            $applyPromocode = $this->cart->applyPromocode($deviceId, $userId,$promocode,$cartItemTotal);
+
+            if ($applyPromocode->original['success']) {
+
+                $promo_discount       = $applyPromocode->original['promo_discount'];
+
+                $promocode_id         = $applyPromocode->original['promocode_id'];
+
+                $promocode_name       = $promocode;
+
+            } else {
+
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,200,$applyPromocode->original['message']);
+
+            }
+        }
+
+        if ($gift_card_id != null) {
+            
+            $applyGiftCard  = $this->cart->applyGiftCard($cartItemTotal, $gift_card_id);
+
+            if (!$applyGiftCard->original['success']) {
+
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,200,$applyGiftCard->original['message']);
+
+            }else{
+
+                $applyGiftCard = $applyGiftCard->original['data'];
+            }
+
+        }
+     
+        return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,200,'featch data sucessfully');
+    }
+
+    public function generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$status,$message) {
+
+        $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
+            $query->where('is_active', 1)
+                ->when($stateId, function ($query, $stateId) {
+                    return $query->where('state_id', $stateId);
+                })
+                ->when($cityId, function ($query, $cityId) {
+                    return $query->where('city_id', $cityId);
+                })
+                ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                    return $query->groupBy('type_name');
+                });
+        }])->where(function ($query) use ($userId, $deviceId) {
+            if ($userId) {
+                $query->where('user_id', $userId);
+            } else {
+                $query->where('device_id', $deviceId);
+            }
+        })->get();
+
+        $totalAmount = 0;
+        $totalSaveAmount = 0;
+        $walletDescount = 0;
+        $totalwalletAmount  = 0;
+
+        foreach ($cartData as $cartItem) {
+
+            $product = $cartItem->product;
+
+            if (!$product || !$product->is_active) {
+                continue;
+            }
+
+            if ($cartItem->type) {
+
+                $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
+
+            } 
+            
+            $totalAmount += $cartItem->total_qty_price;
+
+        }
+
+        if($wallet_status){
+            
+          $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
+
+          $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
+
+          $totalwalletAmount = $user->wallet_amount;
+        }
+
+        $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
+
+        $reponse = [
+            'message'          => $message,
+            'sucess'           => ($status == 200) ? true : false,
+            'address'          => $addressresponse,
+            'shipping_charge'  => (float)$deliveryCharge,
+        ];
+
+        $reponse['promocode'] = [
+            'promo_id'       => $promocode_id,
+            'promo_discount' => $promo_discount,
+            'promo_name'     => $promocode_name,
+        ];
+
+        // First Gift Card Detail
+        if (!empty($applyGiftCard)) {
+  
+            $reponse['gift_card_1']      = [
+                  'cal_promo_amu'         => $finalAmount + $applyGiftCard['amount'],
+                  'gift_card_amount'      => $applyGiftCard['amount'],
+                  'gift_card_gst_amount'  => $applyGiftCard['gst_amount'],
+            ];
+
+            $finalAmount += $applyGiftCard['amount'];
+        }
+        
+        $reponse['wallet_discount']  = $walletDescount;
+        $reponse['wallet_amount']    = $totalwalletAmount;
+        $reponse['total_discount' ]  = $promo_discount + $walletDescount;
+        $reponse['sub_total' ]       = formatPrice($totalAmount,false);
+        $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
+        $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
+        $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+        
+        return response()->json($reponse ,$status);
+    }
+
     public function checkout(Request $request)
     {
         // Validation rules
@@ -116,6 +330,7 @@ class OrderController extends Controller
         $applyGiftCard = [];
 
         $applyGiftCardSec = [];
+
         $walletDescount = 0;
 
         $order =  Order::create([
@@ -299,6 +514,7 @@ class OrderController extends Controller
         return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => formatPrice($totalAmount ,false) ], 'status'=> 200],200);
 
     }
+
 
     public function codCheckout(Request $request)
     {
