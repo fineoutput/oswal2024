@@ -41,7 +41,7 @@ class OrderController extends Controller
 
     public function calculate(Request $request)
     {
-
+        dd(Auth::user()->device_id,Auth::user()->id);
         $rules = [
             // 'user_id'    => 'required|exists:users,id',
             // 'device_id'  => 'required',
