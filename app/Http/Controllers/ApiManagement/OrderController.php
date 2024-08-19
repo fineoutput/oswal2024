@@ -220,7 +220,7 @@ class OrderController extends Controller
 
         $reponse = [
             'message'          => $message,
-            'sucess'           => ($status == 200) ? true : false,
+            'success'           => ($status == 200) ? true : false,
             'address'          => $addressresponse,
             'shipping_charge'  => (float)$deliveryCharge,
         ];
