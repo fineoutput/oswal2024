@@ -94,7 +94,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
     
 });
 
-Route::post('order/calculate', [OrderController::class, 'calculate'])->name('calculate');
+Route::post('calculate', [OrderController::class, 'calculate'])->name('calculate');
 
 Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
 
@@ -139,7 +139,7 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
         Route::post('verify-payment', [OrderController::class, 'verifyPayment'])->name('verifypayment');
 
-        // Route::post('calculate', [OrderController::class, 'calculate'])->name('calculate');
+        Route::post('calculate', [OrderController::class, 'calculate'])->name('calculate');
         
     });
 
