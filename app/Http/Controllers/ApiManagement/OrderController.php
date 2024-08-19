@@ -57,8 +57,8 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
 
-        $deviceId       = Auth::user()->device_id ?? $request->input('device_id');
-        $userId         = Auth::user()->id ?? $request->input('user_id');
+        $deviceId       = $request->input('device_id');
+        $userId         = $request->input('user_id');
         $promocode      = $request->input('promocode');
         $addressId      = $request->input('address_id');
         $gift_card_id   = $request->input('gift_card_id');
@@ -71,13 +71,13 @@ class OrderController extends Controller
         $cityId       = $userAddress->city;
 
         $addressresponse = [
-            'user_name' => Auth::user()->first_name,
+            // 'user_name' => Auth::user()->first_name,
             'address'   => $userAddress->address,
             'state'     => $userAddress->states->state_name,
             'city'      => $userAddress->citys->city_name,
             'zipcode'   => $userAddress->zipcode,
-            'email'     => Auth::user()->email,
-            'phone'     => Auth::user()->contact,
+            // 'email'     => Auth::user()->email,
+            // 'phone'     => Auth::user()->contact,
         ];
 
         $cartItems = Cart::query()
