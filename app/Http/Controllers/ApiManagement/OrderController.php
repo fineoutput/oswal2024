@@ -249,6 +249,7 @@ class OrderController extends Controller
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
+        $reponse['cod_charge']    = formatPrice(getConstant()->cod_charge,false);
         $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
         
         return response()->json($reponse ,$status);
