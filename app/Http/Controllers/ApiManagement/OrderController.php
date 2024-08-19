@@ -81,10 +81,13 @@ class OrderController extends Controller
         ];
 
         $cartItems = Cart::query()
-            ->when($userId, fn($query) => $query->where('user_id', $userId))
-            ->when(!$userId && $deviceId, fn($query) => $query->where('device_id', $deviceId))
-            ->with(['type' => fn($query) => $query->where('state_id', $stateId)->where('city_id', $cityId)])
-            ->get();
+                    ->where(function ($query) use ($userId, $deviceId) {
+                        $query->Where('device_id', $deviceId)
+                        ->orwhere('user_id', $userId);
+                    })
+                    ->with(['type' => fn($query) => $query->where('state_id', $stateId)->where('city_id', $cityId)])
+                    ->get();
+
 
         if ($cartItems->isEmpty()) {
             return response()->json(['message' => 'Your cart is empty.', 'status' => 400]);
@@ -175,13 +178,11 @@ class OrderController extends Controller
                 ->when(is_null($stateId) || is_null($cityId), function ($query) {
                     return $query->groupBy('type_name');
                 });
-        }])->where(function ($query) use ($userId, $deviceId) {
-            if ($userId) {
-                $query->where('user_id', $userId);
-            } else {
-                $query->where('device_id', $deviceId);
-            }
-        })->get();
+        }])
+        ->where(function ($query) use ($userId, $deviceId) {
+            $query->Where('device_id', $deviceId)->where('user_id', $userId);
+        })
+        ->get();
 
         $totalAmount = 0;
         $totalSaveAmount = 0;
