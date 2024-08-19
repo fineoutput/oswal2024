@@ -199,12 +199,10 @@ class CartController extends Controller
         $gift_card_id    = $request->input('gift_card_id');
         $wallet_status   = $request->input('wallet_status');
 
-        $cartQuery = Cart::query()->when(!$user_id && $device_id, function ($query) use ($device_id) {
-            return $query->where('device_id', $device_id);
-        })->when($user_id, function ($query) use ($user_id) {
-            return $query->where('user_id', $user_id);
+        $cartQuery = Cart::query()
+        ->where(function ($query) use ($user_id, $device_id) {
+            $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
         });
-
 
         $cartItems = $cartQuery->with(['type' => function ($query) use ($state_id, $city_id) {
             $query->when($state_id, function ($query) use ($state_id, $city_id) {
@@ -507,13 +505,13 @@ class CartController extends Controller
                 ->when(is_null($stateId) || is_null($cityId), function ($query) {
                     return $query->groupBy('type_name');
                 });
-        }])->where(function ($query) use ($userId, $deviceId) {
-            if ($userId) {
-                $query->where('user_id', $userId);
-            } else {
-                $query->where('device_id', $deviceId);
-            }
-        })->get();
+        }])
+        ->where(function ($query) use ($userId, $deviceId) {
+            $query->where('user_id', $userId)
+                  ->orWhere('device_id', $deviceId);
+        })
+        ->get();
+        
 
         $totalWeight = 0;
         $totalAmount = 0;
