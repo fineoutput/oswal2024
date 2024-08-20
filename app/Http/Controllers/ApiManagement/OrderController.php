@@ -211,9 +211,18 @@ class OrderController extends Controller
             
           $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
 
-          $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
+          if($user->wallet_amount > 0){
 
-          $totalwalletAmount = $user->wallet_amount;
+              $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
+    
+              $totalwalletAmount = $user->wallet_amount;
+
+          }else{
+
+            $message = 'Your wallet balance is insufficient.';
+
+          }
+
         }
 
         $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
@@ -459,7 +468,7 @@ class OrderController extends Controller
         if($wallet_status){
             
             $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
-  
+            
             $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
   
             $totalAmount -= $walletDescount;
@@ -1038,13 +1047,29 @@ class OrderController extends Controller
             ]);
         }
    
+        if($order->extra_discount != null){
+
+            $user->wallet_amount += $order->extra_discount;
+            $user->save();
+
+            WalletTransactionHistory::createTransaction([
+                'user_id' => $user->id,
+                'transaction_type' => 'debit',
+                'amount' => $order->extra_discount,
+                'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                'status' => WalletTransactionHistory::STATUS_COMPLETED,
+                'description' => "Refunded wallet amount for canceled order ID: {$order->id}",
+            ]);
+
+        }
+        
         $order->order_status= 5;
         $order->rejected_by = 1;
         $order->rejected_by_id= Auth::user()->id;
         $order->save();
         
         return response()->json([
-            'message' => 'success',
+            'message' => 'Order canceled successfully',
             'status' => 200,
         ]);
     }
