@@ -520,9 +520,9 @@ class OrderController extends Controller
 
         if($payment_type == 1){
 
-            $this->codCheckout($order->id,$payment_type);
+          return $this->codCheckout($order->id,$payment_type);
         }else{
-            $this->paidCheckout($order->id,$payment_type);
+          return $this->paidCheckout($order->id,$payment_type);
         }
     }
 
