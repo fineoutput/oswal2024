@@ -222,7 +222,7 @@ class OrderController extends Controller
           }
 
         }
-        
+
         $totalwalletAmount = $user->wallet_amount;
 
         $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
@@ -951,6 +951,16 @@ class OrderController extends Controller
 
         }
 
+        // if($order->delivery_status != 0 && $order->track_id != null){
+
+            $deleveryBoy = [
+                'id' => '1',
+                'name' => 'Manish',
+                'phone' => '1234567891',
+            ];
+
+        // }
+
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
 
@@ -1002,6 +1012,7 @@ class OrderController extends Controller
             'payment_mod'      => $payment_type,
             'cod_charge'       => $order->cod_charge,
             'order_datetime'   => $order->date,
+            'deleveryBoydetail'=> $deleveryBoy
         ];
 
         return response()->json([
