@@ -991,6 +991,7 @@ class OrderController extends Controller
             'order_status'     => getOrderStatus($order->order_status),
             'address'          => $addr_string,
             'payment_mod'      => $payment_type,
+            'cod_charge'       => $order->cod_charge,
             'order_datetime'   => $order->date,
         ];
 
