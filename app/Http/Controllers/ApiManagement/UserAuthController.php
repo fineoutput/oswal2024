@@ -259,7 +259,12 @@ class UserAuthController extends Controller
 
             $dlt = config('constants.SMS_LOGIN_DLT');
 
-            $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
+            // $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
+            $msg = "Dear User,
+                    Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+                    Regards,
+                    OSWAL SOAP";
+
 
             sendOtpSms($msg, $user->contact, $OTP, $dlt);
 
