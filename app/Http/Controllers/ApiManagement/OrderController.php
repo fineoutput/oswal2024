@@ -207,16 +207,14 @@ class OrderController extends Controller
 
         }
 
+        $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
+        
         if($wallet_status){
             
-          $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
-
           if($user->wallet_amount > 0){
 
               $walletDescount = (float) calculate_wallet_discount($user->wallet_amount);
     
-              $totalwalletAmount = $user->wallet_amount;
-
           }else{
 
             $message = 'Your wallet balance is insufficient.';
@@ -224,6 +222,8 @@ class OrderController extends Controller
           }
 
         }
+        
+        $totalwalletAmount = $user->wallet_amount;
 
         $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
 
