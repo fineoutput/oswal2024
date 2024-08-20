@@ -227,7 +227,7 @@ class OrderController extends Controller
 
         $reponse['promocode'] = [
             'promo_id'       => $promocode_id,
-            'promo_discount' => $promo_discount,
+            'promo_discount' => formatPrice($promo_discount,false),
             'promo_name'     => $promocode_name,
         ];
 
@@ -235,9 +235,9 @@ class OrderController extends Controller
         if (!empty($applyGiftCard)) {
   
             $reponse['gift_card_1']      = [
-                  'cal_promo_amu'         => $finalAmount + $applyGiftCard['amount'],
-                  'gift_card_amount'      => $applyGiftCard['amount'],
-                  'gift_card_gst_amount'  => $applyGiftCard['gst_amount'],
+                  'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
+                  'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
+                  'gift_card_gst_amount'  => formatPrice($applyGiftCard['gst_amount'],false),
             ];
 
             $finalAmount += $applyGiftCard['amount'];
