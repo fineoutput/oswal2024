@@ -142,7 +142,7 @@ class OrderController extends Controller
 
             } else {
 
-                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,200,$applyPromocode->original['message']);
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,$applyPromocode->original['message']);
 
             }
         }
@@ -153,7 +153,7 @@ class OrderController extends Controller
 
             if (!$applyGiftCard->original['success']) {
 
-                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,200,$applyGiftCard->original['message']);
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,$applyGiftCard->original['message']);
 
             }else{
 
@@ -162,10 +162,10 @@ class OrderController extends Controller
 
         }
      
-        return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,200,'featch data sucessfully');
+        return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,'featch data sucessfully');
     }
 
-    public function generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$status,$message) {
+    public function generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,$status,$message) {
 
         $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
             $query->where('is_active', 1)
