@@ -149,13 +149,10 @@ class CartController extends Controller
         $user_id   = $request->input('user_id');
         $cart_id   = $request->input('cart_id');
 
-        $query = Cart::query();
-
-        if ($user_id) {
-            $query->where('user_id', $user_id);
-        } else {
-            $query->where('device_id', $device_id);
-        }
+        $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
+            $query->Where('device_id', $device_id)
+            ->orwhere('user_id', $user_id);
+        });
 
         $cart = $query->where('id', $cart_id)->first();
 
