@@ -571,7 +571,7 @@ class OrderController extends Controller
             'payment_type'   => 1,
             'payment_status' => 1,
             'cod_charge'     => $codCharge,
-            'total_amount'   => $codCharge + $order->total_amount,
+            'total_amount'   => $order->total_amount,
         ]);
 
         $invoiceNumber = generateInvoiceNumber($orderId);
