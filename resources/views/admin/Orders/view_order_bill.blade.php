@@ -165,7 +165,12 @@
         <tr>
           <th colspan="9">COD Charge</th>
           <th class="product_table"> </th>
-          <th class="product_table"> @if($order->cod_charge == 0) ₹ {{ $order->cod_charge}} @else ₹. N/A  @endif</th>
+          <th class="product_table"> 
+            @if($order->payment_type == 1)
+              ₹ {{ $order->cod_charge}}
+              @else 
+              ₹. N/A  @endif
+            </th>
         </tr>
     
         @if(isset($promocode) && is_object($promocode))
