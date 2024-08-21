@@ -94,7 +94,11 @@
           </tr>
         </thead>
         <tbody>
+          @php
+            $total_tax = 0; 
+          @endphp
           @foreach($orderItems as $key => $item)
+          @php $total_tax += $item->type->gst_percentage_price * $item->quantity @endphp
             <tr class="product_table2">
               <td>{{ $loop->iteration }}</td>
               <td>{{ $item->product->name ?? 'N/A' }}</td>
@@ -115,6 +119,7 @@
               </td>
               <td>Rs. {{ $item->amount }}</td>
             </tr>
+
           @endforeach
           @if($order->gift_id != 0)
             <tr class="product_table2">
@@ -125,9 +130,9 @@
               <td>Rs. {{ $giftCard->price ?? 'N/A' }}</td>
               <td>1</td>
               <td>Rs. {{ $giftCard->price ?? 'N/A' }}</td>
-              <td>18%</td>
+              <td>%</td>
               <td>IGST</td>
-              <td>Rs. {{ round($order->gift1_gst_amt) }}</td>
+              <td>Rs. {{ round($order->gift_gst_amt) }}</td>
               <td>Rs. {{ round($order->gift_amt) }}</td>
             </tr>
           @endif
@@ -138,8 +143,8 @@
           <th class="product_table" colspan="4"></th>
           <!-- <th class="product_table">36.0%</th> -->
           <th class="product_table" colspan="1"></th>
-          <th class="product_table">₹ {{ ($item->type->gst_percentage_price*$item->quantity) + $order->gift1_gst_amt  }}</th>
-          <th class="product_table">₹ {{( $order->gift_amt != null) ? $order->gift_amt + $item->amount: $item->amount }}</th>
+          <th class="product_table">₹ {{ $total_tax + $order->gift_gst_amt  }}</th>
+          <th class="product_table">₹ {{( $order->gift_amt != null) ? $order->gift_amt + $order->sub_total: $order->sub_total }}</th>
         </tr>
           {{-- <tr>
             <th>Free Gift</th>
