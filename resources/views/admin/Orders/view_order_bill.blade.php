@@ -107,7 +107,7 @@
               <td>Rs. {{ $item->type->mrp ?? 'N/A' }}</td>
               <td>{{ $item->quantity }}</td>
               <td>Rs. {{ $item->type->mrp * $item->quantity }}</td>
-              <td>{{ $item->type->gst_percentage }}%</td>
+              <td>{{ $item->type->gst_percentage ?? 18}}%</td>
               <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
               <td>
                 @if($address->state == 29)
@@ -179,7 +179,7 @@
               <th class="product_table"></th>
               <th class="product_table">
                   @if($order->promo_deduction_amount > 0)
-                      - Rs. {{ $order->promo_deduction_amount ?? 0 }}
+                      - ₹ . {{ $order->promo_deduction_amount ?? 0 }}
                   @endif
               </th>
           </tr>
