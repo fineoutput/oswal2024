@@ -138,7 +138,7 @@
           <!-- <th class="product_table">36.0%</th> -->
           <th class="product_table" colspan="1"></th>
           <th class="product_table">₹ {{ ($item->type->gst_percentage_price*$item->quantity) + $order->gift1_gst_amt  }}</th>
-          <th class="product_table">₹ {{ $order->gift_amt + $item->amount }}</th>
+          <th class="product_table">₹ {{( $order->gift_amt != null) ? $order->gift_amt + $item->amount: $item->amount }}</th>
         </tr>
           {{-- <tr>
             <th>Free Gift</th>
@@ -161,21 +161,46 @@
           <th class="product_table"> </th>
           <th class="product_table"> @if($order->cod_charge == 0) ₹ {{ $order->cod_charge}} @else ₹. N/A  @endif</th>
         </tr>
-        <tr>
-            <th colspan="9">Promocode : {{ $promocode->promocode }} </th>
-            <th class="product_table"> </th>
-            <th class="product_table"> @if($order->promo_deduction_amount > 0) - Rs. {{ $order->promo_deduction_amount }} @else  - Rs. 0 @endif</th>
+    
+        @if(isset($promocode) && is_object($promocode))
+          <tr>
+              <th colspan="9">Promocode: {{ $promocode->promocode }}</th>
+              <th class="product_table"></th>
+              <th class="product_table">
+                  @if($order->promo_deduction_amount > 0)
+                      - Rs. {{ $order->promo_deduction_amount ?? 0 }}
+                  @endif
+              </th>
           </tr>
+      @else
+          <tr>
+              <th colspan="9">Promocode: N/A</th>
+              <th class="product_table"></th>
+              <th class="product_table">
+                  @if($order->promo_deduction_amount > 0)
+                      - Rs. {{ $order->promo_deduction_amount ?? 0 }}
+                  @endif
+              </th>
+          </tr>
+      @endif
+
         <tr>
-          <th colspan="9">Discount</th>
+          <th colspan="9"> Discount </th>
           <th class="product_table"> </th>
-          <th class="product_table">-₹ {{ $order->extra_discount }}</th>
+          <th class="product_table">-₹ {{ $order->extra_discount ?? 0  }}</th>
         </tr>
         <tr>
-            @php
-                
-                $total_amount = $order->sub_total + $order->gift_amt + $order->cod_charge + $order->order_shipping_amount  - $order->promo_deduction_amount - $order->extra_discount;
-            @endphp
+          @php
+          $sub_total = (float) ($order->sub_total ?? 0);
+          $gift_amt = (float) ($order->gift_amt ?? 0);
+          $cod_charge = (float) ($order->cod_charge ?? 0);
+          $order_shipping_amount = (float) ($order->order_shipping_amount ?? 0);
+          $promo_deduction_amount = (float) ($order->promo_deduction_amount ?? 0);
+          $extra_discount = (float) ($order->extra_discount ?? 0);
+      
+          $total_amount = $sub_total + $gift_amt + $cod_charge + $order_shipping_amount - $promo_deduction_amount - $extra_discount;
+      @endphp
+      
           <th colspan="9">SubTotal</th>
           <th class="product_table"> </th>
           <th class="product_table" id="tot_amnt">₹ {{ $total_amount }}</th>
