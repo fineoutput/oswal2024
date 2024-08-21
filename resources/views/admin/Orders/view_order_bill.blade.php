@@ -134,6 +134,7 @@
           <th>Total</th>
           <th class="product_table" colspan="2"></th>
           {{-- <th class="product_table">{{ $order->total_order_weight }} kg/ltr</th> --}}
+          <th class="product_table"></th>
           <th class="product_table" colspan="4"></th>
           <!-- <th class="product_table">36.0%</th> -->
           <th class="product_table" colspan="1"></th>
