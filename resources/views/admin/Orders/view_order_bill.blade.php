@@ -132,8 +132,8 @@
               <td>Rs. {{ $giftCard->price ?? 'N/A' }}</td>
               <td>%</td>
               <td>IGST</td>
-              <td>Rs. {{ round($order->gift_gst_amt) }}</td>
-              <td>Rs. {{ round($order->gift_amt) }}</td>
+              <td>Rs. {{ $order->gift_gst_amt }}</td>
+              <td>Rs. {{ $order->gift_amt }}</td>
             </tr>
           @endif
           <th>Total</th>
@@ -167,7 +167,7 @@
           <th class="product_table"> </th>
           <th class="product_table"> 
             @if($order->payment_type == 1)
-              ₹ {{ $order->cod_charge}}
+            + ₹ {{ number_format($order->cod_charge , 2)}}
               @else 
               ₹. N/A  @endif
             </th>
