@@ -177,9 +177,9 @@
               <th colspan="9">Promocode: N/A</th>
               <th class="product_table"></th>
               <th class="product_table">
-                  @if($order->promo_deduction_amount > 0)
-                      - Rs. {{ $order->promo_deduction_amount ?? 0 }}
-                  @endif
+                  
+                  - Rs. {{ $order->promo_deduction_amount ?? ₹. N/A }}
+                  
               </th>
           </tr>
       @endif
