@@ -322,8 +322,8 @@ if(!function_exists('getShipRocketToken')){
         // Authenticate with Shiprocket
         $response = $client->post('https://apiv2.shiprocket.in/v1/external/auth/login', [
             'json' => [
-                'email' => 'acc.fineoutput@gmail.com',
-                'password' => 'Aditya@1956',
+                'email' => config('constants.SHIPROCFET_EMAIL'),
+                'password' => config('constants.SHIPROCFET_PASSWORD'),
             ],
             'headers' => [
                 'Content-Type' => 'application/json',

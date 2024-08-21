@@ -24,6 +24,11 @@ return [
     // Razorpay API Keys
     'RAZORPAY_KEY_ID' => 'rzp_test_nyyE7NA4CoCIbN',
     'RAZORPAY_KEY_SECRET' => 'U0iJVwdeskvEw7qVstJ7mh1c',
-];
+
+    //ShipRocket api
+    'SHIPROCFET_EMAIL' => 'acc.fineoutput@gmail.com',
+    'SHIPROCFET_PASSWORD' => 'Aditya@1956',
+
+];  
 ?>
 
