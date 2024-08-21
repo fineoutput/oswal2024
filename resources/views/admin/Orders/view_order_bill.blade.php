@@ -15,7 +15,7 @@
   <div class="container main_container">
     <div class="row">
       <div class="col-sm-6 oswal_logo">
-        <img src="{{ asset('assets/frontend/main_css/images/logo-customizer-white/oswal-logo.png') }}" class="img-fluid" style="width:90px;">
+        <img src="{{ asset('uploads/image/2024/7/31/Crm/112342.png') }}" class="img-fluid" style="width:90px;">
       </div>
       <div class="col-sm-6 content_part">Tax Invoice/Bill of Supply/Cash Memo
         <p>(Original for Recipient)</p>
