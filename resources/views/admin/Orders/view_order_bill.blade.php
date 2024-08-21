@@ -179,7 +179,7 @@
               <th class="product_table"></th>
               <th class="product_table">
                   @if($order->promo_deduction_amount > 0)
-                      - ₹ . {{ $order->promo_deduction_amount ?? 0 }}
+                      - ₹ {{ $order->promo_deduction_amount ?? 0 }}
                   @endif
               </th>
           </tr>
@@ -189,7 +189,7 @@
               <th class="product_table"></th>
               <th class="product_table">
                   
-                  - Rs. {{ $order->promo_deduction_amount ?? ₹. N/A }}
+                - ₹ {{ $order->promo_deduction_amount ?? ₹. N/A }}
                   
               </th>
           </tr>
