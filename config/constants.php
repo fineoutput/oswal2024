@@ -14,9 +14,11 @@ return [
     // SMS API Keys
     'SMS_API_URL'    => 'http://api.msg91.com/api/sendotp.php',
     'SMS_API_KEY'    => '379704A9kcGMskeHG62d4f215P1',
-    'SMS_SENDER_ID'  => 'TIAOTP',
-    'SMS_SIGNUP_DLT' => '1207166444129174674',
-    'SMS_LOGIN_DLT'  => '1207166444113966752',
+    'SMS_SENDER_ID'  => 'OSWALA',
+    // 'SMS_SIGNUP_DLT' => '1207166444129174674',
+    'SMS_SIGNUP_DLT' => '1207166512469160160',
+    // 'SMS_LOGIN_DLT'  => '1207166444113966752',
+    'SMS_LOGIN_DLT'  => '1207167853097064109',
 
     // Google Map API Key
     'GOOGLE_MAP_KEY' => 'AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U',
@@ -26,8 +28,8 @@ return [
     'RAZORPAY_KEY_SECRET' => 'U0iJVwdeskvEw7qVstJ7mh1c',
 
     //ShipRocket api
-    'SHIPROCFET_EMAIL' => 'acc.fineoutput@gmail.com',
-    'SHIPROCFET_PASSWORD' => 'Aditya@1956',
+    'SHIPROCKET_EMAIL' => 'acc.fineoutput@gmail.com',
+    'SHIPROCKET_PASSWORD' => 'Aditya@1956',
 
 ];  
 ?>
