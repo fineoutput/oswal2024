@@ -253,7 +253,7 @@ class ProductController extends Controller
     }
     public function view_cart() {
         
-        $carts = Cart::with('user' ,'product','type')->where('user_id', '!=' , null)->OrderBy('id', 'Desc')->get();
+        $carts = Cart::with('user' ,'product','type')->OrderBy('id', 'Desc')->get();
     
         return view('admin.Ecommerce.view-cart' , compact('carts'));
 
