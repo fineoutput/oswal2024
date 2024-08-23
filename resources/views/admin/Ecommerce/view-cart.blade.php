@@ -95,13 +95,19 @@
                                             </thead>
 
                                             <tbody>
-                                                @dd($carts);
                                                 @foreach ($carts as $key => $value)
-
+                                                @php
+                                                    if($value->user == null){
+                                                      $user = App\Models\User::where('device_id' , $value->device_id)->first;
+                                                    }else {
+                                                     $user = $value->user;
+                                                    }
+                                                     $first_name = $user->first_name ?? '';
+                                                @endphp
                                                 <tr>
                                                     <td class="text-center">{{ ++$key }}</td>
 
-                                                    <td class="text-center">{{ $value->user->first_name }}</td>
+                                                    <td class="text-center">{{  $first_name }}</td>
 
                                                     <td class="text-center">{{ $value->product->name }}</td>
 
