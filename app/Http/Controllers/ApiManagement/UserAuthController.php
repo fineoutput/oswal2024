@@ -61,7 +61,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+            return response()->json(['status' => 400, 'message' => $validator->errors()->first()], 400);
         }
 
         $dlt = config('constants.SMS_SIGNUP_DLT');
@@ -172,7 +172,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+            return response()->json(['status' => 400, 'message' => $validator->errors()->first()], 400);
         }
 
         $userOtpId = session()->get('user_otp_id');
@@ -248,7 +248,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+            return response()->json(['status' => 400, 'message' => $validator->errors()->first()], 400);
         }
 
         $user = User::where('contact', $request->phone_no)->first();
