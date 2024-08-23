@@ -61,7 +61,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => 400, 'message' => $validator->errors()->first()], 400);
+            return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
         $dlt = config('constants.SMS_SIGNUP_DLT');
