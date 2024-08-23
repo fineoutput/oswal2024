@@ -161,7 +161,7 @@ class UserAuthController extends Controller
 
         } else {
            
-            return response()->json(['status' => 500,'message' => 'Error occurred while saving OTP, please try again'], 500);
+            return response()->json(['status' => 500,'message' => 'Error occurred while saving OTP, please try again']);
         }
     
     }
@@ -172,7 +172,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => 400, 'message' => $validator->errors()->first()], 400);
+            return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
         $userOtpId = session()->get('user_otp_id');
@@ -236,7 +236,7 @@ class UserAuthController extends Controller
             
         } else {
 
-            return response()->json(['status' => 401, 'message' => 'Invalid OTP. Please try again.'], 401);
+            return response()->json(['status' => 401, 'message' => 'Invalid OTP. Please try again.']);
 
         }
 
@@ -248,7 +248,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => 400, 'message' => $validator->errors()->first()], 400);
+            return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
         $user = User::where('contact', $request->phone_no)->first();
@@ -288,11 +288,11 @@ class UserAuthController extends Controller
 
             } else {
             
-                return response()->json(['status' => 500,'message' => 'Error occurred while saving OTP, please try again'], 500);
+                return response()->json(['status' => 500,'message' => 'Error occurred while saving OTP, please try again']);
             }
         }else{
 
-            return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.'], 401);
+            return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.']);
 
         }
 
