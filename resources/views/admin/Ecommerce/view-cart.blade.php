@@ -95,7 +95,7 @@
                                             </thead>
 
                                             <tbody>
-
+                                                @dd($carts);
                                                 @foreach ($carts as $key => $value)
 
                                                 <tr>
