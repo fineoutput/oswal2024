@@ -142,7 +142,7 @@ class CartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
         $device_id = $request->input('device_id');
