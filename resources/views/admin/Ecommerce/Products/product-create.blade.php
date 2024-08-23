@@ -201,7 +201,7 @@
 
                                             <div class="form-floating">
 
-                                                <input class="form-control" type="text" value="{{ $product ? $product->video : old('video')}}" id="video" name="video" placeholder="Enter video" required>
+                                                <input class="form-control" type="text" value="{{ $product ? $product->video : old('video')}}" id="video" name="video" placeholder="Enter video">
 
                                                 <label for="video">Video Link(Optional) </label>
 
