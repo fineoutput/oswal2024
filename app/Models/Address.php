@@ -37,7 +37,7 @@ class Address extends Model
 
     public function orders()
     {
-        return $this->hasOne(Order::class, 'address_id');
+        return $this->hasOne(Order::class, 'address_id' , 'id');
     }
 
     public function citys()

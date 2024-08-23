@@ -85,12 +85,12 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id' ,'id');
     }
 
     public function address()
     {
-        return $this->belongsTo(Address::class, 'address_id');
+        return $this->belongsTo(Address::class, 'address_id' ,'id');
     }
 
     public function gift()
@@ -115,7 +115,7 @@ class Order extends Model
 
     public function transferOrder()
     {
-        return $this->hasMany(TransferOrder::class, 'order_id');
+        return $this->hasOne(TransferOrder::class, 'order_id' , 'id');
     }
     
 }

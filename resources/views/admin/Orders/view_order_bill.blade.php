@@ -143,7 +143,7 @@
           <th class="product_table" colspan="4"></th>
           <!-- <th class="product_table">36.0%</th> -->
           <th class="product_table" colspan="1"></th>
-          <th class="product_table">₹ {{ $total_tax + $order->gift_gst_amt  }}</th>
+          <th class="product_table">₹ {{ $total_tax + (float)($order->gift_gst_amt ?? 0)}}</th>
           <th class="product_table">₹ {{( $order->gift_amt != null) ? $order->gift_amt + $order->sub_total: $order->sub_total }}</th>
         </tr>
           {{-- <tr>

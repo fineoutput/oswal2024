@@ -68,6 +68,8 @@ use App\Http\Controllers\Admin\ComboProductController;
 
 use App\Http\Controllers\Admin\OrderController;
 
+use App\Http\Controllers\Admin\Delivery\DeliveryBoyController;
+
 
 /*========= Home Routes ========*/
 
@@ -586,7 +588,6 @@ Route::prefix('user')->name('user.')->group(function () {
 
    Route::post('update-wallet', [UsersController::class, 'updateWallet'])->name('update-wallet');
 
-
 });
 
 
@@ -666,5 +667,23 @@ Route::prefix('order')->name('order.')->group(function () {
     Route::get('view-delivery-challan/{id}', [OrderController::class, 'deliveryChallan'])->name('view-delivery-challan');
 
     Route::get('destroy/{id}', [ComboProductController::class, 'destroy'])->name('destroy');
+
+});
+
+/*=========Users Routes ========*/
+
+Route::prefix('delivery')->name('delivery.')->group(function () {
+
+    Route::get('boy/index', [DeliveryBoyController::class, 'index'])->name('index');
+
+    Route::get('boy/create/{id?}', [DeliveryBoyController::class, 'create'])->name('create');
+
+    Route::post('boy/store', [DeliveryBoyController::class, 'store'])->name('store');
+
+    Route::get('boy/update-status/{status}/{id}', [DeliveryBoyController::class, 'update_status'])->name('update-status');
+
+    Route::get('boy/destroy/{id}', [DeliveryBoyController::class, 'destroy'])->name('destroy');
+
+    Route::get('boy/order/{id}', [DeliveryBoyController::class, 'Order'])->name('order');
 
 });

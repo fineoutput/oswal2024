@@ -95,17 +95,15 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">BY Admin</th>
+                                                    <th data-priority="1">Ids</th>
 
                                                     <th data-priority="3">User</th>
 
-                                                    <th data-priority="3">Total Amount</th>
-
-                                                    <th data-priority="6">Promocode</th>
-
                                                     <th data-priority="6">User Address</th>
 
-                                                    <th data-priority="6">Location Address</th>
+                                                    <th data-priority="6">Long./Lat.</th>
+
+                                                    <th data-priority="6">DoorFlat</th>
 
                                                     <th data-priority="6">User Mob.</th>
 
@@ -117,29 +115,11 @@
 
                                                     <th data-priority="6">Payment Type</th>
 
-                                                    <th data-priority="6">Cod Charge</th>
-
-                                                    <th data-priority="6">Order Status</th>
-
                                                     <th data-priority="6">Delivery Status</th>
 
-                                                    <th data-priority="6">Order Track Id</th>
-
-                                                    <th data-priority="6">Rejected By</th>
-
-                                                    <th data-priority="6">Last Update Date</th>
-
-                                                    <th data-priority="6">Order Date</th>
+                                                    <th data-priority="6">Expected Delivery Date</th>
 
                                                     <th data-priority="6">Order Products</th>
-
-                                                    <th data-priority="6">Order From</th>
-
-                                                    <th data-priority="6">Gift</th>
-
-                                                    <th data-priority="6">Gift 1</th>
-
-                                                    <th data-priority="6">Remark</th>
 
                                                     <th data-priority="6">Action</th>
 
@@ -149,48 +129,47 @@
 
                                             <tbody>
 
-                                                @foreach ($orders as $key => $order)
-                        
+                                                @foreach ($transferOrders as $key => $order)
+                                                 @php
+                                                   $order->load('orders');
+                                                   $address = $order->orders->load('address')->address;
+                                                   $user = $order->orders->load('user')->user;
+                                                   $orderDetails= $order->orders->load('orderDetails')->orderDetails;
+                                                   $promocodes= $order->orders->load('promocodes')->promocodes;
+                                                   
+                                                 @endphp
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
 
-                                                        <td>{{ $order->user->first_name }}</td>
+                                                        <td>OrderId-{{ $order->orders->id }}, AddressId - {{  $address->id }}</td>
 
-                                                        <td>{{ $order->user->first_name }}</td>
+                                                        <td>{{  $user->first_name }}</td>
 
-                                                        <td> {{ $order->sub_total }}</td>
-
-                                                        <td>
-                                                            @if ($order->promocodes != null && $order->promocodes != '' )
-                                                                
-                                                                {{ $order->promocodes->promocode }}
-
-                                                            @endif
-                                                        </td>
                                                         @php
                                                             $custom_address =
-                                                                $order->address->doorflat .
+                                                                $address->doorflat .
                                                                 ' ' .
-                                                                $order->address->landmark .
+                                                                $address->landmark .
                                                                 ' ' .
-                                                                $order->address->address .
+                                                                $address->address .
                                                                 ' ' .
-                                                                $order->address->location_address .
+                                                                $address->location_address .
                                                                 ' ' .
-                                                                $order->address->zipcode;
+                                                                $address->zipcode;
                                                         @endphp
-
                                                         <td> {{ $custom_address }}</td>
 
-                                                        <td> {{ $custom_address }}</td>
+                                                        <td> {{ $address->latitude .' - '.$address->longitude }}</td>
 
-                                                        <td> {{ $order->user->contact }}</td>
+                                                        <td> {{ $address->doorflat }}</td>
 
-                                                        <td> {{ $order->address->citys->city_name }}</td>
+                                                        <td> {{ $user->contact }}</td>
 
-                                                        <td> {{ $order->address->states->state_name }}</td>
+                                                        <td> {{ $address->citys->city_name }}</td>
 
-                                                        <td> {{ $order->address->zipcode }}</td>
+                                                        <td> {{ $address->states->state_name }}</td>
+
+                                                        <td> {{ $address->zipcode }}</td>
 
                                                         <td>
                                                             @if ($order->payment_type == 1)
@@ -200,27 +179,7 @@
                                                             @endif
                                                         </td>
 
-                                                        <td> {{ $order->cod_charge }}</td>
-
-                                                        <td>
-                                                            @if ($order->order_status == 1)
-                                                                <span class="label label-primary"
-                                                                    style="font-size:13px;">New Order</span>
-                                                            @elseif ($order->order_status == 2)
-                                                                <span class="label label-success"
-                                                                    style="font-size:13px;">Accepted</span>
-                                                            @elseif ($order->order_status == 3)
-                                                                <span class="label label-info"
-                                                                    style="font-size:13px;">Dispatched</span>
-                                                            @elseif ($order->order_status == 4)
-                                                                <span class="label label-success"
-                                                                    style="font-size:13px;">Delivered</span>
-                                                            @elseif ($order->order_status == 5)
-                                                                <span class="label label-danger"
-                                                                    style="font-size:13px;">Rejected</span>
-                                                            @endif
-                                                        </td>
-
+                                                   
                                                         <td>
                                                             @if ($order->delivery_status == 0)
                                                                 <span class="label label-warning"
@@ -242,12 +201,6 @@
                                                             @endif
                                                         </td>
 
-                                                        <td> {{ $order->track_id }}</td>
-
-                                                        <td>
-                                                            {{ getRejectedByDetails($order->rejected_by, $order->rejected_by_id) }}
-                                                        </td>
-
                                                         <td>
 
                                                             @php
@@ -257,19 +210,11 @@
 
                                                         </td>
 
-                                                        <td>
-
-                                                            @php
-                                                                $newDate = \Carbon\Carbon::parse($order->date);
-                                                            @endphp
-                                                            {{ $newDate->format('j F, Y, g:i a') }}
-
-                                                        </td>
 
                                                         <td>
 
-                                                            @if ($order->orderDetails->count() > 0)
-                                                                @foreach ($order->orderDetails as $index => $order2pro)
+                                                            @if ($orderDetails->count() > 0)
+                                                                @foreach ($orderDetails as $index => $order2pro)
                                                                     @php
                                                                         $typeName = $order2pro->type
                                                                             ? $order2pro->type->type_name
@@ -285,7 +230,7 @@
 
                                                                     {{ $output }}
 
-                                                                    @if ($index < $order->orderDetails->count() - 1)
+                                                                    @if ($index < $orderDetails->count() - 1)
                                                                         ,
                                                                     @endif
                                                                 @endforeach
@@ -295,25 +240,6 @@
 
                                                         </td>
 
-                                                        <td> {{ $order->order_from }}</td>
-
-                                                        <td>
-                                                             @if($order->gift_id != null && $order->gift_id != '' && $order->gift_id != 0)
-                                                             {{ $order->gift->name }}
-                                                             @else
-                                                                  No Gift Card
-                                                             @endif
-                                                        </td>
-                                                        
-                                                        <td>
-                                                            @if($order->gift1_id != null && $order->gift1_id != '' && $order->gift1_id != 0 && $order->gift1 != null)
-                                                            {{ $order->gift1->name }}
-                                                            @else
-                                                                 No Gift Card
-                                                            @endif
-                                                       </td>
-
-                                                       <td>{{  $order->remarks }}</td>
 
                                                        <td>
                                                         <div class="btn-group" id="btns{{ $key }}">
