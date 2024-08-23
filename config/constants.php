@@ -13,8 +13,7 @@ return [
 
     // SMS API Keys
     'SMS_API_URL'    => 'http://api.msg91.com/api/sendotp.php',
-    // 'SMS_API_KEY'    => '379704A9kcGMskeHG62d4f215P1',
-    'SMS_API_KEY'    => '665ac4e2d6fc053f476d97c2',
+    'SMS_API_KEY'    => '379704A9kcGMskeHG62d4f215P1',
     'SMS_SENDER_ID'  => 'OSWALA',
     // 'SMS_SIGNUP_DLT' => '1207166444129174674',
     'SMS_SIGNUP_DLT' => '1207166512469160160',
