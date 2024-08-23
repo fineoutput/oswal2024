@@ -217,7 +217,7 @@ if (!function_exists('sendOtpSms')) {
 
         curl_close($ch);
 
-        dd($response);
+        // dd($response);
 
         if ($err) {
             // Log the error or handle it appropriately
