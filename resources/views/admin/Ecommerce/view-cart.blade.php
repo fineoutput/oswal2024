@@ -97,25 +97,29 @@
                                             <tbody>
 
                                                 @foreach ($carts as $key => $value)
-                                                
+
                                                 <tr>
                                                     <td class="text-center">{{ ++$key }}</td>
 
-                                                    <td class="text-center">{{ $shippingCharge->state->state_name }}</td>
+                                                    <td class="text-center">{{ $value->user->first_name }}</td>
 
-                                                    <td class="text-center">{{ $shippingCharge->city->city_name }}</td>
+                                                    <td class="text-center">{{ $value->product->name }}</td>
 
-                                                    <td class="text-center">{{ $shippingCharge->weight1 }}</td>
+                                                    <td class="text-center">{{ $value->type->type_name }}</td>
                                                     
-                                                    <td class="text-center">{{ $shippingCharge->shipping_charge1 }}</td>
+                                                    <td class="text-center">{{ formatPrice($value->type->selling_price)  }}</td>
 
-                                                    <td class="text-center">{{ $shippingCharge->weight2 }}  </td>
+                                                    <td class="text-center">{{ $value->quantity }}  </td>
 
-                                                    <td class="text-center">{{ $shippingCharge->shipping_charge2 }}  </td>
+                                                    <td class="text-center">{{ formatPrice($value->total_qty_price) }}  </td>
 
-                                                    <td class="text-center">{{ $shippingCharge->weight3 }}  </td>
+                                                    <td class="text-center">
+                                                        @if ($value->checkout_status == 0)
+                                                            in Cart
+                                                        @endif  
+                                                    </td>
 
-                                                    <td class="text-center">{{ $shippingCharge->shipping_charge3 }}  </td>
+                                                    <td class="text-center">{{ $value->created_at }}  </td>
 
                                                 </tr>
 
