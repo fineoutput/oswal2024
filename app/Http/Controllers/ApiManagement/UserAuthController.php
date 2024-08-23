@@ -70,7 +70,12 @@ class UserAuthController extends Controller
         
             $OTP = generateOtp();
 
-            $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
+            // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
+            $msg = "Dear User,
+                    Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+
+                    Regards,
+                    OSWAL SOAP";
     
             sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt); // Uncomment this line to send the OTP SMS
     
@@ -127,7 +132,13 @@ class UserAuthController extends Controller
         
         $OTP = generateOtp();
 
-        $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
+        // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
+
+        $msg = "Dear User,
+                    Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+
+                    Regards,
+                    OSWAL SOAP";
 
         sendOtpSms($msg, $user->contact, $OTP, $dlt);
 
