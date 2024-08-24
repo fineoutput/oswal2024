@@ -232,9 +232,12 @@
                                                              @endphp
                                                               Transfered To ({{$deliveryBoy->name}})
                                                             @elseif ($order->delivery_status == 2)
-                                                             
+                                                                @php
+                                                                $order->transferOrder->load('deliveryBoy');
+                                                                $deliveryBoy = $order->transferOrder->deliveryBoy;
+                                                                @endphp
                                                             <span class="label label-info" style="font-size:13px;">
-                                                                Accepted By 
+                                                                Accepted By ({{$deliveryBoy->name}})
                                                                 </span>
                                                             @elseif ($order->delivery_status == 3)
                                                                 <span class="label label-success"
