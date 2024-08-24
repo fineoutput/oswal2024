@@ -226,6 +226,7 @@ class DeliveryBoyController extends Controller
 
             $data[] = [
                 'transfer_order_id' => $value->id,
+                'delivery_status'=> deliveryStatus($value->status),
                 'order_id' => $value->order_id,
                 'user_id' => $value->orders->user_id,
                 'user_name' => $value->orders->user->first_name,
@@ -282,16 +283,6 @@ class DeliveryBoyController extends Controller
 
         }
 
-        if($transferOrder->status == 0){
-            $status = 'Pending';
-        }elseif($transferOrder->status == 1){
-            $status = 'Accepted';
-        }elseif($transferOrder->status == 2){
-            $status = 'StartDelivery';
-        }else{
-            $status = 'Delivered';
-        }
-
         $latitude = $request->latitude;
         $longitude = $request->longitude;
         
@@ -304,7 +295,7 @@ class DeliveryBoyController extends Controller
             'phone_no'    => $transferOrder->orders->user->contact,
             'address'     => $transferOrder->orders->address,
             'payment_type'=> $payment_type,
-            'delivery_status'=> $status,
+            'delivery_status'=> deliveryStatus($transferOrder->status),
              'order_detail' =>[
                 'amount' => $transferOrder->orders->total_amount,
                 'date'   => $transferOrder->orders->created_at,
@@ -397,6 +388,7 @@ class DeliveryBoyController extends Controller
             'message' => 'Order accepted successfully.',
             'status' => 200,
             'data' => [
+                'delivery_status'=> deliveryStatus($order->status),
                 'order_id' => $order->id,
                 'accepted_at' => $order->accepted_at,
             ],
@@ -461,7 +453,7 @@ class DeliveryBoyController extends Controller
             $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
     
             $orderData = [
-                'status' => $transferOrder->status,
+                'delivery_status'=> deliveryStatus($transferOrder->status),
                 'order_id' => $transferOrder->order_id,
                 'final_amount' => $order->total_amount,
                 'user_address' => $userAddress->address ?? '',
@@ -551,6 +543,8 @@ class DeliveryBoyController extends Controller
                 ]);
             }
 
+            Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
+            
             $userAddress = $order->address;
             if (!$userAddress) {
                 return response()->json([
@@ -570,6 +564,7 @@ class DeliveryBoyController extends Controller
                 'status' => 200,
                 'data' => [
                     'order_id' => $deliveryOrder->id,
+                    'delivery_status'=> deliveryStatus(2),
                     'start_location' => $deliveryOrder->start_location,
                     'start_time' => $deliveryOrder->start_time,
                     'user_address' => [
