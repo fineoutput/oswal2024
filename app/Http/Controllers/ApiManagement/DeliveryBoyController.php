@@ -212,7 +212,7 @@ class DeliveryBoyController extends Controller
 
         $transferOrders = TransferOrder::where('status', 0)
                         ->where('delivery_user_id', $user->id)
-                        ->with(['order.user', 'order.address'])
+                        ->with(['Orders.user', 'Orders.address'])
                         ->get();
     
         $data = [];
