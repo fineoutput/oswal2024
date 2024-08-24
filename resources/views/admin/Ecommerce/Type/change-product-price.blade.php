@@ -127,7 +127,7 @@
 
                                                 <div class="form-floating">
 
-                                                    <input class="form-control" type="text" value="{{ $type->state->state_name }}" placeholder="state"  readonly>
+                                                    <input class="form-control" type="text" value="{{ $type->states->state_name }}" placeholder="state"  readonly>
 
                                                     <input type="hidden" value="{{ $type->state_id }}" id="state_id" name="state_id">
 
@@ -147,7 +147,7 @@
 
                                                 <div class="form-floating">
     
-                                                    <input class="form-control" type="text" value="{{ $type->city->city_name }}" placeholder="Selling Price (without GST)"  readonly>
+                                                    <input class="form-control" type="text" value="{{ $type->citys->city_name }}" placeholder="Selling Price (without GST)"  readonly>
 
                                                     <input type="hidden" value="{{ $type->city_id }}"  id="city_id" name="city_id" required>
     
