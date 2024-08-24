@@ -183,7 +183,7 @@ Route::prefix('ecom/type')->name('type.')->group(function () {
 
     Route::get('create/{pid}/{cid}/{pcid}', [TypeController::class, 'create'])->name('create');
 
-    Route::get('edit/{pid}/{cid}/{pcid}', [TypeController::class, 'edit'])->name('edit');
+    Route::get('edit/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'edit'])->name('edit');
   
     Route::post('store', [TypeController::class, 'store'])->name('store');
 
