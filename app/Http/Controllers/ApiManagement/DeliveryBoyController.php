@@ -42,8 +42,9 @@ class DeliveryBoyController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'        => 'required|email',
+            'password'     => 'required',
+            'device_token' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -61,6 +62,9 @@ class DeliveryBoyController extends Controller
                 'message' => 'Invalid credentials',
             ], 401);
         }
+
+        //add Device Token 
+        $deliveryBoy->update(['device_token' => $request->password]);
 
         $token = $deliveryBoy->createToken('DeliveryBoyApp')->plainTextToken;
 
