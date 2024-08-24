@@ -180,7 +180,7 @@
                                             <div class="form-floating">
 
                                                 <input type="password" class="form-control"
-                                                    value="{{ $user ? '': old('password') }}"
+                                                    value="{{ old('password') }}"
                                                     name="password" placeholder="Enter Password" required>
 
                                                 <label for="password"> password &nbsp;<span
