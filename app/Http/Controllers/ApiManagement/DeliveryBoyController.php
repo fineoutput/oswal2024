@@ -10,31 +10,20 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Support\Facades\DB;
-
 use App\Models\DeliveryAmount;
 
 use App\Models\TransferOrder;
 
 use Illuminate\Http\Request;
 
-use App\Models\DeliverySlot;
-
 use App\Models\DeliveryBoy;
 
-use App\Models\EcomProduct;
-
 use App\Models\OrderDetail;
-
-use App\Models\Address;
 
 use GuzzleHttp\Client;
 
 use App\Models\Order;
-use App\Models\Type;
-use App\Models\Unit;
 
-use App\Models\User;
 
 class DeliveryBoyController extends Controller
 {
@@ -64,7 +53,7 @@ class DeliveryBoyController extends Controller
         }
 
         //add Device Token 
-        $deliveryBoy->update(['device_token' => $request->password]);
+        $deliveryBoy->update(['device_token' => $request->device_token]);
 
         $token = $deliveryBoy->createToken('DeliveryBoyApp')->plainTextToken;
 
@@ -99,7 +88,7 @@ class DeliveryBoyController extends Controller
             $tamount = $deliveryAmount ? $deliveryAmount->amount : 0;
    
             // Fetch total amount to collect
-            $transferOrders = TransferOrder::where('status', '<=' , 1)->where('delivery_user_id', $deliveryBoy->id)->get(); 
+            $transferOrders = TransferOrder::where('status', '>=' , 1)->where('delivery_user_id', $deliveryBoy->id)->get(); 
     
             $tfamount = 0;
             foreach ($transferOrders as $transferOrder) {
@@ -350,6 +339,8 @@ class DeliveryBoyController extends Controller
         $order->accepted_at = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
         $order->save();
 
+        Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
+
         return response()->json([
             'message' => 'Order accepted successfully.',
             'status' => 200,
@@ -574,7 +565,6 @@ class DeliveryBoyController extends Controller
         $paymentType = $request->input('payment_type');
         $endTime     = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
 
-        // Handle file upload
         $image = '';
         if ($request->hasFile('image')) {
 
@@ -611,14 +601,19 @@ class DeliveryBoyController extends Controller
         Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
 
         if ($paymentType != 'User did not accept order') {
-            $orderAmount =  Order::where('id',$transfer->order_id)->value('final_amount');
-            $deliveryAmount = DeliveryAmount::where('deluser_id', $deliveryUserId)->value('amount');
-            $totalAmount = ($deliveryAmount ?? 0) + $orderAmount;
 
-               DeliveryAmount::updateOrInsert(
-                    ['deluser_id' => $deliveryUserId],
-                    ['amount' => $totalAmount]
-                );
+            $totalAmount =  Order::where('id',$transfer->order_id)->value('total_amount');
+          
+            DeliveryAmount::insert([
+                'deluser_id' => $deliveryUserId,
+                'amount' => $totalAmount,
+                'payment_type' => $paymentType,
+                'ip' => $request->ip(),
+                'added_by' =>  $deliveryUserId,
+                'is_active' =>  1,
+                'date' =>  now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            ]);
+            
         }
 
         if ($updated) {
