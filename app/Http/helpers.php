@@ -568,3 +568,23 @@ if (!function_exists('getRejectedByDetails')) {
         return '-';
     }
 }
+
+if (! function_exists('deliveryStatus')){
+
+    function deliveryStatus($sts) {
+
+        if($sts == 0){
+            $status = 'Pending';
+        }elseif($sts == 1){
+            $status = 'Accepted';
+        }elseif($sts == 2){
+            $status = 'StartDelivery';
+        }elseif($sts == 3){
+            $status = 'Ongoing';
+        }elseif($sts == 4){
+            $status = 'Delivered';
+        }
+
+        return  $status;
+    }
+}
