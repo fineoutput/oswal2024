@@ -389,7 +389,7 @@ class DeliveryBoyController extends Controller
             ]);
         }
 
-        $order->status = 2;
+        $order->status = 1;
         $order->accepted_at = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
         $order->save();
 
