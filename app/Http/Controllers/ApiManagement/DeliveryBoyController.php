@@ -62,14 +62,15 @@ class DeliveryBoyController extends Controller
             ], 401);
         }
 
-        // Create a token for the user
         $token = $deliveryBoy->createToken('DeliveryBoyApp')->plainTextToken;
 
         return response()->json([
             'success' => true,
+            'message' => 'You have logged in successfully.',
             'token' => $token,
-             'data' => $deliveryBoy
+            'data' => $deliveryBoy,
         ]);
+        
     }
 
     public function logout(Request $request)
@@ -546,89 +547,88 @@ class DeliveryBoyController extends Controller
         }
     }
 
-    // public function completeOrder(Request $request)
-    // {
+    public function completeOrder(Request $request)
+    {
 
-    //     $validator = Validator::make($request->all(), [
-    //         'transfer_id'  => 'required|integer|exists:transfer_orders,id',
-    //         'latitude'     => 'required|numeric',
-    //         'longitude'    => 'required|numeric',
-    //         'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', 
-    //     ]);
+        $validator = Validator::make($request->all(), [
+            'transfer_id'  => 'required|integer|exists:transfer_orders,id',
+            'latitude'     => 'required|numeric',
+            'longitude'    => 'required|numeric',
+            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', 
+        ]);
 
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'message' => $validator->errors()->first(),
-    //             'status' => 400
-    //         ]);
-    //     }
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'status' => 400
+            ]);
+        }
 
-    //     $orderId     = $request->input('order_id');
-    //     $latitude    = $request->input('latitude');
-    //     $longitude   = $request->input('longitude');
-    //     $paymentType = $request->input('payment_type');
-    //     $endTime     = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
+        $transferId  = $request->input('transfer_id');
+        $latitude    = $request->input('latitude');
+        $longitude   = $request->input('longitude');
+        $paymentType = $request->input('payment_type');
+        $endTime     = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
 
-    //     // Handle file upload
-    //     $image = '';
-    //     if ($request->hasFile('image')) {
+        // Handle file upload
+        $image = '';
+        if ($request->hasFile('image')) {
 
-    //         $imagePath = uploadImage($request->file('image'), 'complete_order');
+            $imagePath = uploadImage($request->file('image'), 'complete_order');
             
-    //         $image = basename($imagePath);
-    //     }
+            $image = basename($imagePath);
+        }
 
-    //     $user = Auth::user();
+        $user = Auth::user();
 
-    //     $deliveryUserId = $user->id;
-
+        $deliveryUserId = $user->id;
       
-    //     $order = TransferOrder::where('order_id', $orderId)
-    //         ->where('delivery_user_id', $deliveryUserId)
-    //         ->first();
+        $transfer = TransferOrder::where('id',$transferId)
+            ->where('delivery_user_id', $deliveryUserId)
+            ->first();
 
-    //     if (!$order) {
-    //         return response()->json([
-    //             'message' => 'No data found',
-    //             'status' => 201
-    //         ]);
-    //     }
+        if (!$transfer) {
+            return response()->json([
+                'message' => 'No data found',
+                'status' => 201
+            ]);
+        }
 
-    //     $updated = TransferOrder::where('id', $order->id)
-    //         ->update([
-    //             'status' => 4,
-    //             'payment_type' => $paymentType,
-    //             'image' => $image,
-    //             'end_location' => "$latitude,$longitude",
-    //             'end_time' => $endTime
-    //         ]);
+        $updated = TransferOrder::where('id', $transfer->id)
+            ->update([
+                'status' => 4,
+                'payment_type' => $paymentType,
+                'image' => $image,
+                'end_location' => "$latitude,$longitude",
+                'end_time' => $endTime
+            ]);
 
  
-    //     Order::where('id', $orderId)->update(['delivery_status' => 1]);
+        Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
 
-    //     if ($paymentType != 'User did not accept order') {
-    //         $orderAmount =  Order::where('id', $orderId)->value('final_amount');
-    //         $deliveryAmount = DeliveryAmount::where('deluser_id', $deliveryUserId)->value('amount');
-    //         $totalAmount = ($deliveryAmount ?? 0) + $orderAmount;
+        if ($paymentType != 'User did not accept order') {
+            $orderAmount =  Order::where('id',$transfer->order_id)->value('final_amount');
+            $deliveryAmount = DeliveryAmount::where('deluser_id', $deliveryUserId)->value('amount');
+            $totalAmount = ($deliveryAmount ?? 0) + $orderAmount;
 
-    //            DeliveryAmount::updateOrInsert(
-    //                 ['deluser_id' => $deliveryUserId],
-    //                 ['amount' => $totalAmount]
-    //             );
-    //     }
+               DeliveryAmount::updateOrInsert(
+                    ['deluser_id' => $deliveryUserId],
+                    ['amount' => $totalAmount]
+                );
+        }
 
-    //     if ($updated) {
-    //         return response()->json([
-    //             'message' => 'success',
-    //             'status' => 200
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'message' => 'Error occurred',
-    //             'status' => 201
-    //         ]);
-    //     }
-    // }
+        if ($updated) {
+            return response()->json([
+                'message' => 'success',
+                'status' => 200
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Error occurred',
+                'status' => 201
+            ]);
+        }
+    }
 
 
 }
