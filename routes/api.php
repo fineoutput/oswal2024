@@ -16,7 +16,7 @@ use App\Http\Controllers\ApiManagement\CartController;
 
 use App\Http\Controllers\ApiManagement\OrderController;
 
-// use App\Http\Controllers\ApiManagement\DeliveryBoyController;
+use App\Http\Controllers\ApiManagement\DeliveryBoyController;
 
 Route::post('register', [UserAuthController::class, 'register']);
 
@@ -26,9 +26,9 @@ Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess'])->na
 
 Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('login.otp');
 
-// Route::post('delivery-boy/login', [DeliveryBoyController::class, 'login']);
+Route::post('delivery-boy/login', [DeliveryBoyController::class, 'login']);
 
-// Route::post('delivery-boy/logout', [DeliveryBoyController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('delivery-boy/logout', [DeliveryBoyController::class, 'logout'])->middleware('auth:sanctum');
 
 
 Route::get('state' , [AppController::class , 'GetState']);
@@ -94,8 +94,6 @@ Route::prefix('cart')->name('cart.')->group(function () {
     
 });
 
-
-
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::get('user', function (Request $request) {
@@ -157,16 +155,22 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     
 });
 
-// Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
+Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
 
-//     Route::get('dashboard', [DeliveryBoyController::class, 'dashboard'])->name('dashboard');
+    Route::get('dashboard', [DeliveryBoyController::class, 'dashboard'])->name('dashboard');
 
-//     Route::post('order-list', [DeliveryBoyController::class , 'orders'])->name('order-list');
+    Route::get('order-list', [DeliveryBoyController::class , 'orderList'])->name('order-list');
 
-//     Route::post('order-details', [DeliveryBoyController::class , 'orderDetails'])->name('order-details');
+    Route::get('order-accept', [DeliveryBoyController::class, 'acceptOrder'])->name('order-accept');
 
-//     Route::post('start-delivery', [DeliveryBoyController::class , 'startDelivery'])->name('start-delivery');
+    Route::get('order-detail', [DeliveryBoyController::class , 'orderDetail'])->name('order-details');
 
-//     Route::post('complete-order', [DeliveryBoyController::class , 'completeOrder'])->name('complete-order');
+    Route::get('product-details', [DeliveryBoyController::class , 'productDetail'])->name('product-details');
 
-// });
+    Route::get('location-order', [DeliveryBoyController::class , 'orders'])->name('location-order');
+
+    Route::post('start-delivery', [DeliveryBoyController::class , 'startDelivery'])->name('start-delivery');
+
+    Route::post('complete-order', [DeliveryBoyController::class , 'completeOrder'])->name('complete-order');
+
+});
