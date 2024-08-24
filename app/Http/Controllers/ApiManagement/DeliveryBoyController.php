@@ -193,26 +193,46 @@ class DeliveryBoyController extends Controller
 
     public function orderList(Request $request) {
    
+        $validator = Validator::make($request->all(), [
+            'latitude' => 'required',
+            'longitude' => 'required'
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'status' => 400
+            ]);
+        }
+    
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+
         $user = Auth::user();
 
-        $transferOrders = TransferOrder::with([
-            'orders', 
-            'orders.user', 
-        ])
-        ->where('delivery_user_id', $user->id) 
-        ->where('status', 0) 
-        ->get();
-        
+        $transferOrders = TransferOrder::where('status', 0)
+                        ->where('delivery_user_id', $user->id)
+                        ->with(['order.user', 'order.address'])
+                        ->get();
+    
         $data = [];
         
         foreach($transferOrders as $value){
+
+            $order =$value->orders;
+
+            $userAddress = $order->address;
+
+            $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+
             $data[] = [
                 'transfer_order_id' => $value->id,
                 'order_id' => $value->order_id,
                 'user_id' => $value->orders->user_id,
                 'user_name' => $value->orders->user->first_name,
-                'distanse'  => 5,
-                'time'  => 5,
+                'distance' => $dist['distance'] ?? '0',
+                'time' => $dist['time'] ?? '0',
+                'unit' => $dist['unit'] ?? 'Not Found',
             ];
 
         }
@@ -549,6 +569,7 @@ class DeliveryBoyController extends Controller
             'transfer_id'  => 'required|integer|exists:transfer_orders,id',
             'latitude'     => 'required|numeric',
             'longitude'    => 'required|numeric',
+            'paymentType'  => 'required|numeric',
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', 
         ]);
 
@@ -565,12 +586,11 @@ class DeliveryBoyController extends Controller
         $paymentType = $request->input('payment_type');
         $endTime     = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
 
-        $image = '';
+        $imagePath = '';
         if ($request->hasFile('image')) {
 
             $imagePath = uploadImage($request->file('image'), 'complete_order');
             
-            $image = basename($imagePath);
         }
 
         $user = Auth::user();
@@ -592,7 +612,7 @@ class DeliveryBoyController extends Controller
             ->update([
                 'status' => 4,
                 'payment_type' => $paymentType,
-                'image' => $image,
+                'image' => $imagePath,
                 'end_location' => "$latitude,$longitude",
                 'end_time' => $endTime
             ]);
