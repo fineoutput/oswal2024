@@ -62,6 +62,7 @@ class DeliveryBoyController extends Controller
             'message' => 'You have logged in successfully.',
             'token' => $token,
             'data' => $deliveryBoy,
+            'image' => asset($deliveryBoy->image) ,
         ]);
         
     }
