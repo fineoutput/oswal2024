@@ -293,7 +293,7 @@ class DeliveryBoyController extends Controller
                 'amount' => $transferOrder->orders->total_amount,
                 'date'   => $transferOrder->orders->created_at,
                 'no_of_product' => count($transferOrder->orders->OrderDetails),
-                'destanse' => 5,
+                'distance' => 5,
              ]
         ];
         
