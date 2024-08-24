@@ -318,6 +318,13 @@ class DeliveryBoyController extends Controller
 
         $orderDetails = OrderDetail::with('product' ,'type')->where('main_id', $orderId)->get();
 
+        if (!$orderDetails) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No Product found or you do not have permission to view this order.',
+            ], 404);
+        }
+
         $data = [];
         foreach ($orderDetails as $orderDetail) {
             $product =  $orderDetail->product;
@@ -397,7 +404,7 @@ class DeliveryBoyController extends Controller
     
         $deliveryBoy = Auth::user();
     
-        $orders = TransferOrder::where('status', '>=', 1)
+        $orders = TransferOrder::where('status', '>=', 1)->where('status','!=', 4)
                     ->where('delivery_user_id', $deliveryBoy->id)
                     ->join('tbl_order1', 'transfer_orders.order_id', '=', 'tbl_order1.id')
                     ->join('user_address', 'tbl_order1.address_id', '=', 'user_address.id')
