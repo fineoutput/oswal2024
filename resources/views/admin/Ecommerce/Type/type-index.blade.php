@@ -252,7 +252,7 @@
                                                                     <a href="{{ route('type.update-status', $routeParameters) }}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
 
                                                                 @endif
-
+                                                               
                                                                 <a href="{{ route('type.edit', $routeParameters) }}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                                 <a href="javascript:;" class="dCnf" mydata="{{ $key }}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>

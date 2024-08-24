@@ -20,7 +20,12 @@ class TypeController extends Controller
 
         $pc_id = decrypt($pcid);
         
-        $types = Type::with('state','city')->where('product_id', $p_id)->where('category_id', $c_id)->orderBy('id' ,'DESC')->get();
+        $types = Type::with('state', 'city')
+        ->where('product_id', $p_id)
+        ->where('category_id', $c_id)
+        ->orderBy('id', 'DESC')
+        ->get();
+
 
         return view('admin.Ecommerce.Type.type-index', compact('types', 'p_id', 'c_id', 'pc_id'));
 
@@ -39,7 +44,7 @@ class TypeController extends Controller
         return view('admin.Ecommerce.Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
     }
 
-    public function edit($pid, $cid , $pcid) {
+    public function edit($pid, $cid , $pcid , $tid) {
 
         $p_id  = decrypt($pid);
 
@@ -47,7 +52,9 @@ class TypeController extends Controller
         
         $pc_id = decrypt($pcid);
 
-        $type = Type::with('state','city')->where('product_id', $p_id)->where('category_id', $c_id)->first();
+        $t_id = decrypt($tid);
+
+        $type = Type::with('state','city')->where('id', $t_id)->where('product_id', $p_id)->where('category_id', $c_id)->first();
 
         return view('admin.Ecommerce.Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
     }
