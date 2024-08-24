@@ -35,7 +35,7 @@ class DeliveryBoyController extends Controller
             'password'     => 'required',
             'device_token' => 'required|string',
         ]);
-
+    dd($request->all());
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
