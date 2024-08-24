@@ -115,7 +115,7 @@ class OrderController extends Controller
 
                 $this->sendPushNotification($deviceToken->device_token, $order_status);
 
-               return $this->sendEmailNotification($user, $order, $order_status);
+                $this->sendEmailNotification($user, $order, $order_status);
 
             }
 
