@@ -190,11 +190,11 @@ if(!function_exists('sendType')){
 
 if (!function_exists('sendOtpSms')) {
 
-    function sendOtpSms($msg, $phone, $otp , $dlt) {
+    function sendOtpSms($msg, $phone, $otp , $dlt, $sender_id) {
 
         $url = config('constants.SMS_API_URL');
         $authKey = config('constants.SMS_API_KEY'); 
-        $senderId = config('constants.SMS_SENDER_ID');
+        $senderId = $sender_id;
 
         $ch = curl_init();
 

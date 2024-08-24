@@ -65,6 +65,7 @@ class UserAuthController extends Controller
         }
 
         $dlt = config('constants.SMS_SIGNUP_DLT');
+        $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
 
         if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
         
@@ -72,12 +73,14 @@ class UserAuthController extends Controller
 
             // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
             $msg = "Dear User,
-                    Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
 
-                    Regards,
-                    OSWAL SOAP";
+Welcome!!
+
+Regards,
+OSWAL SOAP";
     
-            sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt); // Uncomment this line to send the OTP SMS
+            sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Uncomment this line to send the OTP SMS
     
             // Update the existing OTP record
             $otpData = Otp::updateOrCreate(
@@ -135,12 +138,14 @@ class UserAuthController extends Controller
         // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
 
         $msg = "Dear User,
-                    Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
 
-                    Regards,
-                    OSWAL SOAP";
+Welcome!!
 
-        sendOtpSms($msg, $user->contact, $OTP, $dlt);
+Regards,
+OSWAL SOAP";
+
+        sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 
         $otpData = Otp::create([
             'name' =>  $name,
@@ -269,15 +274,17 @@ class UserAuthController extends Controller
             $OTP = generateOtp();
 
             $dlt = config('constants.SMS_LOGIN_DLT');
+            $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
 
             // $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
             $msg = "Dear User,
-                    Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
-                    Regards,
-                    OSWAL SOAP";
+Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+
+Regards,
+OSWAL SOAP";
 
 
-            sendOtpSms($msg, $user->contact, $OTP, $dlt);
+            sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 
             $otpData = Otp::create([
                 'name' =>  $user->first_name,
