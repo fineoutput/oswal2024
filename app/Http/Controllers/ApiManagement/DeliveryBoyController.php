@@ -45,7 +45,7 @@ class DeliveryBoyController extends Controller
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
 
-        if (!$deliveryBoy || !Hash::check($request->password, $deliveryBoy->password)) {
+        if (!$deliveryBoy || !Hash::check(trim($request->password), $deliveryBoy->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid credentials',
