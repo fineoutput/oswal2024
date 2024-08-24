@@ -182,6 +182,8 @@ class OrderController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         curl_exec($ch);
         curl_close($ch);
+
+        return true;
     }
 
     private function sendEmailNotification($user, $order, $type)
@@ -206,6 +208,7 @@ class OrderController extends Controller
                 // Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.order-cancelled', 'Order Cancelled'));
                 break;
         }
+        return true;
     }
 
     public function destroy($id, Request $request)
