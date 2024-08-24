@@ -523,11 +523,6 @@ class DeliveryBoyController extends Controller
                     'status'  => 400
                 ]);
             }
-        }else{
-            return response()->json([
-                'message' => 'order not found. Please accepting any order then start ride',
-                'status'  => 400
-            ]);
         }
 
         $deliveryOrder = TransferOrder::with('Orders.address')->where('id', $orderId)
@@ -544,7 +539,7 @@ class DeliveryBoyController extends Controller
             }
 
             Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
-            
+
             $userAddress = $order->address;
             if (!$userAddress) {
                 return response()->json([
