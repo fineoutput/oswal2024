@@ -526,12 +526,8 @@ class DeliveryBoyController extends Controller
             ->first();
 
         if ($ongoingOrder) {
-            if ($ongoingOrder->id == $orderId) {
-                return response()->json([
-                    'message' => 'You already have accepted this order. Please complete it.',
-                    'status'  => 400
-                ]);
-            } else {
+            if ($ongoingOrder->id != $orderId) {
+
                 return response()->json([
                     'message' => 'First complete your ongoing order before accepting a new one.',
                     'status'  => 400
