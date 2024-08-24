@@ -172,25 +172,24 @@
                                                         <td> {{ $address->zipcode }}</td>
 
                                                         <td>
-                                                            @if ($order->payment_type == 1)
+                                                            @if ($order->orders->payment_type == 1)
                                                                 Cash On Delivery
                                                             @else
                                                                 Online Payment
                                                             @endif
                                                         </td>
-
-                                                   
+                                                        
                                                         <td>
-                                                            @if ($order->delivery_status == 0)
+                                                            @if ($order->orders->delivery_status == 0)
                                                                 <span class="label label-warning"
                                                                     style="font-size:13px;">None</span>
-                                                            @elseif ($order->delivery_status == 1)
+                                                            @elseif ($order->orders->delivery_status == 1)
                                                              @php
                                                                 $order->transferOrder->load('deliveryBoy');
                                                                 $deliveryBoy = $order->transferOrder->deliveryBoy;
                                                              @endphp
                                                               Transfered To ({{$deliveryBoy->name}})
-                                                            @elseif ($order->delivery_status == 2)
+                                                            @elseif ($order->orders->delivery_status == 2)
                                                             @php
                                                             $order->transferOrder->load('deliveryBoy');
                                                             $deliveryBoy = $order->transferOrder->deliveryBoy;
@@ -198,7 +197,7 @@
                                                             <span class="label label-info" style="font-size:13px;">
                                                                 Accepted By ({{$deliveryBoy->name}})
                                                                 </span>
-                                                            @elseif ($order->delivery_status == 3)
+                                                            @elseif ($order->orders->delivery_status == 3)
                                                                 <span class="label label-success"
                                                                     style="font-size:13px;">Delivered</span>
                                                             @endif
