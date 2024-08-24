@@ -39,7 +39,7 @@ class DeliveryBoyController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors(),
+                'message' => $validator->errors()->first(),
             ], 422);
         }
 
