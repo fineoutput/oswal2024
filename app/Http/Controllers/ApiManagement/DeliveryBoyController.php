@@ -592,7 +592,7 @@ class DeliveryBoyController extends Controller
             'transfer_id'  => 'required|integer|exists:transfer_orders,id',
             'latitude'     => 'required|numeric',
             'longitude'    => 'required|numeric',
-            'paymentType'  => 'required|numeric',
+            'paymentType'  => 'required|string',
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', 
         ]);
 
