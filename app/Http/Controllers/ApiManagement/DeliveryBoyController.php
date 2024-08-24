@@ -537,6 +537,11 @@ class DeliveryBoyController extends Controller
                     'status'  => 400
                 ]);
             }
+        }else{
+            return response()->json([
+                'message' => 'order not found. Please accepting any order then start ride',
+                'status'  => 400
+            ]);
         }
 
         $deliveryOrder = TransferOrder::with('Orders.address')->where('id', $orderId)
