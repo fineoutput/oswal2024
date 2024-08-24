@@ -210,8 +210,7 @@ class DeliveryBoyController extends Controller
 
         $user = Auth::user();
 
-        $transferOrders = TransferOrder::where('status', 0)
-                        ->where('delivery_user_id', $user->id)
+        $transferOrders = TransferOrder::where('delivery_user_id', $user->id)
                         ->with(['Orders.user', 'Orders.address'])
                         ->get();
     
@@ -264,7 +263,6 @@ class DeliveryBoyController extends Controller
         ])
         ->where('id', $request->transfer_id) 
         ->where('delivery_user_id', $user->id) 
-        ->where('status', 0) 
         ->first();
           
         if (!$transferOrder) {
