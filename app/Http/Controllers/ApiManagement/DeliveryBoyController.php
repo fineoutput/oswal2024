@@ -244,6 +244,8 @@ class DeliveryBoyController extends Controller
    
         $validator = Validator::make($request->all(), [
             'transfer_id' => 'required|integer|exists:transfer_orders,id',
+            'latitude'  => 'required',
+            'longitude' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -281,6 +283,10 @@ class DeliveryBoyController extends Controller
             $payment_type = 'All Ready Pay';
 
         }
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        
+        $dist = $this->calculate_distance($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
         $data= [
             'order_id'    => $transferOrder->order_id,
@@ -293,7 +299,9 @@ class DeliveryBoyController extends Controller
                 'amount' => $transferOrder->orders->total_amount,
                 'date'   => $transferOrder->orders->created_at,
                 'no_of_product' => count($transferOrder->orders->OrderDetails),
-                'distance' => 5,
+                'distance' => $dist['distance'] ?? '0',
+                'time' => $dist['time'] ?? '0',
+                'unit' => $dist['unit'] ?? 'Not Found',
              ]
         ];
         
