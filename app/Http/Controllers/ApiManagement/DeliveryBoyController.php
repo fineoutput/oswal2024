@@ -194,7 +194,7 @@ class DeliveryBoyController extends Controller
     public function orderList(Request $request) {
    
         $validator = Validator::make($request->all(), [
-            'latitude' => 'required',
+            'latitude'  => 'required',
             'longitude' => 'required'
         ]);
     
@@ -265,6 +265,13 @@ class DeliveryBoyController extends Controller
         ->where('status', 0) 
         ->first();
           
+        if (!$transferOrder) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No order found or you do not have permission to view this order.',
+            ], 404);
+        }
+
         if ($transferOrder->orders->payment_type == 1) {
 
             $payment_type = 'Cash on delivery';
