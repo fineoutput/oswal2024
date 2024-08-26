@@ -53,7 +53,9 @@ class DeliveryBoyController extends Controller
         }
 
         //add Device Token 
-        $deliveryBoy->update(['device_token' => $request->device_token]);
+        if($request->device_token){
+            $deliveryBoy->update(['device_token' => $request->device_token]);
+        }
 
         $token = $deliveryBoy->createToken('DeliveryBoyApp')->plainTextToken;
 
