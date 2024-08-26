@@ -39,11 +39,6 @@ class DeliveryBoy extends Authenticatable
     ];
 
     
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = Hash::make($password);
-    }
-
     public function deliveryAmount() {
 
        return $this->hasOne(DeliveryAmount::class, 'deluser_id', 'id');
