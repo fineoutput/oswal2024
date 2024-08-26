@@ -42,8 +42,7 @@ class DeliveryBoyController extends Controller
     public function store(Request $request)
 
     {
-        // dd($request->all());
-
+      
         $rules = [
             'name'              => 'required',
             'pincode'           => 'required',
@@ -52,6 +51,8 @@ class DeliveryBoyController extends Controller
             'password'          => 'nullable',
             'img'               => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ];
+
+        $request->validate($rules);
 
         if (!isset($request->user_id)) {
 
@@ -69,40 +70,31 @@ class DeliveryBoyController extends Controller
 
         }
 
-        $request->validate($rules);
-
-        $user->fill($request->all());
+       
+       $user->fill([
+        'name'     => $request->name,
+        'email'    => $request->email,
+        'phone'    => $request->phone,
+        'pincode'  => $request->pincode,
+        'ip'       => $request->ip(),
+        'date'     => now(),
+        'added_by' => Auth::user()->id,
+        'is_active' => 1,
+       ]);
 
         if ($request->password) {
-
             $user->password = Hash::make(trim($request->password));
-
         }
 
-        if($request->hasFile('img')){
-
+        if ($request->hasFile('img')) {
             $user->image = uploadImage($request->file('img'), 'delivery');
-
         }
-
-        $user->ip = $request->ip();
-
-        $user->date = now();
-
-        $user->added_by = Auth::user()->id;
-
-        $user->is_active = 1;
 
         if ($user->save()) {
-
             $message = isset($request->user_id) ? 'User updated successfully.' : 'User inserted successfully.';
-
             return redirect()->route('delivery.index')->with('success', $message);
-
         } else {
-
             return redirect()->route('delivery.index')->with('error', 'Something went wrong. Please try again later.');
-
         }
     }
 

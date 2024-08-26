@@ -33,7 +33,7 @@ class DeliveryBoyController extends Controller
         $validator = Validator::make($request->all(), [
             'email'        => 'required|email',
             'password'     => 'required',
-            'device_token' => 'required|string',
+            'device_token' => 'nullable|string',
         ]);
     
         if ($validator->fails()) {
