@@ -42,15 +42,15 @@
 
                             <li><a href="{{ route('category-list') }}">Product Category</a></li>
 
-                            <li><a href="product_detail.html">Product Detail</a></li>
+                            <li><a href="{{ route('product-detail') }}">Product Detail</a></li>
 
-                            <li><a href="wishlist_page.html">Wishlist</a></li>
+                            <li><a href="{{ route('wislist') }}">Wishlist</a></li>
 
-                            <li><a href="cart.html">Cart</a></li>
+                            <li><a href="{{ route('Cart') }}">Cart</a></li>
 
-                            <li><a href="checkout.html">Checkout</a></li>
+                            <li><a href="{{ route('checkout') }}">Checkout</a></li>
 
-                            <li><a href="myorder_detail.html">My Orders</a></li>
+                            <li><a href="javascript:void(0)">My Orders</a></li>
 
                         </ul>
 
