@@ -13,10 +13,45 @@ use DateTime;
 class HomeController extends Controller
 {
     // ============================= START INDEX ============================ 
-    public function index(Request $req)
+    public function index(Request $request)
     {
-     
-        return view('welcome')->withTitle('');
+      
+        return view('index')->with('title', 'Oswal');
+
     }
     
+    public function category(Request $request)
+    {
+     
+        return view('products.category')->with('title', 'Category List');
+
+    }
+
+    public function productDetail(Request $request)
+    {
+     
+        return view('products.productdetails')->with('title', 'Product Details');
+
+    }
+
+    public function Wislist(Request $request)
+    {
+     
+        return view('wishlist')->with('title', 'Wishlist');
+
+    }
+
+    public function Cart(Request $request)
+    {
+     
+        return view('cart')->with('title', 'Cart');
+
+    }
+
+    public function checkout(Request $request)
+    {
+     
+        return view('checkout')->with('title', 'checkout');
+
+    }
 }

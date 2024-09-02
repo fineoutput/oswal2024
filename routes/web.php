@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\adminlogincontroller;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,18 +16,28 @@ use App\Http\Controllers\Auth\adminlogincontroller;
 |
 */
 
-// Route::get('/clear-cache', function () {
-//     $exitCode = Artisan::call('cache:clear');
-//     // $exitCode = Artisan::call('route:clear');
-//     // $exitCode = Artisan::call('config:clear');
-//     // $exitCode = Artisan::call('view:clear');
-//     // return what you want
-// });
+Route::get('/clear-cache', function () {
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('route:clear');
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('view:clear');
+//  return back();
+});
 //=========================================== FRONTEND =====================================================
 
 Route::group(['prefix' => '/'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('/');
+
+    Route::get('/category-list', [HomeController::class, 'category'])->name('category-list');
+
+    Route::get('/product-detail', [HomeController::class, 'productDetail'])->name('product-detail');
+
+    Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
+
+    Route::get('/Cart', [HomeController::class, 'Cart'])->name('Cart');
+
+    Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
 });
 
