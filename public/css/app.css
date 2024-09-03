@@ -5302,3 +5302,30 @@ h4.payment {
   color: #fff;
   padding: 10px;
 }
+
+
+.details-product-detail .accordion-toggle {
+  display: block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.details-product-detail .collapsible-content {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .details-product-detail .accordion-toggle {
+      display: block;
+  }
+  .details-product-detail .collapsible-content {
+      display: none;
+  }
+  .details-product-detail .accordion-toggle.active + .collapsible-content {
+      display: block;
+  }
+}

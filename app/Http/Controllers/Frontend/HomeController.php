@@ -25,11 +25,21 @@ class HomeController extends Controller
         return view('products.category')->with('title', 'Category List');
     }
 
-    public function productDetail(Request $request)
+    public function productDetail(Request $request, $slug)
     {
+        $product = EcomProduct::where('url', $slug)->first();
 
-        return view('products.productdetails')->with('title', 'Product Details');
+        $images = [];
+
+        for ($i = 1; $i <= 4; $i++) {
+            $images[] = [
+                'img' => $product->{"img$i"}, 
+            ];
+        }
+
+        return view('products.productdetails', compact('product', 'images'))->with('title', 'Product Details');
     }
+
 
     public function Wislist(Request $request)
     {
@@ -49,39 +59,14 @@ class HomeController extends Controller
         return view('checkout')->with('title', 'checkout');
     }
 
-
-    // public function renderProduct($slug)
-
-    // {
-
-    //     $category = EcomCategory::where('url', $slug)->first();
-
-    //     if (!$category) {
-    //         return response()->json([
-    //             'error' => 'Category not found.'
-    //         ], 404);
-    //     }
-
-    //     $data = [
-    //         'banner_image' => asset($category->image),
-    //         'category_name' => $category->name,
-    //         'description' => $category->long_desc,
-    //     ];
-
-    //     $productsHtml = view('products.partials.product-list', ['category_id' => $category->id ])->render();
-    //     $htmlPagination = $products->links('vendor.pagination.bootstrap-4')->render();
-    //     return response()->json([
-    //         'categoryDetails' => $data,
-    //         'products' => $productsHtml,
-    //     ]);
-    // }
     public function renderProduct($slug)
     {
         $category = EcomCategory::where('url', $slug)->first();
+
         $products = sendProduct($category->id, false, false, false, false, false, false, 6);
 
-
         $htmlProducts = view('products.partials.product-list', compact('products'))->render();
+
         $htmlPagination = $products->links('vendor.pagination.bootstrap-4')->render();
 
         return response()->json([
@@ -94,4 +79,5 @@ class HomeController extends Controller
             'pagination' => $htmlPagination,
         ]);
     }
+
 }

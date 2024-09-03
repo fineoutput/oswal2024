@@ -31,7 +31,7 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/category-list', [HomeController::class, 'category'])->name('category-list');
 
-    Route::get('/product-detail', [HomeController::class, 'productDetail'])->name('product-detail');
+    Route::get('/product/{slug}/details', [HomeController::class, 'productDetail'])->name('product-detail');
 
     Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
 
@@ -40,6 +40,7 @@ Route::group(['prefix' => '/'], function () {
     Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
     Route::get('render/{slug}/product',[HomeController::class, 'renderProduct'])->name('getproduct');
+
 });
 
 //=========================================== Admin Login  =====================================================

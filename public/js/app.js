@@ -572,3 +572,19 @@ function loadProducts(url) {
 }
 
 bindPaginationLinks();
+
+//SHOW MORE DETAILS PRODUCT DETAIL PAGE
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleButton = document.querySelector('.accordion-toggle');
+  const collapsibleContent = document.querySelector('.collapsible-content');
+
+  toggleButton.addEventListener('click', function() {
+      if (collapsibleContent.style.display === 'block') {
+          collapsibleContent.style.display = 'none';
+          toggleButton.textContent = 'Show More';
+      } else {
+          collapsibleContent.style.display = 'block';
+          toggleButton.textContent = 'Show Less';
+      }
+  });
+});

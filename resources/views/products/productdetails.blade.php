@@ -14,11 +14,11 @@
 
                     <!-- card left -->
 
-                    @include('products.partials.image')
+                    @include('products.partials.image',$images)
 
                     <!-- card right -->
 
-                    @include('products.partials.descripttion')
+                    @include('products.partials.descripttion',$product)
 
                 </div>
 
@@ -30,47 +30,49 @@
 
     <hr />
 
-    <div class="video_sect_prod">
+    @if ($product->video != null)
 
-        <div class="container">
+        <div class="video_sect_prod">
 
-            <div class="row">
+            <div class="container">
 
-                <div class="col-lg-12 col-sm-12 col-md-12">
+                <div class="row">
 
-                    <div class="oswla_vide_txt text-center">
+                    <div class="col-lg-12 col-sm-12 col-md-12">
 
-                        <h2>Product video</h2>
+                        <div class="oswla_vide_txt text-center">
 
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex eveniet aliquid libero.</p>
+                            <h2>Product video</h2>
+
+                            <p>{{ $product->long_desc }}</p>
+
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="video_block">
 
-            <div class="video_block">
+                    <div class="bgvideo-1586366347102 txt-right bg-herovideo" data-block-id="1586366347102"
 
-                <div class="bgvideo-1586366347102 txt-right bg-herovideo" data-block-id="1586366347102"
+                        data-block-type="background-video">
 
-                    data-block-type="background-video">
+                        <div class="hero-video">
 
-                    <div class="hero-video">
+                            <video id="Mp41586366347102" src="{{ $product->video }}" loop="" muted="" playsinline="" autoplay=""></video>
 
-                        <video id="Mp41586366347102"
+                        </div>
 
-                            src="https://cdn.shopify.com/videos/c/o/v/c98819b98c0441b499b363e08cbcbc83.mp4" loop="" muted="" playsinline="" autoplay=""></video>
+                        <div class="para_animate" data-aos="fade-up" data-aos-duration="1000">
 
-                    </div>
+                            <h4 class="parallax-banner__title pb-4" style="color: #b7813b;">
 
-                    <div class="para_animate" data-aos="fade-up" data-aos-duration="1000">
+                                Oswal <br /> Organic Soap
 
-                        <h4 class="parallax-banner__title pb-4" style="color: #b7813b;">
+                            </h4>
 
-                            Oswal <br /> Organic Soap
-
-                        </h4>
+                        </div>
 
                     </div>
 
@@ -80,9 +82,9 @@
 
         </div>
 
-    </div>
+        <hr />
 
-    <hr />
+    @endif
 
     <div class="other_products d-none d-lg-block">
 
@@ -110,7 +112,7 @@
 
                 <ul class="splide__list">
 
-                    @include('products.partials.relatedProduct.web-product')
+                    @include('products.partials.relatedProduct.web-product',['categoryId' => $product->category_id])
 
                 </ul>
 
@@ -154,7 +156,7 @@
 
                             <ul class="splide__list">
 
-                                @include('products.partials.relatedProduct.mobile-product')
+                                @include('products.partials.relatedProduct.mobile-product',['categoryId' => $product->category_id])
 
                             </ul>
 

@@ -42,7 +42,7 @@
 
                             <li><a href="{{ route('category-list') }}">Product Category</a></li>
 
-                            <li><a href="{{ route('product-detail') }}">Product Detail</a></li>
+                            <li><a href="{{ route('product-detail' ,['slug' => 'Oswal-Chana-Dal']) }}">Product Detail</a></li>
 
                             <li><a href="{{ route('wislist') }}">Wishlist</a></li>
 
