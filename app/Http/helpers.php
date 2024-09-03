@@ -96,7 +96,7 @@ if(!function_exists('uploadImage')){
 
 if(!function_exists('sendProduct')) {
 
-    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false) {
+    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false , $paginate =false) {
         
         $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1);
 
@@ -119,7 +119,11 @@ if(!function_exists('sendProduct')) {
 
         if($is_fea){$products = $products->where('is_featured', 1);}
         
-        return $products->get();
+        if($paginate){
+            return $products->paginate($paginate);
+        }else{
+            return $products->get();
+        }
 
     }
 
@@ -129,7 +133,7 @@ if(!function_exists('sendCategory')){
 
     function sendCategory($cid = false) {
         
-        $categorys =  EcomCategory::OrderBy('id' , 'Desc')->where('is_active', 1);
+        $categorys =  EcomCategory::OrderBy('sequence' , 'Asc')->where('is_active', 1);
 
         if($cid){ $categorys = $categorys->where('id', $cid);}
 
@@ -587,4 +591,19 @@ if (! function_exists('deliveryStatus')){
 
         return  $status;
     }
+}
+
+if (!function_exists('percentOff')) {
+
+    function percentOff($del_mrp, $selling_price, $format = false) {
+
+        if ($del_mrp <= 0) {
+            return 0;
+        }
+
+        $percent_off = round((($del_mrp - $selling_price) * 100) / $del_mrp);
+
+        return $format ? "{$percent_off}% off" : $percent_off;
+    }
+
 }

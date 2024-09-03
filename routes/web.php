@@ -39,6 +39,7 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
+    Route::get('render/{slug}/product',[HomeController::class, 'renderProduct'])->name('getproduct');
 });
 
 //=========================================== Admin Login  =====================================================

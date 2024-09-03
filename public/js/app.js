@@ -1,5 +1,3 @@
-
-
 //////////Menu Navbar///////////
 document.addEventListener('DOMContentLoaded', function () {
   const menuBtn = document.querySelector('.menu-btn');
@@ -494,3 +492,83 @@ setupSelectableSection('promoCodeSection', 'promoCodeList', 'promo-code-item');
 
 // Initialize promo code selection
 setupPromoCodeSelection('promo-option', 'promoCodeInput', 'applyButton');
+
+
+function renderproductview(url) {
+
+  $.ajax({
+
+    url: url,
+
+    type: 'GET',
+
+    dataType: 'json',
+
+    success: function (response) {
+
+      const category = response.categoryDetails;
+
+      // Update category details
+
+      $('#category-description').text(category.description);
+
+      // $('.category_banner_img').css('background-image', 'url(' + category.banner_image + ')');
+
+      $('#category_name').text(category.category_name);
+
+      $('#product-list-container').html(response.products);
+
+      bindPaginationLinks();
+
+    },
+
+    error: function (xhr) {
+
+      console.error('An error occurred while loading the category details and products.');
+
+    }
+
+  });
+
+}
+
+function bindPaginationLinks() {
+  $('.pagination-links a').on('click', function (e) {
+    e.preventDefault();
+
+    var url = $(this).attr('href');
+    if (url) {
+      loadProducts(url);
+    }
+  });
+}
+
+function bindPaginationLinks() {
+  $('.pagination-links a').on('click', function (e) {
+    e.preventDefault();
+
+    var url = $(this).attr('href');
+    if (url) {
+      loadProducts(url);
+    }
+  });
+}
+
+function loadProducts(url) {
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+      $('#product-list-container').html(response.products);
+
+      // Rebind the pagination links
+      bindPaginationLinks();
+    },
+    error: function (xhr) {
+      console.error('An error occurred while loading the products.');
+    }
+  });
+}
+
+bindPaginationLinks();

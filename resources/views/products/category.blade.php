@@ -3,10 +3,19 @@
 @section('title', $title ?? '')
 
 @section('content')
+    @php
+        $categorys = sendCategory() ?? [];
+
+        $products = sendProduct($categorys[0]->id, false, false, false, false, false, false, 6);
+    @endphp
 
     <section class="category_main">
 
-        <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
+        <input type="hidden" value="{{ route('getproduct', ['slug' => $categorys[0]->url]) }}" id="category-url-route">
+
+        <section class="category_banner_img d-none d-lg-block"
+            style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
+        {{-- <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset($categorys[0]->image) }}');"></section> --}}
 
         <section class="category_home">
 
@@ -22,7 +31,7 @@
 
                                 <h1>All Products</h1>
 
-                                <p>Organic soaps designed for sensitive skin, free from artificial essential oils that can irritate some individuals.</p>
+                                <p id="category-description">{{ $categorys[0]->long_desc }}</p>
 
                             </div>
 
@@ -60,7 +69,6 @@
 
                         </div>
 
-
                         <div class="col-lg-9 col-9">
 
                             <hr />
@@ -69,7 +77,7 @@
 
                                 <div class="col-lg-12 col-sm-12 col-md-12 product_category_title">
 
-                                    <h2>category name</h2>
+                                    <h2 id="category_name">{{ $categorys[0]->name }}</h2>
 
                                     <div class="price_select">
 
@@ -81,7 +89,7 @@
 
                             </div>
 
-                             @include('products.partials.product-list')
+                            @include('products.partials.product-list', $products)
 
                             <hr />
 
@@ -98,3 +106,15 @@
     </section>
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            
+            var url = $('#category-url-route').val()
+
+            renderproductview(url);
+
+        });
+    </script>
+@endpush

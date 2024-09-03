@@ -1,4 +1,22 @@
- <!-- /////////////Hot Deals Product section STARTS////////// -->
+@php
+    $totalProducts = sendProduct(false, false, false, true, false, false, false) ?? collect();
+
+    $totalProducts = is_array($totalProducts) ? $totalProducts : $totalProducts->toArray();
+
+    $chunkedProducts = array_chunk($totalProducts, 4);
+
+    $products = [];
+
+    foreach ($chunkedProducts as $chunk) { 
+        $products[] = $chunk;
+    }
+
+    $i = 0;
+
+@endphp
+
+
+
  <section class="product-sect py-5 hot-deals" style="background-image: url('{{ asset('images/hot_bg.jpg') }}');">
 
     <div class="container-fluid">
@@ -13,425 +31,74 @@
 
             <div class="carousel-inner">
 
-                <!-- Slide 1 -->
-                <div class="carousel-item active">
+                @foreach ($products as $item)
+                    
+                    <div class="carousel-item @if($i== 0) active @endif">
 
-                    <div class="row">
+                        <div class="row">
 
-                        <div class="col-lg-3 col-md-6 col-12">
+                            @foreach ($item as $product)
 
-                            <div class="one_card">
+                                <div class="col-lg-3 col-md-6 col-12">
 
-                                <div class="card_upper_img">
+                                    <div class="one_card">
 
-                                    <img src="images/dhaniya2.jpg" alt="Primary Image" class="primary-image img-responsive" />
+                                        <div class="card_upper_img">
 
-                                    <img src="images/dhaniya.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
+                                            <img src="{{asset($product['img2'])}}" alt="Primary Image" class="primary-image img-responsive" />
 
-                                    <div class="product-buttons">
+                                            <img src="{{asset($product['img1'])}}" alt="Secondary Image" class="secondary-image img-responsive" />
 
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
+                                            <div class="product-buttons">
 
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
+                                                <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
 
-                                    </div>
+                                                <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
 
-                                </div>
+                                            </div>
 
-                                <div class="lower_cntnt_prod">
+                                        </div>
 
-                                    <div class="card__size">
+                                        <div class="lower_cntnt_prod">
 
-                                        <b>
+                                            <div class="card__size">
 
-                                            <p>Cooking Oil</p>
+                                                <b>
 
-                                        </b>
+                                                    <p>{{ $product['name'] }}</p>
 
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
+                                                </b>
 
-                                        <p>₹40</p>
+                                                <h4>{{ Illuminate\Support\Str::limit($product['long_desc'] , 40) }}</h4>
 
-                                    </div>
+                                                <p>₹40</p>
 
-                                    <div class="mobile-product-buttons">
+                                            </div>
 
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
+                                            <div class="mobile-product-buttons">
 
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
+                                                <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
 
-                                    </div>
+                                                <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
 
-                                </div>
+                                            </div>
 
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 d-none d-md-block">
-
-                            <div class="one_card">
-
-                                <div class="card_upper_img">
-
-                                    <img src="images/haldi.jpg" alt="Primary Image" class="primary-image img-responsive" />
-
-                                    <img src="images/haldi2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-
-                                    <div class="product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
+                                        </div>
 
                                     </div>
 
                                 </div>
 
-                                <div class="lower_cntnt_prod">
-
-                                    <div class="card__size">
-
-                                        <b>
-
-                                            <p>Cooking Oil</p>
-
-                                        </b>
-
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-
-                                        <p>₹40</p>
-
-                                    </div>
-
-                                    <div class="mobile-product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-3 d-none d-lg-block">
-                            
-                            <div class="one_card">
-                                
-                                <div class="card_upper_img">
-                                    
-                                    <img src="images/jeera.jpg" alt="Primary Image" class="primary-image img-responsive" />
-                                    
-                                    <img src="images/jeera2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-                                    
-                                    <div class="product-buttons">
-                                        
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-                                        
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-                                        
-                                    </div>
-                                    
-                                </div>
-                                
-                                <div class="lower_cntnt_prod">
-                                    
-                                    <div class="card__size">
-                                        
-                                        <b>
-                                            
-                                            <p>Cooking Oil</p>
-                                            
-                                        </b>
-                                        
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-                                        
-                                        <p>₹40</p>
-                                        
-                                    </div>
-                                    
-                                    <div class="mobile-product-buttons">
-                                        
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-                                        
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-                                        
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                            
-                        </div>
-                        
-                        <div class="col-lg-3 d-none d-lg-block">
-
-                            <div class="one_card">
-
-                                <div class="card_upper_img">
-
-                                    <img src="images/jeera.jpg" alt="Primary Image" class="primary-image img-responsive" />
-
-                                    <img src="images/jeera2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-
-                                    <div class="product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="lower_cntnt_prod">
-
-                                    <div class="card__size">
-
-                                        <b>
-
-                                            <p>Cooking Oil</p>
-
-                                        </b>
-
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-
-                                        <p>₹40</p>
-
-                                    </div>
-
-                                    <div class="mobile-product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
+                            @endforeach
 
                         </div>
 
                     </div>
+                    @php
+                        ++$i;
+                    @endphp
+                @endforeach
 
-                </div>
-
-                <!-- Slide 2 -->
-                <div class="carousel-item">
-
-                    <div class="row">
-
-                        <div class="col-lg-3 col-md-6 col-12">
-
-                            <div class="one_card">
-
-                                <div class="card_upper_img">
-
-                                    <img src="images/masale.jpg" alt="Primary Image" class="primary-image img-responsive" />
-
-                                    <img src="images/masale2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-
-                                    <div class="product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="lower_cntnt_prod">
-
-                                    <div class="card__size">
-
-                                        <b>
-
-                                            <p>Cooking Oil</p>
-
-                                        </b>
-
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-
-                                        <p>₹40</p>
-
-                                    </div>
-
-                                    <div class="mobile-product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 d-none d-md-block">
-
-                            <div class="one_card">
-
-                                <div class="card_upper_img">
-
-                                    <img src="images/haldi.jpg" alt="Primary Image" class="primary-image img-responsive" />
-
-                                    <img src="images/haldi2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-
-                                    <div class="product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="lower_cntnt_prod">
-
-                                    <div class="card__size">
-
-                                        <b>
-
-                                            <p>Cooking Oil</p>
-
-                                        </b>
-
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-
-                                        <p>₹40</p>
-
-                                    </div>
-
-                                    <div class="mobile-product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-3 d-none d-lg-block">
-
-                            <div class="one_card">
-
-                                <div class="card_upper_img">
-
-                                    <img src="images/jeera.jpg" alt="Primary Image" class="primary-image img-responsive" />
-
-                                    <img src="images/jeera2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-
-                                    <div class="product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="lower_cntnt_prod">
-
-                                    <div class="card__size">
-
-                                        <b>
-
-                                            <p>Cooking Oil</p>
-
-                                        </b>
-
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-
-                                        <p>₹40</p>
-
-                                    </div>
-
-                                    <div class="mobile-product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-3 d-none d-lg-block">
-
-                            <div class="one_card">
-
-                                <div class="card_upper_img">
-
-                                    <img src="images/jeera.jpg" alt="Primary Image" class="primary-image img-responsive" />
-
-                                    <img src="images/jeera2.jpg" alt="Secondary Image" class="secondary-image img-responsive" />
-
-                                    <div class="product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="lower_cntnt_prod">
-
-                                    <div class="card__size">
-
-                                        <b>
-
-                                            <p>Cooking Oil</p>
-
-                                        </b>
-
-                                        <h4>Lorem ipsum dolor sit amet.</h4>
-
-                                        <p>₹40</p>
-
-                                    </div>
-
-                                    <div class="mobile-product-buttons">
-
-                                        <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
-
-                                        <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- Slide 3 (Add more slides as needed) -->
             </div>
             <!-- Carousel Controls with Custom Icons -->
             <button class="carousel-control-prev" type="button" data-bs-target="#product-carousel" data-bs-slide="prev">

@@ -2554,7 +2554,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* Style for the carousel */
 .splide_secound {
-  background-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+  /* background-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg); */
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
