@@ -1,7 +1,7 @@
 <div class="secttion_slider">
 
-    <h2 class="text-center">Second Slider</h2>
-
+    <h2 class="text-center">Offer Slider</h2>
+{{-- sec --}}
 </div>
 
 <div class="splide_secound mb-5" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">
@@ -12,37 +12,19 @@
 
             <ul class="splide__list">
 
-                <li class="splide__slide">
+                @foreach (App\Models\Offer2::where('is_active', 1)->orderBy('id', 'desc')->limit(10)->get() as $key => $offerslider)
+                
+                    <li class="splide__slide">
 
-                    <div class="slide-content">
+                        <div class="slide-content">
 
-                        <img src="{{ asset('images/banner_sect.jpeg') }}" alt="Slide 1 Image 1" />
+                            <img src="{{ asset($offerslider->image) }}" alt="Slide 1 Image 1" />
 
-                    </div>
+                        </div>
 
-                </li>
+                    </li>
 
-                <li class="splide__slide">
-
-                    <div class="slide-content">
-
-                        <img src="{{ asset('images/banner_sect.png') }}" alt="Slide 2 Image 2" />
-
-                    </div>
-
-                </li>
-
-                <li class="splide__slide">
-
-                    <div class="slide-content">
-
-                        <img src="{{ asset('images/banner_sect2.png') }}" alt="Slide 2 Image 3" />
-
-                    </div>
-
-                </li>
-
-                <!-- Add more slides as needed -->
+                @endforeach
 
             </ul>
 
@@ -66,37 +48,17 @@
 
             <ul class="splide__list">
 
-                <li class="splide__slide">
+                @foreach (App\Models\Slider::where('is_active', 1)->orderBy('id', 'desc')->limit(10)->get() as $key => $slider)
+                    
+                    <li class="splide__slide">
 
-                    <img style="height: 50vh;" src="{{ asset('images/category_banner.jpg') }}" alt="Slide 1" />
+                        <img style="height: 50vh;" src="{{ asset($slider->image) }}" alt="Slide {{ ++$key }}" />
 
-                    <div class="slider_bg"></div>
+                        <div class="slider_bg"></div>
 
-                </li>
+                    </li>
 
-                <li class="splide__slide">
-
-                    <img style="height: 50vh;" src="{{ asset('images/banner_sect.jpeg') }}" alt="Slide 2" />
-
-                    <div class="slider_bg"></div>
-
-                </li>
-
-                <li class="splide__slide">
-
-                    <img style="height: 50vh;" src="{{ asset('images/soap.jpg') }}" alt="Slide 3" />
-
-                    <div class="slider_bg"></div>
-
-                </li>
-
-                <li class="splide__slide">
-
-                    <img style="height: 50vh;" src="{{ asset('images/1200s.jpg') }}" alt="Slide 4" />
-
-                    <div class="slider_bg"></div>
-
-                </li>
+                @endforeach
 
             </ul>
 

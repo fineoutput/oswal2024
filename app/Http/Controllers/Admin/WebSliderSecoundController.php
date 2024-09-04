@@ -59,7 +59,7 @@ class WebSliderSecoundController extends Controller
     {
 
         $rules = [
-            'link'              => 'nullable|url',
+            'link'              => 'nullable|string',
         ];
 
         if (!isset($request->slider_id)) {

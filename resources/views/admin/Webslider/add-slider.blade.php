@@ -17,19 +17,19 @@
                                 Edit
                             @else
                                 Add New
-                            @endif Slider
+                            @endif Image
                         </h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);"> sliders </a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);"> Images </a></li>
 
                             <li class="breadcrumb-item active">
                                 @if ($slider != null)
                                     Edit
                                 @else
                                     Add
-                                @endif Slider
+                                @endif Image
                             </li>
 
                         </ol>
@@ -82,7 +82,7 @@
                                         Edit
                                     @else
                                         Add
-                                    @endif slider Form
+                                    @endif Image Form
                                 </h4>
 
                                 <hr style="margin-bottom: 50px;background-color: darkgrey;">
@@ -105,7 +105,7 @@
                                                     value="{{ $slider ? $slider->slider_name : old('slider_name') }}"
                                                     name="slider_name" placeholder="Enter slider_name" required>
 
-                                                <label for="slider_name">Slider Name &nbsp;<span
+                                                <label for="slider_name">Image Name &nbsp;<span
                                                         style="color:red;">*</span></label>
 
                                             </div>

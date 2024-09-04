@@ -105,7 +105,7 @@
                                                     value="{{ $slider ? $slider->link : old('link') }}"
                                                     name="link" placeholder="Enter link" required>
 
-                                                <label for="link">Link &nbsp;<span
+                                                <label for="link">Text &nbsp;<span
                                                         style="color:red;">*</span></label>
 
                                             </div>

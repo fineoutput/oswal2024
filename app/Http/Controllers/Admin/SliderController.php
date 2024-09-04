@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Slider;
-use App\Models\EcomCategory;
-use App\Models\EcomProduct;
 
 class SliderController extends Controller
 {

@@ -12,13 +12,13 @@
 
                     <div class="page-title-box">
 
-                        <h4 class="page-title">View Webslider2</h4>
+                        <h4 class="page-title">View Header slider</h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Webslider2</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Header slider</a></li>
 
-                            <li class="breadcrumb-item active">View Webslider2</li>
+                            <li class="breadcrumb-item active">View Header slider</li>
 
                         </ol>
 
@@ -96,7 +96,7 @@
 
                                                     <th data-priority="3">Images</th>
                                                     
-                                                    <th data-priority="1">Link</th>
+                                                    <th data-priority="1">Text</th>
 
                                                     <th data-priority="3">Status</th>
 

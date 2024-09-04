@@ -168,17 +168,21 @@
             
             <ul class="splide__list">
                 
-                <li class="splide__slide">
-                    
-                    <div class="slide-content">
+                @foreach (App\Models\Offer::where('is_active', 1)->orderBy('id', 'desc')->limit(10)->get() as $key => $offerslider)
+
+                    <li class="splide__slide">
                         
-                        <img src="{{ asset('images/banner_sect.jpeg') }}" alt="Slide 1 Image 1" />
+                        <div class="slide-content">
+                            
+                            <img src="{{ asset($offerslider->image) }}" alt="Slide 1 Image 1" />
+                            
+                        </div>
                         
-                    </div>
-                    
-                </li>
+                    </li>
+
+                @endforeach
                 
-                <li class="splide__slide">
+                {{-- <li class="splide__slide">
                     
                     <div class="slide-content">
                         
@@ -196,7 +200,7 @@
                         
                     </div>
                     
-                </li>
+                </li> --}}
                 
                 <!-- Add more slides as needed -->
                 

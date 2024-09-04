@@ -12,13 +12,13 @@
 
                     <div class="page-title-box">
 
-                        <h4 class="page-title">View Slider</h4>
+                        <h4 class="page-title">View Image</h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Slider</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Image</a></li>
 
-                            <li class="breadcrumb-item active">View Slider</li>
+                            <li class="breadcrumb-item active">View Image</li>
 
                         </ol>
 
@@ -69,11 +69,11 @@
 
                                 <div class="row">
 
-                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View Slider</h4> </div>
+                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View Image</h4> </div>
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" href="{{ route('webslider.create') }}" role="button" style="margin-left: 20px;"> Add Slider</a>
+                                        <a class="btn btn-info cticket" href="{{ route('webslider.create') }}" role="button" style="margin-left: 20px;"> Add Image</a>
 
                                     </div>
 
@@ -94,7 +94,7 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">Slider name</th>
+                                                    <th data-priority="1">Image name</th>
 
                                                     <th data-priority="3">Images</th>
 
