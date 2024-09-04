@@ -208,7 +208,7 @@
                         
                         <p>
                             
-                            Developed by <a href="https://www.fineoutput.com/"><b>Fineoutput Technologies</b></a>
+                            Developed by <a target="_blank" href="https://www.fineoutput.com/"><b>Fineoutput Technologies</b></a>
                             
                         </p>
                         

@@ -130,9 +130,12 @@
 </section>
 <!-- /////////////Hot Deals Product section ENDS////////// -->
 
+@php
+  $image =   App\Models\Slider2::where('is_active', 1)->orderBy('id', 'desc')->limit(1)->first()
+@endphp
 
 <!-- /////////////Banner section STARTS////////// -->
-<div class="post_banner py-10" style="background-image: url('{{ asset('images/banner_sect.jpeg') }}');">
+<div class="post_banner py-10" style="background-image: url('{{ asset($image->image) }}');">
 
     <div class="container">
 

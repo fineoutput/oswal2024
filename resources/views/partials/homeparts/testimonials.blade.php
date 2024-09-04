@@ -166,7 +166,7 @@
 
 <!-- ///////////////Banner Section 2 Starts///////////////// -->
 
-<div class="post_banner py-10" style="background-image: url('{{ asset('images/banner_sect.jpeg') }}');">
+{{-- <div class="post_banner py-10" style="background-image: url('{{ asset('images/banner_sect.jpeg') }}');">
 
     <div class="container">
 
@@ -174,4 +174,4 @@
 
     </div>
 
-</div>
+</div> --}}

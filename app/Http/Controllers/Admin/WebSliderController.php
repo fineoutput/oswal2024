@@ -76,7 +76,7 @@ class WebSliderController extends Controller
             
             if (!$slider) {
                 
-                return redirect()->route('webslider.index')->with('error', 'slider not found.');
+                return redirect()->route('webslider.index')->with('error', 'image not found.');
                 
             }
 
@@ -104,7 +104,7 @@ class WebSliderController extends Controller
 
         if ($slider->save()) {
 
-            $message = isset($request->slider_id) ? 'slider updated successfully.' : 'slider inserted successfully.';
+            $message = isset($request->slider_id) ? 'image updated successfully.' : 'image inserted successfully.';
 
             return redirect()->route('webslider.index')->with('success', $message);
 
@@ -157,7 +157,7 @@ class WebSliderController extends Controller
 
         if (Slider2::where('id', $id)->delete()) {
 
-            return  redirect()->route('webslider.index')->with('success', 'slider Deleted Successfully.');
+            return  redirect()->route('webslider.index')->with('success', 'image Deleted Successfully.');
         } else {
             return redirect()->route('webslider.index')->with('error', 'Some Error Occurred.');
 

@@ -404,7 +404,7 @@ Route::prefix('notification')->name('notification.')->group(function () {
 });
 
 
-/*=========Sliders Routes ========*/
+/*=========Festival Slider Routes ========*/
 
 Route::prefix('slider')->name('slider.')->group(function () {
 
