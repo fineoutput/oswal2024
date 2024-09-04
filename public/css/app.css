@@ -1335,6 +1335,7 @@ section.bb-section .bb-container.bb-active .bb-signinBx .bb-imgBx {
 }
 
 @media (max-width: 991px) {
+ 
   section.bb-section .bb-container {
     max-width: 400px;
   }
@@ -4849,6 +4850,12 @@ h4.payment {
 
 /* For screens smaller than 1280px */
 @media screen and (max-width: 1280px) {
+  .laya-please {
+    background-size: contain !important;
+}
+.layer-5 {
+  top: 260px !important;
+}
   .module_aboutus {
     padding-top: 10% !important;
     margin-top: 12% !important;
@@ -5328,4 +5335,151 @@ h4.payment {
   .details-product-detail .accordion-toggle.active + .collapsible-content {
       display: block;
   }
+
+
+
+/* ///////////////New Section */
+
+}
+
+
+/* ////////////////Another Desert Section//////////////////// */
+.totalcontainer {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.container1 {
+  transform: scaleX(1.11);
+}
+.container2 {
+  transform: scaleX(1.25);
+}
+.layer-1 {
+  height: 100vh;
+  width: 100%;
+  background-color: #fed8c1;
+}
+.layer-2 {
+  background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay2.svg") no-repeat center center fixed;
+  animation: slide-in-top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.layer-3 {
+  /* background: url("{{ asset('images/lay3.png') }}") no-repeat center center fixed; */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+.layer-4 {
+  /* background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay4.svg") no-repeat center center fixed; */
+  
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  position: absolute;
+  top: 150px;
+  animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+}
+.layer-5 {
+  /* background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay5.svg") no-repeat center center fixed; */
+  
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  position: absolute;
+  top: 400px;
+  animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.55s both;
+}
+.layer-6 {
+  background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453881/codepen/lay6.svg") no-repeat center center fixed;
+  animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.75s both;
+}
+.layer-7 {
+  /* background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453881/codepen/lay7.svg") no-repeat center center fixed; */
+  background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+             animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.85s both;
+             top: 270px; position: absolute;
+}
+.layer-8 {
+  background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453882/codepen/lay8.svg") no-repeat center center fixed;
+  animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s both;
+}
+.laya-please {
+  position: absolute;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  /* top: 0;
+  left: 0; */
+}
+@-webkit-keyframes slide-in-bottom {
+  0% {
+      -webkit-transform: translateY(1000px);
+      transform: translateY(1000px);
+      opacity: 0;
+  }
+  100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+@keyframes slide-in-bottom {
+  0% {
+      -webkit-transform: translateY(1000px);
+      transform: translateY(1000px);
+      opacity: 0;
+  }
+  100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+@keyframes slide-in-top {
+  0% {
+      -webkit-transform: translateY(-1000px);
+      transform: translateY(-1000px);
+      opacity: 0;
+  }
+  100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+@media(max-width:480px) {
+  .totalcontainer {
+    height: 50vh !important;
+}
+  .laya-please {
+    height: 50vh !important;
+    width: 100%;
+    /* top: 0;
+    left: 0; */
+  }
+  .layer-4 {
+    top: 50px !important;
+}
+
+.layer-5 {
+    top: 80px !important;
+}
+
+.layer-6 {
+    top: 50px !important;
+}
+
+.layer-7 {
+    top: 90px !important;
+}
+
+.layer-8 {
+    top: 50px !important;
+}
 }
