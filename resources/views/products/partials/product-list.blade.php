@@ -155,7 +155,7 @@
 
                     <div class="mobile_common">
 
-                        <div class="d-flex" style="font-size: 0.8rem; gap: 5px;">
+                        <div class="d-flex flex-wrap" style="font-size: 0.8rem; gap: 5px;">
 
                             <del style="color: red;">25</del>
 
