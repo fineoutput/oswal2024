@@ -21,14 +21,9 @@
                     <div class="module-subtitle">
 
                         <br />
-
-                        OSWAL SOAP GROUP With Over 65 Years Of Experience And More Than 150 Million Satisfied Customers,
-
-                        Oswal Soap Group Became One Of The Largest Manufacturers Of The Daily-Use Commodities. We
-
-                        Provide Superior
-
-                        Quality Products To The Consumers
+                        OSWAL SOAP GROUP With Over <span class="red">65 Years Of Experience</span> And More Than <span class="red">150 Million Satisfied Customers</span>,
+    Oswal Soap Group Became One Of The <span class="red">Largest Manufacturers</span> Of The Daily-Use Commodities. We
+    Provide <span class="red">Superior Quality Products</span> To The Consumers
 
                     </div>
 
@@ -116,6 +111,12 @@
     </div>
 
     <div class="home-orangepatch-yellow">FOR OVER 68 YEARS.</div>
+    <img src="http://127.0.0.1:8000/images/bucket.png" alt="" style="
+    width: 9%;
+    position: absolute;
+    top: 40%;
+    left: 0;
+">
 
 </section>
 
