@@ -183,7 +183,7 @@
                     <div class="mobile_common">
 
                         @if ($productType2->isNotEmpty())
-                            <div class="d-flex" style="font-size: 0.8rem; gap: 5px;">
+                            <div class="d-flex flex-wrap" style="font-size: 0.8rem; gap: 5px;">
 
                                 <del style="color: red;">{{ formatPrice($productType2->first()->del_mrp) }}</del>
 
