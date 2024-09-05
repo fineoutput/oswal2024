@@ -6,7 +6,7 @@
 
             @foreach ($categorys as $category)
                 
-                <div class="product_lien mobile_lien"  onclick="renderproductview('{{ route('getproduct', ['slug' => $category->url]) }}')">
+                <div class="product_lien mobile_lien"  onclick="renderproductview('{{ route('getproducts', ['slug' => $category->url]) }}')">
 
                     <img src="{{asset($category->image)}}" alt="" />
 

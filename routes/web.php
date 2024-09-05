@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\adminlogincontroller;
+use App\Http\Controllers\Frontend\LocationController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -39,9 +40,19 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
-    Route::get('render/{slug}/product',[HomeController::class, 'renderProduct'])->name('getproduct');
+    Route::get('render/{slug}/products',[HomeController::class, 'renderProducts'])->name('getproducts');
+
+    Route::get('render/product',[HomeController::class, 'renderProduct'])->name('getproduct');
+    
+    Route::get('render/home/product',[HomeController::class, 'renderProduct'])->name('home.getproduct');
 
 });
+
+// In web.php
+Route::post('/set-location', [LocationController::class, 'setLocation'])->name('set.location');
+
+Route::get('/get-location', [LocationController::class, 'getLocation'])->name('get.location');
+
 
 //=========================================== Admin Login  =====================================================
 

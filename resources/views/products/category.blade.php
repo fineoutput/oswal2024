@@ -11,7 +11,7 @@
 
     <section class="category_main">
 
-        <input type="hidden" value="{{ route('getproduct', ['slug' => $categorys[0]->url]) }}" id="category-url-route">
+        <input type="hidden" value="{{ route('getproducts', ['slug' => $categorys[0]->url]) }}" id="category-url-route">
 
         <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
         {{-- <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset($categorys[0]->image) }}');"></section> --}}

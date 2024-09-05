@@ -1,6 +1,14 @@
 <div class="row" id="product-list-container">
 
     @foreach ($products as $product)
+        @php
+
+            $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
+                return $type->state_id == $globalState && $type->city_id == $globalCity;
+            });
+
+        @endphp
+
         <div class="col-lg-4 this_sectio d-none d-lg-block">
 
             <div class="product_category_product_part" style="position: relative;">
@@ -17,6 +25,12 @@
 
                     </div>
 
+
+
+                </div>
+
+                <div class="product_part_lower" id="web_product_{{ $product->id }}">
+
                     <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
 
@@ -25,44 +39,47 @@
                             fill="#c92323"></path>
 
                         <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central"
-                            fill="#ffffff" dy=".3em">20%
-                            off</text>
+                            fill="#ffffff" dy=".3em">
+                            @if ($productType->isNotEmpty())
+                                {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
+                            @endif
+                        </text>
 
                     </svg>
-
-                </div>
-
-                <div class="product_part_lower">
 
                     <div class="upper_txt det_txt">
 
                         <h4>{{ $product->name }}</h4>
 
-                        <div class="rates">
+                        @if ($productType->isNotEmpty())
+                            <div class="rates">
 
-                            <del>
+                                <del>
 
-                                <p class="prev_rate">₹20</p>
+                                    <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
 
-                            </del>
+                                </del>
 
-                            <p>₹15</p>
+                                <p>{{ formatPrice($productType->first()->selling_price) }}</p>
 
-                        </div>
-
+                            </div>
+                        @endif
                     </div>
 
                     <div class="upper_common d-flex">
 
                         <div class="upper_txt_input">
 
-                            <select name="quality" id="qty_select">
+                            <select name="type_{{ $product->id }}"
+                                onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'type_{{ $product->id }}')">
 
                                 <option value="type">Type</option>
 
-                                <option value="1kg">1kg</option>
-
-                                <option value="250gm">250gm</option>
+                                @foreach ($productType as $type)
+                                    <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                        {{ $type->type_name }}
+                                    </option>
+                                @endforeach
 
                             </select>
 
@@ -111,9 +128,17 @@
             </div>
 
         </div>
+
     @endforeach
 
-    @foreach ($products as $product)
+    @foreach ($products as $product2)
+        @php
+
+            $productType2 = $product2->type->filter(function ($type) use ($globalState, $globalCity) {
+                return $type->state_id == $globalState && $type->city_id == $globalCity;
+            });
+
+        @endphp
 
         <div class="col-lg-6 col-6 this_sectio d-lg-none" style="padding: 0.2rem;">
 
@@ -124,10 +149,14 @@
 
                     <div class="card_upper_img">
 
-                        <img src="{{ asset($product->img2) }}" alt="Primary Image" class="second-image"
+                        <img src="{{ asset($product2->img2) }}" alt="Primary Image" class="second-image"
                             style="width: 100%; height: 114px;" />
 
                     </div>
+
+                </div>
+
+                <div class="product_part_lower mobile_part_lower" id="mob_product_{{ $product2->id }}">
 
                     <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -136,46 +165,48 @@
                             d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z"
                             fill="#c92323"></path>
 
-                        <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central"
-                            fill="#ffffff" dy=".3em">20%
-
-                            off</text>
+                        <text x="50%" y="50%" font-size="6" text-anchor="middle"
+                            alignment-baseline="central"fill="#ffffff" dy=".3em">
+                            @if ($productType2->isNotEmpty())
+                                {{ percentOff($productType2->first()->del_mrp, $productType2->first()->selling_price, true) }}
+                            @endif
+                        </text>
 
                     </svg>
 
-                </div>
-
-                <div class="product_part_lower mobile_part_lower">
-
                     <div class="upper_txt det_txt mobile_det">
 
-                        <h4>{{ $product->name }}</h4>
+                        <h4>{{ $product2->name }}</h4>
 
                     </div>
 
                     <div class="mobile_common">
 
-                        <div class="d-flex flex-wrap" style="font-size: 0.8rem; gap: 5px;">
+                        @if ($productType2->isNotEmpty())
+                            <div class="d-flex" style="font-size: 0.8rem; gap: 5px;">
 
-                            <del style="color: red;">25</del>
+                                <del style="color: red;">{{ formatPrice($productType2->first()->del_mrp) }}</del>
 
-                            <p>₹15</p>
+                                <p>{{ formatPrice($productType2->first()->selling_price) }}</p>
 
-                        </div>
-
+                            </div>
+                        @endif
                     </div>
 
                     <div class="upper_txt_qty det_txt_qnt mobile_input_btn">
 
                         <div class="upper_txt_input mobile_input">
 
-                            <select name="quality" id="qty_select">
+                            <select name="mob_type_{{ $product2->id }}"
+                                onchange="renderProduct('{{ $product2->id }}', '{{ route('getproduct') }}', 'mob_type_{{ $product2->id }}')">
 
                                 <option value="type">Type</option>
 
-                                <option value="1kg">1kg</option>
-
-                                <option value="250gm">250gm</option>
+                                @foreach ($productType2 as $type)
+                                    <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                        {{ $type->type_name }}
+                                    </option>
+                                @endforeach
 
                             </select>
 
