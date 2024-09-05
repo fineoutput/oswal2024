@@ -573,6 +573,50 @@ function loadProducts(url) {
 
 bindPaginationLinks();
 
+function renderProduct(containerId , url , selectedId) {
+
+  const type_id = $(`select[name="${selectedId}"]`).val();
+
+  const webproduct = $(`#web_product_${containerId}`);
+
+  const Mobileproduct = $(`#mob_product_${containerId}`);
+
+  if(type_id != 'type'){
+
+    $.ajax({
+  
+      url: url,
+  
+      type: 'GET',
+  
+      dataType: 'json',
+  
+      data : {type_id: type_id,product_id:containerId},
+  
+      success: function (response) {
+  
+        webproduct.empty();
+  
+        Mobileproduct.empty();
+  
+        webproduct.html(response.webproduct);
+        
+        Mobileproduct.html(response.mobproduct);
+  
+      },
+  
+      error: function (xhr) {
+  
+        console.error('An error occurred while loading the category details and products.');
+  
+      }
+  
+    });
+  }
+
+}
+
+
 //SHOW MORE DETAILS PRODUCT DETAIL PAGE
 document.addEventListener('DOMContentLoaded', function() {
   const toggleButton = document.querySelector('.accordion-toggle');
