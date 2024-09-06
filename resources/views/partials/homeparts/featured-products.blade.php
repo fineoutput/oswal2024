@@ -354,17 +354,21 @@
 
                                                     <div class="button-container addButton mobile_btns">
 
-                                                        <span class="buttonText">Add</span>
+                                                        <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif
+                                                            onclick="manageCart({{ $product->id }})">Add</span>
 
                                                         <div class="controlButtons hidden">
 
                                                             <div class="increment-decrement">
 
-                                                                <button class="btn-decrease">-</button>
+                                                                <button class="btn-decrease" id="btn-decrement{{ $product->id }}"  onclick="decrement({{ $product->id }})">-</button>
 
                                                                 <span class="number-display">1</span>
 
-                                                                <button class="btn-increase">+</button>
+                                                                <input id="quantity-input{{ $product->id }}" type="hidden"
+                                                                name="quantity" value="{{ $cart->quantity ?? 0 }}"
+                                                                size="1" />
+                                                                <button class="btn-increase" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
 
                                                             </div>
 
