@@ -46,7 +46,7 @@
 
                             <li><a href="{{ route('wislist') }}">Wishlist</a></li>
 
-                            <li><a href="{{ route('Cart') }}">Cart</a></li>
+                            <li><a href="">Cart</a></li>
 
                             <li><a href="{{ route('checkout') }}">Checkout</a></li>
 

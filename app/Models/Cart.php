@@ -12,6 +12,7 @@ class Cart extends Model
 
     protected $fillable = [
         'device_id',
+        'persistent_id',
         'user_id',
         'category_id',
         'product_id',

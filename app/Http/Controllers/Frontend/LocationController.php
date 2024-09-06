@@ -27,7 +27,7 @@ class LocationController extends Controller
 
         } else {
             
-            $persistentId = $request->cookie('persistent_id');
+            $persistentId = sendPersistentId($request);
 
             if (!$persistentId) {
 
@@ -46,7 +46,7 @@ class LocationController extends Controller
         return redirect()->back(); 
     }
 
-    public function getLocation()
+    public function getLocation(Request $request)
     {
         $state = null;
         $city = null;
@@ -58,7 +58,7 @@ class LocationController extends Controller
             $city = $user->city;
         } else {
             
-            $persistentId = request()->cookie('persistent_id');
+            $persistentId = sendPersistentId($request);
             if ($persistentId) {
                 $preference = DB::table('user_state_city')->where('persistent_id', $persistentId)->first();
                 if ($preference) {

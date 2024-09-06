@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\adminlogincontroller;
 use App\Http\Controllers\Frontend\LocationController;
+use App\Http\Controllers\Frontend\CartController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -36,8 +37,6 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
 
-    Route::get('/Cart', [HomeController::class, 'Cart'])->name('Cart');
-
     Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
     Route::get('render/{slug}/products',[HomeController::class, 'renderProducts'])->name('getproducts');
@@ -47,6 +46,17 @@ Route::group(['prefix' => '/'], function () {
     Route::get('render/home/product',[HomeController::class, 'renderProduct'])->name('home.getproduct');
 
 });
+Route::prefix('cart')->name('cart.')->group(function () {
+
+    Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
+    
+    Route::post('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
+    
+    Route::post('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
+
+    
+});
+
 
 // In web.php
 Route::post('/set-location', [LocationController::class, 'setLocation'])->name('set.location');

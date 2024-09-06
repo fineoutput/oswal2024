@@ -1,3 +1,12 @@
+@php
+    $product->load('cart');
+
+    $cart = null;
+
+    if (count($product->cart) > 0) {
+        $cart = $product->cart[0];
+    }
+@endphp
 <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 
     <path
@@ -26,13 +35,16 @@
 
         <p>{{ formatPrice($seltedType->selling_price) }}</p>
 
+        <input type="hidden" name="type_price" value="{{ $seltedType->selling_price }}">
+
     </div>
+    
 </div>
 
 <div class="upper_common d-flex">
 
     <div class="upper_txt_input">
-
+        <input type="hidden" name="type_id" value="{{ $seltedType->id }}">
         <select name="type_{{ $product->id }}"
             onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'type_{{ $product->id }}')">
 
@@ -50,34 +62,30 @@
 
     <div class="upper_txt_qty det_txt_qnt">
 
-        <div class="quant" id="quantity-section" style="display: none;">
+        <div class="quant" id="quantity-section{{ $product->id }}"
+            @if ($cart == null) style="display: none;" @endif>
 
             <div class="input-group det_input_grp" style="display: flex; align-items: center;">
 
                 <button type="button" class="btn btn-outline-secondary btn-decrement"
-                    style="margin-right: 5px;">-</button>
+                    style="margin-right: 5px;"id="btn-decrement{{ $product->id }}"
+                    onclick="decrement({{ $product->id }})">-</button>
 
-                <input class="qv-quantity form-control quantity-input" type="number" name="quantity" min="1"
-                    value="1" size="1" step="1" style="width: 60px; text-align: center;" />
+                <input class="qv-quantity form-control quantity-input" id="quantity-input{{ $product->id }}"
+                    type="number" name="quantity" min="0" value="{{ $cart->quantity ?? 0 }}" max="5"
+                    size="1" step="1" style="width: 60px; text-align: center;" />
 
-                <button type="button" class="btn btn-outline-secondary btn-increment"
-                    style="margin-left: 5px;">+</button>
+                <button type="button" class="btn btn-outline-secondary btn-increment" style="margin-left: 5px;"
+                    id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
 
             </div>
 
         </div>
 
-        <div class="add_to_cart_button" id="add-to-cart-section">
+        <div class="add_to_cart_button" id="add-to-cart-section{{ $product->id }}"
+            @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">
 
-            <a href="#">
-
-                <button>
-
-                    <span>Add</span>
-
-                </button>
-
-            </a>
+            <button> <span>Add</span> </button>
 
         </div>
 

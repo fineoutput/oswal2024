@@ -13,7 +13,7 @@ use App\Models\OrderInvoice;
 use App\Models\WalletTransactionHistory;
 use Illuminate\Support\Facades\DB;
 use App\adminmodel\Team;
-
+use Illuminate\Support\Facades\Cookie;
 
 if (!function_exists('lang_change')) {
 
@@ -634,4 +634,25 @@ if (! function_exists('renderStarRating')) {
 
         return $html;
     }
+}
+
+if(! function_exists('sendPersistentId')) {
+
+    function sendPersistentId($request) {
+        
+        $persistentId = $request->cookie('persistent_id');
+        
+        if (!$persistentId) {
+
+            $persistentId = uniqid();
+    
+            Cookie::queue('persistent_id', $persistentId, 60 * 24 * 30); 
+
+            $cookieCreatedAt = cookie('persistent_id_created_at', Carbon::now()->toDateTimeString(), 60 * 24 * 30);
+        
+        }
+
+        return $persistentId;
+    }
+
 }

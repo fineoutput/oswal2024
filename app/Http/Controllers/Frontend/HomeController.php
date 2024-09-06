@@ -51,12 +51,6 @@ class HomeController extends Controller
         return view('wishlist')->with('title', 'Wishlist');
     }
 
-    public function Cart(Request $request)
-    {
-
-        return view('cart')->with('title', 'Cart');
-    }
-
     public function checkout(Request $request)
     {
 

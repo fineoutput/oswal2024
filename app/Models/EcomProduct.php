@@ -73,7 +73,7 @@ class EcomProduct extends Model
 
     public function cart()
     {
-        return $this->hasMany(Cart::class ,'type_id' ,'id');
+        return $this->hasMany(Cart::class ,'product_id' ,'id');
     }
 
     public function offers()

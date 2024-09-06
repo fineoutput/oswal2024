@@ -33,11 +33,11 @@
 
     @include('partials.header')
 
-        <main role="main">
+    <main role="main">
 
-            @yield('content')
+        @yield('content')
 
-        </main>
+    </main>
 
     @include('partials.footer')
 
@@ -45,89 +45,111 @@
 
 </body>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
 
-    <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js" type="module"></script>
 
-    <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js" nomodule></script>
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js" nomodule></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/js/splide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/js/splide.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Initialize AOS (Animate On Scroll)
-            AOS.init();
+<script src="{{ asset('js/app.js') }}"></script>
 
-            // Initialize Splide sliders
-            new Splide("#third_sliders", {
-                type: "loop",
-                perPage: 3,
-                autoplay: true,
-                interval: 3000,
-            }).mount();
+<script>
+    function addToCart($pid) {
+        event.preventDefault();
 
-            new Splide("#mobile_slide", {
-                type: "loop",
-                perPage: 1,
-                heightRatio: 0.5,
-            }).mount();
-
-            new Splide("#matters", {
-                type: "loop",
-                perPage: 1,
-                height: "100%",
-                direction: "ttb",
-                arrows: true,
-                pagination: true,
-            }).mount();
+        $.ajax({
+            url: "{{ route('cart.add-to-cart') }}",
+            type: 'POST',
+            data:  $(`#addtocart${$pid}`).serialize(),
+            success: function(response) {
+                
+                console.log(response);
+            },
+            error: function(xhr) {
+                console.error('An error occurred while loading the category details and products.');
+            }
         });
+    }
+</script>
 
-        // Function to check if an element is in viewport
-        function isInViewport(element) {
-            const rect = element.getBoundingClientRect();
-            return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
-        }
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize AOS (Animate On Scroll)
+        AOS.init();
 
-        // Function to add animation class
-        function addAnimationClass() {
-            const animatedElements = document.querySelectorAll(".animated-section");
+        // Initialize Splide sliders
+        new Splide("#third_sliders", {
+            type: "loop",
+            perPage: 3,
+            autoplay: true,
+            interval: 3000,
+        }).mount();
 
-            animatedElements.forEach((element) => {
-                if (isInViewport(element)) {
-                    element.classList.add("animate__animated", "animate__fadeInUp");
-                } else {
-                    element.classList.remove("animate__animated", "animate__fadeInUp");
-                }
-            });
-        }
+        new Splide("#mobile_slide", {
+            type: "loop",
+            perPage: 1,
+            heightRatio: 0.5,
+        }).mount();
 
-        // Event listener for scroll
-        window.addEventListener("scroll", addAnimationClass);
+        new Splide("#matters", {
+            type: "loop",
+            perPage: 1,
+            height: "100%",
+            direction: "ttb",
+            arrows: true,
+            pagination: true,
+        }).mount();
+    });
 
-        // Initial check in case elements are already in view
-        document.addEventListener("DOMContentLoaded", addAnimationClass);
-    </script>
+    // Function to check if an element is in viewport
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
 
-    <script src="{{ asset('js/app.js') }}"></script>
+    // Function to add animation class
+    function addAnimationClass() {
+        const animatedElements = document.querySelectorAll(".animated-section");
 
-    @stack('scripts') 
+        animatedElements.forEach((element) => {
+            if (isInViewport(element)) {
+                element.classList.add("animate__animated", "animate__fadeInUp");
+            } else {
+                element.classList.remove("animate__animated", "animate__fadeInUp");
+            }
+        });
+    }
+
+    // Event listener for scroll
+    window.addEventListener("scroll", addAnimationClass);
+
+    // Initial check in case elements are already in view
+    document.addEventListener("DOMContentLoaded", addAnimationClass);
+</script>
+
+
+
+@stack('scripts')
+
 </html>
