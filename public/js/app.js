@@ -113,12 +113,6 @@ ratingInputs.forEach(input => {
 
 ///////////////////////RATING iNPUT END//////////
 
-///////////////////////Modal//////////
-// console.log("name2");
-
-//////////////Price range Slider///////////
-
-//////////////Price range Slider End///////////
 
 //////////Wishlist button functionlity///////////
 document.addEventListener('DOMContentLoaded', function () {
@@ -140,53 +134,59 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 //////////Wishlist button functionlity End///////////
-// console.log("tillher");
-//////////input increment/decremnet functionlity ///////////
-document.addEventListener('DOMContentLoaded', function () {
-  // Function to handle increment for all sections
-  document.querySelectorAll('.btn-increment').forEach(button => {
-    button.addEventListener('click', function () {
-      const input = this.closest('.product_category_product_part').querySelector('.quantity-input');
-      var currentValue = parseInt(input.value);
+
+
+// Increment function
+function increment(productId) {
+  const input = document.getElementById(`quantity-input${productId}`);
+  let currentValue = parseInt(input.value);
+
+  // Check if it's below the max value
+  if (currentValue < 5) {
       input.value = currentValue + 1;
-    });
-  });
+  } else {
+      alert("Maximum quantity reached.");
+  }
 
-  // Function to handle decrement for all sections
-  document.querySelectorAll('.btn-decrement').forEach(button => {
-    button.addEventListener('click', function () {
-      // console.log("decreaseit");
-      const productPart = this.closest('.product_category_product_part');
-      const input = productPart.querySelector('.quantity-input');
-      const addToCartSection = productPart.querySelector('#add-to-cart-section');
-      const quantitySection = productPart.querySelector('#quantity-section');
-      var currentValue = parseInt(input.value);
+  updateCartDisplay(productId);
+}
 
-      if (currentValue > 1) {
-        input.value = currentValue - 1;
-      } else {
-        quantitySection.style.display = 'none';
-        addToCartSection.style.display = 'block';
-      }
-    });
-  });
+// Decrement function
+function decrement(productId) {
+  const input = document.getElementById(`quantity-input${productId}`);
+  let currentValue = parseInt(input.value);
 
-  // Function to handle add to cart button click
-  document.querySelectorAll('#add-to-cart-section button').forEach(button => {
-    button.addEventListener('click', function (event) {
-      event.preventDefault(); // Prevent the default action (page reload)
-      const productPart = this.closest('.product_category_product_part');
-      const addToCartSection = productPart.querySelector('#add-to-cart-section');
-      const quantitySection = productPart.querySelector('#quantity-section');
+  if (currentValue > 1) {
+      input.value = currentValue - 1;
+  } else {
+      // Hide quantity section and show "Add to Cart" if the value reaches 0 or 1
+      document.getElementById(`quantity-section${productId}`).style.display = 'none';
+      document.getElementById(`add-to-cart-section${productId}`).style.display = 'block';
+      input.value = 0;
+  }
 
-      addToCartSection.style.display = 'none';
-      quantitySection.style.display = 'flex';
-    });
-  });
-});
+  updateCartDisplay(productId);
+}
+
+// Manage Cart (Show the quantity section and hide "Add to Cart")
+function manageCart(productId) {
+
+  document.getElementById(`add-to-cart-section${productId}`).style.display = 'none';
+  document.getElementById(`quantity-section${productId}`).style.display = 'flex';
+
+  // Increment by default when "Add to Cart" is clicked
+  increment(productId);
+}
+
+// Function to handle updating the cart (like making API calls to update cart)
+function updateCartDisplay(productId) {
+  const quantity = document.getElementById(`quantity-input${productId}`).value;
+  console.log(`Product ${productId} quantity updated to ${quantity}`);
+
+  addToCart(productId)
+}
 
 
-//////////input increment/decremnet functionlity End///////////
 // console.log("name");
 const imgs = document.querySelectorAll('.details-img-select a');
 const imgBtns = [...imgs];
@@ -393,6 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /////Product category button
 document.addEventListener('DOMContentLoaded', function () {
+  
   document.querySelectorAll('.addButton').forEach(function (addButton) {
     let count = 0;
     const buttonText = addButton.querySelector('.buttonText');
@@ -615,7 +616,6 @@ function renderProduct(containerId , url , selectedId) {
   }
 
 }
-
 
 //SHOW MORE DETAILS PRODUCT DETAIL PAGE
 document.addEventListener('DOMContentLoaded', function() {
