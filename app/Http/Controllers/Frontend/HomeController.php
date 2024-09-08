@@ -6,11 +6,15 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 
 use App\Models\EcomCategory;
 
 use App\Models\EcomProduct;
+
+use App\Models\Address;
 
 use App\Models\Type;
 
@@ -113,5 +117,34 @@ class HomeController extends Controller
         }
 
         return response()->json(['webproduct' => $htmlwebProduct ,'mobproduct' => $htmlmobProduct]);
+    }
+
+    public function addAddress(Request $request)  {
+        
+    }
+
+    public function getAddress(Request $request) {
+
+        $addresses = Address::where('user_id', 1)->get();
+
+        $address_data = [];
+
+        foreach ($addresses as $address) {
+
+            $address->load('states', 'citys');
+
+            $addr_string = "Doorflat {$address->doorflat}, ";
+
+            if (!empty($address->landmark)) {
+                $addr_string .= "{$address->landmark}, ";
+            }
+            $addr_string .= "{$address->address}, {$address->location_address}, {$address->zipcode}";
+
+            $address['custom_address'] = $addr_string;
+
+            $address_data[] =  $address;
+        }
+
+        return view('selectaddress' , compact('address_data'));
     }
 }

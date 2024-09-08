@@ -25,6 +25,8 @@
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Oswal')</title>
 
 </head>
@@ -68,6 +70,8 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script src="{{ asset('js/app.js') }}"></script>
+
+<script src="{{ asset('js/login.js') }}"></script>
 
 <script>
     function addToCart($pid) {

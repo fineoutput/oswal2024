@@ -16,6 +16,7 @@ use App\Models\Cart;
 
 class CartController extends Controller
 {
+
     public function addToCart(Request $request)
     {
 
@@ -89,12 +90,50 @@ class CartController extends Controller
         }
     }
 
+    public function getCartDetails(Request $request)
+    {
+        
+        if(auth::check()){
+            
+            $data['user_id'] = Auth::id();
+            
+            $identifierColumn = 'user_id';
+            
+            $identifierValue = Auth::id();
+            
+            $persistent_id = sendPersistentId($request);
+
+            Cart::where('persistent_id' , $persistent_id)->update([
+                'user_id' => Auth::id(),
+            ]);
+
+        }else{
+            
+            $data['persistent_id'] = sendPersistentId($request);
+            
+            $identifierColumn = 'persistent_id';
+            
+            $identifierValue  = $data['persistent_id'];
+        }
+
+        $cartItems = Cart::where($identifierColumn, $identifierValue)->with('type','product','category')->get();
+
+        $cartItems->each(function ($cartItem) {
+            if ($cartItem->type) {
+                $cartItem->type_price = $cartItem->type->selling_price;
+                $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
+                $cartItem->save();
+            }
+        });
+        
+       return view('cart', compact('cartItems'));
+
+    }
+
     public function removeToCart(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
-            'user_id'   => 'nullable|integer|exists:users,id',
             'cart_id'   => 'required|integer|exists:carts,id',
         ]);
 
@@ -103,7 +142,7 @@ class CartController extends Controller
         }
 
         $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
+        $user_id   = Auth::id();
         $cart_id   = $request->input('cart_id');
 
         $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {

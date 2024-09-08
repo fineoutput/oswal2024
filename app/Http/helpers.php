@@ -656,3 +656,11 @@ if(! function_exists('sendPersistentId')) {
     }
 
 }
+if(! function_exists('cleanamount')) {
+    function cleanamount($value) {
+    
+        $cleanedValue = preg_replace('/[^\d.]/', '', $value);
+        
+        return floatval($cleanedValue);
+    }
+}

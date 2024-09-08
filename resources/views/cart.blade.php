@@ -18,7 +18,7 @@
 
                             <div class="row g-0">
 
-                                <div class="col-lg-8">
+                                <div class="col-lg-9">
 
                                     <div class="p-5">
 
@@ -26,7 +26,7 @@
 
                                             <h1 class="fw-bold mb-0">Shopping Cart</h1>
 
-                                            <h6 class="mb-0 text-muted">3 items</h6>
+                                            <h6 class="mb-0 text-muted">{{ count($cartItems) }} items</h6>
 
                                         </div>
 
@@ -39,17 +39,17 @@
 
                                             <div class="col-12 col-md-2 text-center text-md-start">
 
-                                                <h6>Product Image</h6>
+                                                <h6>Product <br>Image</h6>
 
                                             </div>
 
-                                            <div class="col-12 col-md-3 text-center text-md-start">
+                                            <div class="col-12 col-md-2 text-center text-md-start">
 
-                                                <h6>Product Name</h6>
+                                                <h6>Product <br> Name</h6>
 
                                             </div>
 
-                                            <div class="col-12 col-md-3 text-center text-md-start">
+                                            <div class="col-12 col-md-2 text-center text-md-start">
 
                                                 <h6>Quantity</h6>
 
@@ -63,7 +63,13 @@
 
                                             <div class="col-12 col-md-2 text-center text-md-start">
 
-                                                <h6>Quality</h6>
+                                                <h6>Type</h6>
+
+                                            </div>
+
+                                            <div class="col-12 col-md-2 text-center text-md-start">
+
+                                                <h6>SubTotal</h6>
 
                                             </div>
 
@@ -77,236 +83,112 @@
 
                                         <hr class="my-4" />
 
+                                        <?php $totalAmount = 0; ?>
 
-                                        <!-- Product 1 -->
+                                        @forelse ($cartItems as $cartdata)
 
-                                        <div class="row mb-4 d-flex justify-content-between align-items-center flex-column flex-md-row">
+                                            @php
+                                            
+                                                $product     = $cartdata->product;
 
-                                            <div class="col-12 col-md-2 d-flex justify-content-center justify-content-md-start">
+                                                $category    = $cartdata->category;
 
-                                                <img src="images/mirch.jpg" class="img-fluid rounded-3" alt="Mirch Powder" />
+                                                $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
+                                                    return $type->state_id == $globalState && $type->city_id == $globalCity;
+                                                });
 
-                                                <a href="#!" class="text-muted d-lg-none"><i class="fas fa-times"></i></a>
+                                                $totalAmount += $cartdata->total_qty_price;
 
-                                            </div>
+                                            @endphp
 
-                                            <div class="col-12 col-md-3 text-center text-md-start">
+                                            <div class="row mb-4 d-flex justify-content-between align-items-center flex-column flex-md-row">
 
-                                                <h6 class="text-muted">Mirch</h6>
+                                                <div class="col-12 col-md-2 d-flex justify-content-center justify-content-md-start">
 
-                                                <h6 class="mb-0">Oswal Masale</h6>
+                                                    <img src="{{ asset($product->img1) }}" class="img-fluid rounded-3" alt="Mirch Powder" />
 
-                                            </div>
+                                                    <a href="#!" class="text-muted d-lg-none"><i class="fas fa-times"></i></a>
 
-                                            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start mt-2 mt-md-0">
+                                                </div>
 
-                                                <button class="btn btn-link px-2 ripple" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                                <div class="col-12 col-md-2 text-center text-md-start">
 
-                                                    <i class="fas fa-minus"></i>
+                                                    <h6 class="text-muted">{{ $product->name }}</h6>
 
-                                                </button>
+                                                    <h6 class="mb-0">{{ $category->name }}</h6>
 
-                                                <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control form-control-sm carts_puts intern_bord" />
+                                                </div>
 
-                                                <button class="btn btn-link px-2 ripple_set" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                                <div class="col-12 col-md-2 d-flex justify-content-center justify-content-md-start mt-2 mt-md-0">
 
-                                                    <i class="fas fa-plus"></i>
+                                                    <button class="btn btn-link p-2 ripple"onclick="this.parentNode.querySelector('input[type=number]').stepDown()" style="font-size: 10px">
 
-                                                </button>
+                                                        <i class="fas fa-minus"></i>
 
-                                            </div>
+                                                    </button>
 
-                                            <div class="col-12 col-md-1 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
+                                                    <input id="form1" min="0" name="quantity" value="{{ $cartdata->quantity }}" type="number" class="form-control form-control-sm carts_puts intern_bord" />
 
-                                                <h6 class="mb-0">₹30</h6>
+                                                    <button class="btn btn-link p-2 ripple_set" style="font-size: 10px" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
 
-                                            </div>
+                                                        <i class="fas fa-plus"></i>
 
-                                            <div class="col-12 col-md-2 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
+                                                    </button>
 
-                                                <select name="quality" id="qty_select" class="form-select intern_bord">
+                                                </div>
 
-                                                    <option value="type">Type</option>
+                                                <div class="col-12 col-md-1 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
 
-                                                    <option value="1kg">1kg</option>
+                                                    <h6 class="mb-0">{{ formatPrice($cartdata->type->selling_price) }}</h6>
 
-                                                    <option value="250gm">250gm</option>
+                                                </div>
 
-                                                </select>
+                                                <div class="col-12 col-md-2 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
 
-                                            </div>
+                                                    <select name="quality" id="qty_select" class="form-select intern_bord">
 
-                                            <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block">
+                                                        <option value="type">Type</option>
 
-                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                                        @foreach ($productType as $type)
 
-                                            </div>
+                                                        <option value="{{ $type->id }}" {{ $type->id == $cartdata->type->id ? 'selected' : '' }}>
+                                                            {{ $type->type_name }}
+                                                        </option>
 
-                                        </div>
+                                                        @endforeach
+                                                      
+                                                    </select>
 
+                                                </div>
 
-                                        <hr class="my-4" />
+                                                <div class="col-12 col-md-2 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
 
+                                                    <h6 class="mb-0">{{ formatPrice($cartdata->total_qty_price) }}</h6>
 
-                                        <!-- Product 2 -->
+                                                </div>
 
-                                        <!-- Repeat the product structure for each additional product as needed -->
+                                                <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block">
 
-                                        <div class="row mb-4 d-flex justify-content-between align-items-center flex-column flex-md-row">
+                                                    <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
 
-                                            <div class="col-12 col-md-2 d-flex justify-content-center justify-content-md-start">
-
-                                                <img src="images/haldi.jpg" class="img-fluid rounded-3" alt="Haldi Powder" />
-
-                                                <a href="#!" class="text-muted d-lg-none"><i class="fas fa-times"></i></a>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-3 text-center text-md-start">
-
-                                                <h6 class="text-muted">Haldi</h6>
-
-                                                <h6 class="mb-0">Oswal Masale</h6>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start mt-2 mt-md-0">
-
-                                                <button class="btn btn-link px-2 ripple" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-
-                                                    <i class="fas fa-minus"></i>
-
-                                                </button>
-
-                                                <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control form-control-sm carts_puts intern_bord" />
-
-                                                <button class="btn btn-link px-2 ripple_set" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-
-                                                    <i class="fas fa-plus"></i>
-
-                                                </button>
+                                                </div>
 
                                             </div>
 
-                                            <div class="col-12 col-md-1 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
 
-                                                <h6 class="mb-0">₹30</h6>
+                                            <hr class="my-4" />
+                                            
+                                        @empty
 
-                                            </div>
+                                            No Product Found
 
-                                            <div class="col-12 col-md-2 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
-
-                                                <select name="quality" id="qty_select" class="form-select intern_bord">
-
-                                                    <option value="type">Type</option>
-
-                                                    <option value="1kg">1kg</option>
-
-                                                    <option value="250gm">250gm</option>
-
-                                                </select>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block">
-
-                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <hr class="my-4" />
-
-
-                                        <!-- Product 3 -->
-
-                                        <!-- Repeat the product structure for each additional product as needed -->
-
-                                        <div class="row mb-4 d-flex justify-content-between align-items-center flex-column flex-md-row">
-
-                                            <div class="col-12 col-md-2 d-flex justify-content-center justify-content-md-start">
-
-                                                <img src="images/dhaniya.jpg" class="img-fluid rounded-3" alt="Dhaniya Powder" />
-
-                                                <a href="#!" class="text-muted d-lg-none"><i class="fas fa-times"></i></a>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-3 text-center text-md-start">
-
-                                                <h6 class="text-muted">Dhaniya</h6>
-
-                                                <h6 class="mb-0">Oswal Masale</h6>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start mt-2 mt-md-0">
-
-                                                <button class="btn btn-link px-2 ripple" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-
-                                                    <i class="fas fa-minus"></i>
-
-                                                </button>
-
-                                                <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control form-control-sm carts_puts intern_bord" />
-
-                                                <button class="btn btn-link px-2 ripple_set" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-
-                                                    <i class="fas fa-plus"></i>
-
-                                                </button>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-1 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
-
-                                                <h6 class="mb-0">₹30</h6>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-2 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
-
-                                                <select name="quality" id="qty_select" class="form-select intern_bord">
-
-                                                    <option value="type">Type</option>
-
-                                                    <option value="1kg">1kg</option>
-
-                                                    <option value="250gm">250gm</option>
-
-                                                </select>
-
-                                            </div>
-
-                                            <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block">
-
-                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <hr class="my-4" />
-
-
-                                        <div class="pt-5">
-
-                                            <h6 class="mb-0">
-
-                                                <a href="#!" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a>
-
-                                            </h6>
-
-                                        </div>
-
+                                        @endforelse
+                                
                                     </div>
 
                                 </div>
 
-                                <div class="col-lg-4 bg-grey">
+                                <div class="col-lg-3 bg-grey">
 
                                     <div class="p-5">
 
@@ -314,32 +196,46 @@
 
                                         <hr class="my-4" />
 
-
                                         <div class="d-flex justify-content-between mb-4">
 
                                             <h5 class="text-muted">Items</h5>
 
-                                            <h5>₹90</h5>
+                                            <h5>{{ count($cartItems) }} </h5>
 
                                         </div>
 
-
                                         <hr class="my-4" />
-
 
                                         <div class="d-flex justify-content-between mb-5">
 
                                             <h5 class="text-muted">Total</h5>
 
-                                            <h5>₹90</h5>
+                                            <h5>{{formatPrice($totalAmount) }}</h5>
 
                                         </div>
 
-                                        <a href="checkout.html">
+                                        @if (Auth::check())
+                                            <a href="{{ route('checkout.get-address') }}">
 
-                                            <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span></span></button>
+                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button">
 
-                                        </a>
+                                                    <span>Proceed to Pay</span> <span> </span>
+
+                                                </button>
+
+                                            </a>
+                                        @else
+                                            <a href="javascript::void(0)" onclick="showModal(event)">
+
+                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button">
+
+                                                    <span>Proceed to Pay</span> <span> </span>
+
+                                                </button>
+
+                                            </a>
+                                        @endif
+                                        
 
                                     </div>
 

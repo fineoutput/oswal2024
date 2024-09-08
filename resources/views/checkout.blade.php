@@ -4,6 +4,23 @@
 
 @section('content')
 
+    @php
+        $OrderDetails = $orderdetails->orderDetails;
+
+        $addr_string = "Doorflat {$userAddress->doorflat}, ";
+
+        if (!empty($userAddress->landmark)) {
+            $addr_string .= "{$userAddress->landmark}, ";
+        }
+
+        $addr_string .= "{$userAddress->address}, {$userAddress->location_address}, {$userAddress->zipcode}";
+
+        $giftCards = App\Models\GiftCard::where('is_active', 1)->get();
+
+        $promocodes = App\Models\Promocode::where('is_active', 1)->get();
+
+    @endphp
+
     <div class="shopping_cart_sect">
 
         <div> </div>
@@ -34,66 +51,48 @@
 
                 <ul class="list-group mb-3">
 
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    @foreach ($OrderDetails as $orderItem)
+                        @php
 
-                        <div class="clls">
+                            $product = $orderItem->product;
 
-                            <img width="80px" src="images/mirch.jpg" alt="" />
+                            $type = $orderItem->type;
 
-                            <div class="cehc_txt">
+                            $category = $product->category;
+                        @endphp
 
-                                <h6 class="text-danger">Mirchi Powder</h6>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
 
-                                <small class="text-muted">Brief description</small>
+                            <div class="clls">
 
-                            </div>
+                                <img width="80px" src="{{ asset($product->img1) }}" alt="" />
 
-                        </div>
+                                <div class="cehc_txt">
 
-                        <span class="text-muted">₹12</span>
+                                    <h6 class="text-danger">{{ $product->name }}</h6>
 
-                    </li>
+                                    <small class="text-muted">{{ $category->name }}</small>
 
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-
-                        <div class="clls">
-
-                            <img width="80px" src="images/haldi2.jpg" alt="" />
-
-                            <div class="cehc_txt">
-
-                                <h6 class="text-danger">Haldi Powder</h6>
-
-                                <small class="text-muted">Brief description</small>
+                                </div>
 
                             </div>
 
-                        </div>
+                            <span class="text-muted"> {{ $orderItem->quantity }} * {{ $type->selling_price }}</span>
 
-                        <span class="text-muted">₹8</span>
+                        </li>
+                    @endforeach
+                    
+                    <li class="list-group-item d-flex justify-content-between bg-light">
 
-                    </li>
+                        <div class="text-danger">
 
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-
-                        <div class="clls">
-
-                            <img width="80px" src="images/dhaniya.jpg" alt="" />
-
-                            <div class="cehc_txt">
-
-                                <h6 class="text-danger">Dhaniya Powder</h6>
-
-                                <small class="text-muted">Brief description</small>
-
-                            </div>
+                            <h6 class="my-0">Shiping Charge</h6>
 
                         </div>
 
-                        <span class="text-muted">₹5</span>
+                        <span class="text-danger">+₹{{ $orderdetails->delivery_charge }}</span>
 
                     </li>
-
 
                     <li class="list-group-item d-flex justify-content-between bg-light">
 
@@ -101,11 +100,86 @@
 
                             <h6 class="my-0">Promo code</h6>
 
-                            <small>EXAMPLECODE</small>
+                            @if($orderdetails->promocode)
+
+                                @php
+
+                                    $promocode = App\Models\Promocode::find($orderdetails->promocode);
+
+                                @endphp
+
+                                @if($promocode)
+
+                                    <small id="promoCodeName">{{ $promocode->promocode }}</small>
+
+                                @endif
+
+                            @else
+
+                                <small id="promoCodeName">No promo code applied</small>
+
+                            @endif
 
                         </div>
 
-                        <span class="text-success">-₹5</span>
+
+                        <span class="text-success" id="promoCodeAmount">-{{ formatPrice($orderdetails->promo_deduction_amount) }}</span>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+
+                        <div class="text-success">
+
+                            <h6 class="my-0">Wallet Amount</h6>
+
+                        </div>
+
+                        <span class="text-success" id="discountWalletAmount"> -{{formatPrice($orderdetails->extra_discount) }} </span>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+
+                        <div class="text-success">
+
+                            <h6 class="my-0">Gift Card</h6>
+
+                            @if($orderdetails->gift_id)
+
+                                @php
+
+                                    $giftCard = App\Models\GiftCard::find($orderdetails->gift_id);
+
+                                @endphp
+
+                                @if($giftCard)
+
+                                    <small id="giftCardName">{{ $giftCard->name }}</small>
+
+                                @endif
+
+                            @else
+
+                                <small id="giftCardName">No Gift Card applied</small>
+
+                            @endif
+                          
+                        </div>
+
+                        <span class="text-success" id="GiftCardAmount">+{{formatPrice($orderdetails->gift_amt) }}</span>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between bg-light d-none" id="CodCaharges">
+
+                        <div class="text-danger">
+
+                            <h6 class="my-0">Cod Charg</h6>
+
+                        </div>
+
+                        <span class="text-danger" id='codChargeAmount'> </span>
 
                     </li>
 
@@ -113,7 +187,7 @@
 
                         <span>Total (INR)</span>
 
-                        <strong>₹20</strong>
+                        <strong id="totalorderAmount">₹{{$orderdetails->total_amount}}</strong>
 
                     </li>
 
@@ -131,29 +205,17 @@
 
                 <div class="gift-card-list" id="giftCardList">
 
-                    <div class="gift-card-item" data-id="1">
+                    @foreach ($giftCards as $key => $giftCard)
+                        
+                        <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
 
-                        <img src="https://cdn-icons-png.flaticon.com/128/7312/7312829.png" alt="Gift Card 1" />
+                            <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
 
-                        <p>get 10% off for this item</p>
+                            <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
 
-                    </div>
+                        </div>
 
-                    <div class="gift-card-item" data-id="2">
-
-                        <img src="https://cdn-icons-png.flaticon.com/128/4293/4293183.png" alt="Gift Card 2" />
-
-                        <p>₹20 off for this item</p>
-
-                    </div>
-
-                    <div class="gift-card-item" data-id="3">
-
-                        <img src="https://cdn-icons-png.flaticon.com/128/7646/7646924.png" alt="Gift Card 3" />
-
-                        <p>₹30 off for this item</p>
-
-                    </div>
+                    @endforeach
 
                 </div>
 
@@ -163,15 +225,20 @@
 
                     <div class="promo-options">
 
-                        <button class="promo-option" data-code="PROMO10">10% OFF</button>
+                        @foreach ($promocodes as $promocode)
+                            
+                        <button class="promo-option" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">{{ $promocode->percent }}% OFF</button>
 
-                        <button class="promo-option" data-code="PROMO20">20% OFF</button>
+                        @endforeach
 
-                        <button class="promo-option" data-code="PROMO30">30% OFF</button>
+                        {{-- <button class="promo-option" data-code="PROMO20">20% OFF</button>
+
+                        <button class="promo-option" data-code="PROMO30">30% OFF</button> --}}
 
                     </div>
 
-                    <input type="text" id="promoCodeInput" class="promo-code-input" placeholder="Enter or select promo code" readonly />
+                    <input type="text" id="promoCodeInput" class="promo-code-input"
+                        placeholder="Enter or select promo code" readonly />
 
                     <button class="apply-button" id="applyButton">Apply Code</button>
 
@@ -185,47 +252,32 @@
 
                     <h4 class="mb-3">Billing address</h4>
 
-                    <p>or</p>
-
-                    <a href="add_Checkout_address.html">
-
-                        <button style="padding: 4px 12px;" class="animated-button small_btns">
-                            <span>Choose Address</span><span></span>
-                        </button>
-
-                    </a>
-
                 </div>
 
-                <form class="needs-validation" novalidate>
+                <form class="needs-validation" novalidate id="placeOrder">
 
+                    @csrf
+                    <input type="hidden" id="totalorderAmounti" name="totalamount" value="{{$orderdetails->total_amount}}">
+
+                    <input type="hidden" name="order_id" value="{{$orderdetails->id}}">
+                    
                     <div class="row">
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
 
-                            <label for="firstName">First name</label>
+                            <label for="firstName">Customer Name</label>
 
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required />
-
-                            <div class="invalid-feedback">
-
-                                Valid first name is required.
-
-                            </div>
+                            <input type="text" readonly class="form-control" id="firstName" placeholder=""
+                                value="{{ $userAddress->name }}" />
 
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
 
-                            <label for="lastName">Last name</label>
+                            <label for="state">State</label>
 
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required />
-
-                            <div class="invalid-feedback">
-
-                                Valid last name is required.
-
-                            </div>
+                            <input type="text" readonly class="form-control" id="state" placeholder=""
+                                value="{{ $userAddress->states->state_name }}" />
 
                         </div>
 
@@ -233,143 +285,45 @@
 
                     <div class="mb-3">
 
-                        <label for="username">Username</label>
+                        <label for="City"> City</label>
 
                         <div class="input-group">
 
-                            <div class="input-group-prepend">
-
-                                <span class="input-group-text">@</span>
-
-                            </div>
-
-                            <input type="text" class="form-control" id="username" placeholder="Username" required />
-
-                            <div class="invalid-feedback" style="width: 100%;">
-
-                                Your username is required.
-
-                            </div>
+                            <input type="text" readonly class="form-control" id="City" placeholder="City"
+                                value="{{ $userAddress->citys->city_name }}" />
 
                         </div>
 
                     </div>
 
-                    <div class="mb-3">
-
-                        <label for="email">Email <span class="text-muted">(Optional)</span></label>
-
-                        <input type="email" class="form-control" id="email" placeholder="you@example.com" />
-
-                        <div class="invalid-feedback">
-
-                            Please enter a valid email address for shipping updates.
-
-                        </div>
-
-                    </div>
 
                     <div class="mb-3">
 
                         <label for="address">Address</label>
 
-                        <input type="text" class="form-control" id="address" placeholder="1234 Main St" required />
+                        <input type="text" readonly class="form-control" id="address" placeholder="address"
+                            value="{{ $addr_string }}" />
 
-                        <div class="invalid-feedback">
-
-                            Please enter your shipping address.
-
-                        </div>
 
                     </div>
 
                     <div class="mb-3">
 
-                        <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
+                        <label for="address2">Landmark </label>
 
-                        <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" />
+                        <input type="text" readonly class="form-control" id="address2" placeholder="Apartment or suite"
+                            value="{{ $userAddress->landmark }}" />
 
                     </div>
 
                     <div class="row">
 
-                        <div class="col-md-5 mb-3">
-
-                            <label for="State">State</label>
-
-                            <select class="custom-select d-block w-100" id="State" required>
-
-                                <option value="">Choose...</option>
-
-                                <option value="">Choose...</option>
-
-                                <option>Rajasthan</option>
-
-                                <option>Punjab</option>
-
-                                <option>Hariyana</option>
-
-                                <option>Bihar</option>
-
-                                <option>Tamil Nadu</option>
-
-                                <option>Delhi</option>
-
-                                <option>Mumbai</option>
-
-                            </select>
-
-                            <div class="invalid-feedback">
-
-                                Please select a valid State.
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-
-                            <label for="city">City</label>
-
-                            <select class="custom-select d-block w-100" id="city" required>
-
-                                <option value="">Choose...</option>
-
-                                <option>Rajasthan</option>
-
-                                <option>Punjab</option>
-
-                                <option>Hariyana</option>
-
-                                <option>Bihar</option>
-
-                                <option>Tamil Nadu</option>
-
-                                <option>Delhi</option>
-
-                                <option>Mumbai</option>
-
-                            </select>
-
-                            <div class="invalid-feedback">
-
-                                Please provide a valid state.
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-12 mb-3">
 
                             <label for="pin">Pin</label>
 
-                            <input type="text" class="form-control" id="zip" placeholder="" required />
-
-                            <div class="invalid-feedback">
-
-                                Pin code required.
-
-                            </div>
+                            <input type="text" readonly class="form-control" id="zip" placeholder="pincode"
+                                value="{{ $userAddress->zipcode }}" />
 
                         </div>
 
@@ -386,9 +340,9 @@
 
                             </div>
 
-                            <input type="checkbox" name="wallet" id="wallet" class="wallet" checked="" value="" />
+                            <input type="checkbox" onchange="applyWallet()" @if($orderdetails->extra_discount != 0) checked @endif name="wallet" id="wallet" class="wallet" value="1" />
 
-                            <label class="wallet-size mb-0" for="wallet"> Wallet (₹0)</label>
+                            <label class="wallet-size mb-0" for="wallet" id="totalwalletAmount"> Wallet (₹{{ Auth::user()->wallet_amount ?? 0 }})</label>
 
                         </div>
 
@@ -412,27 +366,25 @@
 
                         <div class="payment_option" id="payy">
 
-                            <div class="custome-radio" onclick="update_amount(2)">
+                            <div class="custome-radio">
 
-                                <input class="form-check-input payment_option payment_emthod" type="radio" name="payment_option" id="exampleRadios4" value="2" />
+                                <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(2)" type="radio"
+                                    name="payment_option" id="exampleRadios4" value="2" />
 
                                 <label class="form-check-label" for="exampleRadios4">Online Payment</label> <br />
 
-                                <span class="higlight"> Get <span style="color: #ff324d;">upto 2%</span> discount on prepaid order</span>
+                                <span class="higlight"> Get <span style="color: #ff324d;">upto 2%</span> discount on
+                                    prepaid order</span>
 
                             </div>
 
-                            <div class="custome-radio" onclick="update_amount(1)">
-
-                                <input class="form-check-input payment_option payment_emthod" required=""
-
-                                    type="radio" name="payment_option" id="exampleRadios3" value="1"
-
-                                    checked="" />
+                            <div class="custome-radio">
+                                <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3" checked value="1"/>
 
                                 <label class="form-check-label" for="exampleRadios3">Cash On Delivery (COD)</label> <br />
 
-                                <span class="higlight"> <span style="color: #ff324d;">₹10</span> Will be charged extra for cash on delivery</span>
+                                <span class="higlight"> <span style="color: #ff324d;">₹10</span> Will be charged extra for
+                                    cash on delivery</span>
 
                             </div>
 
@@ -464,9 +416,10 @@
 
                     <hr class="mb-4" />
 
-                    <button class="animated-button"><span>Place Order</span> <span></span></button>
+                    <button type="button" class="animated-button" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
 
-                    <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none" style="bottom: 0 !important;">
+                    {{-- <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none"
+                        style="bottom: 0 !important;">
 
                         <a href="#">
 
@@ -488,7 +441,7 @@
 
                         </div>
 
-                    </div>
+                    </div> --}}
 
                 </form>
 
@@ -497,5 +450,186 @@
         </div>
 
     </div>
+    
+    <div id="paymentContainer"> 
 
+    </div>
 @endsection
+
+@push('scripts')
+
+<script>
+$(document).ready(function() {
+    updateAmount(1);
+});
+
+function applyWallet() {
+    const order_id = "{{ $orderdetails->id }}";
+    const totalorderAmount = $('#totalorderAmount');
+    const total_amount = totalorderAmount.text();
+    const status = $('#wallet').is(':checked') ? 1 : 0;
+
+    const discountWalletAmount = $('#discountWalletAmount');
+    const totalwalletAmount = $('#totalwalletAmount');
+    
+    
+    $.ajax({
+        url: "{{ route('checkout.apply-wallet') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            status: status,
+            amount: total_amount,
+            _token: "{{ csrf_token() }}" 
+        },
+        success: function(response) {
+            discountWalletAmount.text(`-${response.discount}`);
+            totalwalletAmount.text(`Wallet(${response.wallet_amount})`);
+            totalorderAmount.text(response.total_amount);
+            $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+        },
+        error: function(xhr) {
+            console.error('An error occurred while applying the wallet option.');
+        }
+    });
+}
+
+function applyPromocode(promoode) {
+
+    const order_id = "{{ $orderdetails->id }}";
+
+    const totalorderAmount = $('#totalorderAmount');
+
+    const promoCodeName    = $('#promoCodeName');
+
+    const promoCodeAmount  = $('#promoCodeAmount');
+
+    const total_amount = totalorderAmount.text();
+    
+    $.ajax({
+        url: "{{ route('checkout.apply-promocode') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            promoode: promoode,
+            amount: total_amount,
+            _token: "{{ csrf_token() }}" 
+        },
+        success: function(response) {
+            promoCodeAmount.text(`-${response.promo_discount}`);
+            promoCodeName.text(response.promocode_name);
+            totalorderAmount.text(response.total_amount);
+            $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+        },
+        error: function(xhr) {
+            console.error('An error occurred while applying the wallet option.');
+        }
+    });
+}
+
+function applyGiftCard(giftCardID) {
+
+    const order_id = "{{ $orderdetails->id }}";
+
+    const totalorderAmount = $('#totalorderAmount');
+
+    const giftCardName    = $('#giftCardName');
+
+    const GiftCardAmount  = $('#GiftCardAmount');
+
+    const total_amount = totalorderAmount.text();
+
+    $.ajax({
+        url: "{{ route('checkout.apply-gift-card') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            gift_card_id: giftCardID,
+            amount: total_amount,
+            _token: "{{ csrf_token() }}" 
+        },
+        success: function(response) {
+            GiftCardAmount.text(`+${response.amount}`);
+            giftCardName.text(response.name);
+            totalorderAmount.text(response.total_amount);
+            $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+        },
+        error: function(xhr) {
+            console.error('An error occurred while applying the wallet option.');
+        }
+    });
+}
+
+function updateAmount(type) {
+  
+    const codContainer = $('#CodCaharges');
+
+    const codChargeAmount = $('#codChargeAmount');
+
+    const totalorderAmount = $('#totalorderAmount');
+
+    const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
+
+    let total_amount;
+
+    if(type == 1) {
+
+      total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
+
+      totalorderAmount.text(`₹${total_amount}`);
+
+       $('#totalorderAmounti').val(total_amount);
+
+      codChargeAmount.text(`₹${codCharge}`);
+
+      codContainer.removeClass('d-none').addClass('d-block');
+
+    }else{
+
+      total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
+
+      $('#totalorderAmounti').val(total_amount);
+
+      totalorderAmount.text(`₹${total_amount}`)
+
+      codChargeAmount.text(`₹${codCharge}`);
+
+      codContainer.removeClass('d-block').addClass('d-none');
+
+    }
+}
+
+function convertCurrencyToFloat(value) {
+   
+    const cleanedValue = value.replace(/[^\d.]/g, '');
+
+    return parseFloat(cleanedValue);
+}
+
+function placeOrder () {
+
+    $.ajax({
+        url: "{{ route('checkout.place-order') }}",
+        type: 'POST',
+        data: $('#placeOrder').serialize(),
+        success: function(response) {
+          
+            if(response.form != 1){
+                
+                if($('#paymentContainer').html(response.form)){
+
+                    $('#razorpayform').submit()
+                }
+
+            }
+          
+        },
+        error: function(xhr) {
+            console.error('An error occurred while applying the wallet option.');
+        }
+    });
+}
+
+</script>
+    
+@endpush
