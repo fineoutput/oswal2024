@@ -55,8 +55,10 @@ Route::group(['prefix' => '/'], function () {
 Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
+
+    Route::get('update-qty', [CartController::class, 'updateQty'])->name('update-qty');
     
-    Route::post('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
+    Route::get('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
     
     Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 

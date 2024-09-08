@@ -71,8 +71,6 @@
 
 <script src="{{ asset('js/app.js') }}"></script>
 
-<script src="{{ asset('js/login.js') }}"></script>
-
 <script>
     function addToCart($pid) {
 
