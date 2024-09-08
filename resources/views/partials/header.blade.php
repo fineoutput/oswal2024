@@ -46,9 +46,9 @@
 
                             <li><a href="{{ route('wislist') }}">Wishlist</a></li>
 
-                            <li><a href="">Cart</a></li>
+                            <li><a href="{{ route('cart.get-cart-details') }}">Cart</a></li>
 
-                            <li><a href="{{ route('checkout') }}">Checkout</a></li>
+                            <li><a href="">Checkout</a></li>
 
                             <li><a href="javascript:void(0)">My Orders</a></li>
 
@@ -78,7 +78,7 @@
 
                         </button>
 
-                        <a class="d-none d-lg-block" href="cart.html"><i class="fa-solid fa-bag-shopping"></i></a>
+                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-bag-shopping"></i></a>
 
                         <a class="d-none d-lg-block" href="wishlist_page.html"><i class="fa-solid fa-heart"></i></a>
 
@@ -92,7 +92,7 @@
 
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
 
-                                <li><a class="dropdown-item" href="myorder_detail.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.index') }}">Profile</a></li>
 
                                 <li><a class="dropdown-item" href="myorder_detail.html">Account</a></li>
 
