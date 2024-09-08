@@ -44,7 +44,7 @@
 
                             <li><a href="{{ route('product-detail' ,['slug' => 'Oswal-Chana-Dal']) }}">Product Detail</a></li>
 
-                            <li><a href="{{ route('wislist') }}">Wishlist</a></li>
+                            <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
 
                             <li><a href="{{ route('cart.get-cart-details') }}">Cart</a></li>
 
@@ -80,7 +80,7 @@
 
                         <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-bag-shopping"></i></a>
 
-                        <a class="d-none d-lg-block" href="wishlist_page.html"><i class="fa-solid fa-heart"></i></a>
+                        <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
 
                         <div class="dropdown">
 
@@ -159,19 +159,19 @@
 
     <div class="bottom-bar-item">
 
-        <a class="" href="wishlist_page.html"><i class="fa-solid fa-heart"></i></a>
+        <a class="" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
 
     </div>
 
     <div class="bottom-bar-item">
 
-        <a href="cart.html"><i class="fa-solid fa-shopping-cart"></i></a>
+        <a href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-shopping-cart"></i></a>
 
     </div>
 
     <div class="bottom-bar-item">
 
-        <a href="myorder_detail.html"><i class="fa-solid fa-user"></i></a>
+        <a href="{{ route('user.index') }}"><i class="fa-solid fa-user"></i></a>
 
     </div>
 

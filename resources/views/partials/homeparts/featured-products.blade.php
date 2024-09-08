@@ -37,12 +37,19 @@
 
                     $product->load('cart');
 
+                    $product->load('wishlist');
+
                     $cart = null;
+
+                    $wishlist = null;
 
                     if (count($product->cart) > 0) {
                         $cart = $product->cart[0];
                     }
 
+                    if (count($product->wishlist) > 0) {
+                        $wishlist = $product->wishlist[0];
+                    }
                 @endphp
 
                 <div class="col-lg-3 col-sm-12 col-md-4">
@@ -71,18 +78,19 @@
 
                                 </div>
 
-                                <div class="wishlist_icons"
-                                    style="position: absolute; top: 30px; left: 10px; z-index: 10;">
 
-                                    <!-- Adjust top and right as needed -->
-
-                                    <a href="#"><i class="fa-regular fa-heart hollow_icon"
-                                            style="color: #cdd5e5;"></i></a>
-
-                                    <a href="#"><i class="fa-solid fa-heart colored_icon"
-                                            style="color: #f20232; display: none;"></i></a>
-
+                                <div class="wishlist_icons{{ $product->id }}" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
+                                    @if($wishlist)
+                                        <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                            <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
+                                        </a>
+                                    @else
+                                        <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                            <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
+                                        </a>
+                                    @endif
                                 </div>
+                                
 
                             </div>
 
@@ -276,17 +284,16 @@
 
                                                 </div>
 
-                                                <div class="wishlist_icons mobile_part_wish"
-                                                    style="position: absolute; top: 30px; left: 10px; z-index: 10;">
-
-                                                    <!-- Adjust top and right as needed -->
-
-                                                    <a href="#"><i class="fa-regular fa-heart hollow_icon"
-                                                            style="color: #cdd5e5;"></i></a>
-
-                                                    <a href="#"><i class="fa-solid fa-heart colored_icon"
-                                                            style="color: #f20232; display: none;"></i></a>
-
+                                                <div class="wishlist_icons{{ $product->id }} mobile_part_wish" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
+                                                    @if($wishlist)
+                                                        <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                                            <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
+                                                        </a>
+                                                    @else
+                                                        <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                                            <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
+                                                        </a>
+                                                    @endif
                                                 </div>
 
                                             </div>

@@ -9,6 +9,7 @@ use App\Http\Controllers\Frontend\CheckOutController;
 use App\Http\Controllers\Frontend\Auth\UserAuthController;
 use App\Http\Controllers\Frontend\Users\OrderController;
 use App\Http\Controllers\Frontend\Users\UserController;
+use App\Http\Controllers\Frontend\Users\WishlistController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -39,7 +40,7 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/product/{slug}/details', [HomeController::class, 'productDetail'])->name('product-detail');
 
-    Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
+    // Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
 
     // Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
@@ -106,6 +107,17 @@ Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
     
     Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
+});
+
+Route::prefix('wishlist')->name('wishlist.')->group(function () {
+
+    Route::get('/', [WishlistController::class, 'Show'])->name('index');
+
+    Route::post('store', [WishlistController::class, 'store'])->name('store');
+
+    Route::get('destroy',[WishlistController::class, 'destroy'])->name('destroy');
+    
+    Route::post('move-to-cart',[WishlistController::class, 'moveToCart'])->name('move-to-cart');
 });
 //=========================================== Admin Login  =====================================================
 

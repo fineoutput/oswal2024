@@ -3,48 +3,7 @@
 @section('title', $title ?? '')
 
 @section('content')
-    
-<div class="bottom-bar d-lg-none">
 
-    <div class="bottom-bar-item">
-
-        <a href="index.html"><i class="fa-solid fa-home"></i></a>
-
-    </div>
-
-    <div class="form" id="search2">
-
-        <input type="text" class="input2" placeholder="Search Here" />
-
-    </div>
-
-    <button style="border: none; background: none;" class="search-btn2">
-
-        <i style="font-size: 20px; color: red;" class="fa fa-search" id="naming" aria-hidden="true"></i>
-
-    </button>
-
-    <div class="bottom-bar-item">
-
-        <a href="wishlist_page.html"><i class="fa-solid fa-heart"></i></a>
-
-    </div>
-
-    <div class="bottom-bar-item">
-
-        <a href="cart.html"><i class="fa-solid fa-shopping-cart"></i></a>
-
-    </div>
-
-    <div class="bottom-bar-item">
-
-        <a href="myorder_detail.html"><i class="fa-solid fa-user"></i></a>
-
-    </div>
-
-</div>
-
-<!-- ///////HEADER TOP ENDS////////// -->
 <section class="h-100 gradient-custom">
     
     <div class="container py-5 h-100">
