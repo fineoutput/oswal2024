@@ -75,21 +75,65 @@
 
 <script>
     function addToCart($pid) {
-        event.preventDefault();
 
+        event.preventDefault();
         $.ajax({
             url: "{{ route('cart.add-to-cart') }}",
             type: 'POST',
-            data:  $(`#addtocart${$pid}`).serialize(),
+            data: $(`#addtocart${$pid}`).serialize(),
             success: function(response) {
-                
+
                 console.log(response);
             },
             error: function(xhr) {
                 console.error('An error occurred while loading the category details and products.');
             }
         });
+
     }
+
+    function toggleWishList(productId) {
+
+        event.preventDefault();
+
+        let $wishlistIcon = $(`.wishlist-icon[onclick="toggleWishList(${productId})"] i`);
+
+        if ($wishlistIcon.hasClass('fa-regular')) {
+
+            $.ajax({
+                url: "{{ route('wishlist.store') }}",
+                type: 'POST',
+                data: $(`#addtocart${productId}`).serialize(),
+
+                success: function(response) {
+
+                    $wishlistIcon.removeClass('fa-regular hollow_icon').addClass('fa-solid colored_icon');
+                    $wishlistIcon.css('color', '#f20232');
+                },
+                error: function(xhr) {
+                    console.error('An error occurred while adding to the wishlist.');
+                }
+            });
+        } else {
+
+            $.ajax({
+                url: "{{ route('wishlist.destroy') }}",
+                type: 'GET',
+                data: {
+                    product_id: productId
+                },
+                success: function(response) {
+
+                    $wishlistIcon.removeClass('fa-solid colored_icon').addClass('fa-regular hollow_icon');
+                    $wishlistIcon.css('color', '#cdd5e5');
+                },
+                error: function(xhr) {
+                    console.error('An error occurred while removing from the wishlist.');
+                }
+            });
+        }
+    }
+    
 </script>
 
 <script>
