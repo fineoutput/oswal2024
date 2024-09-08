@@ -130,7 +130,7 @@
                                             <!-- Quantity Input -->
                                             <input
                                                 id="form1"
-                                                min="0"
+                                                min="1"
                                                 max="5"
                                                 name="quantity"
                                                 value="{{ $cartdata->quantity }}"
