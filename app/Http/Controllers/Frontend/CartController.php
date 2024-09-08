@@ -34,11 +34,11 @@ class CartController extends Controller
 
         if(auth::check()){
             
-            $data['user_id'] = Auth::id();
+            $data['user_id'] = Auth::user()->id;
             
             $identifierColumn = 'user_id';
             
-            $identifierValue = Auth::id();
+            $identifierValue = Auth::user()->id;
             
         }else{
             
@@ -95,16 +95,16 @@ class CartController extends Controller
         
         if(auth::check()){
             
-            $data['user_id'] = Auth::id();
+            $data['user_id'] = Auth::user()->id;
             
             $identifierColumn = 'user_id';
             
-            $identifierValue = Auth::id();
+            $identifierValue = Auth::user()->id;
             
             $persistent_id = sendPersistentId($request);
 
             Cart::where('persistent_id' , $persistent_id)->update([
-                'user_id' => Auth::id(),
+                'user_id' => Auth::user()->id,
             ]);
 
         }else{
@@ -130,19 +130,36 @@ class CartController extends Controller
 
     }
 
+    public function updateQty(Request $request)
+    {
+       
+        $qty = $request->qty;
+        $price = $request->price;
+        $cart_id = $request->cart_id;
+
+        if ($qty <= 0) {
+            return response()->json(['success' => false, 'message' => 'Quantity cannot be zero or less.']);
+        }
+
+        $cart = Cart::find($cart_id);
+
+        if (!$cart) {
+            return response()->json(['success' => false, 'message' => 'Cart item not found.']);
+        }
+
+        $cart->quantity = $qty;
+        $cart->total_qty_price = $qty * $price;
+        $cart->save();
+
+        return response()->json(['success' => true, 'message' => 'Quantity updated successfully.'], 200);
+    }
+
+
     public function removeToCart(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'cart_id'   => 'required|integer|exists:carts,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        }
-
-        $device_id = $request->input('device_id');
-        $user_id   = Auth::id();
+        $device_id = null;
+        $user_id   = Auth::user()->id;
         $cart_id   = $request->input('cart_id');
 
         $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
