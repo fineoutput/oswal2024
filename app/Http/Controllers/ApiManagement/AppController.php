@@ -188,7 +188,7 @@ class AppController extends Controller {
 
         $userAddress->load('states', 'citys');
 
-        $custom_address = $userAddress->doorflat . " " . $userAddress->landmark . " " . $userAddress->address . " " . $userAddress->location_address . " " . $userAddress->zipcode;
+        $custom_address = $userAddress->doorflat . " " . $userAddress->landmark . " " . $userAddress->address . " " . $userAddress->zipcode;
 
         $response = $userAddress;
         $response['custom_address'] = $custom_address;
@@ -230,7 +230,7 @@ class AppController extends Controller {
             if (!empty($address->landmark)) {
                 $addr_string .= "{$address->landmark}, ";
             }
-            $addr_string .= "{$address->address}, {$address->location_address}, {$address->zipcode}";
+            $addr_string .= "{$address->address}, {$address->zipcode}";
 
             $address['custom_address'] = $addr_string;
 
