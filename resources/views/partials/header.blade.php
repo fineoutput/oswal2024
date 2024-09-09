@@ -13,10 +13,10 @@
                         <a href="#" class="menu-btn"><i class="fa-solid fa-bars"></i></a>
 
                     </div>
-
+                    <a href="{{ route('/') }}">
                     <img class="mobile_logo img-responsive logo" src="{{ asset('images/oswal-logo.png') }}"
                         alt="" />
-
+                        </a>
                 </div>
 
                 <div class="col-lg-10">
