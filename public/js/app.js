@@ -16,20 +16,40 @@ document.addEventListener('DOMContentLoaded', function () {
 //   $(".input").val("");
 // });
 
-$(".fa-search").click(function () {
-  $(".input").toggleClass("active");
-  $("#search").toggleClass("active");
+// $(".fa-search").click(function () {
+//   $(".input").toggleClass("active");
+//   $("#search").toggleClass("active");
+// });
+
+// $(".input").keypress(function (e) {
+//   if (e.which === 13) { // 13 is the Enter key
+//       var query = $(this).val().trim();
+//       if (query) {
+//           // Redirect to the new page with the query
+//           var searchUrl = "{{ route('all_products') }}";
+//                     window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
+//       }
+//   }
+// });
+
+// Toggle 'active' class on click for search and input elements
+document.querySelector(".fa-search").addEventListener("click", function () {
+  document.querySelector(".input").classList.toggle("active");
+  document.getElementById("search").classList.toggle("active");
 });
-$(".input").keypress(function (e) {
-  if (e.which === 13) { // 13 is the Enter key
-      var query = $(this).val().trim();
+
+// Handle Enter key press for input field
+document.querySelector(".input").addEventListener("keypress", function (e) {
+  if (e.key === "Enter") { // Check if the key pressed is "Enter"
+      var query = this.value.trim();
       if (query) {
           // Redirect to the new page with the query
           var searchUrl = "{{ route('all_products') }}";
-                    window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
+          window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
       }
   }
 });
+
 
 // $(".input2").focus(function () {
 //   $("#search2").addClass("move");
@@ -344,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ////////////////////Crousel code////////////
 document.addEventListener('DOMContentLoaded', function () {
+
   new Splide('#product-splide_name', {
     type: 'loop',
     perPage: 3,
@@ -417,27 +438,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-///Notify cart///
-$('#notifyButton').click(function() {
-  $.notify("Product added to cart!", "success");
-});
-///Notify cart END///
 
-document.getElementById('myButton').addEventListener('click', function() {
-  // Fire SweetAlert on button click
-  Swal.fire({
-      title: "Thanks!",
-      text: "You order has been placed!",
-      icon: "success"
-  });
-});
-document.getElementById('failureButton').addEventListener('click', function() {
-  Swal.fire({
-      title: "Oops...",
-      text: "Something went wrong!",
-      icon: "error"
-  });
-});
+// ///Notify cart///
+// $('#notifyButton').click(function() {
+//   $.notify("Product added to cart!", "success");
+// });
+// ///Notify cart END///
+
+// document.getElementById('myButton').addEventListener('click', function() {
+//   // Fire SweetAlert on button click
+//   Swal.fire({
+//       title: "Thanks!",
+//       text: "You order has been placed!",
+//       icon: "success"
+//   });
+// });
+// document.getElementById('failureButton').addEventListener('click', function() {
+//   Swal.fire({
+//       title: "Oops...",
+//       text: "Something went wrong!",
+//       icon: "error"
+//   });
+// });
+
 ///////////////////Instagram Slide///////////
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#insta_slide', {
