@@ -2,30 +2,44 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\WalletTransactionHistory;
+
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\DB;
+
+use App\Services\RazorpayService;
+
+use App\Models\PromocodeApplied;
 
 use Illuminate\Http\Request;
 
-use App\Models\Address;
-use App\Models\Cart;
 use App\Models\ComboProduct;
-use App\Models\GiftCard;
+
 use App\Models\GiftCardSec;
-use App\Models\Order;
+
 use App\Models\OrderDetail;
+
 use App\Models\Promocode;
-use App\Models\PromocodeApplied;
+
+use App\Models\GiftCard;
+
+use App\Models\Address;
+
+use App\Models\Order;
+
+use App\Models\Cart;
+
 use App\Models\Type;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
 use App\Models\User;
-use App\Models\WalletTransactionHistory;
-use App\Services\RazorpayService;
 
 class CheckOutController extends Controller
 {
     protected $razorpayOrder;
-    
+
     public function __construct(RazorpayService $razorpayService)
     {
         $this->razorpayService = $razorpayService;
@@ -34,13 +48,39 @@ class CheckOutController extends Controller
     public function checkout(Request $request)
     {
 
+        if (session()->has('order_id')) {
+
+            $orderId = session('order_id');
+
+            $orderdetails = Order::with('orderDetails', 'orderDetails.product', 'orderDetails.type')->where('id', $orderId)->first();
+
+            if ($orderdetails && $orderdetails->order_status == 0) {
+
+                $cartData = Cart::with('product', 'type')->where('user_id', Auth::user()->id)->get();
+
+                $userAddress = Address::findOrFail($orderdetails->address_id);
+
+                return view('checkout', compact('order', 'cartData', 'userAddress'));
+
+            }
+
+        }
+
         $addressId    = $request->input('address_id');
 
         $userAddress = Address::findOrFail($addressId);
 
         $cityId       = $userAddress->city;
 
-        $cartData  = Cart::with('product', 'type')->where('user_id', 1)->get();
+        $cartData  = Cart::with('product', 'type')->where('user_id', Auth::user()->id)->get();
+
+        $cartData = Cart::with('product', 'type')->where('user_id', Auth::user()->id)->get();
+
+        if ($cartData->isEmpty()) {
+
+            return redirect()->route('/')->with('error', 'Order Not Found');
+
+        }
 
         $totalWeight = 0;
 
@@ -65,6 +105,8 @@ class CheckOutController extends Controller
             'order_from'      => 'WebSite',
             'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
         ]);
+
+        session()->put('order_id', $order->id);
 
         foreach ($cartData as $cartItem) {
 
@@ -237,7 +279,7 @@ class CheckOutController extends Controller
         $userId = Auth::user()->id ?? 1;
         $orderId = $request->order_id;
 
-        
+
         $promocode = Promocode::where('promocode', $userInputPromoCode)->first();
 
         if (!$promocode) {
@@ -350,13 +392,15 @@ class CheckOutController extends Controller
 
         $orderId = $request->order_id;
 
-        $user = User::find(1);
+        $user = Auth::user();
+
+        $walletDiscount = 0;
 
         if ($walletStatus == 1) {
 
             if ($user && $user->wallet_amount > 0) {
 
-                $walletDiscount = (float) calculate_wallet_discount($user->wallet_amount);
+                $walletDiscount = (float) calculate_wallet_discount($user->wallet_amount) ;
 
                 $totalAmount -= $walletDiscount;
 
@@ -396,12 +440,15 @@ class CheckOutController extends Controller
 
     public function placeOrder(Request $request)
     {
-       
+
         if ($request->payment_option == 1) {
 
             return $this->codCheckout(intval($request->order_id), $request->payment_option);
+
         } else {
+
             return $this->paidCheckout(intval($request->order_id), $request->payment_option);
+
         }
     }
 
@@ -409,8 +456,8 @@ class CheckOutController extends Controller
     {
 
         // Get authenticated user
-        // $user = Auth::user();
-        $user = User::find(1);
+        $user = Auth::user();
+
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
@@ -435,7 +482,7 @@ class CheckOutController extends Controller
             'payment_type'   => 1,
             'payment_status' => 1,
             'cod_charge'     => $codCharge,
-            'total_amount'   => $order->total_amount + $codCharge,
+            'total_amount'   => $order->total_amount,
         ]);
 
         $invoiceNumber = generateInvoiceNumber($orderId);
@@ -453,6 +500,8 @@ class CheckOutController extends Controller
                 $query->where('device_id', $user->device_id)
                     ->orWhere('user_id', $user->id);
             })->delete();
+
+            session()->forget('order_id');
 
             if ($user instanceof \App\Models\User) {
 
@@ -491,8 +540,8 @@ class CheckOutController extends Controller
     {
 
         // Get authenticated user
-        // $user = Auth::user();
-        $user = User::find(1);
+        $user = Auth::user();
+
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
@@ -519,23 +568,20 @@ class CheckOutController extends Controller
 
         $data = [
             'razor_order_id' => $razorpayOrder->id,
-            'amount' => formatPrice($order->total_amount, false),
-            'email'  => $user->email,
-            'phone'  => $user->contact,
-            'name'   => $user->first_name,
+            'amount'         => formatPrice($order->total_amount, false),
+            'email'          => $user->email,
+            'phone'          => $user->contact,
+            'name'           => $user->first_name,
         ];
 
-        $htmlProducts = view('payment.razorpay', compact('data'))->render();
-
-
-        return response()->json(['form' => $htmlProducts], 200);
+        return response()->json(['data' => $data], 200);
     }
 
     public function verifyPayment(Request $request)
     {
 
-        // $user = Auth::user();
-        $user = User::find(1);
+        $user = Auth::user();
+
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
@@ -571,6 +617,7 @@ class CheckOutController extends Controller
                         ->orWhere('user_id', $user->id);
                 })->delete();
 
+                session()->forget('order_id');
 
                 if ($user instanceof \App\Models\User) {
 

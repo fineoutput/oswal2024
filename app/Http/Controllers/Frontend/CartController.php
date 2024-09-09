@@ -25,27 +25,27 @@ class CartController extends Controller
         $data['total_qty_price'] = $data['type_price'] * $data['quantity'];
 
         $data['ip'] = $request->ip();
-   
+
         date_default_timezone_set("Asia/Calcutta");
 
         $cur_date = date("Y-m-d H:i:s");
-        
+
         $data['updated_at'] = $cur_date;
 
         if(auth::check()){
-            
+
             $data['user_id'] = Auth::user()->id;
-            
+
             $identifierColumn = 'user_id';
-            
+
             $identifierValue = Auth::user()->id;
-            
+
         }else{
-            
+
             $data['persistent_id'] = sendPersistentId($request);
-            
+
             $identifierColumn = 'persistent_id';
-            
+
             $identifierValue  = $data['persistent_id'];
         }
 
@@ -69,7 +69,7 @@ class CartController extends Controller
         $cartItem = Cart::where($identifierColumn, $identifierValue)->where('product_id', $data['product_id'])->first();
 
         if (empty($cartItem)) {
-            
+
             $data['created_at'] = $cur_date;
 
             Cart::create($data);
@@ -81,7 +81,7 @@ class CartController extends Controller
             $cartItem->delete();
 
             return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.'], 200);
-            
+
         } else {
 
             $cartItem->update($data);
@@ -92,27 +92,26 @@ class CartController extends Controller
 
     public function getCartDetails(Request $request)
     {
-        
+
         if(auth::check()){
-            
+
             $data['user_id'] = Auth::user()->id;
-            
+
             $identifierColumn = 'user_id';
-            
+
             $identifierValue = Auth::user()->id;
-            
+
             $persistent_id = sendPersistentId($request);
 
-            Cart::where('persistent_id' , $persistent_id)->update([
-                'user_id' => Auth::user()->id,
+            Cart::where('persistent_id', $persistent_id)->update([
+                'user_id' => $identifierValue,
             ]);
-
         }else{
-            
+
             $data['persistent_id'] = sendPersistentId($request);
-            
+
             $identifierColumn = 'persistent_id';
-            
+
             $identifierValue  = $data['persistent_id'];
         }
 
@@ -125,14 +124,14 @@ class CartController extends Controller
                 $cartItem->save();
             }
         });
-        
+
        return view('cart', compact('cartItems'));
 
     }
 
     public function updateQty(Request $request)
     {
-       
+
         $qty = $request->qty;
         $price = $request->price;
         $cart_id = $request->cart_id;
@@ -157,23 +156,33 @@ class CartController extends Controller
 
     public function removeToCart(Request $request)
     {
+        if(auth::check()){
 
-        $device_id = null;
-        $user_id   = Auth::user()->id;
+            $identifierColumn = 'user_id';
+
+            $identifierValue = Auth::user()->id;
+
+        }else{
+
+            $identifierColumn = 'persistent_id';
+
+            $identifierValue  = sendPersistentId($request);
+        }
+
         $cart_id   = $request->input('cart_id');
 
-        $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
-            $query->Where('device_id', $device_id)
-            ->orwhere('user_id', $user_id);
-        });
-
-        $cart = $query->where('id', $cart_id)->first();
+        $cart = Cart::query()->where($identifierColumn, $identifierValue)->where('id', $cart_id)->first();
 
         if ($cart) {
+
             $cart->delete();
+
             return response()->json(['success' => true, 'message' => 'Cart remove successfully'], 200);
+
         } else {
+
             return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
+
         }
     }
 
