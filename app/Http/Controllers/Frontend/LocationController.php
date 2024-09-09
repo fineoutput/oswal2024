@@ -19,7 +19,7 @@ class LocationController extends Controller
 
             $user = Auth::user();
 
-            DB::table('user_state_city')->updateOrCreate([
+            DB::table('user_state_city')->updateOrinsert([
                 'user_id'  =>  $user->id,
                 'state_id' =>  $state,
                 'city_id'  =>  $city,
@@ -36,11 +36,20 @@ class LocationController extends Controller
                 Cookie::queue('persistent_id', $persistentId, 60 * 24 * 30); // Store persistent ID in a cookie for 30 days
             }
 
-            // Store or update guest preferences
-            DB::table('user_state_city')->updateOrCreate(
-                ['persistent_id' => $persistentId],
-                ['state' => $state, 'city' => $city]
-            );
+            $record = DB::table('user_state_city')->where('persistent_id', $persistentId)->first();
+
+            if ($record) {
+                DB::table('user_state_city')
+                    ->where('persistent_id', $persistentId)
+                    ->update(['state_id' => $state, 'city_id' => $city]);
+            } else {
+                DB::table('user_state_city')->insert([
+                    'persistent_id' => $persistentId,
+                    'state_id' => $state,
+                    'city_id' => $city
+                ]);
+            }
+
         }
 
         return redirect()->back(); 
