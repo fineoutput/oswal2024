@@ -64,7 +64,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 });
 
-Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(function () {
+Route::prefix('checkout')->middleware(['auth','nocache'])->name('checkout.')->group(function () {
 
     Route::post('/', [CheckOutController::class, 'checkout'])->name('process');
 
