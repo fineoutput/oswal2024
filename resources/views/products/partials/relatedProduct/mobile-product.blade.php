@@ -39,7 +39,7 @@
             <div class="product_category_product_part mobile_cat_part" style="position: relative;">
 
                 <div class="product_part_upper mobile_part_upper">
-
+                    <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
                     <div class="card_upper_img">
 
                         <img src="{{ asset($relatedproduct->img2) }}" alt="Primary Image" class="first-image" style="width: 100%; height: 100%;" />
@@ -47,7 +47,7 @@
                         <img src="{{ asset($relatedproduct->img1) }}" alt="Primary Image" class="secound-image" style="width: 100%; height: 100%;" />
 
                     </div>
-
+                    </a>
                      <div class="wishlist_icons{{ $product->id }} mobile_part_wish" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
                         @auth()
 

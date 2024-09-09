@@ -37,7 +37,7 @@
                 <div class="product_category_product_part" style="position: relative;">
 
                     <div class="product_part_upper">
-
+                        <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
                         <div class="card_upper_img" style="width: 250px;height: 250px;">
 
                             <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
@@ -47,7 +47,7 @@
                                 style="width: 100%; height: 100%;" />
 
                         </div>
-
+                        </a>
                     </div>
 
                     <div class="product_part_lower" id="web_product_{{ $product->id }}">
@@ -192,12 +192,13 @@
                 <div class="product_category_product_part" style="position: relative; border: 1px solid #b6afaf; border-radius: 10px;">
 
                     <div class="product_part_upper">
-
+                        <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
                         <div class="card_upper_img">
 
                             <img src="{{ asset($product->img2) }}" alt="Primary Image" class="second-image" style="width: 100%; height: 114px;" />
 
                         </div>
+                        </a>
 
                     </div>
 
