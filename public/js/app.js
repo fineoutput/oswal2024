@@ -382,27 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //////////////////Login modal///////////
-let toggleForm = () => {
-  const container = document.querySelector('.bb-container');
-  container.classList.toggle('bb-active');
-};
 
-const showModal = (event) => {
-  event.preventDefault();
-  document.getElementById('bb-modal').style.display = 'block';
-};
-
-const closeModal = () => {
-  document.getElementById('bb-modal').style.display = 'none';
-};
-
-// Close the modal when clicking outside of it
-window.onclick = function (event) {
-  const modal = document.getElementById('bb-modal');
-  if (event.target == modal) {
-    modal.style.display = 'none';
-  }
-};
 
 /////Mobile Countet button product category//////////////
 
