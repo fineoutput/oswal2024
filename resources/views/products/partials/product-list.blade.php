@@ -6,12 +6,19 @@
             $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
                 return $type->state_id == $globalState && $type->city_id == $globalCity;
             });
-            $product->load('cart');
+
+            $product->load('cart', 'wishlist');
 
             $cart = null;
+            $wishlist = null;
 
-            if (count($product->cart) > 0) {
-                $cart = $product->cart[0];
+            if (Auth::check()) {
+
+                $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+                $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
+            } else {
+
+                $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
             }
         @endphp
 
@@ -66,6 +73,7 @@
                             <h4>{{ $product->name }}</h4>
 
                             @if ($productType->isNotEmpty())
+
                                 <div class="rates">
 
                                     <del>
@@ -75,10 +83,13 @@
                                     </del>
 
                                     <p>{{ formatPrice($productType->first()->selling_price) }}</p>
-                                    <input type="hidden" name="type_price"
-                                        value="{{ $productType->first()->selling_price }}">
+
+                                    <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+
                                 </div>
+
                             @endif
+
                         </div>
 
                         <div class="upper_common d-flex">
@@ -111,7 +122,7 @@
                                             style="margin-right: 5px;" id="btn-decrement{{ $product->id }}"
                                             onclick="decrement({{ $product->id }})">-</button>
 
-                                        <input class="qv-quantity form-control quantity-input" type="number" 
+                                        <input class="qv-quantity form-control quantity-input" type="number"
                                             name="quantity" id="quantity-input{{ $product->id }}" min="0" value="{{ $cart->quantity ?? 0 }}"
                                             size="1" step="1" style="width: 60px; text-align: center;" />
 
@@ -144,23 +155,30 @@
         </div>
     @endforeach
 
-    @foreach ($products as $product2)
+    @foreach ($products as $product)
         @php
 
-            $productType2 = $product2->type->filter(function ($type) use ($globalState, $globalCity) {
+            $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
                 return $type->state_id == $globalState && $type->city_id == $globalCity;
             });
-            $product->load('cart');
+
+            $product->load('cart', 'wishlist');
 
             $cart = null;
+            $wishlist = null;
 
-            if (count($product->cart) > 0) {
-                $cart = $product->cart[0];
+            if (Auth::check()) {
+
+                $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+                $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
+            } else {
+
+                $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
             }
         @endphp
 
         <div class="col-lg-6 col-6 this_sectio d-lg-none" style="padding: 0.2rem;">
-            
+
             <form id="addtocart{{ $product->id }}">
 
                 @csrf
@@ -177,13 +195,13 @@
 
                         <div class="card_upper_img">
 
-                            <img src="{{ asset($product2->img2) }}" alt="Primary Image" class="second-image" style="width: 100%; height: 114px;" />
+                            <img src="{{ asset($product->img2) }}" alt="Primary Image" class="second-image" style="width: 100%; height: 114px;" />
 
                         </div>
 
                     </div>
 
-                    <div class="product_part_lower mobile_part_lower" id="mob_product_{{ $product2->id }}">
+                    <div class="product_part_lower mobile_part_lower" id="mob_product_{{ $product->id }}">
 
                         <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -194,8 +212,8 @@
 
                             <text x="50%" y="50%" font-size="6" text-anchor="middle"
                                 alignment-baseline="central"fill="#ffffff" dy=".3em">
-                                @if ($productType2->isNotEmpty())
-                                    {{ percentOff($productType2->first()->del_mrp, $productType2->first()->selling_price, true) }}
+                                @if ($productType->isNotEmpty())
+                                    {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
                                 @endif
                             </text>
 
@@ -203,18 +221,18 @@
 
                         <div class="upper_txt det_txt mobile_det">
 
-                            <h4>{{ $product2->name }}</h4>
+                            <h4>{{ $product->name }}</h4>
 
                         </div>
 
                         <div class="mobile_common">
 
-                            @if ($productType2->isNotEmpty())
+                            @if ($productType->isNotEmpty())
                                 <div class="d-flex flex-wrap" style="font-size: 0.8rem; gap: 5px;">
 
-                                    <del style="color: red;">{{ formatPrice($productType2->first()->del_mrp) }}</del>
+                                    <del style="color: red;">{{ formatPrice($productType->first()->del_mrp) }}</del>
 
-                                    <p>{{ formatPrice($productType2->first()->selling_price) }}</p>
+                                    <p>{{ formatPrice($productType->first()->selling_price) }}</p>
                                     <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
                                 </div>
                             @endif
@@ -224,12 +242,12 @@
 
                             <div class="upper_txt_input mobile_input">
                                 <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
-                                <select name="mob_type_{{ $product2->id }}"
-                                    onchange="renderProduct('{{ $product2->id }}', '{{ route('getproduct') }}', 'mob_type_{{ $product2->id }}')">
+                                <select name="mob_type_{{ $product->id }}"
+                                    onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'mob_type_{{ $product->id }}')">
 
                                     <option value="type">Type</option>
 
-                                    @foreach ($productType2 as $type)
+                                    @foreach ($productType as $type)
                                         <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
                                             {{ $type->type_name }}
                                         </option>
@@ -241,17 +259,21 @@
 
                             <div class="button-container addButton mobile_btns">
 
-                                <span class="buttonText">Add</span>
+                                <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
 
                                 <div class="controlButtons hidden">
 
                                     <div class="increment-decrement">
 
-                                        <button class="btn-decrease">-</button>
+                                        <button class="btn-decrease" id="btn-decrement{{ $product->id }}"  onclick="decrement({{ $product->id }})">-</button>
 
                                         <span class="number-display">1</span>
 
-                                        <button class="btn-increase">+</button>
+                                        <input id="quantity-input{{ $product->id }}" type="hidden"
+                                        name="quantity" value="{{ $cart->quantity ?? 0 }}"
+                                        size="1" />
+
+                                        <button class="btn-increase" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
 
                                     </div>
 

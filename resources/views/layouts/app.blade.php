@@ -27,6 +27,8 @@
 <!-- Include SweetAlert2 CSS and JS via CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Oswal')</title>
 
 </head>
@@ -44,6 +46,8 @@
     @include('partials.footer')
 
     @include('partials.login')
+
+    @include('partials.notifaction')
 
 </body>
 
@@ -77,20 +81,97 @@
 
 <script>
     function addToCart($pid) {
-        event.preventDefault();
 
+        event.preventDefault();
         $.ajax({
             url: "{{ route('cart.add-to-cart') }}",
             type: 'POST',
-            data:  $(`#addtocart${$pid}`).serialize(),
+            data: $(`#addtocart${$pid}`).serialize(),
             success: function(response) {
-                
-                console.log(response);
+
+                if(response.success){
+                     showNotification(response.message, 'success');
+                }else{
+                    showNotification(response.message, 'error');
+                }
+
             },
             error: function(xhr) {
-                console.error('An error occurred while loading the category details and products.');
+                if(!response.success){
+                     showNotification(response.message, 'error');
+                }else{
+                    showNotification('An error occurred while loading the category details and products.', 'error');
+                }
+
             }
         });
+
+    }
+
+    function toggleWishList(productId) {
+
+        event.preventDefault();
+
+        let $wishlistIcon = $(`.wishlist-icon[onclick="toggleWishList(${productId})"] i`);
+
+        if ($wishlistIcon.hasClass('fa-regular')) {
+
+            $.ajax({
+                url: "{{ route('wishlist.store') }}",
+                type: 'POST',
+                data: $(`#addtocart${productId}`).serialize(),
+
+                success: function(response) {
+
+                    $wishlistIcon.removeClass('fa-regular hollow_icon').addClass('fa-solid colored_icon');
+                    $wishlistIcon.css('color', '#f20232');
+                },
+                error: function(xhr) {
+                    console.error('An error occurred while adding to the wishlist.');
+                }
+            });
+        } else {
+
+            $.ajax({
+                url: "{{ route('wishlist.destroy') }}",
+                type: 'GET',
+                data: {
+                    product_id: productId
+                },
+                success: function(response) {
+
+                    $wishlistIcon.removeClass('fa-solid colored_icon').addClass('fa-regular hollow_icon');
+                    $wishlistIcon.css('color', '#cdd5e5');
+                },
+                error: function(xhr) {
+                    console.error('An error occurred while removing from the wishlist.');
+                }
+            });
+        }
+    }
+
+    function showNotification(message, type) {
+
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+
+        // Create the remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => notification.remove());
+
+        // Append the remove button to the notification
+        notification.appendChild(removeBtn);
+
+        // Append the notification to the body or a specific container
+        document.body.appendChild(notification);
+
+        // Animate and remove after 5 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
     }
 </script>
 

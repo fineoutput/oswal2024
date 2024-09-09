@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-$(".input").focus(function () {
-  $("#search").addClass("move");
-});
-$(".input").focusout(function () {
-  $("#search").removeClass("move");
-  $(".input").val("");
-});
+// $(".input").focus(function () {
+//   $("#search").addClass("move");
+// });
+// $(".input").focusout(function () {
+//   $("#search").removeClass("move");
+//   $(".input").val("");
+// });
 
 $(".fa-search").click(function () {
   $(".input").toggleClass("active");
@@ -31,19 +31,55 @@ $(".input").keypress(function (e) {
   }
 });
 
-$(".input2").focus(function () {
-  $("#search2").addClass("move");
-});
-$(".input2").focusout(function () {
-  $("#search2").removeClass("move");
-  $(".input2").val("");
-});
+// $(".input2").focus(function () {
+//   $("#search2").addClass("move");
+// });
+// $(".input2").focusout(function () {
+//   $("#search2").removeClass("move");
+//   $(".input2").val("");
+// });
 
 $("#naming").click(function () {
 
-  $(".input2").toggleClass("active");
-  $("#search2").toggleClass("active");
+//   $(".input2").toggleClass("active");
+//   $("#search2").toggleClass("active");
+// });
+
+// When the input field is focused, add the 'move' class to #search
+document.querySelector('.input').addEventListener('focus', function () {
+  document.getElementById('search').classList.add('move');
 });
+
+// When the input field loses focus, remove the 'move' class and clear the input value
+document.querySelector('.input').addEventListener('focusout', function () {
+  document.getElementById('search').classList.remove('move');
+  this.value = '';
+});
+
+// Toggle 'active' class for input and search when the search icon is clicked
+document.querySelector('.fa-search').addEventListener('click', function () {
+  document.querySelector('.input').classList.toggle('active');
+  document.getElementById('search').classList.toggle('active');
+});
+
+// When input2 field is focused, add the 'move' class to #search2
+document.querySelector('.input2').addEventListener('focus', function () {
+  document.getElementById('search2').classList.add('move');
+});
+
+// When input2 loses focus, remove the 'move' class and clear the input value
+document.querySelector('.input2').addEventListener('focusout', function () {
+  document.getElementById('search2').classList.remove('move');
+  this.value = '';
+});
+
+// Toggle 'active' class for input2 and search2 when the naming element is clicked
+document.getElementById('naming').addEventListener('click', function () {
+  document.querySelector('.input2').classList.toggle('active');
+  document.getElementById('search2').classList.toggle('active');
+});
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#carousel1', {
@@ -72,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 //////////Menu Navbar End///////////
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
   $(".owl-carousel").owlCarousel({
     items: 5,
     loop: true,
@@ -98,26 +134,26 @@ $(document).ready(function () {
 
 //////////////////////////////////////////////////////////RATING iNPUT///////////////////////////////////////////////
 
-const ratingInputs = document.querySelectorAll('.rating input');
+// let ratingInputs = document.querySelectorAll('.rating input');
 
-ratingInputs.forEach(input => {
-  input.addEventListener('change', function () {
-    // Remove active class from all labels
-    document.querySelectorAll('.rating label').forEach(label => {
-      label.classList.remove('active');
-    });
+// ratingInputs.forEach(input => {
+//   input.addEventListener('change', function () {
+//     // Remove active class from all labels
+//     document.querySelectorAll('.rating label').forEach(label => {
+//       label.classList.remove('active');
+//     });
 
-    // Add active class to labels up to the selected input
-    let selectedInput = this;
-    while (selectedInput) {
-      const label = document.querySelector(`label[for="${selectedInput.id}"]`);
-      if (label) {
-        label.classList.add('active');
-      }
-      selectedInput = selectedInput.previousElementSibling;
-    }
-  });
-});
+//     // Add active class to labels up to the selected input
+//     let selectedInput = this;
+//     while (selectedInput) {
+//       const label = document.querySelector(`label[for="${selectedInput.id}"]`);
+//       if (label) {
+//         label.classList.add('active');
+//       }
+//       selectedInput = selectedInput.previousElementSibling;
+//     }
+//   });
+// });
 
 ///////////////////////RATING iNPUT END//////////
 
@@ -325,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //////////////////Login modal///////////
-const toggleForm = () => {
+let toggleForm = () => {
   const container = document.querySelector('.bb-container');
   container.classList.toggle('bb-active');
 };

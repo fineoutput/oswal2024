@@ -1,14 +1,56 @@
+@php
+
+$productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
+    return $type->state_id == $globalState && $type->city_id == $globalCity;
+});
+
+$product->load('cart', 'wishlist');
+
+$cart = null;
+$wishlist = null;
+
+if (Auth::check()) {
+
+    $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+    $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
+} else {
+
+    $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
+}
+
+@endphp
+
+<form id="addtocart{{ $product->id }}">
+
+@csrf
+
+<input type="hidden" name="product_id" value="{{ $product->id }}">
+
+<input type="hidden" name="category_id" value="{{ $product->category_id }}">
+
+<input type="hidden" name="cart_from" value="2">
+
 <div class="details-product-content">
 
     <div class="prdd_name">
 
         <h2 class="details-product-title">{{ $product->name }}</h2>
 
-        <div class="wishlist_icons">
+        <div class="wishlist_icons{{ $product->id }}">
 
-            <a href="#"><i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5; font-size: 40px;"></i></a>
+            @auth()
 
-            <a href="#"><i class="fa-solid fa-heart colored_icon" style="color: #f20232; display: none; font-size: 40px;"></i></a>
+                @if($wishlist)
+                    <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                        <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
+                    </a>
+                @else
+                    <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                        <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
+                    </a>
+                @endif
+
+            @endauth
 
         </div>
 
@@ -19,15 +61,17 @@
     <div class="details-product-rating">
 
         {!! renderStarRating(2) !!}
-        
+
     </div>
-    
+
 
     <div class="details-product-price">
 
-        <p class="details-last-price">Market Price: <span>₹50</span></p>
+        <p class="details-last-price">Market Price: <span>{{ formatPrice($productType->first()->del_mrp) }}</span></p>
 
-        <p class="details-new-price">Selling Price: <span>₹40</span></p>
+        <p class="details-new-price">Selling Price: <span>{{ formatPrice($productType->first()->selling_price) }}</span></p>
+
+        <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
 
     </div>
 
@@ -47,13 +91,24 @@
             <li>Shipping Fee: <span>Free</span></li>
         </ul>
     </div>
-    <select name="quality" id="qty_select" style="width: 30%; border: 1px solid #d1caca;">
-        <option value="type">250gm</option>
-        <option value="1kg">1kg</option>
-        <option value="250gm">500gm</option>
+
+    <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+
+    <select name="type_{{ $product->id }}" style="width: 30%; border: 1px solid #d1caca;" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
+
+        <option value="type">Type</option>
+
+        @foreach ($productType as $type)
+            <option value="{{ $type->id }}"
+                {{ $loop->first ? 'selected' : '' }}>
+                {{ $type->type_name }}
+            </option>
+        @endforeach
+
     </select>
 
     <div class="details-purchase-info">
+
         <div class="set_insider">
             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple"
                 onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
@@ -61,16 +116,15 @@
             </button>
 
             <input style="border: 1px solid #d8172863 !important;" id="form1" min="0" name="quantity"
-                value="1" type="number" class="form-control form-control-sm carts_puts" />
+                value="{{ $cart->quantity ?? 1 }}" type="number" class="form-control form-control-sm carts_puts" />
 
             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple_set"
                 onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
-        <!-- <input type="number" min="0" value="1"> -->
 
-        <button type="button" class="details-btn">Add to Cart <i class="fas fa-shopping-cart"></i></button>
+        <button type="button" class="details-btn" onclick="manageCart({{ $product->id }})">Add to Cart <i class="fas fa-shopping-cart"></i></button>
         <!-- <button type="button" class="details-btn"><i class="fa-solid fa-heart colored_icon"
                         style="color: #f20232; display:none;"></i>Add to Wishlist </button> -->
     </div>
@@ -94,3 +148,5 @@
         </a>
     </div>
 </div>
+
+</form>

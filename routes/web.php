@@ -5,6 +5,11 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\adminlogincontroller;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\CheckOutController;
+use App\Http\Controllers\Frontend\Auth\UserAuthController;
+use App\Http\Controllers\Frontend\Users\OrderController;
+use App\Http\Controllers\Frontend\Users\UserController;
+use App\Http\Controllers\Frontend\Users\WishlistController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -23,8 +28,8 @@ Route::get('/clear-cache', function () {
     $exitCode = Artisan::call('route:clear');
     $exitCode = Artisan::call('config:clear');
     $exitCode = Artisan::call('view:clear');
-//  return back();
 });
+
 //=========================================== FRONTEND =====================================================
 
 Route::group(['prefix' => '/'], function () {
@@ -35,9 +40,9 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/product/{slug}/details', [HomeController::class, 'productDetail'])->name('product-detail');
 
-    Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
+    // Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
 
-    Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+    // Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
     Route::get('render/{slug}/products',[HomeController::class, 'renderProducts'])->name('getproducts');
 
@@ -76,24 +81,76 @@ Route::group(['prefix' => '/'], function () {
     Route::get('order_success',[HomeController::class, 'order_success'])->name('order_success');
     
 });
+
 Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
-    
-    Route::post('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
-    
-    Route::post('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
+    Route::get('update-qty', [CartController::class, 'updateQty'])->name('update-qty');
     
+    Route::get('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
+    
+    Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
+
+});
+
+Route::prefix('checkout')->middleware(['auth','nocache'])->name('checkout.')->group(function () {
+
+    Route::post('/', [CheckOutController::class, 'checkout'])->name('process');
+
+    Route::get('add-address', [HomeController::class, 'addAddress'])->name('add-address');
+    
+    Route::get('get-address', [HomeController::class, 'getAddress'])->name('get-address');
+
+    Route::post('apply-wallet', [CheckOutController::class, 'applyWallet'])->name('apply-wallet');
+
+    Route::post('apply-promocode', [CheckOutController::class, 'applyPromocode'])->name('apply-promocode');
+
+    Route::post('apply-gift-card', [CheckOutController::class, 'applyGiftCard'])->name('apply-gift-card');
+
+    Route::post('place-order', [CheckOutController::class, 'placeOrder'])->name('place-order');
+   
+    Route::post('verify-payment', [CheckOutController::class, 'verifyPayment'])->name('verifypayment');
+ 
 });
 
 
-// In web.php
 Route::post('/set-location', [LocationController::class, 'setLocation'])->name('set.location');
 
 Route::get('/get-location', [LocationController::class, 'getLocation'])->name('get.location');
 
+//=========================================== User Login  =====================================================
 
+Route::Post('/register', [UserAuthController::class, 'register'])->name('register');
+
+Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('register.otp');
+
+Route::post('/login', [UserAuthController::class, 'login'])->name('login');
+
+Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('login.otp');
+
+Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
+
+Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
+
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    
+    Route::post('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
+    
+    Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
+
+});
+
+Route::prefix('wishlist')->name('wishlist.')->group(function () {
+
+    Route::get('/', [WishlistController::class, 'Show'])->name('index');
+
+    Route::post('store', [WishlistController::class, 'store'])->name('store');
+
+    Route::get('destroy',[WishlistController::class, 'destroy'])->name('destroy');
+    
+    Route::post('move-to-cart',[WishlistController::class, 'moveToCart'])->name('move-to-cart');
+});
 //=========================================== Admin Login  =====================================================
 
 Route::group(['middleware' => 'admin.guest'], function () {

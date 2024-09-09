@@ -1,3 +1,18 @@
+@php
+    $product->load('cart');
+
+    $cart = null;
+
+    if (Auth::check()) {
+
+        $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+
+    } else {
+
+        $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
+    }
+@endphp
+
 <svg class="savage" width="29" height="28" viewBox="0 0 29 28"fill="none" xmlns="http://www.w3.org/2000/svg">
 
     <path
@@ -23,6 +38,7 @@
 
         <p>{{ formatPrice($seltedType->selling_price) }}</p>
 
+        <input type="hidden" name="type_price" value="{{ $seltedType->selling_price }}">
 
     </div>
 
@@ -32,8 +48,9 @@
 
     <div class="upper_txt_input">
 
-        <select name="mob_type_{{ $product->id }}"
-            onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{ $product->id }}')">
+        <input type="hidden" name="type_id" value="{{ $seltedType->id }}">
+
+        <select name="mob_type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{ $product->id }}')">
 
             <option value="type">Type</option>
 
@@ -49,17 +66,21 @@
 
     <div class="button-container addButton mobile_btns">
 
-        <span class="buttonText">Add</span>
+        <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
 
         <div class="controlButtons hidden">
 
             <div class="increment-decrement">
 
-                <button class="btn-decrease">-</button>
+                <button class="btn-decrease" id="btn-decrement{{ $product->id }}"  onclick="decrement({{ $product->id }})">-</button>
 
                 <span class="number-display">1</span>
 
-                <button class="btn-increase">+</button>
+                <input id="quantity-input{{ $product->id }}" type="hidden"
+                name="quantity" value="{{ $cart->quantity ?? 0 }}"
+                size="1" />
+
+                <button class="btn-increase" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
 
             </div>
 

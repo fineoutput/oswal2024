@@ -3,8 +3,13 @@
 
     $cart = null;
 
-    if (count($product->cart) > 0) {
-        $cart = $product->cart[0];
+    if (Auth::check()) {
+
+        $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+
+    } else {
+
+        $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
     }
 @endphp
 <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +35,9 @@
             </del>
 
             <p>{{ formatPrice($seltedType->selling_price) }}</p>
+
             <input type="hidden" name="type_price" value="{{ $seltedType->selling_price }}">
+
         </div>
     @endif
 

@@ -5338,7 +5338,36 @@ h4.payment {
 /* ///////////////New Section */
 
 }
+.over {
+  position: relative;
+}
 
+.stkey {
+/* position: sticky; */
+top: 120px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  z-index: 999;
+}
+
+.bgh {
+  padding: 6px 25px;
+  outline: none;
+  border: none;
+  background-color: #FF324D;
+  color: white;
+  font-weight: 300;
+  border-radius: 6px;
+}
+
+.bgh:hover {
+  background-color: transparent;
+  color: #FF324D;
+  border: 2px solid #FF324D;
+}
 
 /* ////////////////Another Desert Section//////////////////// */
 .totalcontainer {

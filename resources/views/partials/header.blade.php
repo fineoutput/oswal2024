@@ -44,11 +44,11 @@
 
                             <li><a href="{{ route('product-detail' ,['slug' => 'Oswal-Chana-Dal']) }}">Product Detail</a></li>
 
-                            <li><a href="{{ route('wislist') }}">Wishlist</a></li>
+                            <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
 
-                            <li><a href="">Cart</a></li>
+                            <li><a href="{{ route('cart.get-cart-details') }}">Cart</a></li>
 
-                            <li><a href="{{ route('checkout') }}">Checkout</a></li>
+                            <li><a href="">Checkout</a></li>
 
                             <li><a href="javascript:void(0)">My Orders</a></li>
 
@@ -76,9 +76,9 @@
     <i class="fa fa-search" aria-hidden="true"></i>
 </button>
 
-                        <a class="d-none d-lg-block" href="cart.html"><i class="fa-solid fa-bag-shopping"></i><span class="badge rounded-pill badge-notification bg-danger">9</span></a>
+                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-bag-shopping"></i><span class="badge rounded-pill badge-notification bg-danger">9</span></a>
 
-                        <a class="d-none d-lg-block" href="wishlist_page.html"><i class="fa-solid fa-heart"></i></a>
+                        <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
 
                         <div class="dropdown">
 
@@ -90,7 +90,7 @@
 
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
 
-                                <li><a class="dropdown-item" href="myorder_detail.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.index') }}">Profile</a></li>
 
                                 <li><a class="dropdown-item" href="myorder_detail.html">Account</a></li>
 
@@ -189,19 +189,19 @@
 
     <div class="bottom-bar-item">
 
-        <a class="" href="wishlist_page.html"><i class="fa-solid fa-heart"></i></a>
+        <a class="" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
 
     </div>
 
     <div class="bottom-bar-item">
 
-        <a href="cart.html"><i class="fa-solid fa-shopping-cart"></i></a>
+        <a href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-shopping-cart"></i></a>
 
     </div>
 
     <div class="bottom-bar-item">
 
-        <a href="myorder_detail.html"><i class="fa-solid fa-user"></i></a>
+        <a href="{{ route('user.index') }}"><i class="fa-solid fa-user"></i></a>
 
     </div>
 
