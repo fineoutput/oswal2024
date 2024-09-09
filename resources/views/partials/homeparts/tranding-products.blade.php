@@ -67,7 +67,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
                    <div class="product_category_product_part" style="position: relative;">
 
                        <div class="product_part_upper">
-
+                        <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
                            <div class="card_upper_img">
 
                                <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
@@ -77,7 +77,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
                                    style="width: 100%; height: 100%;" />
 
                            </div>
-
+                        </a>
                            <div class="wishlist_icons{{ $product->id }}" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
 
                                @auth()
