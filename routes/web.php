@@ -94,7 +94,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 });
 
-Route::prefix('checkout')->middleware(['auth','nocache'])->name('checkout.')->group(function () {
+Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(function () {
 
     Route::post('/', [CheckOutController::class, 'checkout'])->name('process');
 
@@ -131,7 +131,7 @@ Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name(
 
 Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
 
-Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
+Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('/', [UserController::class, 'index'])->name('index');
     
@@ -139,7 +139,20 @@ Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
     
     Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
+    Route::get('get-order-details/{id}', [UserController::class, 'orderDetail'])->name('get-order-details');
+
+    Route::get('cancle-order/{id}', [UserController::class, 'cancelOrder'])->name('cancle-order');
+
+    Route::get('add-address/{id?}', [UserController::class, 'addAddress'])->name('add-address');
+
+    Route::post('stor-address', [UserController::class, 'storeAddress'])->name('stor-address');
+
+    Route::get('delete-address/{id}', [UserController::class, 'deleteAddress'])->name('delete-address');
+
 });
+
+Route::get('getcity}', [UserController::class, 'getCity'])->name('getcity');
+
 
 Route::prefix('wishlist')->name('wishlist.')->group(function () {
 
@@ -151,6 +164,8 @@ Route::prefix('wishlist')->name('wishlist.')->group(function () {
     
     Route::post('move-to-cart',[WishlistController::class, 'moveToCart'])->name('move-to-cart');
 });
+
+
 //=========================================== Admin Login  =====================================================
 
 Route::group(['middleware' => 'admin.guest'], function () {

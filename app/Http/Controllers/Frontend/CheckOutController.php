@@ -60,7 +60,7 @@ class CheckOutController extends Controller
 
                 $userAddress = Address::findOrFail($orderdetails->address_id);
 
-                return view('checkout', compact('order', 'cartData', 'userAddress'));
+                return view('checkout', compact('orderdetails', 'cartData', 'userAddress'));
 
             }
 
@@ -170,7 +170,7 @@ class CheckOutController extends Controller
         }
 
         Order::where('id', $order->id)->update([
-            'user_id'                    => 1,
+            'user_id'                    => Auth::user()->id,
             'total_amount'               => $request->total_amount ?? $totalAmount,
             'sub_total'                  => $subtotal,
             'address_id'                 => $addressId,
