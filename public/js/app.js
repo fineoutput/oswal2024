@@ -39,7 +39,7 @@ $(".input").keypress(function (e) {
 //   $(".input2").val("");
 // });
 
-$("#naming").click(function () {
+// $("#naming").click(function () {
 
 //   $(".input2").toggleClass("active");
 //   $("#search2").toggleClass("active");
