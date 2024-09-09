@@ -13,5 +13,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'checkout/verify-payment',
+        '/register',
+        '/login',
+        '/register-otp',
+        '/login-otp',
     ];
 }

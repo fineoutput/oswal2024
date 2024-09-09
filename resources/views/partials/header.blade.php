@@ -42,14 +42,11 @@
 
                             <li><a href="{{ route('category-list') }}">Product Category</a></li>
 
-                            <li><a href="{{ route('product-detail', ['slug' => 'Oswal-Chana-Dal']) }}">Product
-                                    Detail</a></li>
+                            <li><a href="{{ route('product-detail', ['slug' => 'Oswal-Chana-Dal']) }}">Product Detail</a></li>
 
                             <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
 
                             <li><a href="{{ route('cart.get-cart-details') }}">Cart</a></li>
-
-                            <li><a href="">Checkout</a></li>
 
                             <li><a href="javascript:void(0)">My Orders</a></li>
 
@@ -93,11 +90,20 @@
 
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
 
-                                <li><a class="dropdown-item" href="{{ url('/user') }}">Profile</a></li>
+                                @auth
 
-                                <li><a class="dropdown-item" href="myorder_detail.html">Account</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('/user') }}">Profile</a></li>
 
-                                <li onclick="showModal(event)"><a class="dropdown-item" href="#">Login</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('/user') }}">Account</a></li>
+
+                                    <li><a class="dropdown-item" href="{{ url('/logout') }}">Logout</a></li>
+
+                                @else
+
+                                    <li onclick="showModal(event)"><a class="dropdown-item" href="#">Login</a></li>
+
+                                @endauth
+
 
                             </ul>
 
@@ -227,7 +233,7 @@
 
     <div class="bottom-bar-item">
 
-        <a href="{{ route('user.index') }}"><i class="fa-solid fa-user"></i></a>
+        <a href="{{ url('/user') }}"><i class="fa-solid fa-user"></i></a>
 
     </div>
 

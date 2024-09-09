@@ -44,26 +44,26 @@ class UserAuthController extends Controller
 
             if (session()->has('user_otp_id') && session()->has('user_id')) {
 
-                $rules['phone_no'] = 'required|digits:10';
+                $rules['contact'] = 'required|digits:10';
             } else {
 
-                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+                $rules['contact'] = 'required|digits:10|unique:users,contact';
             }
         } else {
 
             session()->flush();
 
-            $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+            $rules['contact'] = 'required|digits:10|unique:users,contact';
         }
 
-        $request->validate($rules);
+        // $request->validate($rules);
 
-        // $validator = Validator::make($request->all(),  $rules);
+        $validator = Validator::make($request->all(),  $rules);
 
-        // if ($validator->fails()) {
+        if ($validator->fails()) {
 
-        //     return response()->json(['success' => false, 'message' => $validator->errors()]);
-        // }
+            return response()->json(['success' => false, 'message' => $validator->errors()]);
+        }
 
         $dlt = config('constants.SMS_SIGNUP_DLT');
         $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
@@ -88,12 +88,12 @@ class UserAuthController extends Controller
                 ]
             );
 
-            return redirect()->back()->with('success', 'Your OTP has been regenerated successfully. Please check your phone for the new code.');
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => 'Your OTP has been regenerated successfully. Please check your phone for the new code',
-            //     'data'    => ['contact_no' => session()->get('user_contact')]
-            // ], 200);
+            // return redirect()->back()->with('success', 'Your OTP has been regenerated successfully. Please check your phone for the new code.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Your OTP has been regenerated successfully. Please check your phone for the new code',
+                'data'    => ['contact_no' => session()->get('user_contact')]
+            ], 200);
         }
 
         $referral = [];
@@ -106,7 +106,7 @@ class UserAuthController extends Controller
             'device_id'       => $request->device_id,
             'auth'            => generateRandomString(),
             'email'           => $request->email,
-            'contact'         => $request->phone_no,
+            'contact'         => $request->contact,
             'password'        => null,
             'status'          => 0,
             'referral_code'   => User::generateReferralCode(),
@@ -154,13 +154,13 @@ class UserAuthController extends Controller
                 session()->put('referee_tr_id', $referral['referee_tr_id']); 
 
             }
-            return redirect()->back()->with('success', 'OTP sent successfully.');
-            // return response()->json([ 'success' => true, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]] , 200);
+            // return redirect()->back()->with('success', 'OTP sent successfully.');
+            return response()->json([ 'success' => true, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]] , 200);
 
         } else {
 
-            return redirect()->back()->with('error', 'Error occurred while saving OTP, please try again.');
-            // return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again'] , 500);
+            // return redirect()->back()->with('error', 'Error occurred while saving OTP, please try again.');
+            return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again'] , 500);
         }
     }
 
@@ -237,14 +237,15 @@ class UserAuthController extends Controller
 
             $user = User::find($user->id);
 
-            // return response()->json([ 'success' => true, 'message' =>  $message], 200);
+            return response()->json([ 'success' => true, 'message' =>  $message ,'redirect_url' => url('/user') ], 200);
 
-            return redirect()->to('/user')->with('success', $message);
+            // return redirect()->to('/user')->with('success', $message);
 
         } else {
 
-            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
-            // return response()->json(['success' => false, 'message' => 'Invalid OTP. Please try again.'] , 401);
+            // return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+
+            return response()->json(['success' => false, 'message' => 'Invalid OTP. Please try again.'] , 401);
 
         }
 
@@ -256,13 +257,13 @@ class UserAuthController extends Controller
             'phone_no'           => 'required|digits:10',
         ];
 
-        $request->validate($rules);
-        // $validator = Validator::make($request->all(), ['phone_no'  => 'required|digits:10']);
+        // $request->validate($rules);
+        $validator = Validator::make($request->all(), ['phone_no'  => 'required|digits:10']);
 
-        // if ($validator->fails()) {
+        if ($validator->fails()) {
 
-        //     return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        // }
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        }
 
         $user = User::where('contact', $request->phone_no)->first();
 
@@ -295,19 +296,19 @@ class UserAuthController extends Controller
                 
                 session()->put('user_id', $user->id);
 
-                return redirect()->back()->with('success', 'OTP sent successfully');
+                // return redirect()->back()->with('success', 'OTP sent successfully');
 
-                // return response()->json([ 'success' => true, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]],200);
+                return response()->json([ 'success' => true, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]],200);
 
             } else {
-                return redirect()->back()->with('error', 'Error occurred while saving OTP, please try again');
-                // return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again'], 500);
+                // return redirect()->back()->with('error', 'Error occurred while saving OTP, please try again');
+                return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again'], 500);
             }
         }else{
 
-            return redirect()->back()->with('error', 'The provided credentials do not match our records.');
+            // return redirect()->back()->with('error', 'The provided credentials do not match our records.');
 
-            // return response()->json(['success' => false, 'message' => 'The provided credentials do not match our records.'] , 401);
+            return response()->json(['success' => false, 'message' => 'The provided credentials do not match our records.'] , 401);
 
         }
 
