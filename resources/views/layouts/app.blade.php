@@ -45,6 +45,8 @@
 
     @include('partials.login')
 
+    @include('partials.notifaction')
+
 </body>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -81,10 +83,20 @@
             data: $(`#addtocart${$pid}`).serialize(),
             success: function(response) {
 
-                console.log(response);
+                if(response.success){
+                     showNotification(response.message, 'success');
+                }else{
+                    showNotification(response.message, 'error');
+                }
+
             },
             error: function(xhr) {
-                console.error('An error occurred while loading the category details and products.');
+                if(!response.success){
+                     showNotification(response.message, 'error');
+                }else{
+                    showNotification('An error occurred while loading the category details and products.', 'error');
+                }
+
             }
         });
 
@@ -131,7 +143,30 @@
             });
         }
     }
-    
+
+    function showNotification(message, type) {
+
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+
+        // Create the remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => notification.remove());
+
+        // Append the remove button to the notification
+        notification.appendChild(removeBtn);
+
+        // Append the notification to the body or a specific container
+        document.body.appendChild(notification);
+
+        // Animate and remove after 5 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
 </script>
 
 <script>

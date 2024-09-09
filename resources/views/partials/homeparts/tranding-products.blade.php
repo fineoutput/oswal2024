@@ -1,362 +1,412 @@
- @php
-     $products = sendProduct(false, false, false, false, true, false, false) ?? [];
- @endphp
- 
- <section class="product-sect py-5 d-none d-lg-block">
+@php
+$products = sendProduct(false, false, false, false, true, false, false) ?? [];
+@endphp
 
-     <div class="container">
+<section class="product-sect py-5 d-none d-lg-block">
 
-         <div class="row">
+<div class="container">
 
-             <div class="col-lg-12 col-sm-12 col-md-12 col-12">
+    <div class="row">
 
-                 <div class="product-head-text">
+        <div class="col-lg-12 col-sm-12 col-md-12 col-12">
 
-                     <p class="text-center subtop">Nourish your skin</p>
+            <div class="product-head-text">
 
-                     <h2 class="text-center sect-text mb-5 aos-init aos-animate" data-aos=""
-                         style="color: #373737; text-align: center;" data-aos-duration="800">
+                <p class="text-center subtop">Nourish your skin</p>
 
-                         Trending Products
+                <h2 class="text-center sect-text mb-5 aos-init aos-animate" data-aos=""
+                    style="color: #373737; text-align: center;" data-aos-duration="800">
 
-                     </h2>
+                    Trending Products
 
-                 </div>
+                </h2>
 
-             </div>
+            </div>
 
-         </div>
+        </div>
 
-         <div class="row">
+    </div>
 
-             @foreach ($products as $product)
-                 @php
-                     $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
-                         return $type->state_id == $globalState && $type->city_id == $globalCity;
-                     });
+    <div class="row">
 
-                     $product->load('cart');
+        @foreach ($products as $product)
 
-                     $cart = null;
+           @php
 
-                      if(count($product->cart) > 0 ){
+               $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
+                   return $type->state_id == $globalState && $type->city_id == $globalCity;
+               });
 
-                        $cart = $product->cart[0];
+               $product->load('cart', 'wishlist');
 
-                      }
+               $cart = null;
+               $wishlist = null;
 
-                 @endphp
+               if (Auth::check()) {
 
-                 <div class="col-lg-3 col-sm-6 col-md-6 col-xs-6">
+                   $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+                   $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
+               } else {
 
-                    <form id="addtocart{{$product->id}}">
+                   $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
+               }
+           @endphp
 
-                        @csrf
+            <div class="col-lg-3 col-sm-6 col-md-6 col-xs-6">
 
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+               <form id="addtocart{{$product->id}}">
 
-                        <input type="hidden" name="category_id" value="{{ $product->category_id }}">
+                   @csrf
 
-                        <input type="hidden" name="cart_from" value="2">
+                   <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                        <div class="product_category_product_part" style="position: relative;">
+                   <input type="hidden" name="category_id" value="{{ $product->category_id }}">
 
-                            <div class="product_part_upper">
+                   <input type="hidden" name="cart_from" value="2">
 
-                                <div class="card_upper_img">
+                   <div class="product_category_product_part" style="position: relative;">
 
-                                    <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
-                                        style="width: 100%; height: 100%;" />
+                       <div class="product_part_upper">
 
-                                    <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image"
-                                        style="width: 100%; height: 100%;" />
+                           <div class="card_upper_img">
 
-                                </div>
+                               <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
+                                   style="width: 100%; height: 100%;" />
 
-                                <div class="wishlist_icons" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
+                               <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image"
+                                   style="width: 100%; height: 100%;" />
 
-                                    <!-- Adjust top and right as needed -->
+                           </div>
 
-                                    <a href="#"><i class="fa-regular fa-heart hollow_icon"
-                                            style="color: #cdd5e5;"></i></a>
+                           <div class="wishlist_icons{{ $product->id }}" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
 
-                                    <a href="#"><i class="fa-solid fa-heart colored_icon"
-                                            style="color: #f20232; display: none;"></i></a>
+                               @auth()
 
-                                </div>
-                                
-                            </div>
-                            
-                            <div class="product_part_lower" id="web_product_{{ $product->id }}">
+                                   @if($wishlist)
+                                       <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                           <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
+                                       </a>
+                                   @else
+                                       <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                           <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
+                                       </a>
+                                   @endif
 
-                                <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-        
-                                    <path
-                                        d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z"
-                                        fill="#c92323"></path>
-        
-                                    <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central"
-                                        fill="#ffffff" dy=".3em">
-                                        @if ($productType->isNotEmpty())
-                                            {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
-                                        @endif
-                                    </text>
-        
-                                </svg>
+                               @endauth
 
-                                <div class="upper_txt">
+                           </div>
 
-                                    <h4>{{ $product->name }}</h4>
+                       </div>
 
-                                    @if ($productType->isNotEmpty())
-                                        <div class="rates">
+                       <div class="product_part_lower" id="web_product_{{ $product->id }}">
 
-                                            <del>
+                           <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none"
+                               xmlns="http://www.w3.org/2000/svg">
 
-                                                <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
+                               <path
+                                   d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z"
+                                   fill="#c92323"></path>
 
-                                            </del>
+                               <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central"
+                                   fill="#ffffff" dy=".3em">
+                                   @if ($productType->isNotEmpty())
+                                       {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
+                                   @endif
+                               </text>
 
-                                            <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                           </svg>
 
-                                             <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+                           <div class="upper_txt">
 
-                                        </div>
-                                    @endif
+                               <h4>{{ $product->name }}</h4>
 
-                                </div>
+                               @if ($productType->isNotEmpty())
+                                   <div class="rates">
 
-                                <div class="upper_common d-flex">
+                                       <del>
 
-                                    <div class="upper_txt_input">
+                                           <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
 
-                                        <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                       </del>
 
-                                        <select name="type_{{$product->id}}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{$product->id}}')">
+                                       <p>{{ formatPrice($productType->first()->selling_price) }}</p>
 
-                                            <option value="type">Type</option>
-            
-                                            @foreach ($productType as $type)
-                                                <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
-                                                    {{ $type->type_name }}
-                                                </option>
-                                            @endforeach
-            
-                                        </select>
+                                        <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
 
-                                    </div>
+                                   </div>
+                               @endif
 
-                                    <div class="upper_txt_qty">
+                           </div>
 
-                                        <div class="quant" id="quantity-section{{$product->id}}" @if($cart == null) style="display: none;" @endif>
+                           <div class="upper_common d-flex">
 
-                                            <div class="input-group" style="display: flex; align-items: center;">
-                                    
-                                                <button type="button" class="btn btn-outline-secondary btn-decrement"
-                                                    style="margin-right: 5px;" id="btn-decrement{{$product->id}}" 
-                                                    onclick="decrement({{$product->id}})">-</button>
-                                    
-                                                <input class="qv-quantity form-control quantity-input" id="quantity-input{{$product->id}}" 
-                                                    type="number" name="quantity" min="0" value="{{$cart->quantity ?? 0 }}" size="1" max="5"
-                                                    step="1" style="width: 60px; text-align: center;" />
-                                    
-                                                <button type="button" class="btn btn-outline-secondary btn-increment"
-                                                    style="margin-left: 5px;" id="btn-increment{{$product->id}}" 
-                                                    onclick="increment({{$product->id}})">+</button>
-                                    
-                                            </div>
-                                    
-                                        </div>
-                                    
-                                        <div class="add_to_cart_button" id="add-to-cart-section{{$product->id}}" @if($cart != null) style="display: none;" @endif onclick="manageCart({{$product->id}})">
-                                    
-                                            <button> <span>Add</span> </button>
-                                    
-                                        </div>
+                               <div class="upper_txt_input">
 
-                                    </div>
+                                   <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
 
-                                </div>
+                                   <select name="type_{{$product->id}}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{$product->id}}')">
 
-                            </div>
+                                       <option value="type">Type</option>
 
-                        </div>
+                                       @foreach ($productType as $type)
+                                           <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                               {{ $type->type_name }}
+                                           </option>
+                                       @endforeach
 
-                    </form>
+                                   </select>
 
-                 </div>
-             @endforeach
+                               </div>
 
-         </div>
+                               <div class="upper_txt_qty">
 
-     </div>
+                                   <div class="quant" id="quantity-section{{$product->id}}" @if($cart == null) style="display: none;" @endif>
 
- </section>
+                                       <div class="input-group" style="display: flex; align-items: center;">
 
- <!-- /////////Mobile product section/////////////////////////////////////// -->
+                                           <button type="button" class="btn btn-outline-secondary btn-decrement"
+                                               style="margin-right: 5px;" id="btn-decrement{{$product->id}}"
+                                               onclick="decrement({{$product->id}})">-</button>
 
- <section class="product-sect py-5 d-lg-none">
+                                           <input class="qv-quantity form-control quantity-input" id="quantity-input{{$product->id}}"
+                                               type="number" name="quantity" min="0" value="{{$cart->quantity ?? 0 }}" size="1" max="5"
+                                               step="1" style="width: 60px; text-align: center;" />
 
-     <div class="container">
+                                           <button type="button" class="btn btn-outline-secondary btn-increment"
+                                               style="margin-left: 5px;" id="btn-increment{{$product->id}}"
+                                               onclick="increment({{$product->id}})">+</button>
 
-         <div class="row">
+                                       </div>
 
-             <div class="col-lg-12 col-sm-12 col-md-12 col-12">
+                                   </div>
 
-                 <div class="product-head-text">
+                                   <div class="add_to_cart_button" id="add-to-cart-section{{$product->id}}" @if($cart != null) style="display: none;" @endif onclick="manageCart({{$product->id}})">
 
-                     <p class="text-center subtop">Nourish your skin</p>
+                                       <button> <span>Add</span> </button>
 
-                     <h2 class="text-center sect-text mb-5 aos-init aos-animate" data-aos=""
-                         style="color: #373737; text-align: center;" data-aos-duration="800">
+                                   </div>
 
-                         Trending Products
+                               </div>
 
-                     </h2>
+                           </div>
 
-                 </div>
+                       </div>
 
-             </div>
+                   </div>
 
-         </div>
+               </form>
 
-         <div class="splide" id="product-splide">
+            </div>
+        @endforeach
 
-             <div class="splide__track">
+    </div>
 
-                 <ul class="splide__list">
-                     @foreach ($products as $product)
-                         @php
-                            $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
-                                return $type->state_id == $globalState && $type->city_id == $globalCity;
-                            });
-                         @endphp
+</div>
 
-                         <li class="splide__slide">
+</section>
 
-                             <div class="product_category_product_part mobile_cat_part" style="position: relative;">
+<!-- /////////Mobile product section/////////////////////////////////////// -->
 
-                                 <!-- Added position: relative; here -->
+<section class="product-sect py-5 d-lg-none">
 
-                                <div class="product_part_upper mobile_part_upper">
+<div class="container">
 
-                                     <div class="card_upper_img">
+    <div class="row">
 
-                                         <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
-                                             style="width: 100%; height: 100%;" />
+        <div class="col-lg-12 col-sm-12 col-md-12 col-12">
 
-                                         <img src="{{ asset($product->img1) }}" alt="Primary Image"
-                                             class="secound-image" style="width: 100%; height: 100%;" />
+            <div class="product-head-text">
 
-                                     </div>
+                <p class="text-center subtop">Nourish your skin</p>
 
-                                     <div class="wishlist_icons mobile_part_wish"
-                                         style="position: absolute; top: 30px; left: 10px; z-index: 10;">
+                <h2 class="text-center sect-text mb-5 aos-init aos-animate" data-aos=""
+                    style="color: #373737; text-align: center;" data-aos-duration="800">
 
-                                         <!-- Adjust top and right as needed -->
+                    Trending Products
 
-                                         <a href="#"><i class="fa-regular fa-heart hollow_icon"
-                                                 style="color: #cdd5e5;"></i></a>
+                </h2>
 
-                                         <a href="#"><i class="fa-solid fa-heart colored_icon"
-                                                 style="color: #f20232; display: none;"></i></a>
+            </div>
 
-                                     </div>
- 
-                                </div>
-                                
-                                <div class="mobile_upper" id="mob_product_{{ $product->id }}">
+        </div>
 
-                                     <svg class="savage" width="29" height="28" viewBox="0 0 29 28"
-                                         fill="none" xmlns="http://www.w3.org/2000/svg">
-     
-                                         <path
-                                             d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z"
-                                             fill="#c92323"></path>
-     
-                                         <text x="50%" y="50%" font-size="6" text-anchor="middle"
-                                             alignment-baseline="central" fill="#ffffff" dy=".3em">
-                                             @if ($productType->isNotEmpty())
-                                               {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
-                                             @endif
-                                            </text>
-     
-                                     </svg>
+    </div>
 
-                                     <div class="mobile_upper_txt">
+    <div class="splide" id="product-splide">
 
-                                         <h4>{{ $product->name }}</h4>
+        <div class="splide__track">
 
-                                         <div class="rates mobile_rates">
+            <ul class="splide__list">
+                @foreach ($products as $product)
+                   @php
 
-                                            <del>
+                       $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
+                           return $type->state_id == $globalState && $type->city_id == $globalCity;
+                       });
 
-                                                <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
-            
-                                            </del>
-            
-                                            <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                       $product->load('cart', 'wishlist');
 
-                                         </div>
+                       $cart = null;
+                       $wishlist = null;
 
-                                     </div>
+                       if (Auth::check()) {
 
-                                     <div class="upper_common d-flex mobile_common">
+                           $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+                           $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
+                       } else {
 
-                                         <div class="upper_txt_input">
+                           $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
+                       }
 
-                                            <select name="mob_type_{{$product->id}}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{$product->id}}')">
+                   @endphp
 
-                                                <option value="type">Type</option>
-                
-                                                @foreach ($productType as $type)
-                                                    <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
-                                                        {{ $type->type_name }}
-                                                    </option>
-                                                @endforeach
-                
-                                            </select>
+                    <li class="splide__slide">
 
-                                         </div>
+                       <form id="addtocart{{ $product->id }}">
 
-                                         <div class="button-container addButton mobile_btns">
+                           @csrf
 
-                                             <span class="buttonText">Add</span>
+                           <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                                             <div class="controlButtons hidden">
+                           <input type="hidden" name="category_id"
+                               value="{{ $product->category_id }}">
 
-                                                 <div class="increment-decrement">
+                           <input type="hidden" name="cart_from" value="2">
 
-                                                     <button class="btn-decrease">-</button>
+                           <div class="product_category_product_part mobile_cat_part" style="position: relative;">
 
-                                                     <span class="number-display">1</span>
+                               <!-- Added position: relative; here -->
 
-                                                     <button class="btn-increase">+</button>
+                               <div class="product_part_upper mobile_part_upper">
 
-                                                 </div>
+                                   <div class="card_upper_img">
 
-                                             </div>
+                                       <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
+                                           style="width: 100%; height: 100%;" />
 
-                                         </div>
+                                       <img src="{{ asset($product->img1) }}" alt="Primary Image"
+                                           class="secound-image" style="width: 100%; height: 100%;" />
 
-                                     </div>
+                                   </div>
 
-                                </div>
+                                   <div class="wishlist_icons{{ $product->id }} mobile_part_wish" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
+                                       @auth()
 
-                             </div>
+                                           @if($wishlist)
+                                               <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                                   <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
+                                               </a>
+                                           @else
+                                               <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                                   <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
+                                               </a>
+                                           @endif
 
-                         </li>
-                     @endforeach
-            
-                 </ul>
+                                       @endauth'
+                                   </div>
 
-             </div>
+                               </div>
 
-         </div>
+                               <div class="mobile_upper" id="mob_product_{{ $product->id }}">
 
-     </div>
+                                   <svg class="savage" width="29" height="28" viewBox="0 0 29 28"
+                                       fill="none" xmlns="http://www.w3.org/2000/svg">
 
- </section>
+                                       <path
+                                           d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z"
+                                           fill="#c92323"></path>
 
- <!-- /////////////product section ENDS////////// -->
+                                       <text x="50%" y="50%" font-size="6" text-anchor="middle"
+                                           alignment-baseline="central" fill="#ffffff" dy=".3em">
+                                           @if ($productType->isNotEmpty())
+                                           {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
+                                           @endif
+                                           </text>
+
+                                   </svg>
+
+                                   <div class="mobile_upper_txt">
+
+                                       <h4>{{ $product->name }}</h4>
+
+                                       <div class="rates mobile_rates">
+
+                                           <del>
+
+                                               <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
+
+                                           </del>
+
+                                           <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+
+                                           <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+
+                                       </div>
+
+                                   </div>
+
+                                   <div class="upper_common d-flex mobile_common">
+
+                                       <div class="upper_txt_input">
+
+                                           <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+
+                                           <select name="mob_type_{{$product->id}}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{$product->id}}')">
+
+                                               <option value="type">Type</option>
+
+                                               @foreach ($productType as $type)
+                                                   <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                                       {{ $type->type_name }}
+                                                   </option>
+                                               @endforeach
+
+                                           </select>
+
+                                       </div>
+
+                                       <div class="button-container addButton mobile_btns">
+
+                                           <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
+
+                                           <div class="controlButtons hidden">
+
+                                               <div class="increment-decrement">
+
+                                                   <button class="btn-decrease" id="btn-decrement{{ $product->id }}"  onclick="decrement({{ $product->id }})">-</button>
+
+                                                   <span class="number-display">1</span>
+
+                                                   <input id="quantity-input{{ $product->id }}" type="hidden"
+                                                   name="quantity" value="{{ $cart->quantity ?? 0 }}"
+                                                   size="1" />
+
+                                                   <button class="btn-increase" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
+
+                                               </div>
+
+                                           </div>
+
+                                       </div>
+
+                                   </div>
+
+                               </div>
+
+                           </div>
+
+                       </form>
+                    </li>
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- /////////////product section ENDS////////// -->

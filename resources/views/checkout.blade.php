@@ -21,6 +21,10 @@
 
     @endphp
 
+ <div id="paymentContainer">
+
+ </div>
+
     <div class="shopping_cart_sect">
 
         <div> </div>
@@ -81,7 +85,7 @@
 
                         </li>
                     @endforeach
-                    
+
                     <li class="list-group-item d-flex justify-content-between bg-light">
 
                         <div class="text-danger">
@@ -164,7 +168,7 @@
                                 <small id="giftCardName">No Gift Card applied</small>
 
                             @endif
-                          
+
                         </div>
 
                         <span class="text-success" id="GiftCardAmount">+{{formatPrice($orderdetails->gift_amt) }}</span>
@@ -206,7 +210,7 @@
                 <div class="gift-card-list" id="giftCardList">
 
                     @foreach ($giftCards as $key => $giftCard)
-                        
+
                         <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
 
                             <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
@@ -226,7 +230,7 @@
                     <div class="promo-options">
 
                         @foreach ($promocodes as $promocode)
-                            
+
                         <button class="promo-option" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">{{ $promocode->percent }}% OFF</button>
 
                         @endforeach
@@ -254,13 +258,13 @@
 
                 </div>
 
-                <form class="needs-validation" novalidate id="placeOrder">
+                <form class="needs-validation" method="POST" novalidate id="placeOrder">
 
                     @csrf
                     <input type="hidden" id="totalorderAmounti" name="totalamount" value="{{$orderdetails->total_amount}}">
 
                     <input type="hidden" name="order_id" value="{{$orderdetails->id}}">
-                    
+
                     <div class="row">
 
                         <div class="col-md-12 mb-3">
@@ -450,13 +454,11 @@
         </div>
 
     </div>
-    
-    <div id="paymentContainer"> 
 
-    </div>
 @endsection
 
 @push('scripts')
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -471,8 +473,8 @@ function applyWallet() {
 
     const discountWalletAmount = $('#discountWalletAmount');
     const totalwalletAmount = $('#totalwalletAmount');
-    
-    
+
+
     $.ajax({
         url: "{{ route('checkout.apply-wallet') }}",
         type: 'POST',
@@ -480,7 +482,7 @@ function applyWallet() {
             order_id: order_id,
             status: status,
             amount: total_amount,
-            _token: "{{ csrf_token() }}" 
+            _token: "{{ csrf_token() }}"
         },
         success: function(response) {
             discountWalletAmount.text(`-${response.discount}`);
@@ -505,7 +507,7 @@ function applyPromocode(promoode) {
     const promoCodeAmount  = $('#promoCodeAmount');
 
     const total_amount = totalorderAmount.text();
-    
+
     $.ajax({
         url: "{{ route('checkout.apply-promocode') }}",
         type: 'POST',
@@ -513,7 +515,7 @@ function applyPromocode(promoode) {
             order_id: order_id,
             promoode: promoode,
             amount: total_amount,
-            _token: "{{ csrf_token() }}" 
+            _token: "{{ csrf_token() }}"
         },
         success: function(response) {
             promoCodeAmount.text(`-${response.promo_discount}`);
@@ -546,7 +548,7 @@ function applyGiftCard(giftCardID) {
             order_id: order_id,
             gift_card_id: giftCardID,
             amount: total_amount,
-            _token: "{{ csrf_token() }}" 
+            _token: "{{ csrf_token() }}"
         },
         success: function(response) {
             GiftCardAmount.text(`+${response.amount}`);
@@ -561,7 +563,7 @@ function applyGiftCard(giftCardID) {
 }
 
 function updateAmount(type) {
-  
+
     const codContainer = $('#CodCaharges');
 
     const codChargeAmount = $('#codChargeAmount');
@@ -600,36 +602,57 @@ function updateAmount(type) {
 }
 
 function convertCurrencyToFloat(value) {
-   
+
     const cleanedValue = value.replace(/[^\d.]/g, '');
 
     return parseFloat(cleanedValue);
 }
 
-function placeOrder () {
+function placeOrder() {
 
     $.ajax({
         url: "{{ route('checkout.place-order') }}",
         type: 'POST',
         data: $('#placeOrder').serialize(),
         success: function(response) {
-          
-            if(response.form != 1){
-                
-                if($('#paymentContainer').html(response.form)){
 
-                    $('#razorpayform').submit()
-                }
+            if (response.form !== 1) {
 
+                var options = {
+                    "key": "{{ config('services.razorpay.key_id') }}",
+                    "amount": response.data.amount,
+                    "currency": "INR",
+                    "name": "OSwal",
+                    "description": "Test Transaction",
+                    "image": "{{ asset('images/oswal-logo.png') }}",
+                    "order_id": response.data.razor_order_id, // Razorpay Order ID
+                    "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+                    "prefill": {
+                        "name": response.data.name,
+                        "email": response.data.email,
+                        "contact": response.data.phone
+                    },
+                    "notes": {
+                        "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+
+                // Initialize and open the Razorpay payment gateway
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
             }
-          
         },
         error: function(xhr) {
-            console.error('An error occurred while applying the wallet option.');
+            console.error('An error occurred while processing the payment option.');
         }
     });
 }
 
+
+
 </script>
-    
+
 @endpush
