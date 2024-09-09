@@ -28,7 +28,84 @@ class HomeController extends Controller
 
         return view('products.category')->with('title', 'Category List');
     }
+    public function find_shop(Request $request)
+    {
 
+        return view('find_shop')->with('title', 'find_shop');
+    }
+    
+    public function services(Request $request)
+    {
+
+        return view('services')->with('title', 'services');
+    }
+    public function dealer_enq(Request $request)
+    {
+
+        return view('dealer_enq')->with('title', 'dealer_enq');
+    }
+    public function manufacture(Request $request)
+    {
+
+        return view('manufacture')->with('title', 'manufacture');
+    }
+    public function contact(Request $request)
+    {
+
+        return view('contact')->with('title', 'contact');
+    }
+    public function recipes(Request $request)
+    {
+
+        return view('recipes')->with('title', 'recipes');
+    }
+    public function video(Request $request)
+    {
+
+        return view('video')->with('title', 'video');
+    }
+    public function all_products(Request $request)
+    {
+
+        return view('all_products')->with('title', 'all_products');
+    }
+    public function vido_recipie2(Request $request)
+    {
+
+        return view('vido_recipie2')->with('title', 'vido_recipie2');
+    }
+    public function vido_recipie3(Request $request)
+    {
+
+        return view('vido_recipie3')->with('title', 'vido_recipie3');
+    }
+    
+    public function privacy_policy(Request $request)
+    {
+
+        return view('privacy_policy')->with('title', 'privacy_policy');
+    }
+    public function terms_conditions(Request $request)
+    {
+
+        return view('terms_conditions')->with('title', 'terms_conditions');
+    }
+    public function about_us(Request $request)
+    {
+
+        return view('about_us')->with('title', 'about_us');
+    }
+    public function career(Request $request)
+    {
+
+        return view('career')->with('title', 'career');
+    }
+    public function order_success(Request $request)
+    {
+
+        return view('order_success')->with('title', 'order_success');
+    }
+    
     public function productDetail(Request $request, $slug)
     {
         $product = EcomProduct::where('url', $slug)->first();

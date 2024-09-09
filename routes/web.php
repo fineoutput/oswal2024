@@ -45,6 +45,36 @@ Route::group(['prefix' => '/'], function () {
     
     Route::get('render/home/product',[HomeController::class, 'renderProduct'])->name('home.getproduct');
 
+    Route::get('find_shop',[HomeController::class, 'find_shop'])->name('find_shop');
+
+    Route::get('services',[HomeController::class, 'services'])->name('services');
+
+    Route::get('dealer_enq',[HomeController::class, 'dealer_enq'])->name('dealer_enq');
+
+    Route::get('manufacture',[HomeController::class, 'manufacture'])->name('manufacture');
+
+    Route::get('contact',[HomeController::class, 'contact'])->name('contact');
+
+    Route::get('recipes',[HomeController::class, 'recipes'])->name('recipes');
+
+    Route::get('video',[HomeController::class, 'video'])->name('video');
+
+    Route::get('all_products',[HomeController::class, 'all_products'])->name('all_products');
+    
+    Route::get('vido_recipie2',[HomeController::class, 'vido_recipie2'])->name('vido_recipie2');
+
+    Route::get('vido_recipie3',[HomeController::class, 'vido_recipie3'])->name('vido_recipie3');
+
+    Route::get('privacy_policy',[HomeController::class, 'privacy_policy'])->name('privacy_policy');
+
+    Route::get('terms_conditions',[HomeController::class, 'terms_conditions'])->name('terms_conditions');
+
+    Route::get('about_us',[HomeController::class, 'about_us'])->name('about_us');
+
+    Route::get('career',[HomeController::class, 'career'])->name('career');
+
+    Route::get('order_success',[HomeController::class, 'order_success'])->name('order_success');
+    
 });
 Route::prefix('cart')->name('cart.')->group(function () {
 

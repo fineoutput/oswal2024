@@ -2354,7 +2354,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .upper_txt_input select:focus-visible,
-:focus-within,
+
 :visited,
 :active {
   border: none;
@@ -2515,7 +2515,7 @@ input[type="range"]::-moz-range-thumb {
   width: 100%;
   border-radius: 20px;
   height: 50vh;
-  object-fit: cover;
+  object-fit: fill;
   display: block;
 }
 
@@ -3475,8 +3475,7 @@ p.prev_rate {
 }
 
 .resp-card__header {
-  background: linear-gradient(to top, #00000063, #0006),
-    url("images/chawal.jpg");
+ 
   background-size: cover;
   background-position: center;
   height: 147px;
@@ -3488,8 +3487,7 @@ p.prev_rate {
 }
 
 .resp-card__header_two {
-  background: linear-gradient(to top, #00000063, #0006),
-    url("images/tikki.jpg");
+  
   background-size: cover;
   background-position: center;
   height: 147px;
@@ -3501,8 +3499,6 @@ p.prev_rate {
 }
 
 .resp-card__header_three {
-  background: linear-gradient(to top, #00000063, #0006),
-    url("images/paneer.jpg");
   background-size: cover;
   background-position: center;
   height: 147px;
@@ -5094,9 +5090,12 @@ h4.payment {
     flex-direction: column;
     align-items: stretch;
   }
-
+  .nav.active {
+    display: flex !important;
+    z-index: 2;
+  }
   .nav {
-    display: none;
+    display: none !important;
     /* Hide navigation links on small screens */
     flex-direction: column;
     position: absolute;
@@ -5105,13 +5104,10 @@ h4.payment {
     left: 0;
     width: 100%;
     background-color: white;
-    padding: 20px;
+    padding: 20px !important;
   }
 
-  .nav.active {
-    display: flex;
-    z-index: 2;
-  }
+ 
 
   .nav-links {
     flex-direction: column;
@@ -5308,6 +5304,7 @@ h4.payment {
   justify-content: space-between;
   color: #fff;
   padding: 10px;
+  z-index: 1000;
 }
 
 

@@ -239,7 +239,7 @@
 
                             </div>
 
-                            <div class="button-container addButton">
+                            <div class="button-container addButton mobile_btns">
 
                                 <span class="buttonText">Add</span>
 
