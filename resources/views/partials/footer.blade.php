@@ -98,15 +98,15 @@
                             
                             <span>Follow us</span>
                             
-                            <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
+                            <a href="https://www.facebook.com/oswalsoaps/"><i class="fab fa-facebook-f facebook-bg"></i></a>
                             
-                            <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
+                            <a href="https://x.com/oswallgroup"><i class="fab fa-twitter twitter-bg"></i></a>
                             
-                            <a href="#"><i class="fab fa-instagram instagram-bg"></i></a>
+                            <a href="https://www.instagram.com/oswalsoapgroup/"><i class="fab fa-instagram instagram-bg"></i></a>
                             
-                            <a href="#"><i class="fab fa-youtube youtube-bg"></i></a>
+                            <a href="https://www.youtube.com/channel/UCjfUqRsCurC0bbbmDlJuc3w"><i class="fab fa-youtube youtube-bg"></i></a>
                             
-                            <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                            <a href="https://www.linkedin.com/in/oswal-products-375979114"><i class="fab fa-linkedin linkedin-bg"></i></a>
                             
                         </div>
                         
