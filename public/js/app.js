@@ -16,11 +16,20 @@ document.addEventListener('DOMContentLoaded', function () {
 //   $(".input").val("");
 // });
 
-// $(".fa-search").click(function () {
-//   $(".input").toggleClass("active");
-//   $("#search").toggleClass("active");
-// });
-
+$(".fa-search").click(function () {
+  $(".input").toggleClass("active");
+  $("#search").toggleClass("active");
+});
+$(".input").keypress(function (e) {
+  if (e.which === 13) { // 13 is the Enter key
+      var query = $(this).val().trim();
+      if (query) {
+          // Redirect to the new page with the query
+          var searchUrl = "{{ route('all_products') }}";
+                    window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
+      }
+  }
+});
 
 // $(".input2").focus(function () {
 //   $("#search2").addClass("move");
@@ -30,8 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 //   $(".input2").val("");
 // });
 
-// $("#naming").click(function () {
-//   // console.log("fuckit");
+$("#naming").click(function () {
 
 //   $(".input2").toggleClass("active");
 //   $("#search2").toggleClass("active");
@@ -409,7 +417,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+///Notify cart///
+$('#notifyButton').click(function() {
+  $.notify("Product added to cart!", "success");
+});
+///Notify cart END///
 
+document.getElementById('myButton').addEventListener('click', function() {
+  // Fire SweetAlert on button click
+  Swal.fire({
+      title: "Thanks!",
+      text: "You order has been placed!",
+      icon: "success"
+  });
+});
+document.getElementById('failureButton').addEventListener('click', function() {
+  Swal.fire({
+      title: "Oops...",
+      text: "Something went wrong!",
+      icon: "error"
+  });
+});
 ///////////////////Instagram Slide///////////
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#insta_slide', {
@@ -526,7 +554,6 @@ function setupPromoCodeSelection(promoClass, inputId, applyButtonId) {
 // Initialize the sections
 setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
 setupSelectableSection('promoCodeSection', 'promoCodeList', 'promo-code-item');
-
 // Initialize promo code selection
 setupPromoCodeSelection('promo-option', 'promoCodeInput', 'applyButton');
 

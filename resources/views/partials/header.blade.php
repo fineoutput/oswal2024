@@ -73,12 +73,10 @@
                         class="d-flex flex-wrap justify-content-end align-items-center header_item_icon">
 
                         <button class="search-btn d-none d-lg-block">
+    <i class="fa fa-search" aria-hidden="true"></i>
+</button>
 
-                            <i class="fa fa-search" aria-hidden="true"></i>
-
-                        </button>
-
-                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-bag-shopping"></i></a>
+                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-bag-shopping"></i><span class="badge rounded-pill badge-notification bg-danger">9</span></a>
 
                         <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
 
@@ -103,10 +101,42 @@
                         </div>
 
                         <div class="form d-none d-lg-block" id="search">
+    <input type="text" class="input" placeholder="Search Here" />
+</div>
 
-                            <input type="text" class="input" placeholder="Search Here" />
+                        <a><button class="order_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">Order Now</button></a>
 
-                        </div>
+<!-- Basic Modal -->
+<div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel" aria-hidden="true">
+  <div class="modal-dialog sta_mode">
+    <form class="">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="basicModalLabel">Select State and City</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <select name="state" id="state" style="width: 100%;" required>
+                <option value="99999">Choose State</option>
+                <option value="1">State 1</option>
+                <option value="2">State 2</option>
+                <option value="3">State 3</option>
+                <option value="99999">Others</option>
+            </select>
+
+            <select name="city" id="city" style="width: 100%; margin-top: 15px;" required>
+                <option value="99999">Choose State First</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Close</button>
+          <button type="submit" class="btn btn-primary" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Proceed</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
                     </div>
 

@@ -182,7 +182,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                                    <div class="add_to_cart_button" id="add-to-cart-section{{$product->id}}" @if($cart != null) style="display: none;" @endif onclick="manageCart({{$product->id}})">
 
-                                       <button> <span>Add</span> </button>
+                                       <button id="notifyButton"> <span>Add</span> </button>
 
                                    </div>
 

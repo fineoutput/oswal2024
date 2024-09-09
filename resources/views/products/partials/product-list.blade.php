@@ -257,7 +257,7 @@
 
                             </div>
 
-                            <div class="button-container addButton">
+                            <div class="button-container addButton mobile_btns">
 
                                 <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
 

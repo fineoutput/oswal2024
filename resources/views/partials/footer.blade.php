@@ -126,21 +126,27 @@
                         
                         <ul>
                             
-                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ route('/') }}">HOME</a></li>
                             
-                            <li><a href="services.html">Services</a></li>
+                            <li><a href="{{ route ('services')}}">Services</a></li>
                             
-                            <li><a href="find_shop.html">Find Shop</a></li>
+                            <li><a href="{{ route('find_shop') }}">Find Shop</a></li>
                             
-                            <li><a href="dealer_enquiry.html">Dealer Enquiry</a></li>
+                            <li><a href="{{ route ('dealer_enq')}}">Dealer Enquiry</a></li>
                             
-                            <li><a href="manufacturing.html">Manufacturing Units</a></li>
+                            <li><a href="{{route('manufacture')}}">Manufacturing Units</a></li>
                             
-                            <li><a href="contact_us.html">Contact US</a></li>
+                            <li><a href="{{route('contact')}}">Contact US</a></li>
                             
-                            <li><a href="find_shop.html">Find Shop</a></li>
+                            <li><a href="{{route('privacy_policy')}}">Privacy Policy</a></li>
+
+                            <li><a href="{{route('terms_conditions')}}">Terms & Conditions</a></li>
                             
-                            <li><a href="reciepe.html">Recipe</a></li>
+                            <li><a href="{{route ('recipes')}}">Recipe</a></li>
+
+                            <li><a href="{{route ('about_us')}}">About us</a></li>
+
+                            <li><a href="{{route ('career')}}">Career</a></li>
                             
                         </ul>
                         

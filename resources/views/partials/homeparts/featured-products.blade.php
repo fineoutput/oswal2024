@@ -53,29 +53,19 @@
 
                 <div class="col-lg-3 col-sm-12 col-md-4">
 
-                    <form id="addtocart{{ $product->id }}">
+                    <div class="product_category_product_part" style="position: relative;">
 
-                        @csrf
+                        <div class="product_part_upper">
 
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <div class="card_upper_img">
 
-                        <input type="hidden" name="category_id" value="{{ $product->category_id }}">
+                                <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
+                                    style="width: 100%; height: 100%;" />
 
-                        <input type="hidden" name="cart_from" value="2">
+                                <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image"
+                                    style="width: 100%; height: 100%;" />
 
-                        <div class="product_category_product_part" style="position: relative;">
-
-                            <div class="product_part_upper">
-
-                                <div class="card_upper_img">
-
-                                    <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
-                                        style="width: 100%; height: 100%;" />
-
-                                    <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image"
-                                        style="width: 100%; height: 100%;" />
-
-                                </div>
+                            </div>
 
                                 <div class="wishlist_icons{{ $product->id }}" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
 
@@ -93,9 +83,9 @@
 
                                     @endauth
 
-                                </div>
-
                             </div>
+                            
+                        </div>
 
 
                             <div class="product_part_lower" id="web_product_{{ $product->id }}">
@@ -112,19 +102,19 @@
 
                                 </svg>
 
-                                <div class="upper_txt">
+                            <div class="upper_txt">
 
-                                    <h4>{{ $product->name }}</h4>
+                                <h4>{{ $product->name }}</h4>
 
                                     @if ($productType->isNotEmpty())
 
                                         <div class="rates">
 
-                                            <del>
+                                        <del>
 
                                                 <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }} </p>
 
-                                            </del>
+                                        </del>
 
                                             <p>{{ formatPrice($productType->first()->selling_price) }}</p>
 
@@ -134,9 +124,9 @@
 
                                     @endif
 
-                                </div>
+                            </div>
 
-                                <div class="upper_common d-flex">
+                            <div class="upper_common d-flex">
 
                                     <div class="upper_txt_input">
 
@@ -144,50 +134,48 @@
 
                                         <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
 
-                                            <option value="type">Type</option>
+                                        <option value="type">Type</option>
 
-                                            @foreach ($productType as $type)
-                                                <option value="{{ $type->id }}"
-                                                    {{ $loop->first ? 'selected' : '' }}>
-                                                    {{ $type->type_name }}
-                                                </option>
-                                            @endforeach
+                                        @foreach ($productType as $type)
+                                            <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                                {{ $type->type_name }}
+                                            </option>
+                                        @endforeach
 
-                                        </select>
+                                    </select>
 
-                                    </div>
+                                </div>
 
-                                    <div class="upper_txt_qty">
+                                <div class="upper_txt_qty">
 
                                         <div class="quant" id="quantity-section{{ $product->id }}" @if ($cart == null) style="display: none;" @endif>
 
-                                            <div class="input-group" style="display: flex; align-items: center;">
+                                        <div class="input-group" style="display: flex; align-items: center;">
 
-                                                <button type="button" class="btn btn-outline-secondary btn-decrement"
-                                                    style="margin-right: 5px;" id="btn-decrement{{ $product->id }}"
-                                                    onclick="decrement({{ $product->id }})">-</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-decrement"
+                                                style="margin-right: 5px;">-</button>
 
-                                                <input class="qv-quantity form-control quantity-input"
-                                                    id="quantity-input{{ $product->id }}" type="number"
-                                                    name="quantity" min="0" value="{{ $cart->quantity ?? 0 }}"
-                                                    size="1" max="5" step="1"
-                                                    style="width: 60px; text-align: center;" />
+                                            <input class="qv-quantity form-control quantity-input" type="number"
+                                                name="quantity" min="1" value="1" size="1"
+                                                step="1" style="width: 60px; text-align: center;" />
 
-                                                <button type="button" class="btn btn-outline-secondary btn-increment"
-                                                    style="margin-left: 5px;" id="btn-increment{{ $product->id }}"
-                                                    onclick="increment({{ $product->id }})">+</button>
-
-                                            </div>
+                                            <button type="button" class="btn btn-outline-secondary btn-increment"
+                                                style="margin-left: 5px;">+</button>
 
                                         </div>
 
-                                        <div class="add_to_cart_button" id="add-to-cart-section{{ $product->id }}"
-                                            @if ($cart != null) style="display: none;" @endif
-                                            onclick="manageCart({{ $product->id }})">
+                                    </div>
 
-                                            <button> <span>Add</span> </button>
+                                    <div class="add_to_cart_button" id="add-to-cart-section">
 
-                                        </div>
+                                   
+
+                                            <button>
+
+                                                <span>Add</span>
+
+                                            </button>
+
 
                                     </div>
 
@@ -197,7 +185,7 @@
 
                         </div>
 
-                    </form>
+                    </div>
 
                 </div>
 
@@ -282,15 +270,15 @@
 
                                         <div class="product_category_product_part mobile_cat_part" style="position: relative;">
 
-                                            <div class="product_part_upper mobile_part_upper">
+                                        <div class="product_part_upper mobile_part_upper">
 
-                                                <div class="card_upper_img">
+                                            <div class="card_upper_img">
 
                                                     <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image" style="width: 100%; height: 100%;" />
 
                                                     <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image" style="width: 100%; height: 100%;" />
 
-                                                </div>
+                                            </div>
 
                                                 <div class="wishlist_icons{{ $product->id }} mobile_part_wish" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
                                                     @auth()
@@ -307,9 +295,9 @@
 
                                                     @endauth'
 
-                                                </div>
-
                                             </div>
+
+                                        </div>
 
 
                                             <div class="product_part_lower mobile_upper" id="mob_product_{{ $product->id }}">
@@ -325,17 +313,17 @@
                                                     </text>
                                                 </svg>
 
-                                                <div class="upper_txt mobile_upper_txt">
+                                            <div class="upper_txt mobile_upper_txt">
 
-                                                    <h4>{{ $product->name }}</h4>
+                                                <h4>{{ $product->name }}</h4>
 
-                                                    <div class="rates mobile_rates">
+                                                <div class="rates mobile_rates">
 
-                                                        <del>
+                                                    <del>
 
                                                             <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
 
-                                                        </del>
+                                                    </del>
 
                                                         <p>{{ formatPrice($productType->first()->selling_price) }}</p>
 
@@ -343,48 +331,46 @@
 
                                                     </div>
 
-                                                </div>
+                                            </div>
 
-                                                <div class="upper_common d-flex mobile_common">
+                                            <div class="upper_common d-flex mobile_common">
 
-                                                    <div class="upper_txt_input">
+                                                <div class="upper_txt_input">
 
                                                         <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
 
                                                         <select name="mob_type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{ $product->id }}')">
 
-                                                            <option value="type">Type</option>
+                                                        <option value="type">Type</option>
 
-                                                            @foreach ($productType as $type)
-                                                                <option value="{{ $type->id }}"
-                                                                    {{ $loop->first ? 'selected' : '' }}>
-                                                                    {{ $type->type_name }}
-                                                                </option>
-                                                            @endforeach
+                                                        @foreach ($productType as $type)
+                                                            <option value="{{ $type->id }}"
+                                                                {{ $loop->first ? 'selected' : '' }}>
+                                                                {{ $type->type_name }}
+                                                            </option>
+                                                        @endforeach
 
-                                                        </select>
+                                                    </select>
 
-                                                    </div>
+                                                </div>
 
-                                                    <div class="button-container addButton mobile_btns">
+                                                <div class="button-container addButton mobile_btns">
 
                                                         <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
 
-                                                        <div class="controlButtons hidden">
+                                                    <div class="controlButtons hidden">
 
-                                                            <div class="increment-decrement">
+                                                        <div class="increment-decrement">
 
                                                                 <button class="btn-decrease" id="btn-decrement{{ $product->id }}"  onclick="decrement({{ $product->id }})">-</button>
 
-                                                                <span class="number-display">1</span>
+                                                            <span class="number-display">1</span>
 
                                                                 <input id="quantity-input{{ $product->id }}" type="hidden"
                                                                 name="quantity" value="{{ $cart->quantity ?? 0 }}"
                                                                 size="1" />
 
                                                                 <button class="btn-increase" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
-
-                                                            </div>
 
                                                         </div>
 
@@ -396,7 +382,7 @@
 
                                         </div>
 
-                                    </form>
+                                    </div>
 
                                 </li>
                             @endforeach
