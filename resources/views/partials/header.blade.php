@@ -14,7 +14,8 @@
 
                     </div>
 
-                    <img class="mobile_logo img-responsive logo" src="{{ asset('images/oswal-logo.png') }}" alt="" />
+                    <img class="mobile_logo img-responsive logo" src="{{ asset('images/oswal-logo.png') }}"
+                        alt="" />
 
                 </div>
 
@@ -29,7 +30,6 @@
                                 <div class="d-flex">
 
                                     <input type="text" class="border-0" placeholder="Search Products..."
-
                                         aria-label="First name" />
 
                                     <span class="ps-1"><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -42,7 +42,8 @@
 
                             <li><a href="{{ route('category-list') }}">Product Category</a></li>
 
-                            <li><a href="{{ route('product-detail' ,['slug' => 'Oswal-Chana-Dal']) }}">Product Detail</a></li>
+                            <li><a href="{{ route('product-detail', ['slug' => 'Oswal-Chana-Dal']) }}">Product
+                                    Detail</a></li>
 
                             <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
 
@@ -69,16 +70,18 @@
                 <div class="col-lg-8 header_expo">
 
                     <div style="margin-top: 2rem;"
-
                         class="d-flex flex-wrap justify-content-end align-items-center header_item_icon">
 
                         <button class="search-btn d-none d-lg-block">
-    <i class="fa fa-search" aria-hidden="true"></i>
-</button>
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
 
-                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i class="fa-solid fa-bag-shopping"></i><span class="badge rounded-pill badge-notification bg-danger">9</span></a>
+                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i
+                                class="fa-solid fa-bag-shopping"></i><span
+                                class="badge rounded-pill badge-notification bg-danger">9</span></a>
 
-                        <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
+                        <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i
+                                class="fa-solid fa-heart"></i></a>
 
                         <div class="dropdown">
 
@@ -90,7 +93,7 @@
 
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
 
-                                <li><a class="dropdown-item" href="{{ route('user.index') }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/user') }}">Profile</a></li>
 
                                 <li><a class="dropdown-item" href="myorder_detail.html">Account</a></li>
 
@@ -101,42 +104,66 @@
                         </div>
 
                         <div class="form d-none d-lg-block" id="search">
-    <input type="text" class="input" placeholder="Search Here" />
-</div>
 
-                        <a><button class="order_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">Order Now</button></a>
+                            <input type="text" class="input" placeholder="Search Here" />
 
-<!-- Basic Modal -->
-<div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel" aria-hidden="true">
-  <div class="modal-dialog sta_mode">
-    <form class="">
+                        </div>
 
-      <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title" id="basicModalLabel">Select State and City</h6>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <select name="state" id="state" style="width: 100%;" required>
-                <option value="99999">Choose State</option>
-                <option value="1">State 1</option>
-                <option value="2">State 2</option>
-                <option value="3">State 3</option>
-                <option value="99999">Others</option>
-            </select>
+                        <a><button class="order_btn btn btn-primary" data-bs-toggle="modal"data-bs-target="#basicModal">Order Now</button></a>
 
-            <select name="city" id="city" style="width: 100%; margin-top: 15px;" required>
-                <option value="99999">Choose State First</option>
-            </select>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-bs-dismiss="modal" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Close</button>
-          <button type="submit" class="btn btn-primary" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Proceed</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+                        <!-- Basic Modal -->
+                        <div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel"
+
+                            aria-hidden="true">
+
+                            <div class="modal-dialog sta_mode">
+
+                                <form method="POST" action="{{ route('set.location') }}">
+
+                                    @csrf
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h6 class="modal-title" id="basicModalLabel">Select State and City</h6>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <select name="state" id="typesstate" style="width: 100%;" onchange="getCity('{{ route('getcity') }}')" required>
+
+                                                <option value="99999">Choose State</option>
+
+                                                @foreach (App\Models\State::all() as $state)
+
+                                                    <option value="{{ $state->id }}">{{ $state->state_name }}</option> <!-- Fixed the closing tag -->
+
+
+                                                @endforeach
+
+                                            </select>
+
+
+                                            <select name="city" id="city-container" style="width: 100%; margin-top: 15px;" required>
+
+                                                <option value="99999">Choose State First</option>
+                                                
+                                            </select>
+                                            
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-bs-dismiss="modal" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Close</button>
+                                            <button type="submit" class="btn btn-primary" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Proceed</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -149,7 +176,6 @@
     </div>
 
 </div>
-
 
 <!-- Bottom bar for mobile -->
 
@@ -207,3 +233,56 @@
 
 </div>
 
+@push('scripts')
+    <script>
+        function getCity(url) {
+
+            let selectedId = $('#typesstate').val();
+
+            if (selectedId !== '') {
+
+                $.ajax({
+
+                    url: url,
+
+                    type: "get",
+
+                    data: {
+
+                        state_id: selectedId,
+
+                    },
+
+                    success: function(response) {
+
+
+                        $('#city-container').html();
+
+                        let $html = '<option value="">----- Select City ----- </option>';
+
+                        $.each(response, function(key, value) {
+
+                            $html += `<option value="${value.id}">${value.city_name}</option>`;
+
+                        });
+
+                        $('#city-container').html($html);
+
+                    },
+
+                    error: function(xhr) {
+
+                        console.log(xhr.responseText);
+
+                    }
+
+                });
+
+            } else {
+
+                $('#city-dropdown').empty();
+
+            }
+        }
+    </script>
+@endpush
