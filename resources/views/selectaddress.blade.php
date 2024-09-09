@@ -106,71 +106,137 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div style="position: sticky; top: 120px;">
-                        <div class="row">
-                            <div class="col-md-12 text-center"
-                                style="margin: 16px 0px 9px 0px !important ; border-bottom: 1px solid #dbdbdb;">
-                                <h2 style="margin-bottom: 22px;">Add New Address</h2>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form method="POST" action="CHANGE_TO_YOUR_FORM_ACTION" enctype="multipart/form-data">
-                                    <div class="row">
-                                        <div class="form-group col-lg-6">
-                                            <input type="text" required class="form-control" id="fname"
-                                                name="fname" placeholder="First name *" />
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input type="text" required class="form-control" id="lname"
-                                                name="lname" placeholder="Last name *" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" type="email" id="email" name="email"
-                                            placeholder="Email Address " />
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-lg-6">
-                                            <input class="form-control" maxlength="10" minlength="10" required
-                                                type="text" id="phonenumber" name="phonenumber"
-                                                placeholder="Phone Number *" />
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input class="form-control" maxlength="6" minlength="6" required
-                                                type="text" id="pincode" name="pincode" placeholder="Pincode *" />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-lg-6">
-                                            <div class="custom_select">
-                                                <select class="form-control" id="state" name="state" required>
-                                                    <option value="">---- Select State ----</option>
-                                                    <!-- State Options Placeholder -->
-                                                    <option value="STATE_NAME">STATE_NAME</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input class="form-control" id="city" required type="text"
-                                                name="city" placeholder="City *" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" required type="text" id="address"
-                                            name="address" placeholder="Address *" />
-                                    </div>
 
-                                    <div class="row detailborder">
-                                        <div class="col-sm-8 col-12 mt-2">
-                                            <button class="btn btn-fill-out btn-block col-sm-8 mb-3" disabled
-                                                style="display: none;"><i
-                                                    class="fa fa-spinner fa-spin"></i>Loading</button>
-                                            <button class="animated-button"><span>Add New
-                                                    Address</span><span></span></button>
+                    <div style="position: sticky; top: 120px;">
+
+                        <div class="row">
+
+                            <div class="col-md-12 text-center"
+
+                                style="margin: 16px 0px 9px 0px !important ; border-bottom: 1px solid #dbdbdb;">
+
+                                <h2 style="margin-bottom: 22px;">Add New Address</h2>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            
+                            <div class="col-md-12">
+                                
+                                <form method="POST" action="CHANGE_TO_YOUR_FORM_ACTION" enctype="multipart/form-data">
+                                    
+                                    <div class="row">
+                                        
+                                        <div class="form-group col-lg-6">
+                                            
+                                            <input type="text" required class="form-control" id="fname"
+                                            
+                                                name="fname" placeholder="First name *" />
+                                                
                                         </div>
+                                        
+                                        <div class="form-group col-lg-6">
+                                            
+                                            <input type="text" required class="form-control" id="lname"
+                                            
+                                                name="lname" placeholder="Last name *" />
+                                                
+                                        </div>
+                                        
                                     </div>
+                                    
+                                    <div class="form-group">
+                                        
+                                        <input class="form-control" type="email" id="email" name="email"
+                                        
+                                            placeholder="Email Address " />
+                                            
+                                    </div>
+                                    
+                                    <div class="row">
+                                        
+                                        <div class="form-group col-lg-6">
+                                            
+                                            <input class="form-control" maxlength="10" minlength="10" required
+                                            
+                                                type="text" id="phonenumber" name="phonenumber"
+                                                
+                                                placeholder="Phone Number *" />
+                                                
+                                        </div>
+                                        
+                                        <div class="form-group col-lg-6">
+                                            
+                                            <input class="form-control" maxlength="6" minlength="6" required
+                                            
+                                                type="text" id="pincode" name="pincode" placeholder="Pincode *" />
+                                                
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="row">
+                                        
+                                        <div class="form-group col-lg-6">
+                                            
+                                            <div class="custom_select">
+                                                
+                                                <select class="form-control" id="state" name="state" required>
+                                                    
+                                                    <option value="">---- Select State ----</option>
+                                                    
+                                                    <!-- State Options Placeholder -->
+                                                    
+                                                    <option value="STATE_NAME">STATE_NAME</option>
+                                                    
+                                                </select>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="form-group col-lg-6">
+                                            
+                                            <input class="form-control" id="city" required type="text"
+                                            
+                                                name="city" placeholder="City *" />
+                                                
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        
+                                        <input class="form-control" required type="text" id="address"
+                                        
+                                            name="address" placeholder="Address *" />
+                                            
+                                    </div>
+                                    
+
+                                    
+                                    <div class="row detailborder">
+                                        
+                                        <div class="col-sm-8 col-12 mt-2">
+                                            
+                                            <button class="btn btn-fill-out btn-block col-sm-8 mb-3" disabled
+                                            
+                                                style="display: none;"><i
+                                                
+                                                    class="fa fa-spinner fa-spin"></i>Loading</button>
+                                                    
+                                            <button class="animated-button"><span>Add New
+                                                
+                                                    Address</span><span></span></button>
+                                                    
+                                        </div>
+                                        
+                                    </div>
+                                    
                                 </form>
+                                
                             </div>
                         </div>
                     </div>

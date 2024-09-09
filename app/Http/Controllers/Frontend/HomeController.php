@@ -202,7 +202,7 @@ class HomeController extends Controller
 
     public function getAddress(Request $request) {
 
-        $addresses = Address::where('user_id', 1)->get();
+        $addresses = Address::where('user_id', Auth::User()->id)->get();
 
         $address_data = [];
 

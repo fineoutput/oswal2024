@@ -239,7 +239,7 @@ class UserAuthController extends Controller
 
             // return response()->json([ 'success' => true, 'message' =>  $message], 200);
 
-            return redirect()->route('user.index')->with('success', $message);
+            return redirect()->to('/user')->with('success', $message);
 
         } else {
 

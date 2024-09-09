@@ -615,8 +615,8 @@ function placeOrder() {
         type: 'POST',
         data: $('#placeOrder').serialize(),
         success: function(response) {
-
-            if (response.form !== 1) {
+            // console.log();
+            if (response.data.form != 1) {
 
                 var options = {
                     "key": "{{ config('services.razorpay.key_id') }}",
@@ -630,7 +630,7 @@ function placeOrder() {
                     "prefill": {
                         "name": response.data.name,
                         "email": response.data.email,
-                        "contact": response.data.phone
+                        "phone": response.data.phone
                     },
                     "notes": {
                         "address": "Razorpay Corporate Office"
@@ -643,6 +643,8 @@ function placeOrder() {
                 // Initialize and open the Razorpay payment gateway
                 var rzp1 = new Razorpay(options);
                 rzp1.open();
+            }else{
+                console.log(response);
             }
         },
         error: function(xhr) {
