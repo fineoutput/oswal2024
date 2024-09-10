@@ -91,7 +91,7 @@
 
                         <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}">
                             <i class="fa-solid fa-bag-shopping"></i>
-                            <span class="badge rounded-pill badge-notification bg-danger" id="cart_count">{{ $cartCount }}</span>
+                            <p class="badge rounded-pill badge-notification bg-danger" id="cart_count">{{ $cartCount }}</p>
                         </a>
 
                         <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i

@@ -90,6 +90,8 @@
             success: function(response) {
 
                 if(response.success){
+
+                     $('#cart_count').text(response.count);
                      showNotification(response.message, 'success');
                 }else{
                     showNotification(response.message, 'error');

@@ -258,6 +258,10 @@
 
                 </div>
 
+                <a href="{{ route('checkout.get-address') }}">
+                    <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Change Address</span> <span> </span></button>
+                </a>
+
                 <form class="needs-validation" method="POST" novalidate id="placeOrder">
 
                     @csrf

@@ -74,13 +74,17 @@ class CartController extends Controller
 
             Cart::create($data);
 
-            return response()->json(['success' => true, 'message' => 'Product added to Cart successfully.', 'data' => $data], 201);
+            $cartCount = Cart::where($identifierColumn, $identifierValue)->count();
+
+            return response()->json(['success' => true, 'message' => 'Product added to Cart successfully.', 'count' =>  $cartCount], 201);
 
         } elseif ($data['quantity'] == 0) {
 
             $cartItem->delete();
 
-            return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.'], 200);
+            $cartCount = Cart::where($identifierColumn, $identifierValue)->count();
+
+            return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.' , 'count' =>  $cartCount], 200);
 
         } else {
 
