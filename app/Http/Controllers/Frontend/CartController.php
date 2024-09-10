@@ -20,6 +20,7 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
 
+        // dd($request->all());
         $data = $request->only(['category_id', 'product_id', 'type_id', 'type_price', 'quantity', 'cart_from']);
 
         $data['total_qty_price'] = $data['type_price'] * $data['quantity'];
@@ -158,7 +159,7 @@ class CartController extends Controller
     }
 
 
-    public function removeToCart(Request $request)
+    public function removeToCart(Request $request, $cart_id = null)
     {
         if(auth::check()){
 
@@ -173,19 +174,20 @@ class CartController extends Controller
             $identifierValue  = sendPersistentId($request);
         }
 
-        $cart_id   = $request->input('cart_id');
+        $cart_id   = $request->input('cart_id') ?? $cart_id;
 
-        $cart = Cart::query()->where($identifierColumn, $identifierValue)->where('id', $cart_id)->first();
+        $cart = Cart::query()->where($identifierColumn, $identifierValue)->where('product_id', $cart_id)->first();
 
         if ($cart) {
 
             $cart->delete();
 
-            return response()->json(['success' => true, 'message' => 'Cart remove successfully'], 200);
+            // return response()->json(['success' => true, 'message' => 'Cart remove successfully'], 200);
+            return redirect()->back()->with('success' ,'Cart remove successfully');
 
         } else {
-
-            return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
+            return redirect()->back()->with('error' ,'Cart not found');
+            // return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
 
         }
     }

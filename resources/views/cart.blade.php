@@ -165,8 +165,12 @@
                                             <h6 class="mb-0">{{ formatPrice($cartdata->total_qty_price) }}</h6>
                                         </div>
 
-                                        <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block" onclick="removeToCart('{{ $product->id }}' ,'{{$cartdata->id  }}')">
+                                        {{-- <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block" onclick="removeToCart('{{ $product->id }}' ,'{{$cartdata->id  }}')">
                                             <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                        </div> --}}
+
+                                        <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block">
+                                            <a href="{{ route('cart.remove-to-cart',['cart_id' =>$product->id])}}" class="text-muted"><i class="fas fa-times"></i></a>
                                         </div>
                                     </div>
 
@@ -296,7 +300,7 @@
             },
             success: function (response) {
                 console.log("Quantity updated successfully");
-                location.reload();
+                // location.reload();
             },
             error: function (xhr) {
                 console.error("An error occurred while updating the cart quantity.");

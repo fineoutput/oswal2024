@@ -88,7 +88,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::get('update-qty', [CartController::class, 'updateQty'])->name('update-qty');
     
-    Route::get('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
+    Route::get('removeToCart/{cart_id?}',[CartController::class, 'removeToCart'])->name('remove-to-cart');
     
     Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
@@ -136,10 +136,6 @@ Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
 Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('/', [UserController::class, 'index'])->name('index');
-    
-    Route::post('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
-    
-    Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
     Route::get('get-order-details/{id}', [UserController::class, 'orderDetail'])->name('get-order-details');
 

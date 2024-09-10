@@ -115,7 +115,7 @@ if (Auth::check()) {
                 <i class="fas fa-minus"></i>
             </button>
 
-            <input style="border: 1px solid #d8172863 !important;" id="form1" min="0" name="quantity"
+            <input style="border: 1px solid #d8172863 !important;" id="form1" min="1" name="quantity"
                 value="{{ $cart->quantity ?? 1 }}" type="number" class="form-control form-control-sm carts_puts" />
 
             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple_set"
