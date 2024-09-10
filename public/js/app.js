@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
 function showSearchButton(button) {
 
   const SelectorId = button === 'searchbutton1' ? 'search' : 'search2';
@@ -91,56 +90,6 @@ function handleSearch(inputSelector, searchRoute) {
   }
     
 }
-
-// console.log("hello");
-
-//////////////////////////////////////////////////////////RATING iNPUT///////////////////////////////////////////////
-
-// let ratingInputs = document.querySelectorAll('.rating input');
-
-// ratingInputs.forEach(input => {
-//   input.addEventListener('change', function () {
-//     // Remove active class from all labels
-//     document.querySelectorAll('.rating label').forEach(label => {
-//       label.classList.remove('active');
-//     });
-
-//     // Add active class to labels up to the selected input
-//     let selectedInput = this;
-//     while (selectedInput) {
-//       const label = document.querySelector(`label[for="${selectedInput.id}"]`);
-//       if (label) {
-//         label.classList.add('active');
-//       }
-//       selectedInput = selectedInput.previousElementSibling;
-//     }
-//   });
-// });
-
-///////////////////////RATING iNPUT END//////////
-
-
-//////////Wishlist button functionlity///////////
-// document.addEventListener('DOMContentLoaded', function () {
-//   document.querySelectorAll('.wishlist_icons').forEach(iconContainer => {
-//     iconContainer.addEventListener('click', function (event) {
-//       // console.log("clicked");
-//       var regularHeart = this.querySelector('.hollow_icon');
-//       var solidHeart = this.querySelector('.colored_icon');
-//       if (regularHeart.style.display === 'none' || regularHeart.style.display === '') {
-//         regularHeart.style.display = 'inline';
-//         solidHeart.style.display = 'none';
-//       } else {
-//         regularHeart.style.display = 'none';
-//         solidHeart.style.display = 'inline';
-//       }
-//       event.preventDefault();
-//       event.stopPropagation();
-//     });
-//   });
-// });
-// //////////Wishlist button functionlity End///////////
-
 
 // Increment function
 function increment(productId) {
