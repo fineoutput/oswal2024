@@ -498,8 +498,6 @@ document.addEventListener('DOMContentLoaded', function () {
         numberDisplay.textContent = count;
         buttonText.style.display = 'block';
         controlButtons.style.display = 'none';
-        controlButtons.style.background = 'red';
-        controlButtons.style.color = '#fff';
       }
     }
   });
