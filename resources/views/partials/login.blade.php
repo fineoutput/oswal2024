@@ -260,8 +260,8 @@
 
                         showNotification(response.message, 'success');
 
-                        window.location.href = response.redirect_url;
-                        
+                        // window.location.href = response.redirect_url;
+                        closeModal();
                     } else {
                         
                         lotpError.textContent = response.message || 'Invalid OTP, please try again.';
@@ -386,7 +386,8 @@
 
                         showNotification(response.message, 'success');
 
-                        window.location.href = response.redirect_url;
+                        // window.location.href = response.redirect_url;
+                        closeModal();
                         
                     } else {
                         
