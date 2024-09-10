@@ -12,9 +12,9 @@
             
             <div class="col-lg-10 col-xl-8">
                 
-                <div class="card" style="border-radius: 10px;color:black;background-color:none">
+                <div class="card" style="border-radius: 10px;color:black;background:none">
                     
-                    <div class="card-header px-4 py-5">
+                    <div class="card-header px-4 py-5" style="color:black;background:none">
                         
                         <h5 class="mb-0">
                             
@@ -23,7 +23,7 @@
                         </h5>
                         
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4" style="color:black;background:none">
                         
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             
@@ -33,9 +33,9 @@
                             
                         </div>
                         
-                        <div class="card shadow-0 border mb-4">
+                        <div class="card shadow-0 border mb-4" style="color:black;background:none">
                             
-                            <div class="card-body">
+                            <div class="card-body" style="color:black;background:none">
                                 
                                 <div class="order_id d-flex justify-content-between">
                                     
