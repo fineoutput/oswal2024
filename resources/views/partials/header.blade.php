@@ -72,10 +72,27 @@
                         <button class="search-btn d-none d-lg-block">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
+                        @php
+                            if(auth::check()){
 
-                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i
-                                class="fa-solid fa-bag-shopping"></i><span
-                                class="badge rounded-pill badge-notification bg-danger">9</span></a>
+                                $identifierColumn = 'user_id';
+
+                                $identifierValue = Auth::user()->id;
+
+                            }else{
+
+                                $identifierColumn = 'persistent_id';
+
+                                $identifierValue  = sendPersistentId(request());
+                                
+                            }
+                            $cartCount = App\Models\Cart::where($identifierColumn, $identifierValue)->count();
+                        @endphp 
+
+                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            <span class="badge rounded-pill badge-notification bg-danger" id="cart_count">{{ $cartCount }}</span>
+                        </a>
 
                         <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i
                                 class="fa-solid fa-heart"></i></a>
