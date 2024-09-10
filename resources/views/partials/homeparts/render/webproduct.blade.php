@@ -73,7 +73,7 @@
                     id="btn-decrement{{ $product->id }}" onclick="decrement({{ $product->id }})">-</button>
 
                 <input class="qv-quantity form-control quantity-input" id="quantity-input{{ $product->id }}"
-                    type="number" name="quantity" min="1" value="{{ $cart->quantity ?? 1 }}" size="1"
+                    type="number" name="quantity" min="0" value="{{ $cart->quantity ?? 0 }}" size="1"
                     max="5" step="1" style="width: 60px; text-align: center;" />
 
                 <button type="button" class="btn btn-outline-secondary btn-increment" style="margin-left: 5px;"
