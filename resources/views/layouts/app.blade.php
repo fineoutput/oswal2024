@@ -173,6 +173,49 @@
             notification.remove();
         }, 5000);
     }
+
+    function getCity(url, cityContainerId) {
+       
+        const stateSelectorId = cityContainerId === 'city-container1' ? '#addressstate' : '#typesstate';
+        const selectedId = $(stateSelectorId).val();
+
+        if (selectedId) {
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: { state_id: selectedId },
+                success: function(response) {
+                    
+                    if (Array.isArray(response)) {
+                    
+                        let optionsHtml = '<option value="">----- Select City -----</option>';
+                        
+                        $.each(response, function(key, value) {
+                            optionsHtml += `<option value="${value.id}">${value.city_name}</option>`;
+                        });
+
+                        $(`#${cityContainerId}`).html(optionsHtml);
+
+                    } else {
+
+                        console.error('Unexpected response format:', response);
+
+                    }
+
+                },
+                error: function(xhr) {
+                    console.error("Error:", xhr.responseText);
+                }
+            });
+
+        } else {
+        
+            $(`#${cityContainerId}`).empty().append('<option value="">----- Select City -----</option>');
+        }
+    }
+
+
 </script>
 
 <script>

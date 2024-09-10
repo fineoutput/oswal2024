@@ -140,24 +140,16 @@
 
                                         <div class="modal-body">
 
-                                            <select name="state" id="typesstate" style="width: 100%;" onchange="getCity('{{ route('getcity') }}')" required>
-
+                                            <select name="state" id="typesstate" style="width: 100%;" onchange="getCity('{{ route('getcity') }}', 'city-container2')" required>
                                                 <option value="99999">Choose State</option>
-
                                                 @foreach (App\Models\State::all() as $state)
-
-                                                    <option value="{{ $state->id }}">{{ $state->state_name }}</option> <!-- Fixed the closing tag -->
-
-
+                                                    <option value="{{ $state->id }}">{{ $state->state_name }}</option>
                                                 @endforeach
-
                                             </select>
 
 
-                                            <select name="city" id="city-container" style="width: 100%; margin-top: 15px;" required>
-
-                                                <option value="99999">Choose State First</option>
-                                                
+                                            <select id="city-container2" name="city" class="form-control" required>
+                                                <option value="">----- Select City -----</option>
                                             </select>
                                             
                                         </div>
@@ -238,57 +230,3 @@
     </div>
 
 </div>
-
-@push('scripts')
-    <script>
-        function getCity(url) {
-
-            let selectedId = $('#typesstate').val();
-
-            if (selectedId !== '') {
-
-                $.ajax({
-
-                    url: url,
-
-                    type: "get",
-
-                    data: {
-
-                        state_id: selectedId,
-
-                    },
-
-                    success: function(response) {
-
-
-                        $('#city-container').html();
-
-                        let $html = '<option value="">----- Select City ----- </option>';
-
-                        $.each(response, function(key, value) {
-
-                            $html += `<option value="${value.id}">${value.city_name}</option>`;
-
-                        });
-
-                        $('#city-container').html($html);
-
-                    },
-
-                    error: function(xhr) {
-
-                        console.log(xhr.responseText);
-
-                    }
-
-                });
-
-            } else {
-
-                $('#city-dropdown').empty();
-
-            }
-        }
-    </script>
-@endpush

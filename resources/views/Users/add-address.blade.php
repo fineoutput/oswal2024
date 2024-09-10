@@ -85,16 +85,13 @@
 
                 <label for="state">State</label>
 
-                <select class="form-control select2  p-0 pt-2" name="state" id="addressstate" onchange="getCity('{{ route('getcity') }}')">
-
-                    <option>----select State-----</option>
-
+                <select class="form-control select2 p-0 pt-2" name="state" id="addressstate" onchange="getCity('{{ route('getcity') }}', 'city-container1')">
+                    <option value="99999">Choose State</option>
                     @foreach ($states as $state)
-                        <option
-                            value="{{ $state->id }}"{{ old('state') == $state->id || (isset($address) && $address->state == $state->id) ? ' selected' : '' }}>
-                            {{ $state->state_name }}</option>
+                        <option value="{{ $state->id }}" {{ old('state') == $state->id || (isset($address) && $address->state == $state->id) ? 'selected' : '' }}>
+                            {{ $state->state_name }}
+                        </option>
                     @endforeach
-
                 </select>
 
                 @error('state')
@@ -108,15 +105,13 @@
 
                 <label for="city">City</label>
 
-                <select class="form-control select2  p-0 pt-2" name="city" id="city-container">
-
+                <select class="form-control select2 p-0 pt-2" name="city" id="city-container1">
                     <option value="">----- Select City -----</option>
-
                     @if ($address != null)
                         @foreach ($cities as $citie)
-                            <option
-                                value="{{ $citie->id }}"{{ isset($address) && $address->city == $citie->id ? ' selected' : '' }}>
-                                {{ $citie->city_name }}</option>
+                            <option value="{{ $citie->id }}" {{ isset($address) && $address->city == $citie->id ? 'selected' : '' }}>
+                                {{ $citie->city_name }}
+                            </option>
                         @endforeach
                     @endif
                 </select>
@@ -167,56 +162,3 @@
 
 @endsection
 
-@push('scripts')
-    <script>
-        function getCity(url) {
-
-            let selectedId = $('#addressstate').val();
-
-            if (selectedId !== '') {
-
-                $.ajax({
-
-                    url: url,
-
-                    type: "get",
-
-                    data: {
-
-                        state_id: selectedId,
-
-                    },
-
-                    success: function(response) {
-
-
-                        $('#city-container').html();
-
-                        let $html = '<option value="">----- Select City ----- </option>';
-
-                        $.each(response, function(key, value) {
-
-                            $html += `<option value="${value.id}">${value.city_name}</option>`;
-
-                        });
-
-                        $('#city-container').html($html);
-
-                    },
-
-                    error: function(xhr) {
-
-                        console.log(xhr.responseText);
-
-                    }
-
-                });
-
-            } else {
-
-                $('#city-dropdown').empty();
-
-            }
-        }
-    </script>
-@endpush
