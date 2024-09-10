@@ -56,32 +56,36 @@
                     <div class="product_category_product_part" style="position: relative;">
 
                         <div class="product_part_upper">
-                        <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
-                            <div class="card_upper_img">
 
-                                <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
-                                    style="width: 100%; height: 100%;" />
+                            <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
 
-                                <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image"
-                                    style="width: 100%; height: 100%;" />
+                                <div class="card_upper_img">
 
-                            </div>
+                                    <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
+                                        style="width: 100%; height: 100%;" />
+
+                                    <img src="{{ asset($product->img1) }}" alt="Primary Image" class="secound-image"
+                                        style="width: 100%; height: 100%;" />
+
+                                </div>
+
                             </a>
-                                <div class="wishlist_icons{{ $product->id }}" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
 
-                                    @auth()
+                            <div class="wishlist_icons{{ $product->id }}" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
 
-                                        @if($wishlist)
-                                            <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
-                                                <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
-                                            </a>
-                                        @else
-                                            <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
-                                                <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
-                                            </a>
-                                        @endif
+                                @auth
 
-                                    @endauth
+                                    @if($wishlist)
+                                        <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                            <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
+                                        </a>
+                                    @else
+                                        <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                                            <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
+                                        </a>
+                                    @endif
+
+                                @endauth
 
                             </div>
                             
@@ -102,29 +106,29 @@
 
                                 </svg>
 
-                            <div class="upper_txt">
+                                <div class="upper_txt">
 
-                                <h4>{{ $product->name }}</h4>
+                                    <h4>{{ $product->name }}</h4>
 
-                                    @if ($productType->isNotEmpty())
+                                        @if ($productType->isNotEmpty())
 
-                                        <div class="rates">
+                                            <div class="rates">
 
-                                        <del>
+                                            <del>
 
-                                                <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }} </p>
+                                                    <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }} </p>
 
-                                        </del>
+                                            </del>
 
-                                            <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                                                <p>{{ formatPrice($productType->first()->selling_price) }}</p>
 
-                                            <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+                                                <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
 
-                                        </div>
+                                            </div>
 
-                                    @endif
+                                        @endif
 
-                            </div>
+                                </div>
 
                             <div class="upper_common d-flex">
 
@@ -134,17 +138,19 @@
 
                                         <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
 
-                                        <option value="type">Type</option>
+                                            <option value="type">Type</option>
 
-                                        @foreach ($productType as $type)
-                                            <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
-                                                {{ $type->type_name }}
-                                            </option>
-                                        @endforeach
+                                            @foreach ($productType as $type)
+                                                <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                                    {{ $type->type_name }}
+                                                </option>
+                                            @endforeach
 
-                                    </select>
+                                        </select>
 
-                                </div>
+                                    </div>
+
+                       
 
                                 <div class="upper_txt_qty">
 
@@ -152,31 +158,23 @@
 
                                         <div class="input-group" style="display: flex; align-items: center;">
 
-                                            <button type="button" class="btn btn-outline-secondary btn-decrement"
-                                                style="margin-right: 5px;">-</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-decrement" style="margin-right: 5px;" id="btn-decrement{{ $product->id }}" onclick="decrement({{ $product->id }})">-</button>
 
-                                            <input class="qv-quantity form-control quantity-input" type="number"
-                                                name="quantity" min="1" value="1" size="1"
+                                            <input class="qv-quantity form-control quantity-input" id="quantity-input{{ $product->id }}" type="number" name="quantity" min="1" value="{{ $cart->quantity ?? 1 }}" size="1" max="5"
                                                 step="1" style="width: 60px; text-align: center;" />
 
-                                            <button type="button" class="btn btn-outline-secondary btn-increment"
-                                                style="margin-left: 5px;">+</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-increment" style="margin-left: 5px;"
+                                                id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
 
                                         </div>
 
                                     </div>
 
-                                    <div class="add_to_cart_button" id="add-to-cart-section">
-
-                                   
-
-                                            <button>
-
-                                                <span>Add</span>
-
-                                            </button>
-
-
+                                    <div class="add_to_cart_button" id="add-to-cart-section{{ $product->id }}"
+                                        @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">
+                            
+                                        <button> <span>Add</span> </button>
+                            
                                     </div>
 
                                 </div>
