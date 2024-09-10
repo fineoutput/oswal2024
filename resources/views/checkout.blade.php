@@ -644,7 +644,9 @@ function placeOrder() {
                 var rzp1 = new Razorpay(options);
                 rzp1.open();
             }else{
-                console.log(response);
+               
+                window.location.href=`{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+                
             }
         },
         error: function(xhr) {
