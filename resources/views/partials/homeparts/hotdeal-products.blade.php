@@ -39,23 +39,35 @@
 
                             @foreach ($item as $product)
 
+                                @php
+                                    $productType = App\Models\Type::where('state_id', $globalState)
+                                    ->where('city_id', $globalCity)
+                                    ->where('product_id', $product['id'])
+                                    ->first();
+                                   
+                                @endphp
+
                                 <div class="col-lg-3 col-md-6 col-12">
 
                                     <div class="one_card">
 
                                         <div class="card_upper_img">
 
-                                            <img src="{{asset($product['img2'])}}" alt="Primary Image" class="primary-image img-responsive" />
+                                            <a href="{{ route('product-detail' ,['slug' => $product['url']]) }}">
 
-                                            <img src="{{asset($product['img1'])}}" alt="Secondary Image" class="secondary-image img-responsive" />
+                                                <img src="{{asset($product['img2'])}}" alt="Primary Image" class="primary-image img-responsive" />
 
-                                            <div class="product-buttons">
+                                                <img src="{{asset($product['img1'])}}" alt="Secondary Image" class="secondary-image img-responsive" />
 
-                                                <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
+                                           </a>
 
-                                                <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
+                                            {{-- <div class="product-buttons">
 
-                                            </div>
+                                                <button class="btn-cart" onclick="addToCart($product['id'])"><ion-icon name="cart-outline"></ion-icon></button>
+
+                                                <button class="btn-wishlist" onclick="addtoWishList($product['id'])"><ion-icon name="heart-outline"></ion-icon></button>
+
+                                            </div> --}}
 
                                         </div>
 
@@ -71,17 +83,17 @@
 
                                                 <h4>{{ Illuminate\Support\Str::limit($product['long_desc'] , 40) }}</h4>
 
-                                                <p>₹40</p>
+                                                <p>{{ formatPrice($productType->selling_price) }}</p>
 
                                             </div>
 
-                                            <div class="mobile-product-buttons">
+                                            {{-- <div class="mobile-product-buttons">
 
-                                                <button class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
+                                                <button onclick="addToCart($product['id'])"class="btn-cart"><ion-icon name="cart-outline"></ion-icon></button>
 
-                                                <button class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
+                                                <button  onclick="addtoWishList($product['id'])" class="btn-wishlist"><ion-icon name="heart-outline"></ion-icon></button>
 
-                                            </div>
+                                            </div> --}}
 
                                         </div>
 
@@ -94,6 +106,7 @@
                         </div>
 
                     </div>
+
                     @php
                         ++$i;
                     @endphp
@@ -121,7 +134,9 @@
 
         <div class="inner_stop text-center">
 
-            <button class="btn-11 animated-button" type="button"><span>Shop Now</span> <span></span></button>
+            <a href="{{ route('category-list') }}">
+             <button class="btn-11 animated-button" type="button"><span>Shop Now</span> <span></span></button>
+            </a>
 
         </div>
 

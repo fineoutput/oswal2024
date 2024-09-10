@@ -92,75 +92,73 @@
                         </div>
 
 
-                            <div class="product_part_lower" id="web_product_{{ $product->id }}">
+                        <div class="product_part_lower" id="web_product_{{ $product->id }}">
 
-                                <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="savage" width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-                                    <path d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z" fill="#c92323"></path>
+                                <path d="M28.9499 0C28.3999 0 27.9361 1.44696 27.9361 2.60412V27.9718L24.5708 25.9718L21.2055 27.9718L17.8402 25.9718L14.4749 27.9718L11.1096 25.9718L7.74436 27.9718L4.37907 25.9718L1.01378 27.9718V2.6037C1.01378 1.44655 0.549931 0 0 0H28.9499Z" fill="#c92323"></path>
 
-                                    <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central" fill="#ffffff" dy=".3em">
-                                        @if ($productType->isNotEmpty())
-                                            {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
-                                        @endif
-                                    </text>
+                                <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central" fill="#ffffff" dy=".3em">
+                                    @if ($productType->isNotEmpty())
+                                        {{ percentOff($productType->first()->del_mrp, $productType->first()->selling_price, true) }}
+                                    @endif
+                                </text>
 
-                                </svg>
+                            </svg>
 
-                                <div class="upper_txt">
+                            <div class="upper_txt">
 
-                                    <h4>{{ $product->name }}</h4>
+                                <h4>{{ $product->name }}</h4>
 
-                                        @if ($productType->isNotEmpty())
+                                    @if ($productType->isNotEmpty())
 
-                                            <div class="rates">
+                                        <div class="rates">
 
-                                            <del>
+                                        <del>
 
-                                                    <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }} </p>
+                                                <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }} </p>
 
-                                            </del>
+                                        </del>
 
-                                                <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                                            <p>{{ formatPrice($productType->first()->selling_price) }}</p>
 
-                                                <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+                                            <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
 
-                                            </div>
+                                        </div>
 
-                                        @endif
+                                    @endif
 
-                                </div>
+                            </div>
 
                             <div class="upper_common d-flex">
 
-                                    <div class="upper_txt_input">
+                                <div class="upper_txt_input">
 
-                                        <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                    <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
 
-                                        <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
+                                    <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
 
-                                            <option value="type">Type</option>
+                                        <option value="type">Type</option>
 
-                                            @foreach ($productType as $type)
-                                                <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
-                                                    {{ $type->type_name }}
-                                                </option>
-                                            @endforeach
+                                        @foreach ($productType as $type)
+                                            <option value="{{ $type->id }}" {{ $loop->first ? 'selected' : '' }}>
+                                                {{ $type->type_name }}
+                                            </option>
+                                        @endforeach
 
-                                        </select>
+                                    </select>
 
-                                    </div>
-
-                       
+                                </div>
 
                                 <div class="upper_txt_qty">
 
-                                        <div class="quant" id="quantity-section{{ $product->id }}" @if ($cart == null) style="display: none;" @endif>
+                                    <div class="quant" id="quantity-section{{ $product->id }}" @if ($cart == null) style="display: none;" @endif>
 
                                         <div class="input-group" style="display: flex; align-items: center;">
 
                                             <button type="button" class="btn btn-outline-secondary btn-decrement" style="margin-right: 5px;" id="btn-decrement{{ $product->id }}" onclick="decrement({{ $product->id }})">-</button>
 
-                                            <input class="qv-quantity form-control quantity-input" id="quantity-input{{ $product->id }}" type="number" name="quantity" min="1" value="{{ $cart->quantity ?? 1 }}" size="1" max="5"
+                                            <input class="qv-quantity form-control quantity-input" id="quantity-input{{ $product->id }}" type="number" name="quantity" min="0" value="{{ $cart->quantity ?? 0 }}" size="1" max="5"
                                                 step="1" style="width: 60px; text-align: center;" />
 
                                             <button type="button" class="btn btn-outline-secondary btn-increment" style="margin-left: 5px;"
@@ -190,8 +188,6 @@
             @endforeach
 
         </div>
-
-    </div>
 
 </section>
 
