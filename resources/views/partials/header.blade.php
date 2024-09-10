@@ -72,13 +72,37 @@
                         <button class="search-btn d-none d-lg-block">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
+                        @php
+                            $count = 0;
 
-                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}"><i
-                                class="fa-solid fa-bag-shopping"></i><span
-                                class="badge rounded-pill badge-notification bg-danger">9</span></a>
+                            if(Auth::check()){
 
-                        <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}"><i
-                                class="fa-solid fa-heart"></i></a>
+                                $identifierColumn = 'user_id';
+
+                                $identifierValue = Auth::user()->id;
+
+                                $count = App\Models\Wishlist::where('user_id', Auth::user()->id)->count();
+
+                            }else{
+
+                                $identifierColumn = 'persistent_id';
+
+                                $identifierValue  = sendPersistentId(request());
+                                
+                            }
+                            $cartCount = App\Models\Cart::where($identifierColumn, $identifierValue)->count();
+
+                        @endphp 
+
+                        <a class="d-none d-lg-block" href="{{ route('cart.get-cart-details') }}">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            <p class="badge rounded-pill badge-notification bg-danger" id="cart_count">{{ $cartCount }}</p>
+                        </a>
+
+                        <a class="d-none d-lg-block" href="{{ route('wishlist.index') }}">
+                            <i class="fa-solid fa-heart"></i>
+                            <p class="badge rounded-pill badge-notification bg-danger" id="wishlist_count">{{ $count }}</p>
+                        </a>
 
                         <div class="dropdown">
 

@@ -197,13 +197,23 @@
                                     </div>
 
                                     @if (Auth::check())
-                                    <a href="{{ route('checkout.get-address') }}">
-                                        <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
-                                    </a>
+
+                                        @if (count($cartItems) > 0)
+                                            <a href="{{ route('checkout.get-address') }}">
+                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
+                                            </a>
+                                        @else   
+                                            <a href="javascript:void(0);" onclick="showNotification('Your cart is empty.', 'error');">
+                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button">
+                                                    <span>Proceed to Pay</span>
+                                                </button>
+                                            </a>                                        
+                                        @endif
+
                                     @else
-                                    <a href="javascript::void(0)" onclick="showModal(event)">
-                                        <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
-                                    </a>
+                                        <a href="javascript:void(0);" onclick="showModal(event)">
+                                            <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
+                                        </a>
                                     @endif
                                 </div>
                             </div>

@@ -133,7 +133,14 @@
                 product_id: productId,
             },
             success: function (response) {
-                $(`#wishlist${productId}`).remove();
+                if(response.success){
+
+                    $(`#wishlist${productId}`).remove();
+                    $('#wishlist_count').text(response.count);
+                    showNotification(response.message, 'success');
+                }else{
+                    showNotification(response.message, 'error');
+                }
             },
             error: function (xhr) {
                 console.error("An error occurred while removing from the wishlist.");

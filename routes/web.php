@@ -36,7 +36,7 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('/');
 
-    Route::get('/category-list', [HomeController::class, 'category'])->name('category-list');
+    Route::get('/category-list/{type?}', [HomeController::class, 'category'])->name('category-list');
 
     Route::get('/product/{slug}/details', [HomeController::class, 'productDetail'])->name('product-detail');
 

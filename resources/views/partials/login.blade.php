@@ -260,7 +260,9 @@
 
                         showNotification(response.message, 'success');
 
-                        window.location.href = response.redirect_url;
+                        // window.location.href = response.redirect_url;
+                        closeModal();
+                        window.location.reload()
                         
                     } else {
                         
@@ -386,7 +388,8 @@
 
                         showNotification(response.message, 'success');
 
-                        window.location.href = response.redirect_url;
+                        // window.location.href = response.redirect_url;
+                        closeModal();
                         
                     } else {
                         

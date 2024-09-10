@@ -27,10 +27,10 @@ class HomeController extends Controller
         return view('index')->with('title', 'Oswal');
     }
 
-    public function category(Request $request)
+    public function category(Request $request,$type=null)
     {
-
-        return view('products.category')->with('title', 'Category List');
+        
+        return view('products.category', compact('type'))->with('title', 'Category List');
     }
     public function find_shop(Request $request)
     {

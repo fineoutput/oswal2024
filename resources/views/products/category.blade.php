@@ -4,9 +4,14 @@
 
 @section('content')
     @php
+        if($type != null){
+            $hot = true;
+        }else {
+            $hot = false;
+        }
         $categorys = sendCategory() ?? [];
 
-        $products = sendProduct($categorys[0]->id, false, false, false, false, false, false, 6);
+        $products = sendProduct($categorys[0]->id, false, false, $hot , false, false, false, 6);
     @endphp
 
     <section class="category_main">
