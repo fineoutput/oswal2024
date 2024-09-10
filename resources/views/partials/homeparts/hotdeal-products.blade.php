@@ -134,7 +134,7 @@
 
         <div class="inner_stop text-center">
 
-            <a href="{{ route('category-list') }}">
+            <a href="{{ route('category-list' ,['type' => 'hot']) }}">
              <button class="btn-11 animated-button" type="button"><span>Shop Now</span> <span></span></button>
             </a>
 
