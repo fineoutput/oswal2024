@@ -203,7 +203,7 @@
                                                 <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
                                             </a>
                                         @else   
-                                            <a href="javascript:void(0);" onclick="alert('Your cart is empty. Please add products to proceed to payment.');">
+                                            <a href="javascript:void(0);" onclick="showNotification('Your cart is empty.', 'error');">
                                                 <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button">
                                                     <span>Proceed to Pay</span>
                                                 </button>
