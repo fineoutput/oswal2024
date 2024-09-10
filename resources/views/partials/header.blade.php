@@ -73,7 +73,7 @@
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
                         @php
-                            if(auth::check()){
+                            if(Auth::check()){
 
                                 $identifierColumn = 'user_id';
 

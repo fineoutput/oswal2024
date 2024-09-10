@@ -262,6 +262,8 @@
 
                         // window.location.href = response.redirect_url;
                         closeModal();
+                        window.location.reload()
+                        
                     } else {
                         
                         lotpError.textContent = response.message || 'Invalid OTP, please try again.';
