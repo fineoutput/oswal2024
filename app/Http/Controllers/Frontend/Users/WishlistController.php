@@ -49,7 +49,9 @@ class WishlistController extends Controller
 
             if($wishlist->save()){
 
-                return response()->json(['success' => true, 'message' => 'Product added to Wishlist successfully.', 'data' => $wishlist], 201);
+                $Count = Wishlist::where('user_id', Auth::user()->id)->count();
+
+                return response()->json(['success' => true, 'message' => 'Product added to Wishlist successfully.', 'count' => $Count], 201);
 
             }else{
 
@@ -178,7 +180,9 @@ class WishlistController extends Controller
 
         $wishlist->delete();
 
-        return response()->json(['success' => true,'message' => 'Wishlist remove successfully'], 200);
+        $Count = Wishlist::where('user_id', Auth::user()->id)->count();
+
+        return response()->json(['success' => true,'message' => 'Wishlist remove successfully','count' => $Count], 200);
     }
 
     public function moveToCart(Request $request)
