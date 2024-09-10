@@ -79,11 +79,15 @@
 </svg>
                         </button>
                         @php
+                            $count = 0;
+
                             if(Auth::check()){
 
                                 $identifierColumn = 'user_id';
 
                                 $identifierValue = Auth::user()->id;
+
+                                $count = App\Models\Wishlist::where('user_id', Auth::user()->id)->count();
 
                             }else{
 
@@ -93,6 +97,7 @@
                                 
                             }
                             $cartCount = App\Models\Cart::where($identifierColumn, $identifierValue)->count();
+
                         @endphp 
 
                         <a class="d-none d-lg-block me-3 bag_icon" href="{{ route('cart.get-cart-details') }}">
