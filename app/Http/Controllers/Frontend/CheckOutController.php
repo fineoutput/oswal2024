@@ -653,9 +653,16 @@ class CheckOutController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
+            return view('order_success' , compact('response'))->with('tittle' ,'Order');
+            // return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
         } else {
-            return response()->json(['status' => false, 'message' =>  $signatureStatus['message'], 'status' => 400,], 400);
+            // return response()->json(['status' => false, 'message' =>  $signatureStatus['message'], 'status' => 400,], 400);
         }
+    }
+
+    public function orderSuccess($order_id=null) {
+
+        return view('order_success',compact('order_id'))->with('tittle' ,'Order');
+
     }
 }

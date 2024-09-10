@@ -79,7 +79,7 @@ box-shadow: 5px 5px 10px grey;
           <div class="confirm-green-box">
             <br>
             <h5>ORDER CONFIRMATION</h5>
-            <p>Your order #2465 has been sucessful!</p>
+            <p>Your order #{{ (isset($response)) ? $response['order_id'] :$order_id  }} has been sucessful!</p>
             <p>Thank you for choosing Oswal Soap. You will shortly receive a confirmation email.</p>
           </div>
 
