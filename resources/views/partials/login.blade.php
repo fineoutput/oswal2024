@@ -215,10 +215,17 @@
                     }
                 },
                 error: function(xhr) {
-                    
-                    console.error(xhr.responseText);
+                    if (!response.success) {
 
-                    errorLphone.textContent = 'An error occurred. Please try again.';
+                      errorLphone.textContent = response.message
+
+                    }else{
+
+                        console.error(xhr.responseText);
+
+                        errorLphone.textContent = 'An error occurred. Please try again.';
+                    }
+                   
                 }
             });
 
@@ -262,9 +269,16 @@
                 },
                 error: function(xhr) {
 
-                    console.error(xhr.responseText); 
+                    if (!response.success) {
 
-                    lotpError.textContent = 'An error occurred. Please try again later.';
+                       sotpError.textContent = response.message
+
+                    }else{
+
+                        console.error(xhr.responseText); 
+    
+                        lotpError.textContent = 'An error occurred. Please try again later.';
+                    }
                 }
 
             });
@@ -326,10 +340,18 @@
                     }
                 },
                 error: function(xhr) {
-                    
-                    console.error(xhr.responseText);
 
-                    errorLphone.textContent = 'An error occurred. Please try again.';
+                    if (!response.success) {
+
+                        sphone_no.textContent = response.message
+
+                    }else{
+
+                        console.error(xhr.responseText);
+
+                        sphone_no.textContent = 'An error occurred. Please try again.';
+                    }
+                    
                 }
 
             });
@@ -373,9 +395,17 @@
                 },
                 error: function(xhr) {
 
-                    console.error(xhr.responseText); 
+                    if (!response.success) {
 
-                    sotpError.textContent = 'An error occurred. Please try again later.';
+                        sotpError.textContent = response.message
+
+                    }else{
+
+                        console.error(xhr.responseText); 
+    
+                        sotpError.textContent = 'An error occurred. Please try again later.';
+                    }
+
                 }
 
             });
