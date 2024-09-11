@@ -49,6 +49,8 @@
 
             @if ($address != null) <input type="hidden" name="address_id" value="{{$address->id}}"> @endif
 
+            <input type="hidden" value="{{ $redirect }}" name="redirect">
+            
             <div class="form-group">
 
                 <input type="hidden" name="name" value="{{ Auth::user()->first_name }}" required>

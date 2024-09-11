@@ -72,9 +72,9 @@
 
                                         <div style="display: flex; justify-content: end;">
 
-                                            <a href="CHANGE_TO_YOUR_EDIT_URL" class="mr-2">
+                                            <a href="{{ route('user.add-address',['redirect' => 'checkout', 'id' => base64_encode($address->id)]) }}" class="mr-2">
 
-                                                <button class="animated-button">
+                                                <button type="button" class="animated-button">
 
                                                     <span><i class="fa-solid fa-pencil"></i></span>
 
@@ -109,7 +109,7 @@
 
                     <div style="position: sticky; top: 120px;">
 
-                        <div class="row">
+                        {{-- <div class="row">
 
                             <div class="col-md-12 text-center"
 
@@ -119,11 +119,25 @@
 
                             </div>
 
-                        </div>
+                        </div> --}}
 
                         <div class="row">
-                            
-                            <div class="col-md-12">
+                            <div class="col-sm-8 col-12 mt-2">
+                                            
+                                <button class="btn btn-fill-out btn-block col-sm-8 mb-3" disabled
+                                
+                                    style="display: none;"><i
+                                    
+                                        class="fa fa-spinner fa-spin"></i>Loading</button>
+                                        
+                                        <a href="{{ route('user.add-address', ['redirect' => 'checkout']) }}">
+                                            <button class="animated-button">
+                                                <span>Add New Address</span>
+                                                <span></span>
+                                            </button>
+                                        </a>
+                            </div>
+                            {{-- <div class="col-md-12">
                                 
                                 <form method="POST" action="CHANGE_TO_YOUR_FORM_ACTION" enctype="multipart/form-data">
                                     
@@ -237,7 +251,7 @@
                                     
                                 </form>
                                 
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

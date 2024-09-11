@@ -225,7 +225,7 @@
 
     <div class="bottom-bar-item">
 
-        <a href="index.html"><i class="fa-solid fa-home"></i></a>
+        <a href="{{ url('/') }}"><i class="fa-solid fa-home"></i></a>
 
     </div>
 

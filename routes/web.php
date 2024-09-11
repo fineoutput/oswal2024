@@ -98,8 +98,6 @@ Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(functi
 
     Route::post('/', [CheckOutController::class, 'checkout'])->name('process');
 
-    Route::get('add-address', [HomeController::class, 'addAddress'])->name('add-address');
-    
     Route::get('get-address', [HomeController::class, 'getAddress'])->name('get-address');
 
     Route::post('apply-wallet', [CheckOutController::class, 'applyWallet'])->name('apply-wallet');
@@ -141,7 +139,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('cancle-order/{id}', [UserController::class, 'cancelOrder'])->name('cancle-order');
 
-    Route::get('add-address/{id?}', [UserController::class, 'addAddress'])->name('add-address');
+    Route::get('add-address/{redirect}/{id?}', [UserController::class, 'addAddress'])->name('add-address');
 
     Route::post('stor-address', [UserController::class, 'storeAddress'])->name('stor-address');
 

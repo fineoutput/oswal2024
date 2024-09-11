@@ -196,9 +196,6 @@ class HomeController extends Controller
         return response()->json(['webproduct' => $htmlwebProduct ,'mobproduct' => $htmlmobProduct]);
     }
 
-    public function addAddress(Request $request)  {
-        
-    }
 
     public function getAddress(Request $request) {
 
