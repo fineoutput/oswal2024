@@ -497,6 +497,7 @@ function applyWallet() {
             showNotification(response.message, 'success');
         },
         error: function(xhr) {
+            showNotification(response.message, 'error');
             console.error('An error occurred while applying the wallet option.');
         }
     });
@@ -531,6 +532,7 @@ function applyPromocode(promoode) {
             showNotification(response.message, 'success');
         },
         error: function(xhr) {
+            showNotification(response.message, 'error');
             console.error('An error occurred while applying the wallet option.');
         }
     });
@@ -565,6 +567,7 @@ function applyGiftCard(giftCardID) {
             showNotification(response.message, 'success');
         },
         error: function(xhr) {
+            showNotification(response.message, 'error');
             console.error('An error occurred while applying the wallet option.');
         }
     });
