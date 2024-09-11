@@ -273,7 +273,7 @@
                     
                     $('#cart-container').append('<div class="no-products">No Product Found</div>');
 
-                    $('#proceedToPayLink').attr('href', 'javascript:void(0)');
+                    $('#proceedToPayLink').attr('href', 'javascript:void(0)').attr('onclick', "showNotification('Your cart is empty.', 'error');");
                 }
 
             },
