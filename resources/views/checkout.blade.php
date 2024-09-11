@@ -493,6 +493,8 @@ function applyWallet() {
             totalwalletAmount.text(`Wallet(${response.wallet_amount})`);
             totalorderAmount.text(response.total_amount);
             $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+
+            showNotification(response.message, 'success');
         },
         error: function(xhr) {
             console.error('An error occurred while applying the wallet option.');
@@ -526,6 +528,7 @@ function applyPromocode(promoode) {
             promoCodeName.text(response.promocode_name);
             totalorderAmount.text(response.total_amount);
             $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+            showNotification(response.message, 'success');
         },
         error: function(xhr) {
             console.error('An error occurred while applying the wallet option.');
@@ -559,6 +562,7 @@ function applyGiftCard(giftCardID) {
             giftCardName.text(response.name);
             totalorderAmount.text(response.total_amount);
             $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+            showNotification(response.message, 'success');
         },
         error: function(xhr) {
             console.error('An error occurred while applying the wallet option.');
