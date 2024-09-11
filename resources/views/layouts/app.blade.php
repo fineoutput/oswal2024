@@ -171,7 +171,7 @@
                             $('#wishlist_count').removeClass('wishlist_dot');
                         }
 
-                        showNotification(response.message, 'success');
+                        
                         
                     }else{
                         showNotification(response.message, 'error');
