@@ -131,7 +131,7 @@ Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name(
 
 Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
 
-Route::prefix('user')->name('user.')->group(function () {
+Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
 
     Route::get('/', [UserController::class, 'index'])->name('index');
 
