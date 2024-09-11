@@ -175,7 +175,7 @@
                                         </div>
 
                                         <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block" onclick="removeToCart('{{ $product->id }}' ,'{{$cartdata->id  }}')">
-                                            <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                            <a href="javascript:void(0)" class="text-muted"><i class="fas fa-times"></i></a>
                                         </div>
 
                                         {{-- <div class="col-12 col-md-1 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0 d-none d-lg-block">
