@@ -933,7 +933,7 @@ class OrderController extends Controller
 
         $addr_string = "Doorflat {$address->doorflat}, " .
                    (!empty($address->landmark) ? "{$address->landmark}, " : '') .
-                   "{$address->address}, {$address->zipcode}";
+                   "{$address->address},{$address->citys->city_name},{$address->states->state_name}, {$address->zipcode}";
 
         $orderDetails = $order->orderDetails()->orderBy('id', 'DESC')->get();
         $data = [];
