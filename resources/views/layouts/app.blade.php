@@ -134,7 +134,13 @@
                     if(response.success) {
                         $wishlistIcon.removeClass('fa-regular hollow_icon').addClass('fa-solid colored_icon');
                         $wishlistIcon.css('color', '#f20232');
-                        $('#wishlist_count').text(response.count);
+
+                        if(response.count > 0) {
+                            $('#wishlist_count').addClass('wishlist_dot');
+                        }else{
+                            $('#wishlist_count').removeClass('wishlist_dot');
+                        }
+                        
                         showNotification(response.message, 'success');
                     }else{
                         showNotification(response.message, 'error');
@@ -159,7 +165,11 @@
                         $wishlistIcon.removeClass('fa-solid colored_icon').addClass('fa-regular hollow_icon');
                         $wishlistIcon.css('color', '#cdd5e5');
 
-                        $('#wishlist_count').text(response.count);
+                         if(response.count > 0) {
+                            $('#wishlist_count').addClass('wishlist_dot');
+                        }else{
+                            $('#wishlist_count').removeClass('wishlist_dot');
+                        }
 
                         showNotification(response.message, 'success');
                         

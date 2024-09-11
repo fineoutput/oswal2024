@@ -276,6 +276,7 @@
                     $('#proceedToPayLink').attr('href', 'javascript:void(0)').attr('onclick', "showNotification('Your cart is empty.', 'error');");
                 }
 
+                showNotification(response.message, 'success');
             },
             error: function (xhr) {
                 console.error("An error occurred while removing from the wishlist.");
@@ -297,6 +298,7 @@
 
             updateQuantity(cartId, productId);
         }
+        
     }
 
     function updateQuantity(cartId, productId) {
@@ -312,7 +314,7 @@
         let totalAmount = $('#totalamount');
 
         if (quantity < 1 || quantity > 5) {
-            alert("Quantity must be between 1 and 5.");
+            showNotification("Quantity must be between 1 and 5.", 'error');
             return;
         }
 
@@ -334,8 +336,11 @@
 
                     totalAmount.text(response.totalamount);
 
+                    showNotification(response.message, 'success');
+
                 } else {
-                    alert(response.message || "An error occurred while updating the quantity.");
+                    
+                    showNotification((response.message || "An error occurred while updating the quantity."), 'success');
                 }
             },
             error: function (xhr) {
