@@ -24,7 +24,7 @@ use App\Models\Address;
 use App\Models\Order;
 
 use App\Models\Cart;
-
+use App\Models\TransferOrder;
 use App\Models\User;
 
 use App\Models\Type;
@@ -903,7 +903,7 @@ class OrderController extends Controller
         $user_id = $request->input('user_id');
         $order_id = $request->input('order_id');
         $lang = $request->input('lang');
- 
+        $deleveryBoy = [];
 
         $user = User::find($user_id);
 
@@ -951,15 +951,17 @@ class OrderController extends Controller
 
         }
 
-        // if($order->delivery_status != 0 && $order->track_id != null){
+        if($order->delivery_status != 0 ){
+
+          $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)->first();
 
             $deleveryBoy = [
-                'id' => '1',
-                'name' => 'Manish',
-                'phone' => '1234567891',
+                'id' => $delivery->deliveryBoy->id,
+                'name' => $delivery->deliveryBoy->name,
+                'phone' => $delivery->deliveryBoy->phone,
             ];
 
-        // }
+        }
 
         foreach ($orderDetails as $detail) {
             $product = $detail->product;
