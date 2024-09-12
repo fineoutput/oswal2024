@@ -14,7 +14,7 @@
     align-items: center;
     background-color: #4CAF50;
     opacity: 0;
-    animation: slideInOut 5s forwards;
+    animation: slideInOut 8s forwards;
 }
 
 .notification.success {
@@ -40,7 +40,11 @@
         opacity: 0;
     }
     10% {
-        top: 10px; /* Final position */
+        top: 20px; /* Final position */
+        opacity: 1;
+    }
+    15% {
+        top: 20px; /* Final position */
         opacity: 1;
     }
     90% {

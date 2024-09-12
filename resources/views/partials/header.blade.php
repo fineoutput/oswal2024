@@ -1,4 +1,4 @@
-<div class="container-fluid  sticky-top bg-light shadow-lg p-lg-0 p-2">
+<div class="container-fluid  sticky-top bg-light shadow-lg p-lg-0 p-2" style="z-index:999">
 
     <div class="asdas">
 
@@ -70,7 +70,6 @@
 
                     <div style="margin-top: 2rem;"
                         class="d-flex flex-wrap justify-content-end align-items-center header_item_icon">
-
                         <button class="search-btn d-none d-lg-block me-3">
                             <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
                             <svg class="header_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none">
