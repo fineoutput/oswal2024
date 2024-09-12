@@ -27,6 +27,14 @@
     font-family: popins;
     text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.8);
 }
+@media (min-width: 900px) and (max-width: 1280px) {
+    .settts {
+        background-size: contain;
+    }
+    .stationary-text {
+    bottom: -30px;
+}
+}
 @media (min-width: 312px) and (max-width: 900px) {
     .settts {
         height: 200px !important;
@@ -34,6 +42,16 @@
     }
     .slide-text {
     font-size: 1rem;
+}
+.module {
+    margin-top: -90px !important;
+    padding: 83px 0px;
+}
+.home-orangepatch-yellow {
+    font-size: 15px;
+}
+.home-orangepatch {
+    font-size: 15px;
 }
 }
     </style>
