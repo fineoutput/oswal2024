@@ -86,7 +86,7 @@ i.fas.fa-plus {
 }
 .input-inset{
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1;
   background: #FFFFFF;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 19 19'><path fill='%23838D99' d='M13.98 12.57a2 2 0 0 1 1.93.52l2.5 2.5a2 2 0 0 1-2.82 2.82l-2.5-2.5a2 2 0 0 1-.52-1.93l-1.38-1.37a7 7 0 1 1 1.42-1.42l1.37 1.38zm-3.37-2.03a5 5 0 1 0-7.08-7.08 5 5 0 0 0 7.08 7.08z'></path></svg>");
   background-repeat: no-repeat;
@@ -95,7 +95,7 @@ i.fas.fa-plus {
   border: 1px solid #C5CBD5;
   box-shadow: inset 0 1px 4px 0 rgba(0,0,0,0.20);
   border-radius: 8px;
-  width: 300px;
+  width: 200px;
   padding: .5em 1em .5em .5em;
   } 
   
@@ -325,7 +325,7 @@ i.fas.fa-plus {
 }
 
 .logo {
-  width: 90px;
+  width:75px;
 }
 
 li {
@@ -1572,9 +1572,9 @@ section.bb-section .bb-container.bb-active .bb-signinBx .bb-imgBx {
     font-size: 15px !important;
   }
 
-  .mobile_logo {
+  /* .mobile_logo {
     margin-left: 20px !important;
-  }
+  } */
 }
 
 .input-group {
@@ -4269,7 +4269,7 @@ p.prev_rate {
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  width: 350px;
+  width: 250px;
   padding:1rem 2rem !important;
   /* Adjust width as needed */
 }
@@ -4280,7 +4280,7 @@ p.prev_rate {
 }
 
 .dropdown-item {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #333;
   text-decoration: none;
@@ -5096,7 +5096,7 @@ h4.payment {
 .nav-links li a {
   text-decoration: none;
   padding: 0.5rem 0;
-  font-size: 1.1rem !important;
+  font-size: .9rem !important;
   font-weight: 500;
   font-family: fangsong;
   position: relative; /* Required for absolute positioning of the pseudo-element */

@@ -8,27 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  const links = document.querySelectorAll('.nav-link_color');
-
-  links.forEach(link => {
-      // Add the 'clicked' class to a link if it matches the stored clicked link
-      if (localStorage.getItem('clickedLink') === link.href) {
-          link.classList.add('clicked');
-      }
-
-      link.addEventListener('click', function() {
-          // Remove 'clicked' class from all links
-          links.forEach(link => link.classList.remove('clicked'));
-          
-          // Add 'clicked' class to the clicked link
-          this.classList.add('clicked');
-          
-          // Store the clicked link's URL in local storage
-          localStorage.setItem('clickedLink', this.href);
-      });
-  });
-});
 
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#carousel1', {
