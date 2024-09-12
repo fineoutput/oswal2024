@@ -116,34 +116,24 @@
     </div>
 
 <!-- <section id="mobile_slide" class="mobile_hero splide d-lg-none">
-
+    
     <div class="splide__track">
-
+        
         <ul class="splide__list">
+            
+            @foreach (App\Models\Websliders2::where('is_active', 1)->orderBy('id', 'desc')->limit(10)->get() as $slider)
+                <li class="splide__slide" style="padding: 0;">
 
-            <li class="splide__slide" style="padding: 0;">
+                    <img width="100%" height="100%" src="{{ asset($slider->image) }}" alt="" />
 
-                <img width="100%" height="100%" src="{{ asset('images/running_bannner.jpg') }}" alt="" />
-
-            </li>
-
-            <li class="splide__slide" style="padding: 0;">
-
-                <img width="100%" height="100%" src="{{ asset('images/lemon_banner.jpg') }}" alt="" />
-
-            </li>
-
-            <li class="splide__slide" style="padding: 0;">
-
-                <img width="100%" height="100%" src="{{ asset('images/samosa_banner.jpg') }}" alt="" />
-
-            </li>
+                </li>
+            @endforeach
 
         </ul>
 
     </div>
 
-</section> -->
+</section> --> -->
 @push('scripts')
 <script>
         document.addEventListener('DOMContentLoaded', function () {

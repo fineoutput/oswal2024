@@ -403,7 +403,7 @@ class UserController extends Controller
         return $data;
     }
 
-    public function addAddress(Request $request, $id=null)  {
+    public function addAddress(Request $request, $redirect , $id=null)  {
         
         $address = null;
 
@@ -416,7 +416,7 @@ class UserController extends Controller
 
         $cities = City::get();
 
-        return view('Users.add-address', compact('address' ,'states' ,'cities'));
+        return view('Users.add-address', compact('address' ,'states' ,'cities' , 'redirect'));
 
     }
 
@@ -459,8 +459,16 @@ class UserController extends Controller
 
             $message = isset($request->address_id) ? 'Address updated successfully.' : 'Address inserted successfully.';
 
-            return redirect()->back()->with('success', $message);
+            if($request->redirect == 'checkout'){
 
+                return redirect()->route('checkout.get-address')->with('success', $message);
+
+            }else{
+
+                return redirect()->to('/user')->with('success', $message);
+
+            }
+           
         } else {
 
             return redirect()->back()->with('error', 'Something went wrong. Please try again later.');

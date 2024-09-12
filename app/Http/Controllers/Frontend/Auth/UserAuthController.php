@@ -160,7 +160,7 @@ class UserAuthController extends Controller
         } else {
 
             // return redirect()->back()->with('error', 'Error occurred while saving OTP, please try again.');
-            return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again'] , 500);
+            return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again']);
         }
     }
 
@@ -245,7 +245,7 @@ class UserAuthController extends Controller
 
             // return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
 
-            return response()->json(['success' => false, 'message' => 'Invalid OTP. Please try again.'] , 401);
+            return response()->json(['success' => false, 'message' => 'Invalid OTP. Please try again.']);
 
         }
 
@@ -262,7 +262,7 @@ class UserAuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
         $user = User::where('contact', $request->phone_no)->first();
@@ -302,13 +302,13 @@ class UserAuthController extends Controller
 
             } else {
                 // return redirect()->back()->with('error', 'Error occurred while saving OTP, please try again');
-                return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again'], 500);
+                return response()->json(['success' => false,'message' => 'Error occurred while saving OTP, please try again']);
             }
         }else{
 
             // return redirect()->back()->with('error', 'The provided credentials do not match our records.');
 
-            return response()->json(['success' => false, 'message' => 'The provided credentials do not match our records.'] , 401);
+            return response()->json(['success' => false, 'message' => 'The provided credentials do not match our records.']);
 
         }
 
