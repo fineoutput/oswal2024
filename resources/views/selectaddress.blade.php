@@ -12,96 +12,115 @@
 
                 <div class="col-md-6">
 
-                    <form action="{{ route('checkout.process') }}" method="POST">
+                    @if(session()->has('address_id') && $place == null)
 
-                        @csrf
+                        <form action="{{ route('checkout.process') }}" method="get" id="autoSubmitForm">
+                            @csrf
+                            <input type="hidden" name="address_id" value="{{ session()->get('address_id') }}" />
+                        </form>
+                        
+                        <script>
+                            window.onload = function() {
+                                document.getElementById('autoSubmitForm').submit();
+                            };
+                        </script>
+                    
 
-                        <div class="row">
+                    @else
 
-                            <div class="col-md-12 text-center stkey" style="justify-content: space-around;">
+                        <form action="{{ route('checkout.process') }}" method="get">
 
-                                <div>
+                            @csrf
 
-                                    <h2>Select Address</h2>
+                            <div class="row">
 
-                                </div>
+                                <div class="col-md-12 text-center stkey" style="justify-content: space-around;">
 
-                                <div class="mt-3 mb-2 sxcds" style="margin-left: 37px;">
+                                    <div>
 
-                                    <button type="submit" class="animated-button">
+                                        <h2>Select Address</h2>
 
-                                        <span>Continue</span> <span></span>
+                                    </div>
 
-                                    </button>
+                                    <div class="mt-3 mb-2 sxcds" style="margin-left: 37px;">
 
-                                </div>
+                                        <button type="submit" class="animated-button">
 
-                            </div>
+                                            <span>Continue</span> <span></span>
 
-                            @forelse ($address_data as $address)
-
-                                <div class="col-md-12">
-
-                                    <div class="bottom-11 p-3 over">
-
-                                        <div class="row add_sel">
-
-                                            <div class="col-1 col-md-1 p-0" style="text-align: end;">
-
-                                                <input type="radio" name="address_id" value="{{ $address->id }}"  required="" />
-
-                                            </div>
-
-                                            <div class="col-10 col-md-11">
-
-                                                <p class="bottom-m"><b>Name:</b> <a>{{ $address->name }}</a></p>
-
-                                                <p class="bottom-m"><b>Address:</b> <a>{{ $address->custom_address }}</a></p>
-
-                                                <p class="bottom-m"><b>State:</b> <a>{{ $address->states->state_name }}</a></p>
-
-                                                <p class="bottom-m"><b>City:</b> <a>{{ $address->citys->city_name }}</a></p>
-
-                                                <p class="bottom-m"><b>Landmark:</b> <a>{{ $address->landmark }}</a></p>
-
-                                                <p class="bottom-m"><b>Pincode:</b> <a>{{ $address->zipcode }}</a></p>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div style="display: flex; justify-content: end;">
-
-                                            <a href="{{ route('user.add-address',['redirect' => 'checkout', 'id' => base64_encode($address->id)]) }}" class="mr-2">
-
-                                                <button type="button" class="animated-button">
-
-                                                    <span><i class="fa-solid fa-pencil"></i></span>
-
-                                                    <span></span>
-
-                                                </button>
-
-                                            </a>
-
-                                        </div>
+                                        </button>
 
                                     </div>
 
                                 </div>
 
-                            @empty
-                                <div class="w-100 text-center mt-5">
+                                @forelse ($address_data as $address)
 
-                                    <h5 class="text-center" style="color: #ff324d;">Please add an address for checkout</h5>
+                                    <div class="col-md-12">
 
-                                </div>
-                            @endforelse
+                                        <div class="bottom-11 p-3 over">
+
+                                            <div class="row add_sel">
+
+                                                <div class="col-1 col-md-1 p-0" style="text-align: end;">
+
+                                                    <input type="radio" name="address_id" value="{{ $address->id }}"  required="" />
+
+                                                </div>
+
+                                                <div class="col-10 col-md-11">
+
+                                                    <p class="bottom-m"><b>Name:</b> <a>{{ $address->name }}</a></p>
+
+                                                    <p class="bottom-m"><b>Address:</b> <a>{{ $address->custom_address }}</a></p>
+
+                                                    <p class="bottom-m"><b>State:</b> <a>{{ $address->states->state_name }}</a></p>
+
+                                                    <p class="bottom-m"><b>City:</b> <a>{{ $address->citys->city_name }}</a></p>
+
+                                                    <p class="bottom-m"><b>Landmark:</b> <a>{{ $address->landmark }}</a></p>
+
+                                                    <p class="bottom-m"><b>Pincode:</b> <a>{{ $address->zipcode }}</a></p>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div style="display: flex; justify-content: end;">
+
+                                                <a href="{{ route('user.add-address',['redirect' => 'checkout', 'id' => base64_encode($address->id)]) }}" class="mr-2">
+
+                                                    <button type="button" class="animated-button">
+
+                                                        <span><i class="fa-solid fa-pencil"></i></span>
+
+                                                        <span></span>
+
+                                                    </button>
+
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                @empty
+                                    <div class="w-100 text-center mt-5">
+
+                                        <h5 class="text-center" style="color: #ff324d;">Please add an address for checkout</h5>
+
+                                    </div>
+                                @endforelse
 
 
-                        </div>
+                            </div>
 
-                    </form>
+                        </form>
+
+                    @endif
+                    
 
                 </div>
 

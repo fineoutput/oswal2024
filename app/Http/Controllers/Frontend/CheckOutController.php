@@ -47,6 +47,14 @@ class CheckOutController extends Controller
 
     public function checkout(Request $request)
     {
+        $addressId = $request->input('address_id') ?? session('address_id');
+
+        if ($addressId != session('address_id')) {
+            
+            session()->forget('address_id');
+ 
+            session()->put('address_id', $addressId);
+        }
 
         if (session()->has('order_id')) {
 
@@ -58,15 +66,13 @@ class CheckOutController extends Controller
 
                 $cartData = Cart::with('product', 'type')->where('user_id', Auth::user()->id)->get();
 
-                $userAddress = Address::findOrFail($orderdetails->address_id);
+                $userAddress = Address::findOrFail($addressId);
 
                 return view('checkout', compact('orderdetails', 'cartData', 'userAddress'));
 
             }
 
         }
-
-        $addressId    = $request->input('address_id');
 
         $userAddress = Address::findOrFail($addressId);
 

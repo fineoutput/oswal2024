@@ -271,7 +271,7 @@
 
                     <h4 class="mb-3">Billing address</h4>
 
-                    <a href="{{ route('checkout.get-address') }}">
+                    <a href="{{ route('checkout.get-address',['place' => 'checkout']) }}">
                         <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Change Address</span> <span> </span></button>
                     </a>
 
