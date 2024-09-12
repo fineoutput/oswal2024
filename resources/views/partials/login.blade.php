@@ -262,7 +262,7 @@
 
                         // window.location.href = response.redirect_url;
                         closeModal();
-                        window.location.reload()
+                        window.location.reload();
                         
                     } else {
                         
@@ -390,7 +390,8 @@
 
                         // window.location.href = response.redirect_url;
                         closeModal();
-                        
+                        window.location.reload();
+
                     } else {
                         
                         sotpError.textContent = response.message || 'Invalid OTP, please try again.';

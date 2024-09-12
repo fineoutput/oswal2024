@@ -10,7 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
+use App\Models\OrderDetail;
+
 use App\Models\CartOld;
+
+use App\Models\Order;
 
 use App\Models\Cart;
 
@@ -77,7 +81,10 @@ class CartController extends Controller
 
             $cartCount = Cart::where($identifierColumn, $identifierValue)->count();
 
-            return response()->json(['success' => true, 'message' => 'Product added to Cart successfully.', 'count' =>  $cartCount], 201);
+            if($this->updateOrderAfterCartChange()){
+
+                return response()->json(['success' => true, 'message' => 'Product added to Cart successfully.', 'count' =>  $cartCount], 201);
+            }
 
         } elseif ($data['quantity'] == 0) {
 
@@ -85,13 +92,19 @@ class CartController extends Controller
 
             $cartCount = Cart::where($identifierColumn, $identifierValue)->count();
 
-            return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.' , 'count' =>  $cartCount], 200);
+            if($this->updateOrderAfterCartChange()){
+
+                return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.' , 'count' =>  $cartCount], 200);
+            }
 
         } else {
 
             $cartItem->update($data);
+            
+            if($this->updateOrderAfterCartChange()){
 
-            return response()->json(['success' => true, 'message' => 'Product updated to Cart successfully.', 'data' => $data], 200);
+                return response()->json(['success' => true, 'message' => 'Product updated to Cart successfully.', 'data' => $data], 200);
+            }
         }
     }
 
@@ -177,13 +190,16 @@ class CartController extends Controller
         $totalAmount = Cart::where($identifierColumn, $identifierValue)
                             ->sum('total_qty_price');
     
-        return response()->json([
-            'success' => true,
-            'message' => 'Quantity updated successfully.',
-            'selling_price' => formatPrice($type->selling_price),
-            'total_qty_price' => formatPrice(($qty * $type->selling_price)),
-            'totalamount' => formatPrice($totalAmount),
-        ], 200);
+        if($this->updateOrderAfterCartChange()){
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Quantity updated successfully.',
+                'selling_price' => formatPrice($type->selling_price),
+                'total_qty_price' => formatPrice(($qty * $type->selling_price)),
+                'totalamount' => formatPrice($totalAmount),
+            ], 200);
+        }
     }
     
     public function removeToCart(Request $request, $cart_id = null)
@@ -217,7 +233,10 @@ class CartController extends Controller
 
             $cartcount = Cart::query()->where($identifierColumn, $identifierValue)->count();
             
-            return response()->json(['success' => true, 'message' => 'Cart remove successfully' ,'totalAmount' =>formatPrice($totalAmount) ,'count' => $cartcount], 200);
+            if($this->updateOrderAfterCartChange()){
+
+                return response()->json(['success' => true, 'message' => 'Cart remove successfully' ,'totalAmount' =>formatPrice($totalAmount) ,'count' => $cartcount], 200);
+            }
 
             // return redirect()->back()->with('success' ,'Cart remove successfully');
 
@@ -226,6 +245,27 @@ class CartController extends Controller
             return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
 
         }
+    }
+
+    private function updateOrderAfterCartChange() {
+       
+        if (session()->has('order_id')) {
+
+            $orderId = session('order_id');
+
+            $order = Order::find($orderId);
+
+            if ($order) {
+
+                OrderDetail::where('main_id', $orderId)->delete();
+
+                $order->delete();
+            }
+
+            session()->forget('order_id');
+        }
+
+        return true;
     }
 
 }
