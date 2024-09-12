@@ -239,8 +239,10 @@
                     <div class="promo-section">
 
                         <div class="promo-title">Choose Your Promo Code</div>
+                        <button class="toggle-options-button" id="toggleButtonpromo">Choose Promo Codes</button>
 
-                        <div class="promo-options">
+                        <div class="promo-options" id="promoOptions" style="display: none;">
+
 
                             @foreach ($promocodes as $promocode)
 
@@ -254,10 +256,10 @@
 
                         </div>
 
-                        <input type="text" id="promoCodeInput" class="promo-code-input"
+                        <!-- <input type="text" id="promoCodeInput" class="promo-code-input"
                             placeholder="Enter or select promo code" readonly />
 
-                        <button class="apply-button" id="applyButton">Apply Code</button>
+                        <button class="apply-button" id="applyButton">Apply Code</button> -->
 
                     </div>
                     
