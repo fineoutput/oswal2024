@@ -102,6 +102,7 @@ p.botmname_top:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+	flex-direction: column;
 }
 </style>
 <!-- <div class="container">
