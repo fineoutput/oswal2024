@@ -1,3 +1,36 @@
+<style>
+    .search-field {
+	background-color: transparent;
+	background-image: url(https://wp-themes.com/wp-content/themes/twentythirteen/images/search-icon.png);
+	background-position: 5px  center;
+	background-repeat: no-repeat;
+	background-size: 24px 24px;
+	border: none;
+	cursor: pointer;
+	height: 40px;
+	margin: 3px 0;
+	padding: 0 0 0 34px;
+	position: relative;
+	-webkit-transition: width 400ms ease, background 400ms ease;
+	transition:         width 400ms ease, background 400ms ease;
+	width:0px;
+   cursor: pointer;
+}
+
+.search-field:focus {
+	background-color: navajowhite;
+	border: 2px solid #c3c0ab;
+	cursor: text;
+	outline: 0;
+	width: 250px;
+  color:#fff;
+}
+.search-form
+.search-submit { 
+display:none;
+}
+
+</style>
 <div class="container-fluid  sticky-top bg-light shadow-lg p-lg-0 p-2" style="z-index:999">
 
     <div class="asdas">
@@ -76,7 +109,8 @@
     <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
 </svg>
-                        </button>
+                        </button> -->
+                        <input type="search" class="search-field d-none d-lg-block" placeholder="Search …" value="" name="s" title="Search for:" />
                         @php
                             $count = 0;
 
@@ -247,12 +281,12 @@
 
             </div>
 
-            <button style="border: none; background: none;" class="search-btn2">
+            <!-- <button style="border: none; background: none;" class="search-btn2">
 
                 <i style="font-size: 20px; color: red;" class="fa fa-search" id="naming" aria-hidden="true"></i>
 
-            </button>
-
+            </button> -->
+            <input style="color: #d62837 !important;" type="search" class="search-field" placeholder="Search …" value="" name="s" title="Search for:" />
         </div>
 
     </div>

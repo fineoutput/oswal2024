@@ -283,12 +283,12 @@ class CheckOutController extends Controller
         $promocode = Promocode::where('promocode', $userInputPromoCode)->first();
 
         if (!$promocode) {
-            return response()->json(['success' => false, 'message' => 'Invalid Promocode.'], 400);
+            return response()->json(['success' => false, 'message' => 'Invalid Promocode.']);
         }
 
         $currentDate = now()->format('Y-m-d');
         if ($currentDate > $promocode->expiry_date) {
-            return response()->json(['success' => false, 'message' => 'This Promocode Has Expired.'], 400);
+            return response()->json(['success' => false, 'message' => 'This Promocode Has Expired.']);
         }
 
         if ($promocode->type == 1) {
@@ -296,12 +296,26 @@ class CheckOutController extends Controller
             $promocodeApplied = PromocodeApplied::where('user_id', $userId)->where('promocode_id', $promocode->id)->where('status', '!=', 1)->exists();
 
             if ($promocodeApplied) {
-                return response()->json(['success' => false, 'message' => 'This Promocode Has Been Already Used.'], 400);
+                return response()->json(['success' => false, 'message' => 'This Promocode Has Been Already Used.']);
+            }
+        } else {
+
+            $isPromoCodeAppliedToOrder = Order::where('id', $orderId)
+                ->where('promocode', $promocode->id)
+                ->exists();
+    
+            if ($isPromoCodeAppliedToOrder) {
+                return response()->json(['success' => false, 'message' => 'This Promocode Has Already Been Applied.']);
+            }
+    
+            $order = Order::find($orderId);
+            if ($order && $order->promocode) {
+                return response()->json(['success' => false, 'message' => 'Only One Promocode Can Be Applied.']);
             }
         }
 
         if ($totalAmount < $promocode->minimum_amount) {
-            return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.'], 400);
+            return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.']);
         }
 
         $deductionAmount = ($promocode->percent / 100) * $totalAmount;
@@ -312,6 +326,13 @@ class CheckOutController extends Controller
 
         $totalAmount -= $deductionAmount;
 
+        if ($promocode->type == 1) {
+            PromocodeApplied::updateOrCreate(
+                ['user_id' => $userId, 'order_id' => $orderId, 'promocode_id' => $promocode->id],
+                ['status' => 1, 'promocode_discount' => $deductionAmount, 'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')]
+            );
+        }
+
         Order::where('id', $orderId)->update([
             'total_amount' => $totalAmount,
             'promocode'   => $promocode->id,
@@ -319,11 +340,69 @@ class CheckOutController extends Controller
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Promocode applied successfully.',
-            'promo_discount' => round($deductionAmount),
+            'promo_discount' => formatPrice($deductionAmount),
             'total_amount'  => formatPrice($totalAmount),
             'promocode_id'  =>  $promocode->id,
             'promocode_name' =>  $promocode->promocode,
+        ], 200);
+    }
+
+    public function removePromocode(Request $request)
+    {
+        
+        $orderId = $request->input('order_id');
+        $totalAmount = cleanamount($request->amount);
+        $userId = Auth::User()->id; 
+
+        if (!$orderId) {
+            return response()->json(['success' => false, 'message' => 'Order ID is required.']);
+        }
+
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found.']);
+        }
+
+        if (!$order->promocode) {
+            return response()->json(['success' => false, 'message' => 'No promocode is applied to this order.']);
+        }
+
+        $promocode = Promocode::find($order->promocode);
+
+        if ($promocode && $promocode->type == 1) {
+
+            $isPromoCodeUsed = PromocodeApplied::where('user_id', $userId)
+            ->where('order_id', $orderId)
+            ->where('promocode_id', $promocode->id)
+            ->where('status', '!=', 1)
+            ->exists();
+
+            if ($isPromoCodeUsed) {
+                PromocodeApplied::where('user_id', $userId)
+                    ->where('order_id', $orderId)
+                    ->where('promocode_id', $promocode->id)
+                    ->update(['status' => 0]);
+            }
+        }
+
+        $totalAmount =  $totalAmount + $order->promo_deduction_amount;
+        
+        $order->update([
+            'promocode' => null,
+            'promo_deduction_amount' => 0,
+            'total_amount' =>  $totalAmount,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Promocode removed successfully.',
+            'promo_discount' => formatPrice(0),
+            'total_amount'  => formatPrice($totalAmount),
+            'promocode_id'  =>  null,
+            'promocode_name' =>  'No promo code applied',
         ], 200);
     }
 
@@ -340,6 +419,25 @@ class CheckOutController extends Controller
         $giftCardStatus = 0;
 
         $promoStatus = 1;
+
+        $isGiftCardAppliedToOrder = Order::where('id', $orderId)
+        ->where('gift_id', $gift_card_id)
+        ->exists();
+
+        if($isGiftCardAppliedToOrder){
+
+            return response()->json(['success' => false, 'message' => 'This GiftCard Has Already Been Applied.']);
+
+        }else{
+            
+            $order = Order::find($orderId);
+
+            if ($order && $order->gift_id) {
+
+                return response()->json(['success' => false, 'message' => 'Only One GiftCard Can Be Applied.']);
+
+            }
+        }
 
         if ($finalAmount > getConstant()->gift_min_amount) {
 
@@ -358,13 +456,15 @@ class CheckOutController extends Controller
             if ($giftCard) {
 
                 $giftCardAmount = round($giftCard->price + ($giftCard->price * 18 / 100), 2);
+
             } else {
 
-                return response()->json(['success' => false, 'message' => 'Gift Card Not Found.'], 400);
+                return response()->json(['success' => false, 'message' => 'Gift Card Not Found.']);
             }
+
         } else {
 
-            return response()->json(['success' => false, 'message' => 'Your amount is less than the Gift Card minimum amount.'], 400);
+            return response()->json(['success' => false, 'message' => 'Your amount is less than the Gift Card minimum amount.']);
         }
 
         $finalAmount += $giftCardAmount;
@@ -376,12 +476,53 @@ class CheckOutController extends Controller
             'gift_gst_amt'   => ($giftCard->price * 18 / 100),
         ]);
         return response()->json([
+            'success'        => true,
             'message' => 'gift card applied successfully.',
             'name'        => $giftCard->name,
             'amount'      => formatPrice($giftCardAmount),
             'total_amount'   => formatPrice($finalAmount),
         ], 200);
     }
+
+    public function removeGiftCard(Request $request)
+    {
+        $orderId = $request->input('order_id');
+
+        $finalAmount = cleanamount($request->amount);
+       
+        if (!$orderId) {
+            return response()->json(['success' => false, 'message' => 'Order ID is required.']);
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found.']);
+        }
+
+        if (!$order->gift_id) {
+            return response()->json(['success' => false, 'message' => 'No gift card is applied to this order.']);
+        }
+
+        $giftCardAmount = $order->gift_amt;
+
+        $totalAmount = $finalAmount - $giftCardAmount;
+
+        $order->update([
+            'total_amount' => $totalAmount,
+            'gift_id' => null,
+            'gift_amt' => 0,
+            'gift_gst_amt' => 0,
+        ]);
+        return response()->json([
+            'success'     => true,
+            'message'     => 'Gift card removed successfully.',
+            'name'        => 'No Gift Card applied',
+            'amount'      => formatPrice(0),
+            'total_amount'   => formatPrice($totalAmount),
+        ], 200);
+
+    }
+
 
     public function applyWallet(Request $request)
     {

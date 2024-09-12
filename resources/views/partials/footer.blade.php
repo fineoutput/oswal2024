@@ -8,9 +8,9 @@
                 
                 <div class="col-xl-4 col-md-4 mb-30">
                     
-                    <div class="single-cta">
+                    <div class="single-cta d-flex">
                         
-                        <i class="fas fa-map-marker-alt"></i>
+                        <i class="fas fa-map-marker-alt" style="margin:0;"></i>
                         
                         <div class="cta-text">
                             
