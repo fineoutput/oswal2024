@@ -98,7 +98,7 @@ class WebSliderSecoundController extends Controller
 
         }
 
-        if($request->hasFile('img')){
+        if($request->hasFile('img2')){
 
             $slider->app_img = uploadImage($request->file('img2'), 'webslider2' ,'app');
 
