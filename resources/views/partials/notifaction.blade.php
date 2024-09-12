@@ -1,7 +1,7 @@
 <style>
  .notification {
     position: fixed;
-    top: -200px;
+    top: -1000px;
     right: 10px;
     width: 300px;
     padding: 15px;
@@ -36,7 +36,7 @@
 
 @keyframes slideInOut {
     0% {
-        top: -200px; /* Start above the viewport */
+        top: -1000px; /* Start above the viewport */
         opacity: 0;
     }
     10% {
@@ -51,7 +51,7 @@
         opacity: 1;
     }
     100% {
-        top: -200px; /* Move above the viewport */
+        top: -1000px; /* Move above the viewport */
         opacity: 0;
     }
 }
@@ -87,7 +87,7 @@
                 // Remove notification after a delay
                 setTimeout(() => {
                     notification.remove();
-                }, 5000); // Time in milliseconds (e.g., 5000ms = 5s)
+                }, 100000); // Time in milliseconds (e.g., 5000ms = 5s)
             });
         });
     </script>

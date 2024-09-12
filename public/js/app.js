@@ -8,97 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// $(".input").focus(function () {
-//   $("#search").addClass("move");
-// });
-// $(".input").focusout(function () {
-//   $("#search").removeClass("move");
-//   $(".input").val("");
-// });
-
-// $(".fa-search").click(function () {
-//   $(".input").toggleClass("active");
-//   $("#search").toggleClass("active");
-// });
-
-// $(".input").keypress(function (e) {
-//   if (e.which === 13) { // 13 is the Enter key
-//       var query = $(this).val().trim();
-//       if (query) {
-//           // Redirect to the new page with the query
-//           var searchUrl = "{{ route('all_products') }}";
-//                     window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
-//       }
-//   }
-// });
-
-// Toggle 'active' class on click for search and input elements
-document.querySelector(".fa-search").addEventListener("click", function () {
-  document.querySelector(".input").classList.toggle("active");
-  document.getElementById("search").classList.toggle("active");
-});
-
-// Handle Enter key press for input field
-document.querySelector(".input").addEventListener("keypress", function (e) {
-  if (e.key === "Enter") { // Check if the key pressed is "Enter"
-      var query = this.value.trim();
-      if (query) {
-          // Redirect to the new page with the query
-          var searchUrl = "{{ route('all_products') }}";
-          window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
-      }
-  }
-});
-
-
-// $(".input2").focus(function () {
-//   $("#search2").addClass("move");
-// });
-// $(".input2").focusout(function () {
-//   $("#search2").removeClass("move");
-//   $(".input2").val("");
-// });
-
-// $("#naming").click(function () {
-
-//   $(".input2").toggleClass("active");
-//   $("#search2").toggleClass("active");
-// });
-
-// When the input field is focused, add the 'move' class to #search
-document.querySelector('.input').addEventListener('focus', function () {
-  document.getElementById('search').classList.add('move');
-});
-
-// When the input field loses focus, remove the 'move' class and clear the input value
-document.querySelector('.input').addEventListener('focusout', function () {
-  document.getElementById('search').classList.remove('move');
-  this.value = '';
-});
-
-// Toggle 'active' class for input and search when the search icon is clicked
-document.querySelector('.fa-search').addEventListener('click', function () {
-  document.querySelector('.input').classList.toggle('active');
-  document.getElementById('search').classList.toggle('active');
-});
-
-// When input2 field is focused, add the 'move' class to #search2
-document.querySelector('.input2').addEventListener('focus', function () {
-  document.getElementById('search2').classList.add('move');
-});
-
-// When input2 loses focus, remove the 'move' class and clear the input value
-document.querySelector('.input2').addEventListener('focusout', function () {
-  document.getElementById('search2').classList.remove('move');
-  this.value = '';
-});
-
-// Toggle 'active' class for input2 and search2 when the naming element is clicked
-document.getElementById('naming').addEventListener('click', function () {
-  document.querySelector('.input2').classList.toggle('active');
-  document.getElementById('search2').classList.toggle('active');
-});
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -150,55 +59,37 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// console.log("hello");
+function showSearchButton(button) {
 
-//////////////////////////////////////////////////////////RATING iNPUT///////////////////////////////////////////////
+  const SelectorId = button === 'searchbutton1' ? 'search' : 'search2';
+  const inputID = button === 'searchbutton1' ? 'input' : 'input2';
 
-// let ratingInputs = document.querySelectorAll('.rating input');
+  document.querySelector('.'+inputID).classList.toggle('active');
+  document.getElementById(SelectorId).classList.toggle('active');
 
-// ratingInputs.forEach(input => {
-//   input.addEventListener('change', function () {
-//     // Remove active class from all labels
-//     document.querySelectorAll('.rating label').forEach(label => {
-//       label.classList.remove('active');
-//     });
+}
 
-//     // Add active class to labels up to the selected input
-//     let selectedInput = this;
-//     while (selectedInput) {
-//       const label = document.querySelector(`label[for="${selectedInput.id}"]`);
-//       if (label) {
-//         label.classList.add('active');
-//       }
-//       selectedInput = selectedInput.previousElementSibling;
-//     }
-//   });
-// });
+function handleSearch(inputSelector, searchRoute) {
+  
+  const inputElement = document.querySelector(inputSelector);
 
-///////////////////////RATING iNPUT END//////////
+  if (!inputElement) {
+    console.error('Element not found:', inputSelector);
+    return;
+  }
 
+  if (e.key === "Enter" || e.keyCode === 13) {
+    
+    const query = this.value.trim();
 
-//////////Wishlist button functionlity///////////
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.wishlist_icons').forEach(iconContainer => {
-    iconContainer.addEventListener('click', function (event) {
-      // console.log("clicked");
-      var regularHeart = this.querySelector('.hollow_icon');
-      var solidHeart = this.querySelector('.colored_icon');
-      if (regularHeart.style.display === 'none' || regularHeart.style.display === '') {
-        regularHeart.style.display = 'inline';
-        solidHeart.style.display = 'none';
-      } else {
-        regularHeart.style.display = 'none';
-        solidHeart.style.display = 'inline';
-      }
-      event.preventDefault();
-      event.stopPropagation();
-    });
-  });
-});
-//////////Wishlist button functionlity End///////////
+    if (query) {
+      const searchUrl = searchRoute;
+      window.location.href = `${searchUrl}?search=${encodeURIComponent(query)}`;
+    }
 
+  }
+    
+}
 
 // Increment function
 function increment(productId) {

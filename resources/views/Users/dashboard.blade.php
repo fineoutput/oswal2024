@@ -94,8 +94,8 @@
 
                     <div class="view_address">
                         <h2>Address</h2>
-                        <a href="{{ route('user.add-address') }}">
-                            <button class="animated-button">
+                        <a href="{{ route('user.add-address', ['redirect' => 'user']) }}">
+                            <button type="button" class="animated-button">
                                 <span>Add Address</span>
                                 <span></span>
                             </button>
@@ -116,7 +116,7 @@
                         <p><strong>Pincode:</strong> {{ $address->zipcode }}</p>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ route('user.add-address',['id' => base64_encode($address->id)]) }}">
+                            <a href="{{ route('user.add-address',['redirect' => 'user', 'id' => base64_encode($address->id)]) }}">
                                 <button class="animated-button">
                                     <span><i class="fa-solid fa-pencil"></i></span>
                                     <span></span>

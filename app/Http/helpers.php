@@ -233,7 +233,6 @@ if (!function_exists('sendOtpSms')) {
     }
 }
 
-
 if(!function_exists('generateRandomString')){
 
     function generateRandomString($length = 20){
@@ -656,6 +655,7 @@ if(! function_exists('sendPersistentId')) {
     }
 
 }
+
 if(! function_exists('cleanamount')) {
     function cleanamount($value) {
     
@@ -664,3 +664,36 @@ if(! function_exists('cleanamount')) {
         return floatval($cleanedValue);
     }
 }
+
+if(! function_exists('getLatLngFromAddress')){
+    
+    function getLatLngFromAddress($address) {
+
+        $apiKey = 'AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U'; 
+        $address = urlencode($address);
+        
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&key={$apiKey}";
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        
+        $responseData = json_decode($response, true);
+        
+        if ($responseData['status'] === 'OK') {
+        
+            $latitude = $responseData['results'][0]['geometry']['location']['lat'];
+            $longitude = $responseData['results'][0]['geometry']['location']['lng'];
+            
+            return ['latitude' => $latitude, 'longitude' => $longitude];
+
+        } else {
+
+            return false; 
+            
+        }
+    }
+
+} 

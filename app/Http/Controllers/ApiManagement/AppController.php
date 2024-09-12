@@ -162,6 +162,20 @@ class AppController extends Controller {
        
         $state_id = $city ? $city->state_id : null;
 
+        // $shippingData = ShippingCharge::where('city_id',$city->id)->first();
+
+        // if (!$shippingData) {
+        //     return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'],400);
+        // }
+        
+        $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name ."". $city->state->state_name ." ".$request->zipcode ." ". 'India';
+
+        if(!getLatLngFromAddress($custom_address)) {
+            return response()->json(['success' => false, 'message' => 'Address Not Found.'],400);
+        }
+
+        $location = getLatLngFromAddress($custom_address);
+
         $addressData = [
             'device_id'        => $request->device_id,
             'user_id'          => $request->user_id ?? Auth::user()->id,
@@ -172,24 +186,16 @@ class AppController extends Controller {
             'state'            => strval($state_id),
             'zipcode'          => $request->zipcode,
             'address'          => $request->address,
-            'latitude'         => $request->latitude,
-            'longitude'        => $request->longitude,
+            'latitude'         => $location['latitude'],
+            'longitude'        => $location['longitude'],
             'location_address' => $request->location_address,
             'date'             => now()->setTimezone('Asia/Calcutta')->toDateTimeString(),
         ];
- 
-        $shippingData = ShippingCharge::where('city_id',$city->id)->first();
-
-        if (!$shippingData) {
-            return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'],400);
-        }
 
         $userAddress = Address::create($addressData);
 
         $userAddress->load('states', 'citys');
-
-        $custom_address = $userAddress->doorflat . " " . $userAddress->landmark . " " . $userAddress->address . " " . $userAddress->zipcode;
-
+      
         $response = $userAddress;
         $response['custom_address'] = $custom_address;
        

@@ -59,7 +59,7 @@
 
                         <h2>Products</h2>
 
-                        @include('products.partials.filterprice')
+                        {{-- @include('products.partials.filterprice') --}}
 
                     </div>
 

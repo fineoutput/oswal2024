@@ -88,7 +88,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::get('update-qty', [CartController::class, 'updateQty'])->name('update-qty');
     
-    Route::get('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
+    Route::get('removeToCart/{cart_id?}',[CartController::class, 'removeToCart'])->name('remove-to-cart');
     
     Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
@@ -98,8 +98,6 @@ Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(functi
 
     Route::post('/', [CheckOutController::class, 'checkout'])->name('process');
 
-    Route::get('add-address', [HomeController::class, 'addAddress'])->name('add-address');
-    
     Route::get('get-address', [HomeController::class, 'getAddress'])->name('get-address');
 
     Route::post('apply-wallet', [CheckOutController::class, 'applyWallet'])->name('apply-wallet');
@@ -133,19 +131,15 @@ Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name(
 
 Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
 
-Route::prefix('user')->name('user.')->group(function () {
+Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
 
     Route::get('/', [UserController::class, 'index'])->name('index');
-    
-    Route::post('removeToCart',[CartController::class, 'removeToCart'])->name('remove-to-cart');
-    
-    Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
 
     Route::get('get-order-details/{id}', [UserController::class, 'orderDetail'])->name('get-order-details');
 
     Route::get('cancle-order/{id}', [UserController::class, 'cancelOrder'])->name('cancle-order');
 
-    Route::get('add-address/{id?}', [UserController::class, 'addAddress'])->name('add-address');
+    Route::get('add-address/{redirect}/{id?}', [UserController::class, 'addAddress'])->name('add-address');
 
     Route::post('stor-address', [UserController::class, 'storeAddress'])->name('stor-address');
 
