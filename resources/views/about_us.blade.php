@@ -104,6 +104,164 @@ p.botmname_top:hover {
     align-items: center;
 	flex-direction: column;
 }
+
+/* 
+//////////////////Service Section */
+
+.section-services {
+	font-family: "Poppins", sans-serif;
+	background-color: #e6edf7;
+	color: #202020;
+	padding-top: 115px;
+    padding-bottom: 120px;
+}
+
+.section-services .header-section {
+	margin-bottom: 34px;
+}
+
+.section-services .header-section .title {
+	position: relative;
+    padding-bottom: 14px;
+    margin-bottom: 25px;
+	font-weight: 700;
+    font-size: 32px;
+}
+
+.section-services .header-section .title:before {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 50px;
+	height: 3px;
+	background-color: #ff4500;
+    border-radius: 3px;
+}
+
+.section-services .header-section .title:after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+    transform: translateX(30px);
+	width: 10px;
+	height: 3px;
+	background-color: #504f93;
+    border-radius: 3px;
+}
+
+.section-services .header-section .description {
+	font-size: 14px;
+    color: #282828;
+}
+
+.section-services .single-service {
+    position: relative;
+    margin-top: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 40px 30px;
+    overflow: hidden;
+}
+
+.section-services .single-service .content {
+	position: relative;
+	z-index: 20;
+}
+
+.section-services .single-service .circle-before {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    transform: translate(40%, -40%);
+    width: 150px;
+    height: 150px;
+    background-color: #d81828;
+    border: 6px solid #504f93;
+    border-radius: 50%;
+    opacity: 0.5;
+    z-index: 10;
+    transition: all .6s;
+}
+
+.section-services .single-service:hover .circle-before {
+	width: 100%;
+	height: 100%;
+	transform: none;
+	border: 0;
+	border-radius: 0;
+	opacity: 1;
+}
+
+.section-services .single-service .icon {
+	display: inline-block;
+	margin-bottom: 26px;
+    width: 70px;
+    height: 70px;
+    background-color: #d81828;
+    border-radius: 5px;
+    line-height: 70px;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    transition: all .3s;
+}
+
+.section-services .single-service:hover .icon {
+	background-color: #fff;
+	color: #ff4500;
+}
+
+.section-services .single-service .title {
+    margin-bottom: 18px;
+	font-weight: 700;
+    font-size: 23px;
+    transition: color .3s;
+}
+
+.section-services .single-service:hover .title {
+	color: #fff;
+}
+
+.section-services .single-service .description {
+    margin-bottom: 20px;
+    font-size: 14px;
+    transition: color .3s;
+}
+
+.section-services .single-service:hover .description {
+	color: #fff;
+}
+
+.section-services .single-service a {
+	position: relative;
+	font-size: 18px;
+    color: #202020;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color .3s;
+}
+
+.section-services .single-service:hover a {
+	color: #fff;
+}
+
+.section-services .single-service a:after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background-color: #ff4500;
+	transition: background-color .3s;
+}
+
+.section-services .single-service:hover a:after {
+	background-color: #fff;
+}
 </style>
 <!-- <div class="container">
 	<div class="row">
@@ -216,6 +374,9 @@ p.botmname_top:hover {
 		</div>
 	</div>
 </div> -->
+<div class="banner_abbts d-flex justify-content-center" style="{{asset('images/banner')}}">
+	<h1>About US</h1>
+</div>
 
 <div class="container-fluid">
     <div class="row slept_through bg-2" style="background-image: url('{{ asset('images/bg-2.png') }}');">
@@ -382,7 +543,76 @@ p.botmname_top:hover {
     </div>
 </div>
 
-<div class=""></div>
+<section class="section-services">
+		<div class="container">
+			<div class="row justify-content-center text-center">
+				<div class="col-md-10 col-lg-8">
+					<div class="header-section">
+						<h2 class="title">Our Services</h2>
+						
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- Single Service -->
+				<div class="col-md-6 col-lg-3">
+					<div class="single-service">
+						<div class="content">
+							<span class="icon">
+								<i class="fab fa-battle-net"></i>
+							</span>
+							<h2 class="title">Quality Control</h2>
+							<p class="description">The primary objective of our organization is to deliver high-quality products at affordable prices in a safe and hygienic environment.</p>
+						</div>
+						<span class="circle-before"></span>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-3">
+					<div class="single-service">
+						<div class="content">
+							<span class="icon">
+								<i class="fab fa-battle-net"></i>
+							</span>
+							<h2 class="title">Infrastructure</h2>
+							<p class="description">In order to extend our outreach to the customers, we are continuously developing our infrastructure with well-equipped machines and facilities for our employees.</p>
+						</div>
+						<span class="circle-before"></span>
+					</div>
+				</div>
+				<!-- / End Single Service -->
+				<!-- Single Service -->
+				<div class="col-md-6 col-lg-3">
+					<div class="single-service">
+						<div class="content">
+							<span class="icon">
+								<i class="fab fa-asymmetrik"></i>
+							</span>
+							<h2 class="title">Manufacturing</h2>
+							<p class="description">We are our own competitors, and hence we are always outdoing ourselves to provide our consumers with a wide range of products using highly advanced machinery.</p>
+						</div>
+						<span class="circle-before"></span>
+					</div>
+				</div>
+				<!-- / End Single Service -->
+				<!-- Single Service -->
+				<div class="col-md-6 col-lg-3">
+					<div class="single-service">
+						<div class="content">
+							<span class="icon">
+								<i class="fab fa-artstation"></i>
+							</span>
+							<h2 class="title">Reasonable Prices</h2>
+							<p class="description">We provide all products on the affordable prices to all customers which give us a long string of happy customers.</p>
+						</div>
+						<span class="circle-before"></span>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</section>
+
+</div>
 <script>
     function showContent(contentId) {
     const contents = document.querySelectorAll('.tab-content');
