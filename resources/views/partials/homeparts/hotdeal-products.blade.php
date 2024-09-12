@@ -81,7 +81,7 @@
 
                                                 </b>
 
-                                                <h4>{{ Illuminate\Support\Str::limit($product['long_desc'] , 40) }}</h4>
+                                                {{-- <h4>{{ Illuminate\Support\Str::limit($product['long_desc'] , 40) }}</h4> --}}
 
                                                 <p>{{ formatPrice($productType->selling_price) }}</p>
 

@@ -97,7 +97,7 @@
 
                                     <div class="form-group row">
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -105,7 +105,7 @@
                                                     value="{{ $slider ? $slider->link : old('link') }}"
                                                     name="link" placeholder="Enter link" required>
 
-                                                <label for="link">Text &nbsp;<span
+                                                <label for="link"> WebText &nbsp;<span
                                                         style="color:red;">*</span></label>
 
                                             </div>
@@ -116,7 +116,26 @@
 
                                         </div>
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control"
+                                                    value="{{ $slider ? $slider->app_link : old('apptext') }}"
+                                                    name="apptext" placeholder="Enter text" required>
+
+                                                <label for="apptext"> App Text &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('apptext')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -132,6 +151,27 @@
                                             </div>
 
                                             @error('img')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="file" id="img2" name="img2"
+                                                    placeholder="img2">
+
+                                                @if ($slider != null)
+                                                    <img src="{{ asset($slider->app_img) }}" width="100px" height="100px">
+                                                @endif
+
+                                                <label class="mb-2" for="img"> App Image </label>
+
+                                            </div>
+
+                                            @error('img2')
                                                 <div style="color:red">{{ $message }}</div>
                                             @enderror
 
