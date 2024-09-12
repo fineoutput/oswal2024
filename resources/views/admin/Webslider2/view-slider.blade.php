@@ -69,11 +69,11 @@
 
                                 <div class="row">
 
-                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View Webslider2</h4> </div>
+                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View Header</h4> </div>
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" href="{{ route('webslidersecound.create') }}" role="button" style="margin-left: 20px;"> Add Webslider2</a>
+                                        <a class="btn btn-info cticket" href="{{ route('webslidersecound.create') }}" role="button" style="margin-left: 20px;"> Add Header</a>
 
                                     </div>
 
@@ -94,9 +94,13 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="3">Images</th>
+                                                    <th data-priority="3">Web Images</th>
+
+                                                    <th data-priority="3">App Images</th>
                                                     
-                                                    <th data-priority="1">Text</th>
+                                                    <th data-priority="1">Web Text</th>
+
+                                                    <th data-priority="1">App Text</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -120,7 +124,17 @@
 
                                                    </td>
 
+                                                   <td>
+
+                                                    @if ($slider->app_img != null)
+                                                        <img src="{{ asset($slider->app_img)}}" width="50px" height="50px" alt="">
+                                                    @endif 
+
+                                                   </td>
+
                                                     <td>{{ $slider->link }}</td>
+
+                                                    <td>{{ $slider->app_link }}</td>
 
                                                     <td> 
                                                         @if($slider->is_active == 1)  

@@ -60,16 +60,21 @@ class WebSliderSecoundController extends Controller
 
         $rules = [
             'link'              => 'nullable|string',
+            'apptext'           => 'nullable|string',
         ];
 
         if (!isset($request->slider_id)) {
 
             $rules['img'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            
+            $rules['img2'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $slider = new Websliders2;
 
         } else {
             $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
+            $rules['img2'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $slider = Websliders2::find($request->slider_id);
             
@@ -83,11 +88,19 @@ class WebSliderSecoundController extends Controller
 
         $request->validate($rules);
 
-        $slider->fill($request->all());
+        $slider->link = $request->link;
+
+        $slider->app_link = $request->apptext;
 
         if($request->hasFile('img')){
 
-            $slider->image = uploadImage($request->file('img'), 'webslider2');
+            $slider->image = uploadImage($request->file('img'), 'webslider2' ,'web');
+
+        }
+
+        if($request->hasFile('img')){
+
+            $slider->app_img = uploadImage($request->file('img2'), 'webslider2' ,'app');
 
         }
 

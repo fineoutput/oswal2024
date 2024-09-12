@@ -255,8 +255,8 @@ class AppController extends Controller {
        foreach ($sliders as $key => $value) {
          $data[] =[
             'id'    => $value->id,
-            'url'   => $value->link,
-            'image' => asset($value->image),
+            'url'   => $value->app_link,
+            'image' => asset($value->app_img),
          ];
        }
 
