@@ -19,7 +19,7 @@
                         </a>
                 </div>
 
-                <div class="col-lg-10 d-flex  justify-content-end ">
+                <div class="col-lg-10 d-flex  justify-content-center ">
 
                     <nav class="nav">
 
@@ -64,12 +64,12 @@
 
         <div class="col-lg-3 col-4">
 
-            <div class="row" style="display: flex; justify-content: end;">
+            <div class="row" style="display: flex; justify-content:center;">
 
                 <div class="col-lg-8 header_expo" style="width:100%">
 
                     <div style="margin-top: 2rem;"
-                        class="d-flex flex-wrap justify-content-end align-items-center header_item_icon">
+                        class="d-flex flex-wrap justify-content-center align-items-center header_item_icon">
                         <button class="search-btn d-none d-lg-block me-3">
                             <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
                             <svg class="header_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none">
