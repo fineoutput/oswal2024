@@ -4,8 +4,9 @@
 
 @section('content')
 
-<div class="container">
+<div class="container section-padding">
             <div class="row">
+              <h2 class="d-flex justify-content-center align-items-center">Services</h2>
                 <div class="row section-padding">
   
                     <div class="col-md-3">
