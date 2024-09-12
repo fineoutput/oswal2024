@@ -3,8 +3,103 @@
 @section('title', $title ?? '')
 
 @section('content')
+<style>
+    .abts_imngs img {
+    border-radius: 20px;
+}
 
-<div class="container">
+.slept_through {
+    align-items: center;
+    padding: 80px 5%;
+}
+.about-bgtextss {
+    margin: 0;
+    padding: 0;
+    /* font: bold 150px Arial; */
+    /* background: url(abt_img/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg) no-repeat center center; */
+    background-size: cover;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    /* -webkit-mask-image: url(abt_img/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg); */
+    /* mask-image: url(abt_img/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg); */
+    font-weight: 800;
+    font-family: sans-serif;
+}
+.bg-2 {
+    background-image: url(abt_img/bg-2.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+.bg-1 {
+    background-image: url(abt_img/bg-1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+.bg-3 {
+    background-image: url(abt_img/bg-3.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+/* //////// */
+.tab-button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #feb302;
+    color: white;
+    font-size: 16px;
+    width: 300px;
+    font-size: 30px;
+    /* background: none; */
+    cursor: pointer;
+    border-bottom: 5px solid black;
+}
+
+.tab-button:hover {
+    background-color: #f0563b;
+}
+
+.tab-content {
+    display: none;
+    margin-top: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+.round_name {
+    box-shadow: 0px 10px 0px 0px #ee1f71;
+}
+p.botmname_top {
+    background-image:url(abt_img/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    color: #ee1f71;
+    text-align: center;
+    font-weight: 700;
+    font-size: 22px;
+    height: 172px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 3rem;
+}
+p.botmname_top:hover {
+    background: #ee1f71 !important;
+    color: #fff !important;
+}
+</style>
+<!-- <div class="container">
 	<div class="row">
 		<div class="col-md-12" style="text-align:justify !important;">
 			<button id="myButton">Click Me</button>
@@ -114,5 +209,178 @@
 			</div>
 		</div>
 	</div>
+</div> -->
+
+<div class="container-fluid">
+    <div class="row slept_through bg-2" style="background-image: url('{{ asset('images/bg-2.png') }}');">
+        <div class="col-lg-4">
+            <div class="abts_imngs">
+                <img src="{{asset('images/masala_1.png')}}" width="100%" alt="">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h1 class="about-bgtextss" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}'); -webkit-mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);">Founding and Early Success</h3>
+        </div>
+        <div class="col-lg-4">
+            <p> Oswal Soap Group was established by Late Shri Uttamchand Deshraj Jain in 1956 in <span class="red">Johari Bazaar, Jaipur.</span> Driven by his hard work and dedication, the soap quickly gained popularity due to its <span class="red">high quality,</span> making it a preferred choice among consumers. The foundation laid by Late Shri Jain was crucial in setting the stage for future growth. </p>
+        </div>
+    </div>
+    <div class="row slept_through bg-1" style="background-image: url('{{ asset('images/bg-1.png') }}');">
+        
+        <div class="col-lg-4">
+            <h1 class="about-bgtextss" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}'); -webkit-mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);">Expansion and Growth</h1>
+        </div>
+        <div class="col-lg-4">
+            <p> Following the initial success, Late Shri Uttamchand Deshraj Jain’s sons took significant steps to <span class="red">formalize and expand the business.</span> They registered the company as <span class="red">“Oswal Soap Group”</span> and began handling the operations more systematically. This expansion included setting up <span class="red">production centers and stores</span> to cater to various cities, towns, and villages. </p>
+        </div>
+        <div class="col-lg-4">
+            <div class="abts_imngs">
+                <img src="{{asset('images/kachighani_oil.png')}}" width="100%" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="row slept_through bg-3" style="background-image: url('{{ asset('images/bg-3.png') }}');">
+        <div class="col-lg-4">
+            <div class="abts_imngs">
+                <img src="{{asset('images/Poha_2.png')}}" width="100%" alt="">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h1 class="about-bgtextss" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}'); -webkit-mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);">Product Diversification</h1>
+        </div>
+        <div class="col-lg-4">
+            <p> In 1995, the third generation of the Deshraj family took over the business, introducing a broader range of products to meet diverse needs. The Oswal Soap Group expanded its offerings to include <span class="red">washing powder, detergent powder, bath soap, cleaning powders,</span> and other daily-use items such as <span class="red">tea, spices, and sanitary products.</span> This diversification aimed to cater to a wider market and enhance consumer satisfaction. </p>
+        </div>
+    </div>
+    <div class="row slept_through bg-2" style="background-image: url('{{ asset('images/bg-2.png') }}');">
+        
+        <div class="col-lg-4">
+            <h1 class="about-bgtextss" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}'); -webkit-mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);">Nationwide Presence and Future Plans</h1>
+        </div>
+        <div class="col-lg-4">
+            <p> With its products available at reasonable prices across <span class="red">Rajasthan, Punjab, Haryana, Gujarat, Maharashtra,</span> and Madhya Pradesh, Oswal Soap Group has built a strong presence. The company continues to innovate and plans to <span class="red">launch new products</span> in the near future. Ongoing research and efforts are dedicated to expanding their product line and reaching new markets. </p>
+        </div>
+        <div class="col-lg-4">
+            <div class="abts_imngs">
+                <img src="{{asset('images/daal_1.png')}}" width="100%" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="row slept_through bg-3" style="background-image: url('{{ asset('images/bg-3.png') }}');">
+        <div class="col-lg-4">
+            <div class="abts_imngs">
+                <img src="{{asset('images/oswal_rice.png')}}" width="100%" alt="">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h1 class="about-bgtextss" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}'); -webkit-mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    mask-image: url(images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);">Industry Leadership and Opportunities</h1>
+        </div>
+        <div class="col-lg-4">
+           <p> With over 65 years of experience and a <span class="red">billion satisfied customers,</span> Oswal Soap Group has become one of the largest manufacturers of daily-use commodities. The company operates through a network of over <span class="red">1000 distributors, 250,000 wholesale retailers,</span> and 800+ employees. As demand grows, Oswal Soap Group is looking to <span class="red">appoint more agencies</span> in various cities. Interested candidates and agencies are encouraged to get in touch to explore opportunities. </p>
+        </div>
+    </div>
 </div>
+
+<div class="container">
+	<div class="owner_frame">
+		<img src="{{asset('images/oswalowner.jpg')}}" alt="">
+	</div>
+    <div class="inside_bttns d-flex justify-content-center">
+        <button class="tab-button" onclick="showContent('content1')">Our Directors</button>
+        <button class="tab-button" onclick="showContent('content2')">Eight Brothers</button>
+    </div>
+
+    <div id="content1" class="tab-content">
+        <div class="row mt-5 good_e">
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Devendra Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Surendra Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Yatendra Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Virendra Jain Director</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="content2" class="tab-content">
+        <div class="row newefe " style="position:relative;">
+
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Harsh Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Ajay Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12   m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Sanjay Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Achal Jain Director</p>
+                </div>
+            </div>
+    
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Gaurav Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Saurabh Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Shrenik Jain Director</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 m-auto">
+                <div class="round_name">
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Hemank Jain Director</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class=""></div>
+<script>
+    function showContent(contentId) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+
+    const selectedContent = document.getElementById(contentId);
+    selectedContent.classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    showContent('content1');
+});
+
+</script>
 @endsection

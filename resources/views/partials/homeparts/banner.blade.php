@@ -1,4 +1,43 @@
-<section class="hero-section d-none d-lg-block">
+<style>
+        #alv_slider {
+    /* height: 100vh; */
+    width: 100%;
+}
+
+.settts {
+    position: relative;
+    height: 100vh !important;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.stationary-text {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.slide-text {
+    color: #f8161c;
+    font-size: 6rem;
+    text-align:center;
+    font-family: popins;
+    text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.8);
+}
+@media (min-width: 312px) and (max-width: 900px) {
+    .settts {
+        height: 200px !important;
+        background-size: contain;
+    }
+    .slide-text {
+    font-size: 1rem;
+}
+}
+    </style>
+<!-- <section class="hero-section d-none d-lg-block">
 
     <div class="row no-gutters">
 
@@ -53,10 +92,30 @@
 
     </div>
 
-</section>
+</section> -->
 
+<div id="alv_slider" class="splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+            @foreach (App\Models\Websliders2::where('is_active', 1)->orderBy('id', 'desc')->get() as $slider)
+                <li class="splide__slide settts" style="background-image: url('{{ asset($slider->image) }}');">
+            @endforeach      
+                <!-- </li>
+                <li class="splide__slide settts" style="background-image: url('{{ asset('images/web_slide2.png') }}');">
+                    
+                </li>
+                <li class="splide__slide settts" style="background-image: url('{{ asset('images/web_slide3.png') }}'); ">
+                    
+                </li> -->
+                <!-- Add more slides as needed -->
+            </ul>
+        </div>
+        <div class="stationary-text">
+        <div class="slide-text">Oswal <span><img style="width: 10%;" src="{{asset('images/oswal-logo.png')}}" alt=""></span> Soap</div>
+    </div>
+    </div>
 
-<section id="mobile_slide" class="mobile_hero splide d-lg-none">
+<!-- <section id="mobile_slide" class="mobile_hero splide d-lg-none">
 
     <div class="splide__track">
 
@@ -84,4 +143,17 @@
 
     </div>
 
-</section>
+</section> -->
+@push('scripts')
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new Splide('#alv_slider', {
+                type       : 'loop',
+                heightRatio: 1,
+                drag       : true, // Allows for drag to scroll
+                pagination : false,
+                arrows     : false,
+            }).mount();
+        });
+</script>
+@endpush
