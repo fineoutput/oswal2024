@@ -394,60 +394,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Gift card js
-function setupSelectableSection(sectionId, listId, itemClass) {
-  const sectionElement = document.getElementById(sectionId);
-  const listElement = document.getElementById(listId);
-
-  // Handle the click event to toggle the list display
-  sectionElement.addEventListener('click', () => {
-    listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Handle item selection
-  document.querySelectorAll(`.${itemClass}`).forEach(item => {
-    item.addEventListener('click', function () {
-      document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-      this.classList.add('selected');
-
-      // Update the section with the selected item's text and image
-      const selectedText = this.querySelector('p').innerText;
-      const selectedImageSrc = this.querySelector('img').src;
-      sectionElement.innerHTML = `
-              <p>${selectedText}</p>
-              <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
-          `;
-
-      // Hide the list
-      listElement.style.display = 'none';
-    });
-  });
-}
-
-function setupPromoCodeSelection(promoClass, inputId, applyButtonId) {
-  const promoInput = document.getElementById(inputId);
-
-  // Handle promo option selection
-  document.querySelectorAll(`.${promoClass}`).forEach(button => {
-    button.addEventListener('click', function () {
-      document.querySelectorAll(`.${promoClass}`).forEach(btn => btn.classList.remove('active'));
-      this.classList.add('active');
-      promoInput.value = this.getAttribute('data-code');
-    });
-  });
-
-  // Handle apply button click
-  document.getElementById(applyButtonId).addEventListener('click', () => {
-    const promoCode = promoInput.value;
-    alert(promoCode ? `Promo code ${promoCode} applied!` : 'Please select a promo code.');
-  });
-}
-
-// Initialize the sections
-setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
-setupSelectableSection('promoCodeSection', 'promoCodeList', 'promo-code-item');
-// Initialize promo code selection
-setupPromoCodeSelection('promo-option', 'promoCodeInput', 'applyButton');
 
 
 function renderproductview(url) {

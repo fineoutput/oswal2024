@@ -189,55 +189,35 @@
                 </ul>
 
                 <div class="gift-card-section ribbon" id="giftCardSection">
+    <div class="age_class d-flex justify-content-center">
+        <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
+    </div>
+</div>
 
-                    <div class="age_class d-flex justify-content-center">
+<div class="gift-card-list" id="giftCardList">
+    @foreach ($giftCards as $key => $giftCard)
+        <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
+            <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
+            <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
+        </div>
+    @endforeach
+</div>
 
-                        <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
+<div class="promo-section">
+    <div class="promo-title">Choose Your Promo Code</div>
 
-                    </div>
+    <!-- Button to toggle the visibility of promo options -->
+    <button class="toggle-options-button" id="toggleButtonpromo">Choose Promo Codes</button>
 
-                </div>
+    <div class="promo-options" id="promoOptions" style="display: none;">
+        @foreach ($promocodes as $promocode)
+            <button class="promo-option" data-code="{{ $promocode->promocode }}">
+                {{ $promocode->percent }}% OFF
+            </button>
+        @endforeach
+    </div>
+</div>
 
-                <div class="gift-card-list" id="giftCardList">
-
-                    @foreach ($giftCards as $key => $giftCard)
-
-                        <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
-
-                            <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
-
-                            <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
-
-                        </div>
-
-                    @endforeach
-
-                </div>
-
-                <div class="promo-section">
-
-                    <div class="promo-title">Choose Your Promo Code</div>
-
-                    <div class="promo-options">
-
-                        @foreach ($promocodes as $promocode)
-
-                        <button class="promo-option" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">{{ $promocode->percent }}% OFF</button>
-
-                        @endforeach
-
-                        {{-- <button class="promo-option" data-code="PROMO20">20% OFF</button>
-
-                        <button class="promo-option" data-code="PROMO30">30% OFF</button> --}}
-
-                    </div>
-
-                    <input type="text" id="promoCodeInput" class="promo-code-input"
-                        placeholder="Enter or select promo code" readonly />
-
-                    <button class="apply-button" id="applyButton">Apply Code</button>
-
-                </div>
 
             </div>
 
@@ -775,4 +755,72 @@ function placeOrder() {
 
 </script>
 
+<script>
+    // Gift card js
+// Gift card selection setup
+function setupSelectableSection(sectionId, listId, itemClass) {
+  const sectionElement = document.getElementById(sectionId);
+  const listElement = document.getElementById(listId);
+
+  // Toggle the gift card list display when clicked
+  sectionElement.addEventListener('click', () => {
+      listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Handle gift card item selection
+  document.querySelectorAll(`.${itemClass}`).forEach(item => {
+      item.addEventListener('click', function () {
+          // Deselect all items and select the clicked one
+          document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+          this.classList.add('selected');
+
+          // Update the selected gift card information in the section
+          const selectedText = this.querySelector('p').innerText;
+          const selectedImageSrc = this.querySelector('img').src;
+          sectionElement.innerHTML = `
+              <p>${selectedText}</p>
+              <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
+          `;
+
+          // Hide the list after selection
+          listElement.style.display = 'none';
+      });
+  });
+}
+
+// Promo code selection setup
+document.addEventListener('DOMContentLoaded', function() {
+  // Promo code selection setup
+  const promoOptions = document.getElementById('promoOptions');
+  const toggleButtonpromo = document.getElementById('toggleButtonpromo');
+
+  // Toggle promo code options visibility
+  toggleButtonpromo.addEventListener('click', function() {
+      promoOptions.style.display = promoOptions.style.display === 'block' ? 'none' : 'block';
+      toggleButtonpromo.innerText = promoOptions.style.display === 'block' ? 'Hide Promo Codes' : 'Show Promo Codes';
+  });
+
+  // Handle promo code option selection
+  document.querySelectorAll('.promo-option').forEach(function(button) {
+      button.addEventListener('click', function() {
+          // Remove 'active' class from all buttons and add it to the clicked one
+          document.querySelectorAll('.promo-option').forEach(function(btn) {
+              btn.classList.remove('active');
+          });
+          this.classList.add('active');
+
+          // Get the selected promo code and apply it
+          const promoCode = this.getAttribute('data-code');
+          applyPromocode(promoCode);  // Call the applyPromocode function with the selected code
+      });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
+  setupPromoCodeSelection('promo-option', 'applyButton'); // This line might be redundant and could be removed
+});
+
+
+</script>
 @endpush

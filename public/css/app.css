@@ -4107,6 +4107,8 @@ p.prev_rate {
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
 }
 
 .gift-card-item {
@@ -4150,6 +4152,8 @@ p.prev_rate {
   margin: 20px auto;
   padding: 20px;
   text-align: center;
+  max-height: 250px;
+  overflow-y: auto;
 }
 
 .promo-section::before {
@@ -4173,11 +4177,14 @@ p.prev_rate {
 }
 
 .promo-options {
-  display: flex;
-  justify-content: center;
+  display: none; /* Hide the options initially */
+  flex-direction: column;
   gap: 10px;
-  flex-wrap: wrap;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .promo-option {
@@ -4189,6 +4196,9 @@ p.prev_rate {
   font-size: 18px;
   cursor: pointer;
   transition: background 0.3s, transform 0.3s;
+  width: 100%;
+  text-align: center;
+  margin-top: 5px;
 }
 
 .promo-option:hover {
@@ -4208,7 +4218,7 @@ p.prev_rate {
   border: 2px solid #ffc107;
   border-radius: 8px;
   font-size: 18px;
-  width: calc(100% - 40px);
+  width: 100%;
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
@@ -4227,6 +4237,21 @@ p.prev_rate {
 
 .apply-button:hover {
   background: #ff8a6b;
+}
+
+.toggle-options-button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.toggle-options-button:hover {
+  background: #0056b3;
 }
 
 /* ///////////////Header drop Down */

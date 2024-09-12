@@ -221,11 +221,11 @@
 
                                         @if (count($cartItems) > 0)
                                             <a href="{{ route('checkout.get-address') }}" id="proceedToPayLink">
-                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
+                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100"><span>Proceed to Pay</span> <span> </span></button>
                                             </a>
                                         @else   
                                             <a href="javascript:void(0);" onclick="showNotification('Your cart is empty.', 'error');">
-                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button">
+                                                <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100">
                                                     <span>Proceed to Pay</span>
                                                 </button>
                                             </a>                                        
@@ -233,7 +233,7 @@
 
                                     @else
                                         <a href="javascript:void(0);" onclick="showModal(event)">
-                                            <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Proceed to Pay</span> <span> </span></button>
+                                            <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100"><span>Proceed to Pay</span> <span> </span></button>
                                         </a>
                                     @endif
                                 </div>
