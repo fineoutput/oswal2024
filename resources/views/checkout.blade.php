@@ -10,20 +10,21 @@
         $addr_string = "Doorflat {$userAddress->doorflat}, ";
 
         if (!empty($userAddress->landmark)) {
+
             $addr_string .= "{$userAddress->landmark}, ";
         }
 
-        $addr_string .= "{$userAddress->address}, {$userAddress->location_address}, {$userAddress->zipcode}";
+        $addr_string .= "{$userAddress->address}, {$userAddress->citys->city_name }, {$userAddress->states->state_name}, {$userAddress->zipcode}";
 
         $giftCards = App\Models\GiftCard::where('is_active', 1)->get();
 
         $promocodes = App\Models\Promocode::where('is_active', 1)->get();
 
+        $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+
+        $giftCardStatus  = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+
     @endphp
-
- <div id="paymentContainer">
-
- </div>
 
     <div class="shopping_cart_sect">
 
@@ -37,7 +38,7 @@
 
             <h2>Checkout Page</h2>
 
-            <p class="lead" style="font-size: 0.8rem;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt consequatur aperiam laboriosam?/p></p>
+            <p class="lead" style="font-size: 0.8rem;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt consequatur aperiam laboriosam?</p>
 
         </div>
 
@@ -110,32 +111,33 @@
 
                     </li>
 
-                    <li class="list-group-item d-flex justify-content-between bg-light">
-                        <div class="text-success">
-                            <h6 class="my-0">Promo code</h6>
-                    
-                            @php
-                                $promocode = $orderdetails->promocode ? App\Models\Promocode::find($orderdetails->promocode) : null;
-                            @endphp
-                    
-                            <small id="promoCodeName">
-                                @if($promocode)
-                                    {{ $promocode->promocode }}
-                                @else
-                                    No promo code applied
-                                @endif
-                            </small>
-                        </div>
-                    
-                        <span class="text-success" id="promoCodeAmount">
-                            
-                            -{{ formatPrice($orderdetails->promo_deduction_amount) }}
-                            
-                        </span>
-                    
-                        <button class="btn btn-danger @unless($orderdetails->promocode) d-none @endunless" id="removpromo" onclick="removePromocode()">Remove</button>
-                    </li>
-                    
+                    @if($promoStatus == 1)
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0">Promo code</h6>
+                        
+                                @php
+                                    $promocode = $orderdetails->promocode ? App\Models\Promocode::find($orderdetails->promocode) : null;
+                                @endphp
+                        
+                                <small id="promoCodeName">
+                                    @if($promocode)
+                                        {{ $promocode->promocode }}
+                                    @else
+                                        No promo code applied
+                                    @endif
+                                </small>
+                            </div>
+                        
+                            <span class="text-success" id="promoCodeAmount">
+                                
+                                -{{ formatPrice($orderdetails->promo_deduction_amount) }}
+                                
+                            </span>
+                        
+                            <button class="btn btn-danger @unless($orderdetails->promocode) d-none @endunless" id="removpromo" onclick="removePromocode()">Remove</button>
+                        </li>
+                    @endif
 
                     <li class="list-group-item d-flex justify-content-between bg-light">
 
@@ -149,34 +151,36 @@
 
                     </li>
 
-                    <li class="list-group-item d-flex justify-content-between bg-light">
+                    @if($giftCardStatus == 1)
 
-                        <div class="text-success">
+                        <li class="list-group-item d-flex justify-content-between bg-light">
 
-                            <h6 class="my-0">Gift Card</h6>
-                    
-                            @php
-                                $giftCard = $orderdetails->gift_id ? App\Models\GiftCard::find($orderdetails->gift_id) : null;
-                            @endphp
-                    
-                            <small id="giftCardName">
-                                @if($giftCard)
-                                    {{ $giftCard->name }}
-                                @else
-                                    No Gift Card applied
-                                @endif
-                            </small>
-                        </div>
-                    
-                        <span class="text-success" id="GiftCardAmount">
-                           
-                            +{{ formatPrice($orderdetails->gift_amt) }}
+                            <div class="text-success">
+
+                                <h6 class="my-0">Gift Card</h6>
+                        
+                                @php
+                                    $giftCard = $orderdetails->gift_id ? App\Models\GiftCard::find($orderdetails->gift_id) : null;
+                                @endphp
+                        
+                                <small id="giftCardName">
+                                    @if($giftCard)
+                                        {{ $giftCard->name }}
+                                    @else
+                                        No Gift Card applied
+                                    @endif
+                                </small>
+                            </div>
+                        
+                            <span class="text-success" id="GiftCardAmount">
                             
-                        </span>
-                    
-                        <button class="btn btn-danger @unless($orderdetails->gift_id) d-none @endunless" id="removegiftCard" onclick="removeGiftCard()">Remove</button>
-                    </li>
-                    
+                                +{{ formatPrice($orderdetails->gift_amt) }}
+                                
+                            </span>
+                        
+                            <button class="btn btn-danger @unless($orderdetails->gift_id) d-none @endunless" id="removegiftCard" onclick="removeGiftCard()">Remove</button>
+                        </li>
+                    @endif
 
                     <li class="list-group-item d-flex justify-content-between bg-light d-none" id="CodCaharges">
 
@@ -200,56 +204,64 @@
 
                 </ul>
 
-                <div class="gift-card-section ribbon" id="giftCardSection">
+                @if($giftCardStatus == 1)
 
-                    <div class="age_class d-flex justify-content-center">
+                    <div class="gift-card-section ribbon" id="giftCardSection">
 
-                        <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
+                        <div class="age_class d-flex justify-content-center">
 
-                    </div>
-
-                </div>
-
-                <div class="gift-card-list" id="giftCardList">
-
-                    @foreach ($giftCards as $key => $giftCard)
-
-                        <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
-
-                            <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
-
-                            <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
+                            <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
 
                         </div>
 
-                    @endforeach
+                    </div>
+                    
+                    <div class="gift-card-list" id="giftCardList">
 
-                </div>
+                        @foreach ($giftCards as $key => $giftCard)
 
-                <div class="promo-section">
+                            <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
 
-                    <div class="promo-title">Choose Your Promo Code</div>
+                                <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
 
-                    <div class="promo-options">
+                                <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
 
-                        @foreach ($promocodes as $promocode)
-
-                        <button class="promo-option" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">{{ $promocode->percent }}% OFF</button>
+                            </div>
 
                         @endforeach
 
-                        {{-- <button class="promo-option" data-code="PROMO20">20% OFF</button>
-
-                        <button class="promo-option" data-code="PROMO30">30% OFF</button> --}}
-
                     </div>
 
-                    <input type="text" id="promoCodeInput" class="promo-code-input"
-                        placeholder="Enter or select promo code" readonly />
+                @endif
 
-                    <button class="apply-button" id="applyButton">Apply Code</button>
+                @if($promoStatus == 1)
 
-                </div>
+                    <div class="promo-section">
+
+                        <div class="promo-title">Choose Your Promo Code</div>
+
+                        <div class="promo-options">
+
+                            @foreach ($promocodes as $promocode)
+
+                            <button class="promo-option" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">{{ $promocode->percent }}% OFF</button>
+
+                            @endforeach
+
+                            {{-- <button class="promo-option" data-code="PROMO20">20% OFF</button>
+
+                            <button class="promo-option" data-code="PROMO30">30% OFF</button> --}}
+
+                        </div>
+
+                        <input type="text" id="promoCodeInput" class="promo-code-input"
+                            placeholder="Enter or select promo code" readonly />
+
+                        <button class="apply-button" id="applyButton">Apply Code</button>
+
+                    </div>
+                    
+                @endif
 
             </div>
 
@@ -259,11 +271,28 @@
 
                     <h4 class="mb-3">Billing address</h4>
 
+                    <a href="{{ route('checkout.get-address') }}">
+                        <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Change Address</span> <span> </span></button>
+                    </a>
+
                 </div>
 
-                <a href="{{ route('checkout.get-address') }}">
-                    <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Change Address</span> <span> </span></button>
-                </a>
+                <div class="mt-2 order_review mb-2 p-3" style="margin-bottom: 10px; padding: 10px 30px; padding-bottom: 0px !important;">
+
+                    <div class="form-group-1" style="margin-bottom: 15px;">
+
+                        <div class="heading_s1">
+
+                            <h4 style="font-size: 17px; font-family: Muli, sans-serif !important;">User Address</h4>
+
+                        </div>
+
+                        <span>{{ $userAddress->name }} , {{ $addr_string }} </span>
+
+                    </div>
+
+                </div>
+                
 
                 <form class="needs-validation" method="POST" novalidate id="placeOrder">
 
@@ -271,75 +300,6 @@
                     <input type="hidden" id="totalorderAmounti" name="totalamount" value="{{$orderdetails->total_amount}}">
 
                     <input type="hidden" name="order_id" value="{{$orderdetails->id}}">
-
-                    <div class="row">
-
-                        <div class="col-md-12 mb-3">
-
-                            <label for="firstName">Customer Name</label>
-
-                            <input type="text" readonly class="form-control" id="firstName" placeholder=""
-                                value="{{ $userAddress->name }}" />
-
-                        </div>
-
-                        <div class="col-md-12 mb-3">
-
-                            <label for="state">State</label>
-
-                            <input type="text" readonly class="form-control" id="state" placeholder=""
-                                value="{{ $userAddress->states->state_name }}" />
-
-                        </div>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label for="City"> City</label>
-
-                        <div class="input-group">
-
-                            <input type="text" readonly class="form-control" id="City" placeholder="City"
-                                value="{{ $userAddress->citys->city_name }}" />
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="mb-3">
-
-                        <label for="address">Address</label>
-
-                        <input type="text" readonly class="form-control" id="address" placeholder="address"
-                            value="{{ $addr_string }}" />
-
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label for="address2">Landmark </label>
-
-                        <input type="text" readonly class="form-control" id="address2" placeholder="Apartment or suite"
-                            value="{{ $userAddress->landmark }}" />showNotification(response.message, 'success');
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-12 mb-3">
-
-                            <label for="pin">Pin</label>
-
-                            <input type="text" readonly class="form-control" id="zip" placeholder="pincode"
-                                value="{{ $userAddress->zipcode }}" />
-
-                        </div>
-
-                    </div>
-
 
                     <div class="mt-2 order_review mb-2 p-3" style="margin-bottom: 10px; padding: 10px 30px; padding-bottom: 0px !important;" id="wallet_div">
 
@@ -429,8 +389,7 @@
 
                     <button type="button" class="animated-button" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
 
-                    {{-- <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none"
-                        style="bottom: 0 !important;">
+                    {{-- <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none" style="bottom: 0 !important;">
 
                         <a href="#">
 
@@ -452,7 +411,7 @@
 
                         </div>
 
-                    </div> --}}
+                    </div>  --}}
 
                 </form>
 
