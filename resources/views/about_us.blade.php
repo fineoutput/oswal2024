@@ -79,7 +79,7 @@
     box-shadow: 0px 10px 0px 0px #ee1f71;
 }
 p.botmname_top {
-    background-image:url(abt_img/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg);
+    /* background-image:url(abt_img/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg); */
     color: #ee1f71;
     text-align: center;
     font-weight: 700;
@@ -97,6 +97,11 @@ p.botmname_top {
 p.botmname_top:hover {
     background: #ee1f71 !important;
     color: #fff !important;
+}
+.owner_frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>
 <!-- <div class="container">
@@ -288,7 +293,15 @@ p.botmname_top:hover {
 
 <div class="container">
 	<div class="owner_frame">
-		<img src="{{asset('images/oswalowner.jpg')}}" alt="">
+		<img src="{{asset('images/oswalowner.jpg')}}" width="170px" alt="">
+		<p style="
+    /* border: 1px solid #ee1f71; */
+    padding: 10px;
+    border-radius: 10px;
+    background: #ee1f71d6;
+    color: #fff;
+    font-weight: 800;
+">Late Shri Uttam Chand desraj</p>
 	</div>
     <div class="inside_bttns d-flex justify-content-center">
         <button class="tab-button" onclick="showContent('content1')">Our Directors</button>
