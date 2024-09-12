@@ -90,6 +90,18 @@
 
                         <div class="text-danger">
 
+                            <h6 class="my-0">SubTotal</h6>
+
+                        </div>
+
+                        <span class="text-success">{{ formatPrice($orderdetails->sub_total)}}</span>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+
+                        <div class="text-danger">
+
                             <h6 class="my-0">Shiping Charge</h6>
 
                         </div>
@@ -461,14 +473,16 @@ $(document).ready(function() {
 });
 
 function applyWallet() {
+    
     const order_id = "{{ $orderdetails->id }}";
+
     const totalorderAmount = $('#totalorderAmount');
-    const total_amount = totalorderAmount.text();
+
     const status = $('#wallet').is(':checked') ? 1 : 0;
-
+    
     const discountWalletAmount = $('#discountWalletAmount');
-    const totalwalletAmount = $('#totalwalletAmount');
 
+    const totalwalletAmount = $('#totalwalletAmount');
 
     $.ajax({
         url: "{{ route('checkout.apply-wallet') }}",
@@ -476,20 +490,35 @@ function applyWallet() {
         data: {
             order_id: order_id,
             status: status,
-            amount: total_amount,
             _token: "{{ csrf_token() }}"
         },
         success: function(response) {
-            discountWalletAmount.text(`-${response.discount}`);
-            totalwalletAmount.text(`Wallet(${response.wallet_amount})`);
-            totalorderAmount.text(response.total_amount);
-            $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
 
+            discountWalletAmount.text(`-${response.discount}`);
+
+            totalwalletAmount.text(`Wallet(${response.wallet_amount})`);
+
+            if($('input[name="payment_option"]:checked').val() == 1) {
+
+                   final_amount = response.cod_amount;
+
+            }else{
+                
+                   final_amount = response.prepared_amount;
+
+            }
+
+            totalorderAmount.text(final_amount);
+
+            $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+            
             showNotification(response.message, 'success');
+            
         },
         error: function(xhr) {
             console.error('An error occurred while applying the wallet option.');
         }
+
     });
 }
 
@@ -503,7 +532,7 @@ function applyPromocode(promoode) {
 
     const promoCodeAmount  = $('#promoCodeAmount');
 
-    const total_amount = totalorderAmount.text();
+    const total_amount = "{{ $orderdetails->sub_total }}";
 
     const removpromo  = $('#removpromo');
 
@@ -517,14 +546,32 @@ function applyPromocode(promoode) {
             _token: "{{ csrf_token() }}"
         },
         success: function(response) {
+
             if(response.success) {
+                
                 promoCodeAmount.text(`-${response.promo_discount}`);
+
                 promoCodeName.text(response.promocode_name);
-                totalorderAmount.text(response.total_amount);
+
+                if($('input[name="payment_option"]:checked').val() == 1) {
+
+                    final_amount = response.cod_amount;
+                    
+                }else{
+
+                    final_amount = response.prepared_amount;
+                }
+
+                totalorderAmount.text(final_amount);
+
                 removpromo.removeClass('d-none')
-                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+
+                $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+
                 showNotification(response.message, 'success');
+
             }else{
+
                 showNotification(response.message, 'error');
             }
         },
@@ -544,8 +591,6 @@ function removePromocode() {
 
     const promoCodeAmount  = $('#promoCodeAmount');
 
-    const total_amount = totalorderAmount.text();
-
     const removpromo  = $('#removpromo');
 
     $.ajax({
@@ -553,21 +598,39 @@ function removePromocode() {
         type: 'POST',
         data: {
             order_id: order_id,
-            amount: total_amount,
             _token: "{{ csrf_token() }}"
         },
         success: function(response) {
+
             if(response.success) {
+
                 promoCodeAmount.text(`-${response.promo_discount}`);
+
                 promoCodeName.text(response.promocode_name);
-                totalorderAmount.text(response.total_amount);
-                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+
+                if($('input[name="payment_option"]:checked').val() == 1) {
+
+                    final_amount = response.cod_amount;
+                    
+                }else{
+
+                    final_amount = response.prepared_amount;
+                }
+
+                totalorderAmount.text(final_amount);
+
+                $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
 
                 removpromo.addClass('d-none')
+
                 showNotification(response.message, 'success');
+
             }else{
+
                 showNotification(response.message, 'error');
+
             }
+            
         },
         error: function(xhr) {
             console.error('An error occurred while applying the wallet option.');
@@ -585,7 +648,7 @@ function applyGiftCard(giftCardID) {
 
     const GiftCardAmount  = $('#GiftCardAmount');
 
-    const total_amount = totalorderAmount.text();
+    const total_amount = "{{ $orderdetails->sub_total }}";
 
     const removegiftCard  = $('#removegiftCard');
 
@@ -603,10 +666,24 @@ function applyGiftCard(giftCardID) {
             if(response.success) {
 
                 GiftCardAmount.text(`+${response.amount}`);
+
                 giftCardName.text(response.name);
-                totalorderAmount.text(response.total_amount);
-                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+
+                if($('input[name="payment_option"]:checked').val() == 1) {
+
+                    final_amount = response.cod_amount;
+
+                }else{
+
+                   final_amount = response.prepared_amount;
+                }
+
+                totalorderAmount.text(final_amount);
+
+                $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+
                 removegiftCard.removeClass('d-none')
+
                 showNotification(response.message, 'success');
 
             }else{
@@ -632,8 +709,6 @@ function removeGiftCard(giftCardID) {
 
     const GiftCardAmount  = $('#GiftCardAmount');
 
-    const total_amount = totalorderAmount.text();
-
     const removegiftCard  = $('#removegiftCard');
 
     const cleargiftsecation  = $('#cleargiftsecation');
@@ -643,7 +718,6 @@ function removeGiftCard(giftCardID) {
         type: 'POST',
         data: {
             order_id: order_id,
-            amount: total_amount,
             _token: "{{ csrf_token() }}"
         },
         success: function(response) {
@@ -654,11 +728,21 @@ function removeGiftCard(giftCardID) {
 
                 giftCardName.text(response.name);
 
-                totalorderAmount.text(response.total_amount);
+                if($('input[name="payment_option"]:checked').val() == 1) {
+
+                    final_amount = response.cod_amount;
+
+                }else{
+
+                    final_amount = response.prepared_amount;
+
+                }
+
+                totalorderAmount.text(final_amount);
 
                 cleargiftsecation.text('Click here to select a gift card');
 
-                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+                $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
 
                 removegiftCard.addClass('d-none')
 
@@ -698,7 +782,7 @@ function updateAmount(type) {
 
        $('#totalorderAmounti').val(total_amount);
 
-      codChargeAmount.text(`₹${codCharge}`);
+      codChargeAmount.text(`+₹${codCharge}`);
 
       codContainer.removeClass('d-none').addClass('d-block');
 
@@ -710,7 +794,7 @@ function updateAmount(type) {
 
       totalorderAmount.text(`₹${total_amount}`)
 
-      codChargeAmount.text(`₹${codCharge}`);
+      codChargeAmount.text(`+₹${codCharge}`);
 
       codContainer.removeClass('d-block').addClass('d-none');
 
@@ -770,8 +854,6 @@ function placeOrder() {
         }
     });
 }
-
-
 
 </script>
 

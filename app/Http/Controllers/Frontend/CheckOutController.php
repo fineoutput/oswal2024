@@ -275,11 +275,15 @@ class CheckOutController extends Controller
     public function applyPromocode(Request $request)
     {
         $userInputPromoCode = $request->promoode;
-        $totalAmount = cleanamount($request->amount);
+
+        $subtotalAmount = cleanamount($request->amount);
+
         $userId = Auth::user()->id ?? 1;
+
         $orderId = $request->order_id;
 
-
+        $order = Order::find($orderId);
+        
         $promocode = Promocode::where('promocode', $userInputPromoCode)->first();
 
         if (!$promocode) {
@@ -308,23 +312,22 @@ class CheckOutController extends Controller
                 return response()->json(['success' => false, 'message' => 'This Promocode Has Already Been Applied.']);
             }
     
-            $order = Order::find($orderId);
             if ($order && $order->promocode) {
                 return response()->json(['success' => false, 'message' => 'Only One Promocode Can Be Applied.']);
             }
         }
 
-        if ($totalAmount < $promocode->minimum_amount) {
+        if ($subtotalAmount < $promocode->minimum_amount) {
             return response()->json(['success' => false, 'message' => 'Your amount is less than the promocode minimum amount.']);
         }
 
-        $deductionAmount = ($promocode->percent / 100) * $totalAmount;
+        $deductionAmount = ($promocode->percent / 100) * $subtotalAmount;
 
         if ($deductionAmount > $promocode->maximum_gift_amount) {
             $deductionAmount = $promocode->maximum_gift_amount;
         }
 
-        $totalAmount -= $deductionAmount;
+        $totalAmount =  $order->total_amount - $deductionAmount;
 
         if ($promocode->type == 1) {
             PromocodeApplied::updateOrCreate(
@@ -343,7 +346,8 @@ class CheckOutController extends Controller
             'success' => true,
             'message' => 'Promocode applied successfully.',
             'promo_discount' => formatPrice($deductionAmount),
-            'total_amount'  => formatPrice($totalAmount),
+            'cod_amount'     => formatPrice($totalAmount + 40),
+            'prepared_amount'=> formatPrice($totalAmount),
             'promocode_id'  =>  $promocode->id,
             'promocode_name' =>  $promocode->promocode,
         ], 200);
@@ -353,8 +357,10 @@ class CheckOutController extends Controller
     {
         
         $orderId = $request->input('order_id');
-        $totalAmount = cleanamount($request->amount);
+
         $userId = Auth::User()->id; 
+
+        $totalAmount = 0;
 
         if (!$orderId) {
             return response()->json(['success' => false, 'message' => 'Order ID is required.']);
@@ -388,7 +394,7 @@ class CheckOutController extends Controller
             }
         }
 
-        $totalAmount =  $totalAmount + $order->promo_deduction_amount;
+        $totalAmount =  $order->total_amount + $order->promo_deduction_amount;
         
         $order->update([
             'promocode' => null,
@@ -400,7 +406,8 @@ class CheckOutController extends Controller
             'success' => true,
             'message' => 'Promocode removed successfully.',
             'promo_discount' => formatPrice(0),
-            'total_amount'  => formatPrice($totalAmount),
+            'cod_amount'     => formatPrice($totalAmount + 40),
+            'prepared_amount'=> formatPrice($totalAmount),
             'promocode_id'  =>  null,
             'promocode_name' =>  'No promo code applied',
         ], 200);
@@ -410,7 +417,7 @@ class CheckOutController extends Controller
     {
         $orderId = $request->order_id;
 
-        $finalAmount = cleanamount($request->amount);
+        $subtotalAmount = cleanamount($request->amount);
 
         $gift_card_id = $request->gift_card_id;
 
@@ -419,6 +426,8 @@ class CheckOutController extends Controller
         $giftCardStatus = 0;
 
         $promoStatus = 1;
+
+        $order = Order::find($orderId);
 
         $isGiftCardAppliedToOrder = Order::where('id', $orderId)
         ->where('gift_id', $gift_card_id)
@@ -439,7 +448,7 @@ class CheckOutController extends Controller
             }
         }
 
-        if ($finalAmount > getConstant()->gift_min_amount) {
+        if ($subtotalAmount > getConstant()->gift_min_amount) {
 
             $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
 
@@ -449,7 +458,7 @@ class CheckOutController extends Controller
             $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
         }
 
-        if ($finalAmount > getConstant()->gift_min_amount) {
+        if ($subtotalAmount > getConstant()->gift_min_amount) {
 
             $giftCard = GiftCard::where('id', $gift_card_id)->where('is_Active', 1)->first();
 
@@ -467,7 +476,7 @@ class CheckOutController extends Controller
             return response()->json(['success' => false, 'message' => 'Your amount is less than the Gift Card minimum amount.']);
         }
 
-        $finalAmount += $giftCardAmount;
+        $finalAmount = $order->total_amount + $giftCardAmount;
 
         Order::where('id', $orderId)->update([
             'total_amount'   => $finalAmount,
@@ -480,7 +489,8 @@ class CheckOutController extends Controller
             'message' => 'gift card applied successfully.',
             'name'        => $giftCard->name,
             'amount'      => formatPrice($giftCardAmount),
-            'total_amount'   => formatPrice($finalAmount),
+            'cod_amount'     => formatPrice($finalAmount + 40),
+            'prepared_amount'=> formatPrice($finalAmount),
         ], 200);
     }
 
@@ -488,8 +498,6 @@ class CheckOutController extends Controller
     {
         $orderId = $request->input('order_id');
 
-        $finalAmount = cleanamount($request->amount);
-       
         if (!$orderId) {
             return response()->json(['success' => false, 'message' => 'Order ID is required.']);
         }
@@ -505,7 +513,7 @@ class CheckOutController extends Controller
 
         $giftCardAmount = $order->gift_amt;
 
-        $totalAmount = $finalAmount - $giftCardAmount;
+        $totalAmount = $order->total_amount - $giftCardAmount;
 
         $order->update([
             'total_amount' => $totalAmount,
@@ -518,7 +526,8 @@ class CheckOutController extends Controller
             'message'     => 'Gift card removed successfully.',
             'name'        => 'No Gift Card applied',
             'amount'      => formatPrice(0),
-            'total_amount'   => formatPrice($totalAmount),
+            'cod_amount'     => formatPrice($totalAmount + 40),
+            'prepared_amount'=> formatPrice($totalAmount),
         ], 200);
 
     }
@@ -526,14 +535,16 @@ class CheckOutController extends Controller
 
     public function applyWallet(Request $request)
     {
-
+        
         $walletStatus = $request->status;
-
-        $totalAmount = cleanamount($request->amount);
 
         $orderId = $request->order_id;
 
+        $order = Order::find($orderId);
+
         $user = Auth::user();
+
+        $totalAmount = 0;
 
         $walletDiscount = 0;
 
@@ -543,7 +554,7 @@ class CheckOutController extends Controller
 
                 $walletDiscount = (float) calculate_wallet_discount($user->wallet_amount) ;
 
-                $totalAmount -= $walletDiscount;
+                $totalAmount = $order->total_amount - $walletDiscount;
 
                 Order::where('id', $orderId)->update([
                     'total_amount'   => $totalAmount,
@@ -560,7 +571,7 @@ class CheckOutController extends Controller
 
             if ($order) {
 
-                $totalAmount += $order->extra_discount;
+                $totalAmount = $order->total_amount + $order->extra_discount;
 
                 $order->update([
                     'total_amount'   => $totalAmount,
@@ -574,7 +585,8 @@ class CheckOutController extends Controller
         return response()->json([
             'message'  => $message,
             'discount' => formatPrice($walletDiscount),
-            'total_amount' => formatPrice($totalAmount),
+            'cod_amount'     => formatPrice($totalAmount + 40),
+            'prepared_amount'=> formatPrice($totalAmount),
             'wallet_amount' => formatPrice($user->wallet_amount - $walletDiscount)
         ]);
     }
