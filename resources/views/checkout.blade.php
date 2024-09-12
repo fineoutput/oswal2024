@@ -99,37 +99,31 @@
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between bg-light">
-
                         <div class="text-success">
-
                             <h6 class="my-0">Promo code</h6>
-
-                            @if($orderdetails->promocode)
-
-                                @php
-
-                                    $promocode = App\Models\Promocode::find($orderdetails->promocode);
-
-                                @endphp
-
+                    
+                            @php
+                                $promocode = $orderdetails->promocode ? App\Models\Promocode::find($orderdetails->promocode) : null;
+                            @endphp
+                    
+                            <small id="promoCodeName">
                                 @if($promocode)
-
-                                    <small id="promoCodeName">{{ $promocode->promocode }}</small>
-
+                                    {{ $promocode->promocode }}
+                                @else
+                                    No promo code applied
                                 @endif
-
-                            @else
-
-                                <small id="promoCodeName">No promo code applied</small>
-
-                            @endif
-
+                            </small>
                         </div>
-
-
-                        <span class="text-success" id="promoCodeAmount">-{{ formatPrice($orderdetails->promo_deduction_amount) }}</span>
-
+                    
+                        <span class="text-success" id="promoCodeAmount">
+                            
+                            -{{ formatPrice($orderdetails->promo_deduction_amount) }}
+                            
+                        </span>
+                    
+                        <button class="btn btn-danger @unless($orderdetails->promocode) d-none @endunless" id="removpromo" onclick="removePromocode()">Remove</button>
                     </li>
+                    
 
                     <li class="list-group-item d-flex justify-content-between bg-light">
 
@@ -148,32 +142,29 @@
                         <div class="text-success">
 
                             <h6 class="my-0">Gift Card</h6>
-
-                            @if($orderdetails->gift_id)
-
-                                @php
-
-                                    $giftCard = App\Models\GiftCard::find($orderdetails->gift_id);
-
-                                @endphp
-
+                    
+                            @php
+                                $giftCard = $orderdetails->gift_id ? App\Models\GiftCard::find($orderdetails->gift_id) : null;
+                            @endphp
+                    
+                            <small id="giftCardName">
                                 @if($giftCard)
-
-                                    <small id="giftCardName">{{ $giftCard->name }}</small>
-
+                                    {{ $giftCard->name }}
+                                @else
+                                    No Gift Card applied
                                 @endif
-
-                            @else
-
-                                <small id="giftCardName">No Gift Card applied</small>
-
-                            @endif
-
+                            </small>
                         </div>
-
-                        <span class="text-success" id="GiftCardAmount">+{{formatPrice($orderdetails->gift_amt) }}</span>
-
+                    
+                        <span class="text-success" id="GiftCardAmount">
+                           
+                            +{{ formatPrice($orderdetails->gift_amt) }}
+                            
+                        </span>
+                    
+                        <button class="btn btn-danger @unless($orderdetails->gift_id) d-none @endunless" id="removegiftCard" onclick="removeGiftCard()">Remove</button>
                     </li>
+                    
 
                     <li class="list-group-item d-flex justify-content-between bg-light d-none" id="CodCaharges">
 
@@ -201,7 +192,7 @@
 
                     <div class="age_class d-flex justify-content-center">
 
-                        <p><b>Click here to select a gift card</b></p>
+                        <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
 
                     </div>
 
@@ -320,7 +311,7 @@
                         <label for="address2">Landmark </label>
 
                         <input type="text" readonly class="form-control" id="address2" placeholder="Apartment or suite"
-                            value="{{ $userAddress->landmark }}" />
+                            value="{{ $userAddress->landmark }}" />showNotification(response.message, 'success');
 
                     </div>
 
@@ -497,7 +488,6 @@ function applyWallet() {
             showNotification(response.message, 'success');
         },
         error: function(xhr) {
-            showNotification(response.message, 'error');
             console.error('An error occurred while applying the wallet option.');
         }
     });
@@ -515,6 +505,8 @@ function applyPromocode(promoode) {
 
     const total_amount = totalorderAmount.text();
 
+    const removpromo  = $('#removpromo');
+
     $.ajax({
         url: "{{ route('checkout.apply-promocode') }}",
         type: 'POST',
@@ -525,14 +517,59 @@ function applyPromocode(promoode) {
             _token: "{{ csrf_token() }}"
         },
         success: function(response) {
-            promoCodeAmount.text(`-${response.promo_discount}`);
-            promoCodeName.text(response.promocode_name);
-            totalorderAmount.text(response.total_amount);
-            $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
-            showNotification(response.message, 'success');
+            if(response.success) {
+                promoCodeAmount.text(`-${response.promo_discount}`);
+                promoCodeName.text(response.promocode_name);
+                totalorderAmount.text(response.total_amount);
+                removpromo.removeClass('d-none')
+                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+                showNotification(response.message, 'success');
+            }else{
+                showNotification(response.message, 'error');
+            }
         },
         error: function(xhr) {
-            showNotification(response.message, 'error');
+            console.error('An error occurred while applying the wallet option.');
+        }
+    });
+}
+
+function removePromocode() {
+
+    const order_id = "{{ $orderdetails->id }}";
+
+    const totalorderAmount = $('#totalorderAmount');
+
+    const promoCodeName    = $('#promoCodeName');
+
+    const promoCodeAmount  = $('#promoCodeAmount');
+
+    const total_amount = totalorderAmount.text();
+
+    const removpromo  = $('#removpromo');
+
+    $.ajax({
+        url: "{{ route('checkout.remove-promocode') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            amount: total_amount,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            if(response.success) {
+                promoCodeAmount.text(`-${response.promo_discount}`);
+                promoCodeName.text(response.promocode_name);
+                totalorderAmount.text(response.total_amount);
+                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+
+                removpromo.addClass('d-none')
+                showNotification(response.message, 'success');
+            }else{
+                showNotification(response.message, 'error');
+            }
+        },
+        error: function(xhr) {
             console.error('An error occurred while applying the wallet option.');
         }
     });
@@ -550,6 +587,8 @@ function applyGiftCard(giftCardID) {
 
     const total_amount = totalorderAmount.text();
 
+    const removegiftCard  = $('#removegiftCard');
+
     $.ajax({
         url: "{{ route('checkout.apply-gift-card') }}",
         type: 'POST',
@@ -560,17 +599,83 @@ function applyGiftCard(giftCardID) {
             _token: "{{ csrf_token() }}"
         },
         success: function(response) {
-            GiftCardAmount.text(`+${response.amount}`);
-            giftCardName.text(response.name);
-            totalorderAmount.text(response.total_amount);
-            $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
-            showNotification(response.message, 'success');
+
+            if(response.success) {
+
+                GiftCardAmount.text(`+${response.amount}`);
+                giftCardName.text(response.name);
+                totalorderAmount.text(response.total_amount);
+                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+                removegiftCard.removeClass('d-none')
+                showNotification(response.message, 'success');
+
+            }else{
+
+                showNotification(response.message, 'error');
+
+            }
         },
         error: function(xhr) {
             showNotification(response.message, 'error');
             console.error('An error occurred while applying the wallet option.');
         }
     });
+}
+
+function removeGiftCard(giftCardID) {
+
+    const order_id = "{{ $orderdetails->id }}";
+
+    const totalorderAmount = $('#totalorderAmount');
+
+    const giftCardName    = $('#giftCardName');
+
+    const GiftCardAmount  = $('#GiftCardAmount');
+
+    const total_amount = totalorderAmount.text();
+
+    const removegiftCard  = $('#removegiftCard');
+
+    const cleargiftsecation  = $('#cleargiftsecation');
+
+    $.ajax({
+        url: "{{ route('checkout.remove-gift-card') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            amount: total_amount,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+
+            if(response.success){
+
+                GiftCardAmount.text(`+${response.amount}`);
+
+                giftCardName.text(response.name);
+
+                totalorderAmount.text(response.total_amount);
+
+                cleargiftsecation.text('Click here to select a gift card');
+
+                $('#totalorderAmounti').val(convertCurrencyToFloat(response.total_amount));
+
+                removegiftCard.addClass('d-none')
+
+                showNotification(response.message, 'success');
+
+            }else{
+
+                showNotification(response.message, 'error');
+                
+            }
+        },
+        error: function(xhr) {
+            showNotification(response.message, 'error');
+            console.error('An error occurred while applying the wallet option.');
+        }
+    });
+    
 }
 
 function updateAmount(type) {

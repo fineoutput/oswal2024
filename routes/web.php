@@ -104,7 +104,11 @@ Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(functi
 
     Route::post('apply-promocode', [CheckOutController::class, 'applyPromocode'])->name('apply-promocode');
 
+    Route::post('remove-promocode', [CheckOutController::class, 'removePromocode'])->name('remove-promocode');
+
     Route::post('apply-gift-card', [CheckOutController::class, 'applyGiftCard'])->name('apply-gift-card');
+    
+    Route::post('remove-gift-card', [CheckOutController::class, 'removeGiftCard'])->name('remove-gift-card');
 
     Route::post('place-order', [CheckOutController::class, 'placeOrder'])->name('place-order');
    
