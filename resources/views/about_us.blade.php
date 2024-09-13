@@ -382,7 +382,7 @@ p.botmname_top:hover {
     <div class="row slept_through bg-2" style="background-image: url('{{ asset('images/bg-2.png') }}');">
         <div class="col-lg-4">
             <div class="abts_imngs">
-                <img src="{{asset('images/masala_1.png')}}" width="100%" alt="">
+                <img src="{{asset('images/oswal_shop.png')}}" width="100%" alt="">
             </div>
         </div>
         <div class="col-lg-4">
