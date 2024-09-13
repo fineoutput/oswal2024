@@ -105,7 +105,15 @@ a.nav-link_color.clicked::after {
 }
 .dropdown-toggle::after {
   display: none !important; /* Hide the default dropdown icon */
+
+  
 }
+.modal-content {
+            z-index: 1050 !important; /* Ensure modal is above the overlay */
+        }
+        .modal-backdrop {
+            z-index: 980 !important; /* Ensure backdrop is below the modal */
+        }
 
 </style>
 <div class="container-fluid  sticky-top bg-light shadow-lg p-lg-0 p-2" style="z-index:999">
