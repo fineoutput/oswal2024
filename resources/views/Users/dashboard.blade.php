@@ -271,6 +271,13 @@
 @endsection
 
 @push('scripts')
+
+<script>
+    window.onload = function() {
+          
+          showSection('neword-orders');
+      };
+</script>
     <script>
         document.getElementById('cancelButton').addEventListener('click', function() {
             this.classList.add('canceled');
@@ -306,9 +313,6 @@
             }
         }
 
-        window.onload = function() {
-          
-            showSection('neword-orders');
-        };
+        
     </script>
 @endpush
