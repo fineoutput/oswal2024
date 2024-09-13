@@ -281,8 +281,8 @@ class AppController extends Controller {
         foreach ($sliders as $key => $value) {
           $data[] =[
              'id'            => $value->id,
-             'slider_name'   => ($request->lang == 'hi') ? $value->slider_name_hi : $value->slider_name,
-             'image'         => asset($value->image),
+             'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
+             'image'         => asset($value->app_image),
           ];
         }
  
