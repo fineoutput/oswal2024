@@ -150,6 +150,7 @@
 @endphp
 
 <!-- /////////////Banner section STARTS////////// -->
+@if($image)
 <div class="post_banner py-10" style="background-image: url('{{ asset($image->image) }}');">
 
     <div class="container">
@@ -159,5 +160,5 @@
     </div>
 
 </div>
-
+@endif
 <!-- /////////////Banner section ENDS////////// -->
