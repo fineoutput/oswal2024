@@ -12,13 +12,13 @@
 
                     <div class="page-title-box">
 
-                        <h4 class="page-title">View Image</h4>
+                        <h4 class="page-title">View Footer Slider</h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Image</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Footer Slider</a></li>
 
-                            <li class="breadcrumb-item active">View Image</li>
+                            <li class="breadcrumb-item active">View Footer Slider</li>
 
                         </ol>
 
@@ -73,7 +73,7 @@
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" href="{{ route('webslider.create') }}" role="button" style="margin-left: 20px;"> Add Image</a>
+                                        <a class="btn btn-info cticket" href="{{ route('webslider.create') }}" role="button" style="margin-left: 20px;"> Add Footer Slider</a>
 
                                     </div>
 
@@ -94,9 +94,13 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">Image name</th>
+                                                    <th data-priority="1">web name</th>
 
-                                                    <th data-priority="3">Images</th>
+                                                    <th data-priority="3">web Images</th>
+
+                                                    <th data-priority="3">App name</th>
+
+                                                    <th data-priority="3">App Images</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -118,6 +122,16 @@
 
                                                         @if ($slider->image != null)
                                                             <img src="{{ asset($slider->image)}}" width="50px" height="50px" alt="">
+                                                        @endif 
+
+                                                   </td>
+
+                                                   <td>{{ $slider->app_slider_name }}</td>
+
+                                                   <td>
+
+                                                        @if ($slider->app_image != null)
+                                                            <img src="{{ asset($slider->app_image)}}" width="50px" height="50px" alt="">
                                                         @endif 
 
                                                    </td>

@@ -17,19 +17,19 @@
                                 Edit
                             @else
                                 Add New
-                            @endif Image
+                            @endif Footer Slider
                         </h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);"> Images </a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);"> Footer Slider </a></li>
 
                             <li class="breadcrumb-item active">
                                 @if ($slider != null)
                                     Edit
                                 @else
                                     Add
-                                @endif Image
+                                @endif Footer Slider
                             </li>
 
                         </ol>
@@ -82,7 +82,7 @@
                                         Edit
                                     @else
                                         Add
-                                    @endif Image Form
+                                    @endif Footer Slider Form
                                 </h4>
 
                                 <hr style="margin-bottom: 50px;background-color: darkgrey;">
@@ -97,7 +97,7 @@
 
                                     <div class="form-group row">
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -116,7 +116,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -132,6 +132,46 @@
                                             </div>
 
                                             @error('img')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control"
+                                                    value="{{ $slider ? $slider->app_slider_name : old('app_slider_name') }}"
+                                                    name="app_slider_name" placeholder="Enter slider_name" required>
+
+                                                <label for="app_slider_name">App Image Name &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('app_slider_name')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="file" id="img2" name="img2"
+                                                    placeholder="img">
+
+                                                @if ($slider != null)
+                                                    <img src="{{ asset($slider->app_image) }}" width="100px" height="100px">
+                                                @endif
+
+                                                <label class="mb-2" for="img">Image </label>
+
+                                            </div>
+
+                                            @error('img2')
                                                 <div style="color:red">{{ $message }}</div>
                                             @enderror
 
