@@ -38,7 +38,7 @@
 
                                         <div class="col-12 col-md-2 text-center text-md-start">
 
-                                            <h6>
+                                            <h6 class="d-none d-lg-block">
 
                                                 Product <br />
 
@@ -50,7 +50,7 @@
 
                                         <div class="col-12 col-md-2 text-center text-md-start">
 
-                                            <h6>
+                                            <h6 class="d-none d-lg-block">
 
                                                 Product <br />
 
@@ -60,23 +60,23 @@
 
                                         </div>
 
-                                        <div class="col-12 col-md-2 text-center text-md-start">
+                                        <div class="col-12 col-md-2 text-center text-md-start d-none d-lg-block">
                                             <h6>Quantity</h6>
                                         </div>
 
-                                        <div class="col-12 col-md-1 text-center text-md-start">
+                                        <div class="col-12 col-md-1 text-center text-md-start d-none d-lg-block">
                                             <h6>Price</h6>
                                         </div>
 
-                                        <div class="col-12 col-md-2 text-center text-md-start">
+                                        <div class="col-12 col-md-2 text-center text-md-start d-none d-lg-block">
                                             <h6>Type</h6>
                                         </div>
 
-                                        <div class="col-12 col-md-2 text-center text-md-start">
+                                        <div class="col-12 col-md-2 text-center text-md-start d-none d-lg-block">
                                             <h6>SubTotal</h6>
                                         </div>
 
-                                        <div class="col-12 col-md-1 text-center text-md-end p-0">
+                                        <div class="col-12 col-md-1 text-center text-md-end p-0 d-none d-lg-block">
                                             <h6>Remove</h6>
                                         </div>
 
@@ -109,7 +109,7 @@
 
                                             <img src="{{ asset($product->img1) }}" class="img-fluid rounded-3" alt="Mirch Powder" />
 
-                                            <a href="#!" class="text-muted d-lg-none"><i class="fas fa-times"></i></a>
+                                            <a href="#!" onclick="removeToCart('{{ $product->id }}' ,'{{$cartdata->id  }}')" class="text-muted d-lg-none"><i class="fas fa-times"></i></a>
 
                                         </div>
 
