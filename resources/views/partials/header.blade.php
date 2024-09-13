@@ -1,4 +1,39 @@
+<style>
+    .icon-container {
+  position: relative;
+  width: 20px; /* Set your desired width */
+  height: 20px; /* Set your desired height */
+}
 
+.first-icon, .second-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 24px; /* Adjust the size as needed */
+  transition: all 0.3s ease; /* Smooth transition for both icons */
+}
+
+
+.second-icon {
+  opacity: 0;
+  transform: translateY(100%); /* Position it out of view */
+}
+
+
+.icon-container:hover .first-icon {
+  transform: translateY(-100%); 
+  opacity: 0;
+}
+
+.icon-container:hover .second-icon {
+  opacity: 1;
+  transform: translateY(0); /* Bring it into view */
+}
+.dropdown-toggle::after {
+  display: none !important; /* Hide the default dropdown icon */
+}
+
+</style>
 <div class="container-fluid  sticky-top bg-light shadow-lg p-lg-0 p-2" style="z-index:999">
 
     <div class="asdas">
