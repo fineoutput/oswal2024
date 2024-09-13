@@ -161,7 +161,7 @@
 
                 <br />
 
-                <p style="line-height: 26px; font-size: 14px;">
+                <p style="line-height: 26px; font-size: 18px;">
 
                     Oswal Soap Group was established by Late Shri Uttamchand Deshraj Jain in 1956 in Johari Bazaar,
 

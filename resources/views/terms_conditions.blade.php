@@ -6,8 +6,7 @@
 
 <div class="container">
 <div class="row">
-<div class="col-md-2 col-lg-2"></div>
-<div class="col-md-8 col-lg-8" style="text-align:center;">
+<div class="col-md-12 col-lg-12 privacy_heads" style="text-align:justify;">
     <h1>Terms & Conditions</h1>
 Please read the following terms and conditions very carefully as your use of service is subject to your acceptance of and compliance with the following terms and conditions ("Terms").
 <br><br>
@@ -106,7 +105,6 @@ If any provision of the Terms is determined to be invalid or unenforceable in wh
 As per these Terms, users are solely responsible for every material or content uploaded on to the Website. Users can be held legally liable for their contents and may be held legally accountable if their contents or material include, for example, defamatory comments or material protected by copyright, trademark, etc. If you come across any abuse or violation of these Terms, please report at customercare@oswalsoap.com, with Subject heading “Report Abuse”.
  <br><br>
 </div>
-<div class="col-md-2 col-lg-2"></div>
 </div>
 </div>
 
