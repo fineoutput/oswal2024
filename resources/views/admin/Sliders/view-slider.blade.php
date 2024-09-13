@@ -94,9 +94,13 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">Slider name</th>
+                                                    <th data-priority="1">web Slider name</th>
 
-                                                    <th data-priority="3">Images</th>
+                                                    <th data-priority="3">web Images</th>
+                                                    
+                                                    <th data-priority="1">App Slider name</th>
+
+                                                    <th data-priority="3">AppImages</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -120,7 +124,17 @@
                                                             <img src="{{ asset($slider->image)}}" width="50px" height="50px" alt="">
                                                         @endif 
 
-                                                   </td>
+                                                    </td>
+
+                                                    <td>{{ $slider->app_slider_name }}</td>
+
+                                                    <td>
+
+                                                        @if ($slider->app_image != null)
+                                                            <img src="{{ asset($slider->app_image)}}" width="50px" height="50px" alt="">
+                                                        @endif 
+
+                                                    </td>
 
                                                     <td> 
                                                         @if($slider->is_active == 1)  

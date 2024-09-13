@@ -16,8 +16,11 @@ class Slider extends Model
 
     protected $fillable = [
         'slider_name',
+        'app_slider_name',
         'slider_name_hi',
+        'app_slider_name_hi',
         'image',
+        'app_image',
         'ip',
         'date',
         'added_by',
