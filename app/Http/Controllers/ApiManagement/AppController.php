@@ -254,6 +254,11 @@ class AppController extends Controller {
        $data = [];
 
        foreach ($sliders as $key => $value) {
+
+        if ($value->app_img == null) {
+            continue;
+        }
+        
          $data[] =[
             'id'    => $value->id,
             'url'   => $value->app_link,
@@ -280,6 +285,11 @@ class AppController extends Controller {
         $data = [];
  
         foreach ($sliders as $key => $value) {
+
+            if ($value->app_image == null) {
+                continue;
+            }
+
           $data[] =[
              'id'            => $value->id,
              'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
@@ -305,6 +315,11 @@ class AppController extends Controller {
         $data = [];
  
         foreach ($sliders as $key => $value) {
+
+            if($value->app_image == null) {
+                continue;
+            }
+
           $data[] =[
              'id'            => $value->id,
              'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
