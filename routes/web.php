@@ -74,6 +74,8 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('career',[HomeController::class, 'career'])->name('career');
 
+    Route::get('search', [HomeController::class, 'Search'])->name('search');
+
 });
 
 Route::prefix('cart')->name('cart.')->group(function () {

@@ -43,6 +43,7 @@ class HomeController extends Controller
 
         return view('services')->with('title', 'services');
     }
+
     public function dealer_enq(Request $request)
     {
 
@@ -120,19 +121,6 @@ class HomeController extends Controller
         return view('products.productdetails', compact('product', 'images'))->with('title', 'Product Details');
     }
 
-
-    public function Wislist(Request $request)
-    {
-
-        return view('wishlist')->with('title', 'Wishlist');
-    }
-
-    public function checkout(Request $request)
-    {
-
-        return view('checkout')->with('title', 'checkout');
-    }
-
     public function renderProducts($slug)
     {
         $category = EcomCategory::where('url', $slug)->first();
@@ -191,7 +179,6 @@ class HomeController extends Controller
         return response()->json(['webproduct' => $htmlwebProduct ,'mobproduct' => $htmlmobProduct]);
     }
 
-
     public function getAddress(Request $request, $place = null) {
 
         $addresses = Address::where('user_id', Auth::User()->id)->get();
@@ -221,5 +208,15 @@ class HomeController extends Controller
             return view('selectaddress' , compact('address_data','place'));
         }
             
+    }
+
+    public function Search(Request $request) {
+
+        $query = $request->input('query');
+
+        $products = EcomProduct::where('name', 'LIKE', "%$query%")->paginate(10);
+
+        return view('all_products', compact('products'));
+
     }
 }
