@@ -157,6 +157,7 @@
                             <span class="badge  badge-notification bg-danger bag_count" id="cart_count">{{ $cartCount }}</span>
                         </a>
 
+                        @auth
                         <a class="d-none d-lg-block wishlist_icon nav-link_color icon-container" href="{{ route('wishlist.index') }}">
                             <!-- <i class="fa-solid fa-heart"></i> -->
                             <svg class="header_icon first-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
