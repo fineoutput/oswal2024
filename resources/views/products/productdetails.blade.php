@@ -104,6 +104,10 @@
 
     </div>
     
+    @php
+        $relatedproducts = sendProduct($product->category_id, false, false, false, false, false, false, false);
+    @endphp
+
     <div class="container d-none d-lg-block">
 
         <div class="splide" id="product-splide">
@@ -112,7 +116,11 @@
 
                 <ul class="splide__list">
 
-                    @include('products.partials.relatedProduct.web-product',['categoryId' => $product->category_id])
+                    @foreach ($relatedproducts as $webproduct)
+
+                        @include('products.partials.relatedProduct.web-product', compact('webproduct'))
+
+                    @endforeach
 
                 </ul>
 
@@ -156,7 +164,11 @@
 
                             <ul class="splide__list">
 
-                                @include('products.partials.relatedProduct.mobile-product',['categoryId' => $product->category_id])
+                                @foreach ($relatedproducts as $mobproduct)
+
+                                   @include('products.partials.relatedProduct.mobile-product', compact('mobproduct'))
+
+                                @endforeach
 
                             </ul>
 
