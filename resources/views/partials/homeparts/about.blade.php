@@ -1,3 +1,24 @@
+<style>
+    .effect {
+    position: relative;
+  height: 100%;
+  width:100%;
+  margin: 0;
+  padding: 0;
+  font-size: 10vw;
+  background-color: #ddf0e9;
+}
+
+
+
+#confetti{
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+</style>
 <!-- <div class="renwew_sect section-padding mb-5"
 
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/about_bg.jpg); margin-top: -10px;">
@@ -94,28 +115,6 @@
     </section>
 
 </div> -->
-<style>
-    .effect {
-    position: relative;
-  height: 100%;
-  width:100%;
-  margin: 0;
-  padding: 0;
-  font-size: 10vw;
-  background-color: #ddf0e9;
-}
-
-
-
-#confetti{
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-}
-</style>
-
 <section class="module"
 
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/3.png); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">

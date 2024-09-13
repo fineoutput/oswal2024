@@ -84,29 +84,7 @@ i.fas.fa-plus {
   cursor: pointer;
 
 }
-.input-inset{
-  font-size: 16px;
-  line-height: 1;
-  background: #FFFFFF;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 19 19'><path fill='%23838D99' d='M13.98 12.57a2 2 0 0 1 1.93.52l2.5 2.5a2 2 0 0 1-2.82 2.82l-2.5-2.5a2 2 0 0 1-.52-1.93l-1.38-1.37a7 7 0 1 1 1.42-1.42l1.37 1.38zm-3.37-2.03a5 5 0 1 0-7.08-7.08 5 5 0 0 0 7.08 7.08z'></path></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center; 
-  background-size: 26px 26px;
-  border: 1px solid #C5CBD5;
-  box-shadow: inset 0 1px 4px 0 rgba(0,0,0,0.20);
-  border-radius: 8px;
-  width: 200px;
-  padding: .5em 1em .5em .5em;
-  } 
-  
-  .input-inset::placeholder{
-    color: #838D99;
-  }
-  
-  .input-inset:focus {
-    outline: none;
-    border: 1px solid #D19221;
-  }
+
   
 
 /* .form {
@@ -5129,58 +5107,6 @@ h4.payment {
   transition: color 0.5s ease; /* Smooth color transition */
 }
 
-/* Underline effect using pseudo-element */
-.nav-links li a::after {
-  content: ""; /* Pseudo-element requires content */
-  position: absolute;
-  bottom: 0; /* Position the underline at the bottom */
-  left: 0; /* Start the underline from the left */
-  width: 100%; /* Full width of the link */
-  height: 2px; /* Height of the underline */
-  background-color: #D19221; /* Underline color */
-  transform: scaleX(0); /* Start with 0 width */
-  transform-origin: bottom right; /* Animation starts from the right side */
-  transition: transform 0.5s ease; /* Smooth transition for the underline effect */
-}
-
-/* Underline animation on hover */
-.nav-links li a:hover::after {
-  transform: scaleX(1); /* Scale to full width on hover */
-  transform-origin: bottom left; /* Animation starts from the left side on hover */
-}
-
-/* Change color on hover */
-.nav-links li a:hover {
-  color: #D19221;
-}
-
-/* Default color for links with class 'nav-link_color' */
-a.nav-link_color {
-  color: #000;
-  text-decoration: none;
-}
-
-/* Style for clicked links */
-a.nav-link_color.clicked {
-  color: #D19221; /* Change color when clicked */
-  text-decoration: underline; /* Underline text when clicked */
-  /* Override pseudo-element underline effect */
-  position: relative; /* Ensure positioning for pseudo-element */
-  overflow: hidden; /* Ensure underline effect does not overflow */
-}
-
-a.nav-link_color.clicked::after {
-  content: ""; /* Ensure pseudo-element is displayed */
-  position: absolute;
-  bottom: 0; /* Position the underline at the bottom */
-  left: 0; /* Start the underline from the left */
-  width: 100%; /* Full width of the link */
-  height: 2px; /* Height of the underline */
-  background-color: #D19221; /* Underline color */
-  transform: scaleX(1); /* Full width for clicked state */
-  transform-origin: bottom left; /* Ensure full width is visible */
-  transition: transform 0s; /* No transition needed for clicked state */
-}
 
 
 .header_icon{
@@ -5203,6 +5129,10 @@ a.nav-link_color.clicked::after {
   background-color: red;
   color: red;
 }
+
+
+
+
 .menu-toggle {
   display: none;
   /* Initially hidden on larger screens */
