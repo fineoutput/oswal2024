@@ -104,11 +104,6 @@ class HomeController extends Controller
 
         return view('career')->with('title', 'career');
     }
-    public function order_success(Request $request)
-    {
-
-        return view('order_success')->with('title', 'order_success');
-    }
     
     public function productDetail(Request $request, $slug)
     {
@@ -197,7 +192,7 @@ class HomeController extends Controller
     }
 
 
-    public function getAddress(Request $request) {
+    public function getAddress(Request $request, $place = null) {
 
         $addresses = Address::where('user_id', Auth::User()->id)->get();
 
@@ -218,7 +213,13 @@ class HomeController extends Controller
 
             $address_data[] =  $address;
         }
+        
+        if(session()->has('address_id') && $place == null){
+            return redirect()->route('checkout.process');
+        }else{
 
-        return view('selectaddress' , compact('address_data'));
+            return view('selectaddress' , compact('address_data','place'));
+        }
+            
     }
 }

@@ -40,10 +40,6 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/product/{slug}/details', [HomeController::class, 'productDetail'])->name('product-detail');
 
-    // Route::get('/wislist', [HomeController::class, 'Wislist'])->name('wislist');
-
-    // Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
-
     Route::get('render/{slug}/products',[HomeController::class, 'renderProducts'])->name('getproducts');
 
     Route::get('render/product',[HomeController::class, 'renderProduct'])->name('getproduct');
@@ -78,8 +74,6 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('career',[HomeController::class, 'career'])->name('career');
 
-    Route::get('order_success',[HomeController::class, 'order_success'])->name('order_success');
-    
 });
 
 Route::prefix('cart')->name('cart.')->group(function () {
@@ -96,9 +90,9 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(function () {
 
-    Route::post('/', [CheckOutController::class, 'checkout'])->name('process');
+    Route::get('/', [CheckOutController::class, 'checkout'])->name('process');
 
-    Route::get('get-address', [HomeController::class, 'getAddress'])->name('get-address');
+    Route::get('get-address/{place?}', [HomeController::class, 'getAddress'])->name('get-address');
 
     Route::post('apply-wallet', [CheckOutController::class, 'applyWallet'])->name('apply-wallet');
 

@@ -81,7 +81,7 @@
 
                                                 </b>
 
-                                                <h4>{{ Illuminate\Support\Str::limit($product['long_desc'] , 40) }}</h4>
+                                                {{-- <h4>{{ Illuminate\Support\Str::limit($product['long_desc'] , 40) }}</h4> --}}
 
                                                 <p>{{ formatPrice($productType->selling_price) }}</p>
 
@@ -150,6 +150,7 @@
 @endphp
 
 <!-- /////////////Banner section STARTS////////// -->
+@if($image)
 <div class="post_banner py-10" style="background-image: url('{{ asset($image->image) }}');">
 
     <div class="container">
@@ -159,5 +160,5 @@
     </div>
 
 </div>
-
+@endif
 <!-- /////////////Banner section ENDS////////// -->

@@ -186,7 +186,10 @@
     </div>
 
 </section>
-
+<div class="container-fluid effect" style="margin-bottom:7rem;">
+   <img src="{{ asset('images/oswal_banner.') }}jpg" alt="" width="100%" />
+    <canvas id="confetti"></canvas>
+</div>
 <div class="splide_secound_set mb-5">
     
     <div class="splide" id="splide3">

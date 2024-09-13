@@ -4,92 +4,50 @@
 
 @section('content')
 <style>
-    .message-box{
-  display: flex;
-  justify-content: center;
-  /* padding-top: 20vh;
-  padding-bottom: 20vh; */
+  .success_btmns {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
-.success-container{
-  background: white;
-  height: 480px;
-  width: 90%;
-box-shadow: 5px 5px 10px grey;
-  text-align: center;
-}
-.confirm-green-box{
-  width: 100%;
-  height: 140px;
-  background: #d7f5da;
-}
-
-
-.monserrat-font{
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 2px;
-}
-
-
-
-
-
-/* --------------- site wide START ----------------- */
-
-
-
-/* 
- * Setting the site variables, example of how to use
- * color:var(--text-1);
- *
- */
-
-
-
-.verticle-align{
-  text-align:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.no-style{
-  padding:0;
-  margin:0;
-}
-
 </style>
 <div style="background:">
-<div class="container">
+  <div class="container">
 
-  <div class="row">
-    <div class="col-12 ">
-      <div class="message-box">
-      <div class="success-container">
-        
-        <br>
-        <!-- <img src="https://scontent-lcy1-1.xx.fbcdn.net/v/t1.6435-9/31301640_2114242505489348_3921532491046846464_n.png?_nc_cat=104&ccb=1-3&_nc_sid=973b4a&_nc_ohc=pfOalMq8BzUAX-k-rhY&_nc_ht=scontent-lcy1-1.xx&oh=3af014dd12fa6e3d1816a3425a80e516&oe=609BE04A" alt="" style="height: 100px;"> -->
-        <br>
-        <div style="padding-left: 5%; padding-right: 5%">
-        <hr
-        </div>
-        <br>
-        <h1 class="monserrat-font" style="color: Grey">Thank you for your order</h1>
-        <br>
-          
-          <div class="confirm-green-box">
-            <br>
-            <h5>ORDER CONFIRMATION</h5>
-            <p>Your order #{{ (isset($response)) ? $response['order_id'] :$order_id  }} has been sucessful!</p>
-            <p>Thank you for choosing Oswal Soap. You will shortly receive a confirmation email.</p>
+    <div class="row section-padding">
+      
+      <div class="section">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="text-center order_complete">
+                <i class="fas fa-check-circle" style="color: green; font-size:80px;"></i>
+                <div class="heading_s1">
+                  <b>
+                    <h1>Your order is successfully placed!</h1>
+                  </b>
+                </div>
+                <p>Your order <b> #{{ (isset($response)) ? $response['order_id'] :$order_id  }} </b>has been successfull!</p>
+                <p>Thank you for choosing Oswal Soap. You will shortly receive a confirmation email.</p>
+                <div class="success_btmns">
+                <a href="{{url('/user')}}"><button type="submit" class="animated-button">
+
+                    <span>View Order</span> <span></span>
+
+                  </button></a>
+                <a href="{{route('/')}}"><button type="submit" class="animated-button">
+
+                    <span>Continue Shopping</span> <span></span>
+
+                  </button></a>
+                  </div>
+              </div>
+            </div>
           </div>
-
-        <br>
-         <button id="create-btn" class="btn btn-ouioui-secondary margin-left-5px"><a href="{{route('/')}}">Back to shop</a></button> 
-      </div>
         </div>
+      </div>
     </div>
   </div>
-
-</div>
-</div>
-@endsection
+  @endsection

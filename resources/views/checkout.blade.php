@@ -239,8 +239,10 @@
                     <div class="promo-section">
 
                         <div class="promo-title">Choose Your Promo Code</div>
+                        <button class="toggle-options-button" id="toggleButtonpromo">Choose Promo Codes</button>
 
-                        <div class="promo-options">
+                        <div class="promo-options" id="promoOptions" style="display: none;">
+
 
                             @foreach ($promocodes as $promocode)
 
@@ -254,10 +256,10 @@
 
                         </div>
 
-                        <input type="text" id="promoCodeInput" class="promo-code-input"
+                        <!-- <input type="text" id="promoCodeInput" class="promo-code-input"
                             placeholder="Enter or select promo code" readonly />
 
-                        <button class="apply-button" id="applyButton">Apply Code</button>
+                        <button class="apply-button" id="applyButton">Apply Code</button> -->
 
                     </div>
                     
@@ -271,7 +273,7 @@
 
                     <h4 class="mb-3">Billing address</h4>
 
-                    <a href="{{ route('checkout.get-address') }}">
+                    <a href="{{ route('checkout.get-address',['place' => 'checkout']) }}">
                         <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Change Address</span> <span> </span></button>
                     </a>
 
@@ -816,4 +818,72 @@ function placeOrder() {
 
 </script>
 
+<script>
+    // Gift card js
+// Gift card selection setup
+function setupSelectableSection(sectionId, listId, itemClass) {
+  const sectionElement = document.getElementById(sectionId);
+  const listElement = document.getElementById(listId);
+
+  // Toggle the gift card list display when clicked
+  sectionElement.addEventListener('click', () => {
+      listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Handle gift card item selection
+  document.querySelectorAll(`.${itemClass}`).forEach(item => {
+      item.addEventListener('click', function () {
+          // Deselect all items and select the clicked one
+          document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+          this.classList.add('selected');
+
+          // Update the selected gift card information in the section
+          const selectedText = this.querySelector('p').innerText;
+          const selectedImageSrc = this.querySelector('img').src;
+          sectionElement.innerHTML = `
+              <p>${selectedText}</p>
+              <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
+          `;
+
+          // Hide the list after selection
+          listElement.style.display = 'none';
+      });
+  });
+}
+
+// Promo code selection setup
+document.addEventListener('DOMContentLoaded', function() {
+  // Promo code selection setup
+  const promoOptions = document.getElementById('promoOptions');
+  const toggleButtonpromo = document.getElementById('toggleButtonpromo');
+
+  // Toggle promo code options visibility
+  toggleButtonpromo.addEventListener('click', function() {
+      promoOptions.style.display = promoOptions.style.display === 'block' ? 'none' : 'block';
+      toggleButtonpromo.innerText = promoOptions.style.display === 'block' ? 'Hide Promo Codes' : 'Show Promo Codes';
+  });
+
+  // Handle promo code option selection
+  document.querySelectorAll('.promo-option').forEach(function(button) {
+      button.addEventListener('click', function() {
+          // Remove 'active' class from all buttons and add it to the clicked one
+          document.querySelectorAll('.promo-option').forEach(function(btn) {
+              btn.classList.remove('active');
+          });
+          this.classList.add('active');
+
+          // Get the selected promo code and apply it
+          const promoCode = this.getAttribute('data-code');
+          applyPromocode(promoCode);  // Call the applyPromocode function with the selected code
+      });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
+  setupPromoCodeSelection('promo-option', 'applyButton'); // This line might be redundant and could be removed
+});
+
+
+</script>
 @endpush

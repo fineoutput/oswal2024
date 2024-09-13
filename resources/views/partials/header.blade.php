@@ -124,9 +124,9 @@
 
     @auth
 
-        <li><a class="dropdown-item" href="{{ url('/user') }}">Profile</a></li>
+        <li><a class="dropdown-item" href="{{ url('/user') }}">dashBoard</a></li>
 
-        <li><a class="dropdown-item" href="{{ url('/user') }}">Account</a></li>
+        {{-- <li><a class="dropdown-item" href="{{ url('/user') }}">Account</a></li> --}}
 
         <li><a class="dropdown-item" href="{{ url('/logout') }}">Logout</a></li>
 
@@ -171,6 +171,23 @@
                             <!-- <span class="  @if($count > 0) wishlist_dot @endif" id="wishlist_count"></span> -->
 
                         </a>
+                
+                    @else
+                
+                        <a class="d-none d-lg-block wishlist_icon " href="javascript:void(0)" onclick="showModal(event)">
+                            <!-- <i class="fa-solid fa-heart"></i> -->
+                            <svg class="header_icon " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+
+                                <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                            <span class="badge  badge-notification bg-danger bag_count" id="wishlist_count">{{ $count }}</span> 
+                            <!-- <span class="  @if($count > 0) wishlist_dot @endif" id="wishlist_count"></span> -->
+
+                        </a>
+                
+                    @endauth
+
+                      
 
                       
 
@@ -276,11 +293,24 @@
 
     </div>
 
-    <div class="bottom-bar-item">
+    @auth
 
-        <a class="" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
+        <div class="bottom-bar-item">
 
-    </div>
+            <a class="" href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i></a>
+
+        </div>
+
+    @else
+
+        <div class="bottom-bar-item">
+
+            <a href="javascript:void(0)" onclick="showModal(event)"><i class="fa-solid fa-heart"></i></a>
+    
+        </div>
+
+    @endauth
+  
 
     <div class="bottom-bar-item">
 

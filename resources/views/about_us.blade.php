@@ -559,7 +559,7 @@ p.botmname_top:hover {
 					<div class="single-service">
 						<div class="content">
 							<span class="icon">
-								<i class="fab fa-battle-net"></i>
+							<i class="fa-regular fa-star"></i>
 							</span>
 							<h2 class="title">Quality Control</h2>
 							<p class="description">The primary objective of our organization is to deliver high-quality products at affordable prices in a safe and hygienic environment.</p>
@@ -571,7 +571,7 @@ p.botmname_top:hover {
 					<div class="single-service">
 						<div class="content">
 							<span class="icon">
-								<i class="fab fa-battle-net"></i>
+							<i class="fa-solid fa-building-wheat"></i>
 							</span>
 							<h2 class="title">Infrastructure</h2>
 							<p class="description">In order to extend our outreach to the customers, we are continuously developing our infrastructure with well-equipped machines and facilities for our employees.</p>
@@ -585,7 +585,7 @@ p.botmname_top:hover {
 					<div class="single-service">
 						<div class="content">
 							<span class="icon">
-								<i class="fab fa-asymmetrik"></i>
+							<i class="fa-solid fa-gear"></i>
 							</span>
 							<h2 class="title">Manufacturing</h2>
 							<p class="description">We are our own competitors, and hence we are always outdoing ourselves to provide our consumers with a wide range of products using highly advanced machinery.</p>
@@ -599,7 +599,7 @@ p.botmname_top:hover {
 					<div class="single-service">
 						<div class="content">
 							<span class="icon">
-								<i class="fab fa-artstation"></i>
+							<i class="fa-solid fa-indian-rupee-sign"></i>
 							</span>
 							<h2 class="title">Reasonable Prices</h2>
 							<p class="description">We provide all products on the affordable prices to all customers which give us a long string of happy customers.</p>
