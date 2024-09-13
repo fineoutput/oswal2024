@@ -34,7 +34,7 @@
 
                                     <!-- Headings for Product Details -->
 
-                                    <div class="row mb-4 d-flex script">
+                                    <div class="row mb-4 d-flex script cart_finds">
 
                                         <div class="col-12 col-md-2 text-center text-md-start">
 
