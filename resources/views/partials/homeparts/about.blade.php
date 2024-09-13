@@ -115,11 +115,6 @@
     </section>
 
 </div> -->
-
-<!-- <div class="container-fluid effect" style="margin-bottom:7rem;">
-   <img src="{{ asset('images/oswal_banner.') }}jpg" alt="" width="100%" />
-    <canvas id="confetti"></canvas>
-</div> -->
 <section class="module"
 
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/3.png); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">

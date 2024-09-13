@@ -5202,7 +5202,7 @@ a.nav-link_color.clicked::after {
   background-color: red;
   color: red;
 }
-/* styles.css */
+
 .icon-container {
   position: relative;
   width: 20px; /* Set your desired width */
@@ -5217,13 +5217,13 @@ a.nav-link_color.clicked::after {
   transition: all 0.3s ease; /* Smooth transition for both icons */
 }
 
-/* Initially hide the second icon */
+
 .second-icon {
   opacity: 0;
   transform: translateY(100%); /* Position it out of view */
 }
 
-/* On hover, move the first icon and reveal the second icon */
+
 .icon-container:hover .first-icon {
   transform: translateY(-100%); 
   opacity: 0;
