@@ -5129,57 +5129,6 @@ h4.payment {
   transition: color 0.5s ease; /* Smooth color transition */
 }
 
-/* Underline effect using pseudo-element */
-.nav-links li a::after {
-  content: ""; /* Pseudo-element requires content */
-  position: absolute;
-  bottom: -3px; /* Position the underline at the bottom */
-  left: 0; /* Start the underline from the left */
-  width: 100%; /* Full width of the link */
-  height: 2px; /* Height of the underline */
-  background-color: #D19221; /* Underline color */
-  transform: scaleX(0); /* Start with 0 width */
-  transform-origin: bottom right; /* Animation starts from the right side */
-  transition: transform 0.5s ease; /* Smooth transition for the underline effect */
-}
-
-/* Underline animation on hover */
-.nav-links li a:hover::after {
-  transform: scaleX(1); /* Scale to full width on hover */
-  transform-origin: bottom left; /* Animation starts from the left side on hover */
-}
-
-/* Change color on hover */
-.nav-links li a:hover {
-  color: #D19221;
-}
-
-/* Default color for links with class 'nav-link_color' */
-a.nav-link_color {
-  color: #000;
-  text-decoration: none;
-}
-
-/* Style for clicked links */
-a.nav-link_color.clicked {
-  color: #D19221; /* Change color when clicked */
-  text-decoration: underline; /* Underline text when clicked */
-  position: relative; /* Ensure positioning for pseudo-element */
-
-}
-
-a.nav-link_color.clicked::after {
-  content: ""; /* Ensure pseudo-element is displayed */
-  position: absolute;
-  bottom: -3px; /* Position the underline at the bottom */
-  left: 0; /* Start the underline from the left */
-  width: 100%; /* Full width of the link */
-  height: 2px; /* Height of the underline */
-  background-color: #D19221; /* Underline color */
-  transform: scaleX(1); /* Full width for clicked state */
-  transform-origin: bottom left; /* Ensure full width is visible */
-  transition: transform 0s; /* No transition needed for clicked state */
-}
 
 
 .header_icon{
