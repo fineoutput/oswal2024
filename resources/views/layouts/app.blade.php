@@ -24,15 +24,14 @@
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet" />
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-<!-- Include SweetAlert2 CSS and JS via CDN -->
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -56,6 +55,8 @@
 
     @include('partials.notifaction')
 
+    <input type="hidden" id="maxquentity"  value="{{ getConstant()->quantity }}">
+    
 </body>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -91,7 +92,6 @@
     $('#example').DataTable();
 } );
 
-console.log("davidgogins");
 </script>
 
 <script src="{{ asset('js/app.js') }}"></script>

@@ -148,7 +148,7 @@ Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
 Route::get('getcity}', [UserController::class, 'getCity'])->name('getcity');
 
 
-Route::prefix('wishlist')->name('wishlist.')->group(function () {
+Route::prefix('wishlist')->middleware(['auth'])->name('wishlist.')->group(function () {
 
     Route::get('/', [WishlistController::class, 'Show'])->name('index');
 

@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
   menuBtn.addEventListener('click', function () {
     navMenu.classList.toggle('active');
   });
+
 });
+
 document.addEventListener('DOMContentLoaded', function() {
   const links = document.querySelectorAll('.nav-link_color');
 
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 });
+
 
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#carousel1', {
@@ -77,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-
 function showSearchButton(button) {
 
   const SelectorId = button === 'searchbutton1' ? 'search' : 'search2';
@@ -112,14 +114,27 @@ function handleSearch(inputSelector, searchRoute) {
 
 // Increment function
 function increment(productId) {
+
   const input = document.getElementById(`quantity-input${productId}`);
-  let currentValue = parseInt(input.value);
+
+  const mobinput = document.getElementById(`mob_quantity-input${productId}`);
+
+  const numberDisplay = document.querySelector(`.number-display${productId}`);
+
+  const CartMaxQuentity = parseInt(document.getElementById('maxquentity').value)
+
+  let webcurrentValue = parseInt(input.value);
+
+  let mobcurrentValue = parseInt(mobinput.value);
 
   // Check if it's below the max value
-  if (currentValue < 5) {
-      input.value = currentValue + 1;
+  if (webcurrentValue < CartMaxQuentity && mobcurrentValue < CartMaxQuentity) {
+      input.value = webcurrentValue + 1;
+      mobinput.value = mobcurrentValue + 1;
+      numberDisplay.textContent = mobcurrentValue + 1;
   } else {
-      alert("Maximum quantity reached.");
+      showNotification('Maximum quantity reached', 'error');
+      return;
   }
 
   updateCartDisplay(productId);
@@ -127,18 +142,34 @@ function increment(productId) {
 
 // Decrement function
 function decrement(productId) {
-  const input = document.getElementById(`quantity-input${productId}`);
-  let currentValue = parseInt(input.value);
 
-  if (currentValue > 1) {
-      input.value = currentValue - 1;
+  const input = document.getElementById(`quantity-input${productId}`);
+  const mobinput = document.getElementById(`mob_quantity-input${productId}`);
+  const numberDisplay = document.querySelector(`.number-display${productId}`);
+
+  let webcurrentValue = parseInt(input.value);  
+  let mobcurrentValue = parseInt(mobinput.value);
+
+  if (webcurrentValue > 1 && mobcurrentValue > 1) {
+
+      input.value = webcurrentValue - 1;
+      mobinput.value = mobcurrentValue - 1;
+      numberDisplay.textContent = mobcurrentValue - 1;
   } else {
       // Hide quantity section and show "Add to Cart" if the value reaches 0 or 1
       document.getElementById(`quantity-section${productId}`).style.display = 'none';
-      document.getElementById(`add-to-cart-section${productId}`).style.display = 'block';
-      input.value = 0;
-  }
 
+      document.getElementById(`mob_quantity-section${productId}`).style.display = 'none';
+
+      document.getElementById(`add-to-cart-section${productId}`).style.display = 'block';
+
+      document.getElementById(`mob_add-to-cart-section${productId}`).style.display = 'block';
+
+      input.value = 0;
+      mobinput.value = 0;
+      numberDisplay.textContent = 0;
+  }
+  
   updateCartDisplay(productId);
 }
 
@@ -146,7 +177,12 @@ function decrement(productId) {
 function manageCart(productId) {
 
   document.getElementById(`add-to-cart-section${productId}`).style.display = 'none';
+
+  document.getElementById(`mob_add-to-cart-section${productId}`).style.display = 'none';
+
   document.getElementById(`quantity-section${productId}`).style.display = 'flex';
+
+  document.getElementById(`mob_quantity-section${productId}`).style.display = 'flex';
 
   // Increment by default when "Add to Cart" is clicked
   increment(productId);
@@ -154,8 +190,12 @@ function manageCart(productId) {
 
 // Function to handle updating the cart (like making API calls to update cart)
 function updateCartDisplay(productId) {
-  const quantity = document.getElementById(`quantity-input${productId}`).value;
-  console.log(`Product ${productId} quantity updated to ${quantity}`);
+  const webquantity = document.getElementById(`quantity-input${productId}`).value;
+
+  const mobquantity = document.getElementById(`mob_quantity-input${productId}`).value;
+
+  console.log(`Product ${productId} quantity updated to ${webquantity}`);
+  console.log(`Product ${productId} quantity updated to ${mobquantity}`);
 
   addToCart(productId)
 }
@@ -229,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
   }).mount();
 });
+
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#product-splide_index', {
     // type: 'loop',  
@@ -247,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
   }).mount();
 });
-// console.log("hello2");
+
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#splide3', {
     type: 'loop', // You can choose other types like 'fade' if needed
@@ -265,12 +306,6 @@ document.addEventListener('DOMContentLoaded', function () {
     },
   }).mount();
 });
-// console.log("splider");
-
-
-
-
-
 
 ////////////////////Crousel code////////////
 document.addEventListener('DOMContentLoaded', function () {
@@ -290,11 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
     },
   }).mount();
 });
-
-//////////////////Login modal///////////
-
-
-/////Mobile Countet button product category//////////////
 
 /////Sticky buttons category//////////////
 document.addEventListener("DOMContentLoaded", function () {
@@ -329,28 +359,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// ///Notify cart///
-// $('#notifyButton').click(function() {
-//   $.notify("Product added to cart!", "success");
-// });
-// ///Notify cart END///
-
-// document.getElementById('myButton').addEventListener('click', function() {
-//   // Fire SweetAlert on button click
-//   Swal.fire({
-//       title: "Thanks!",
-//       text: "You order has been placed!",
-//       icon: "success"
-//   });
-// });
-// document.getElementById('failureButton').addEventListener('click', function() {
-//   Swal.fire({
-//       title: "Oops...",
-//       text: "Something went wrong!",
-//       icon: "error"
-//   });
-// });
-
 ///////////////////Instagram Slide///////////
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#insta_slide', {
@@ -368,51 +376,61 @@ document.addEventListener('DOMContentLoaded', function () {
   }).mount();
 });
 
-/////Product category button
-document.addEventListener('DOMContentLoaded', function () {
-  
-  document.querySelectorAll('.addButton').forEach(function (addButton) {
-    let count = 0;
-    const buttonText = addButton.querySelector('.buttonText');
-    const controlButtons = addButton.querySelector('.controlButtons');
-    const numberDisplay = addButton.querySelector('.number-display');
-    const incrementButton = addButton.querySelector('.btn-increase');
-    const decrementButton = addButton.querySelector('.btn-decrease');
 
-    addButton.addEventListener('click', function () {
-      if (count === 0) {
-        buttonText.style.display = 'none';
-        controlButtons.style.display = 'flex';
-        count = 1;
-        numberDisplay.textContent = count;
-      }
-    });
+// Gift card js
+function setupSelectableSection(sectionId, listId, itemClass) {
+  const sectionElement = document.getElementById(sectionId);
+  const listElement = document.getElementById(listId);
 
-    incrementButton.addEventListener('click', function (event) {
-      event.stopPropagation();
-      changeNumber(1);
-    });
-
-    decrementButton.addEventListener('click', function (event) {
-      event.stopPropagation();
-      changeNumber(-1);
-    });
-
-    function changeNumber(amount) {
-      count += amount;
-
-      if (count > 0) {
-        numberDisplay.textContent = count;
-      } else {
-        count = 0;
-        numberDisplay.textContent = count;
-        buttonText.style.display = 'block';
-        controlButtons.style.display = 'none';
-      }
-    }
+  // Handle the click event to toggle the list display
+  sectionElement.addEventListener('click', () => {
+    listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
   });
-});
 
+  // Handle item selection
+  document.querySelectorAll(`.${itemClass}`).forEach(item => {
+    item.addEventListener('click', function () {
+      document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+      this.classList.add('selected');
+
+      // Update the section with the selected item's text and image
+      const selectedText = this.querySelector('p').innerText;
+      const selectedImageSrc = this.querySelector('img').src;
+      sectionElement.innerHTML = `
+              <p>${selectedText}</p>
+              <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
+          `;
+
+      // Hide the list
+      listElement.style.display = 'none';
+    });
+  });
+}
+
+function setupPromoCodeSelection(promoClass, inputId, applyButtonId) {
+  const promoInput = document.getElementById(inputId);
+
+  // Handle promo option selection
+  document.querySelectorAll(`.${promoClass}`).forEach(button => {
+    button.addEventListener('click', function () {
+      document.querySelectorAll(`.${promoClass}`).forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      promoInput.value = this.getAttribute('data-code');
+    });
+  });
+
+  // Handle apply button click
+  document.getElementById(applyButtonId).addEventListener('click', () => {
+    const promoCode = promoInput.value;
+    alert(promoCode ? `Promo code ${promoCode} applied!` : 'Please select a promo code.');
+  });
+}
+
+// Initialize the sections
+setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
+setupSelectableSection('promoCodeSection', 'promoCodeList', 'promo-code-item');
+// Initialize promo code selection
+setupPromoCodeSelection('promo-option', 'promoCodeInput', 'applyButton');
 
 
 function renderproductview(url) {
