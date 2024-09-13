@@ -558,7 +558,7 @@ class CheckOutController extends Controller
 
             if ($user && $user->wallet_amount > 0) {
 
-                $walletDiscount = (float) calculate_wallet_discount($user->wallet_amount) ;
+                $walletDiscount = calculate_wallet_discount($user->wallet_amount) ;
 
                 $totalAmount = $order->total_amount - $walletDiscount;
 
@@ -641,7 +641,7 @@ class CheckOutController extends Controller
             'payment_type'   => 1,
             'payment_status' => 1,
             'cod_charge'     => $codCharge,
-            'total_amount'   => $order->total_amount,
+            'total_amount'   => $order->total_amount + $codCharge,
         ]);
 
         $invoiceNumber = generateInvoiceNumber($orderId);
