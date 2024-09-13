@@ -427,7 +427,8 @@ class CartController extends Controller
                 'success' => true,
                 'gift_detail' => [
                     'id'         => $giftCard->id,
-                    'product_id' => $giftCard->product_id,
+                    'product_id'   => $giftCard->product_id,
+                    'product_name' => $giftCard->product->name,
                     'type_id'    => $giftCard->type_id,
                     'price'       => $giftCard->price,
                     'image'      => asset($giftCard->appimage),

@@ -28,7 +28,7 @@ class GiftCardSec extends Model
 
     public function product()
     {
-        return $this->belongsTo(EcomProduct::class, 'product_id');
+        return $this->belongsTo(EcomProduct::class, 'product_id' , 'id');
     }
 
     public function type()
