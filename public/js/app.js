@@ -359,6 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+
 ///////////////////Instagram Slide///////////
 document.addEventListener('DOMContentLoaded', function () {
   new Splide('#insta_slide', {
@@ -376,61 +377,71 @@ document.addEventListener('DOMContentLoaded', function () {
   }).mount();
 });
 
-
-// Gift card js
+// Gift card selection setup
 function setupSelectableSection(sectionId, listId, itemClass) {
+
   const sectionElement = document.getElementById(sectionId);
   const listElement = document.getElementById(listId);
 
-  // Handle the click event to toggle the list display
+
   sectionElement.addEventListener('click', () => {
-    listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+      listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
   });
 
-  // Handle item selection
+  // Handle gift card item selection
   document.querySelectorAll(`.${itemClass}`).forEach(item => {
-    item.addEventListener('click', function () {
-      document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-      this.classList.add('selected');
+    
+      item.addEventListener('click', function () {
+          // Deselect all items and select the clicked one
+          document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+          this.classList.add('selected');
 
-      // Update the section with the selected item's text and image
-      const selectedText = this.querySelector('p').innerText;
-      const selectedImageSrc = this.querySelector('img').src;
-      sectionElement.innerHTML = `
+          // Update the selected gift card information in the section
+          const selectedText = this.querySelector('p').innerText;
+          const selectedImageSrc = this.querySelector('img').src;
+          sectionElement.innerHTML = `
               <p>${selectedText}</p>
               <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
           `;
 
-      // Hide the list
-      listElement.style.display = 'none';
-    });
+          // Hide the list after selection
+          listElement.style.display = 'none';
+      });
   });
 }
 
-function setupPromoCodeSelection(promoClass, inputId, applyButtonId) {
-  const promoInput = document.getElementById(inputId);
+// Promo code selection setup
+document.addEventListener('DOMContentLoaded', function() {
+  // Promo code selection setup
+  const promoOptions = document.getElementById('promoOptions');
+  const toggleButtonpromo = document.getElementById('toggleButtonpromo');
 
-  // Handle promo option selection
-  document.querySelectorAll(`.${promoClass}`).forEach(button => {
-    button.addEventListener('click', function () {
-      document.querySelectorAll(`.${promoClass}`).forEach(btn => btn.classList.remove('active'));
-      this.classList.add('active');
-      promoInput.value = this.getAttribute('data-code');
-    });
+  // Toggle promo code options visibility
+  toggleButtonpromo.addEventListener('click', function() {
+      promoOptions.style.display = promoOptions.style.display === 'block' ? 'none' : 'block';
+      toggleButtonpromo.innerText = promoOptions.style.display === 'block' ? 'Hide Promo Codes' : 'Show Promo Codes';
   });
 
-  // Handle apply button click
-  document.getElementById(applyButtonId).addEventListener('click', () => {
-    const promoCode = promoInput.value;
-    alert(promoCode ? `Promo code ${promoCode} applied!` : 'Please select a promo code.');
-  });
-}
+  // Handle promo code option selection
+  document.querySelectorAll('.promo-option').forEach(function(button) {
+      button.addEventListener('click', function() {
+          // Remove 'active' class from all buttons and add it to the clicked one
+          document.querySelectorAll('.promo-option').forEach(function(btn) {
+              btn.classList.remove('active');
+          });
+          this.classList.add('active');
 
-// Initialize the sections
-setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
-setupSelectableSection('promoCodeSection', 'promoCodeList', 'promo-code-item');
-// Initialize promo code selection
-setupPromoCodeSelection('promo-option', 'promoCodeInput', 'applyButton');
+          // Get the selected promo code and apply it
+          const promoCode = this.getAttribute('data-code');
+          applyPromocode(promoCode);  // Call the applyPromocode function with the selected code
+      });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
+  setupPromoCodeSelection('promo-option', 'applyButton'); // This line might be redundant and could be removed
+});
 
 
 function renderproductview(url) {
