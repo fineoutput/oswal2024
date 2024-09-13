@@ -1,3 +1,24 @@
+<style>
+    .effect {
+    position: relative;
+  height: 100%;
+  width:100%;
+  margin: 0;
+  padding: 0;
+  font-size: 10vw;
+  background-color: #ddf0e9;
+}
+
+
+
+#confetti{
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+</style>
 <!-- <div class="renwew_sect section-padding mb-5"
 
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/about_bg.jpg); margin-top: -10px;">
@@ -94,27 +115,7 @@
     </section>
 
 </div> -->
-<style>
-    .effect {
-    position: relative;
-  height: 100%;
-  width:100%;
-  margin: 0;
-  padding: 0;
-  font-size: 10vw;
-  background-color: #ddf0e9;
-}
 
-
-
-#confetti{
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-}
-</style>
 <div class="container-fluid effect" style="margin-bottom:7rem;">
    <img src="{{ asset('images/oswal_banner.') }}jpg" alt="" width="100%" />
     <canvas id="confetti"></canvas>
