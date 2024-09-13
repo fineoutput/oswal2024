@@ -39,6 +39,7 @@ use App\Models\State;
 use App\Models\Blog;
 
 use App\Models\City;
+use App\Models\Slider;
 
 class AppController extends Controller {
 
@@ -289,6 +290,31 @@ class AppController extends Controller {
         return response()->json(['success' => true, 'data' =>  $data ],200);
     }
  
+    public function festivalSlider(Request $request)  {
+
+        $validator = Validator::make($request->all(), [
+            'lang'      => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        $sliders =  Slider::where('is_active', 1)->get();
+ 
+        $data = [];
+ 
+        foreach ($sliders as $key => $value) {
+          $data[] =[
+             'id'            => $value->id,
+             'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
+             'image'         => asset($value->app_image),
+          ];
+        }
+ 
+        return response()->json(['success' => true, 'data' =>  $data ],200);
+    }
+
     public function getPromoCode() {
 
         $promocodes  =  Promocode::where('is_active', 1)->get();
