@@ -3,7 +3,24 @@
 @section('title', $title ?? '')
 
 @section('content')
-
+<style>
+    .hunn_list_itms {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.hunn_icons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.hunn_icons p {
+    margin: 0;
+}
+.hunn_total{
+    border-top: 1px dashed black ;
+}
+</style>
 <section class="h-100 gradient-custom">
     
     <div class="container py-5 h-100">
@@ -94,6 +111,49 @@
                                 
                             </div>
                             
+                            <div class="hun_details">
+                                <h2>Order Details</h2>
+                                <div class="hun_list">
+                                    <div class="hunn_price_total hunn_list_itms">
+                                        <h4> Item Total</h4>
+                                        <p>{{$data['subtotal'] }}</p>
+                                    </div>
+                                    <div class="hunn_list_itms">
+                                        <div class="hunn_icons">
+                                            <img src="{{(asset('images/wallet (1).png'))}}" width="20%" alt="">
+                                        <p>Wallet Discount</p>
+                                        </div>
+                                        <p>{{$data['wallet_discount'] }}</p>
+                                    </div>
+                                    <div class="hunn_list_itms">
+                                    <div class="hunn_icons">
+                                    <img src="{{(asset('images/gift-card.png'))}}" width="20%" alt="">
+                                        <p>Gift Card amount</p>
+                                    </div>
+                                        <p>{{$data['gift_amount']}}</p>
+                                    </div>
+                                    <div class="hunn_list_itms">
+                                    <div class="hunn_icons">
+                                    <img src="{{(asset('images/delivery.png'))}}" width="20%" alt="">
+                                        <p>Shipping Charges</p>
+                                        </div>
+                                        <p>{{$data['delivery_charge']}}</p>
+                                    </div>
+                                    <div class="hunn_list_itms">
+                                    <div class="hunn_icons">
+                                    <img src="{{(asset('images/buy.png'))}}" width="20%" alt="">
+                                        <p>COD Charges</p>
+                                    </div>
+                                        <p>{{$data['cod_charge']}}</p>
+                                    </div>
+                                    <div class="hunn_total hunn_list_itms">
+                                        <h4>Bill Total</h4>
+                                        <p>{{$data['total_amount'] }}</p>
+                                    </div>
+                                    <hr>
+                                    {{$data['address']}}
+                                </div>
+                            </div>
                             {{-- <div class="card-body">
                                 
                                 <div class="row">
