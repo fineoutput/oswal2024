@@ -6,17 +6,13 @@ $productType = $product->type->filter(function ($type) use ($globalState, $globa
 
 $product->load('cart', 'wishlist');
 
-$cart = null;
-$wishlist = null;
+$cart = Auth::check() 
+    ? $product->cart->firstWhere('user_id', Auth::user()->id) 
+    : $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
 
-if (Auth::check()) {
-
-    $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
-    $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
-} else {
-
-    $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
-}
+$wishlist = Auth::check() 
+    ? $product->wishlist->firstWhere('user_id', Auth::user()->id) 
+    : null;
 
 @endphp
 
@@ -38,18 +34,10 @@ if (Auth::check()) {
 
         <div class="wishlist_icons{{ $product->id }}">
 
-            @auth()
-
-                @if($wishlist)
-                    <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
-                        <i class="fa-solid fa-heart colored_icon" style="color: #f20232;"></i>
-                    </a>
-                @else
-                    <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
-                        <i class="fa-regular fa-heart hollow_icon" style="color: #cdd5e5;"></i>
-                    </a>
-                @endif
-
+            @auth
+                <a href="javascript:void(0)" class="wishlist-icon" onclick="toggleWishList({{ $product->id }})">
+                    <i class="{{ $wishlist ? 'fa-solid fa-heart colored_icon' : 'fa-regular fa-heart hollow_icon' }}" style="color: {{ $wishlist ? '#f20232' : '#cdd5e5' }}"></i>
+                </a>
             @endauth
 
         </div>
@@ -110,15 +98,16 @@ if (Auth::check()) {
     <div class="details-purchase-info">
 
         <div class="set_insider">
-            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple"
+
+            <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple"
                 onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
                 <i class="fas fa-minus"></i>
             </button>
 
             <input style="border: 1px solid #d8172863 !important;" id="form1" min="1" name="quantity"
-                value="{{ $cart->quantity ?? 1 }}" type="number" class="form-control form-control-sm carts_puts" />
+                value="{{ $cart->quantity ?? 1 }}" type="number" max="{{ getConstant()->quantity }}" class="form-control form-control-sm carts_puts" />
 
-            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple_set"
+            <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple_set"
                 onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                 <i class="fas fa-plus"></i>
             </button>
