@@ -4,10 +4,9 @@
 
 @section('content')
 
-<div class="container">
+<div class="container section-padding">
     <div class="row">
-        <div class="col-md-2 col-lg-2"></div>
-        <div class="col-md-8 col-lg-8" style="text-align:center;">
+        <div class="col-md-12 col-lg-12 privacy_heads" style="text-align:justify;">
             <h1>Privacy Policy</h1>
             <br><br>
 
@@ -82,7 +81,6 @@
             We may change this Privacy Policy from time to time. If/when changes are made to this privacy policy, we will post any changes here, so be sure to check back periodically. However, please be assured that if the Privacy Policy changes in the future, we will not use the personal information you have submitted to us under this Privacy Policy in a manner that is materially inconsistent with this Privacy Policy, without your prior consent.
             <br><br>
         </div>
-        <div class="col-md-2 col-lg-2"></div>
     </div>
 </div>
 

@@ -105,7 +105,15 @@ a.nav-link_color.clicked::after {
 }
 .dropdown-toggle::after {
   display: none !important; /* Hide the default dropdown icon */
+
+  
 }
+.modal-content {
+            z-index: 1050 !important; /* Ensure modal is above the overlay */
+        }
+        .modal-backdrop {
+            z-index: 980 !important; /* Ensure backdrop is below the modal */
+        }
 
 </style>
 <div class="container-fluid  sticky-top bg-light shadow-lg p-lg-0 p-2" style="z-index:999">
@@ -310,50 +318,35 @@ a.nav-link_color.clicked::after {
                         <!-- <a><button class="order_btn btn btn-primary" data-bs-toggle="modal"data-bs-target="#basicModal">Order Now</button></a> -->
 
                         <!-- Basic Modal -->
-                        <div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel"
-
-                            aria-hidden="true">
-
-                            <div class="modal-dialog sta_mode">
-
-                                <form method="POST" action="{{ route('set.location') }}">
-
-                                    @csrf
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h6 class="modal-title" id="basicModalLabel">Select State and City</h6>
-
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-                                        </div>
-
-                                        <div class="modal-body">
-
-                                            <select name="state" id="typesstate" style="width: 100%;" onchange="getCity('{{ route('getcity') }}', 'city-container2')" required>
-                                                <option value="99999">Choose State</option>
-                                                @foreach (App\Models\State::all() as $state)
-                                                    <option value="{{ $state->id }}">{{ $state->state_name }}</option>
-                                                @endforeach
-                                            </select>
-
-
-                                            <select id="city-container2" name="city" class="form-control" required>
-                                                <option value="">----- Select City -----</option>
-                                            </select>
-                                            
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-bs-dismiss="modal" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Close</button>
-                                            <button type="submit" class="btn btn-primary" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Proceed</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        <div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel" aria-hidden="true">
+        <div class="modal-dialog sta_mode">
+            <form method="POST" action="{{ route('set.location') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="basicModalLabel">Select State and City</h6>
+                        <!-- Optional close button -->
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                        <select name="state" id="typesstate" style="width: 100%;" onchange="getCity('{{ route('getcity') }}', 'city-container2')" required>
+                            <option value="99999">Choose State</option>
+                            @foreach (App\Models\State::all() as $state)
+                                <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+                            @endforeach
+                        </select>
+                        <select id="city-container2" name="city" class="form-control" required>
+                            <option value="">----- Select City -----</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-default" data-bs-dismiss="modal" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Close</button> -->
+                        <button type="submit" class="btn btn-primary" style="background:#4FD1C5; padding: 7px 17px; font-size: 15px;">Proceed</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
                     </div>
 
@@ -435,3 +428,13 @@ a.nav-link_color.clicked::after {
     </div>
 
 </div>
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('basicModal'), {
+            backdrop: 'static', 
+            keyboard: false     
+        });
+        myModal.show();
+    });
+</script> -->

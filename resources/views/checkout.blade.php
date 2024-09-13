@@ -44,7 +44,7 @@
 
         <div class="row">
 
-            <div class="col-md-4 order-md-2 mb-4">
+            <div class="col-md-6 order-md-2 mb-4">
 
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
 
@@ -74,7 +74,7 @@
 
                                 <div class="cehc_txt">
 
-                                    <h6 class="text-danger">{{ $product->name }}</h6>
+                                    <h6 class="">{{ $product->name }} <span style="color:#d81828; font-size:1rem; font-family:'Courier New', Courier, monospace"><b> X {{ $orderItem->quantity }} </b></span></h6>
 
                                     <small class="text-muted">{{ $category->name }}</small>
 
@@ -82,7 +82,7 @@
 
                             </div>
 
-                            <span class="text-muted"> {{ $orderItem->quantity }} * {{ $type->selling_price }}</span>
+                            <span class="text-muted"> {{ $type->selling_price }}</span>
 
                         </li>
                     @endforeach
@@ -267,7 +267,7 @@
 
             </div>
 
-            <div class="col-md-8 order-md-1">
+            <div class="col-md-6 order-md-1">
 
                 <div class="chek_rees d-flex gap-5">
 

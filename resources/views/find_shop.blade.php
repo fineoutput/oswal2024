@@ -12,7 +12,7 @@
     </div>
 
     <div class="container" style="margin-top:10px;">
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <table id="example" class="table table-striped table-bordered table-responsive" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
