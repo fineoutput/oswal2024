@@ -1139,11 +1139,16 @@ class OrderController extends Controller
             'deliveryBoy' => [
                 'latitude'  => (float)$deliveryBoy->latitude,
                 'longitude' => (float)$deliveryBoy->longitude,
-                 'detail' =>  $deliveryBoy,
+                 'detail' => [
+                    'name'     => $deliveryBoy->name,
+                    'image'    => asset($deliveryBoy->image),
+                    'phone_no' => $deliveryBoy->phone,
+                 ],
             ],
             'user' => [
                 'latitude'  => (float)$order->address->latitude,
                 'longitude' => (float)$order->address->longitude,
+                 'address' => $order->address
             ],
         ];
     
