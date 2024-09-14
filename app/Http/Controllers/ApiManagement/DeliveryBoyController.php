@@ -23,7 +23,7 @@ use App\Models\OrderDetail;
 use GuzzleHttp\Client;
 
 use App\Models\Order;
-
+use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 class DeliveryBoyController extends Controller
 {
@@ -676,5 +676,35 @@ class DeliveryBoyController extends Controller
         }
     }
 
+    public function currentLocation(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'latitude'  => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'address'   => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'status'  => 400
+            ], 400);
+        }
+
+        $user = DeliveryBoy::find(Auth::user()->id);
+
+        $user->update([
+            'latitude'  => $request->latitude,
+            'longitude' => $request->longitude,
+            'address'   => $request->address ?? ''
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Location updated successfully'
+        ], 200);
+    }
 
 }
