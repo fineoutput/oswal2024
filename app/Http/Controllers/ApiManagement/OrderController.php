@@ -795,7 +795,7 @@ class OrderController extends Controller
     public function orders(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id'      => 'required|exists:users,device_id',
+            'user_id'      => 'required|exists:users,id',
             'device_id'    => 'required',
             'lang'         => 'required|string'
         ]);
