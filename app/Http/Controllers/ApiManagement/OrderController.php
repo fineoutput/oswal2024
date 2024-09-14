@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 use App\Services\RazorpayService;
 
+use App\Models\TransferOrder;
+
 use Illuminate\Http\Request;
 
 use App\Models\OrderDetail;
@@ -24,7 +26,7 @@ use App\Models\Address;
 use App\Models\Order;
 
 use App\Models\Cart;
-use App\Models\TransferOrder;
+use App\Models\DeliveryBoy;
 use App\Models\User;
 
 use App\Models\Type;
@@ -573,8 +575,18 @@ class OrderController extends Controller
             return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
         }
 
+        $maxCodAmount = getConstant()->cod_max_process_amount;
+
+        if ($order->sub_total > $maxCodAmount) {
+            return response()->json([
+                'status' => 400,
+                'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
+            ]);
+        }
+
         // Handle COD payment type
         $codCharge = getConstant()->cod_charge;
+
         $order->update([
             'order_status'   => 1,
             'payment_type'   => 1,
@@ -1089,101 +1101,50 @@ class OrderController extends Controller
 
     public function trackOrder(Request $request)
     {
+        dd('hello');
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
+            'device_id'=>'required|exists:users,id',
+            'user_id'  => 'required|exists:users,id',
             'order_id' => 'required',
         ]);
-
+    
         if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-                'status' => 201,
-            ]);
+            return response()->json(['message' => $validator->errors()->first(), 'status' => 422], 422);
         }
+    
+        $userId = $request->input('user_id');
+        $orderId = $request->input('order_id');
 
-        $user_id = $request->input('user_id') ?? Auth::user()->id;
-        $order_id = $request->input('order_id');
-
-        $user = User::find($user_id);
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'User does not exist',
-                'status' => 201,
-            ]);
-        }
-
-        $order = Order::find($order_id);
-
+        $order = Order::with('address')->find($orderId);
+    
         if (!$order) {
-            return response()->json([
-                'message' => 'Order not found!',
-                'status' => 201,
-                'data' => [],
-            ]);
+            return response()->json(['message' => 'Order does not exist', 'status' => 400], 400);
         }
-
-        if (empty($order->track_id)) {
-
-            $res4[] = [
-                'date' => $order->date,
-                'title' => 'Ordered',
-                'activity' => 'Order Placed',
-                'location' => '',
-            ];
-
-            return response()->json([
-                'message' => 'Track id not found!',
-                'status' => 201,
-                'data' => $res4,
-            ]);
+    
+        $transfer = TransferOrder::where('order_id', $orderId)->first();
+    
+        if (!$transfer) {
+            return response()->json(['message' => 'Track ID not found!', 'status' => 400], 400);
         }
-
-        $track_id = $order->track_id;
-
-        $token = getShipRocketToken();
-
-        // Track the order with Shiprocket
-
-        $main_respo = trackOrderApi($token ,$track_id);
-
-        $tracking_data = $main_respo->tracking_data;
-
-        $track_status = $tracking_data->track_status;
-
-        if ($track_status != 0) {
-
-            $res2 = [];
-
-            foreach ($tracking_data->shipment_track_activities as $activity) {
-
-                $activity_parts = explode('-', $activity->activity);
-
-                $activity_title = $activity_parts[0];
-
-                $activity_detail = implode(' ', array_slice($activity_parts, 1));
-                
-                $res2[] = [
-                    'date' => $activity->date,
-                    'title' => $activity_title,
-                    'activity' => $activity_detail,
-                    'location' => $activity->location,
-                ];
-            }
-
-            return response()->json([
-                'message' => 'success',
-                'status' => 200,
-                'data' => $res2,
-            ]);
-            
-        } else {
-            return response()->json([
-                'message' => 'wrong order id',
-                'status' => 201,
-                'data' => [],
-            ]);
+    
+        $deliveryBoy = DeliveryBoy::find($transfer->delivery_user_id);
+    
+        if (!$deliveryBoy) {
+            return response()->json(['message' => 'Delivery boy not found', 'status' => 400], 400);
         }
+    
+        $data = [
+            'deliveryBoy' => [
+                'latitude'  => $deliveryBoy->latitude,
+                'longitude' => $deliveryBoy->longitude,
+            ],
+            'user' => [
+                'latitude'  => $order->address->latitude,
+                'longitude' => $order->address->longitude,
+            ],
+        ];
+    
+        return response()->json(['status' => 200, 'response' => $data]);
     }
-
+    
 }
