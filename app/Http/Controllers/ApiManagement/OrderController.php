@@ -1148,7 +1148,15 @@ class OrderController extends Controller
             'user' => [
                 'latitude'  => (float)$order->address->latitude,
                 'longitude' => (float)$order->address->longitude,
-                 'address' => $order->address
+                 'address' => [
+                        'address' =>$order->address->address,
+                        'landmark' =>$order->address->landmark,
+                        'doorflat' =>$order->address->doorflat,
+                        'city' => $order->address->citys->city_name,
+                        'state' => $order->address->states->state_name,
+                        'zipcode' => $order->address->states->zipcode,
+
+                 ]
             ],
         ];
     
