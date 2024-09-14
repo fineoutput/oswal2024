@@ -28,6 +28,10 @@
                         <button class="btn btn-danger btn-sm">Logout</button>
                     </a>
                 </li>
+                <li class="asac_shradder menu-item">
+                <i class="fa-solid fa-map-location"></i>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#basicModal">Select State</button>
+                </li>
             </ul>
         </div>
 
