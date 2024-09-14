@@ -1154,7 +1154,7 @@ class OrderController extends Controller
                         'doorflat' =>$order->address->doorflat,
                         'city' => $order->address->citys->city_name,
                         'state' => $order->address->states->state_name,
-                        'zipcode' => $order->address->states->zipcode,
+                        'zipcode' => $order->address->zipcode,
 
                  ]
             ],
