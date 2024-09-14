@@ -1122,13 +1122,13 @@ class OrderController extends Controller
         }
     
         $transfer = TransferOrder::where('order_id', $orderId)->first();
-    dd( $transfer);
+   
         if (!$transfer) {
             return response()->json(['message' => 'Track ID not found!', 'status' => 400], 400);
         }
     
         $deliveryBoy = DeliveryBoy::find($transfer->delivery_user_id);
-    
+      
         if (!$deliveryBoy) {
             return response()->json(['message' => 'Delivery boy not found', 'status' => 400], 400);
         }
