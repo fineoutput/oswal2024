@@ -5592,3 +5592,15 @@ top: 120px;
 .cart_finds h6 {
   font-weight: 800;
 }
+.video_about_sect {
+  background: rgb(223, 169, 169);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0px;
+}
+.naminfs{
+  height: 80vh;
+}
+iframe{
+border-radius: 20px;;
+}

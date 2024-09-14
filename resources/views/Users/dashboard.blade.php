@@ -76,18 +76,15 @@
                                 </td>
                                 <td><button class="btn btn-warning btn-sm">Track</button></td>
 
-                                <td>
-
-                                    @if(in_array($order['order_status'], ['Confirmed','Dispatched','Delivered' ,'Rejected']))
-                                    -----
-                                    @else
-                                    <a href="{{ route('user.cancle-order',['id' => encrypt($order['order_id'])]) }}">
-                                        <button class="btn btn-danger btn-sm">Cancel</button>
-                                    </a>
-
-                                    @endif
-
-                                </td>
+                                <td onclick="window.alert()">
+    @if(in_array($order['order_status'], ['Confirmed', 'Dispatched', 'Delivered', 'Rejected']))
+        -----
+    @else
+        <a href="{{ route('user.cancle-order', ['id' => encrypt($order['order_id'])]) }}" onclick="return confirmCancel(event)">
+            <button class="btn btn-danger btn-sm">Cancel</button>
+        </a>
+    @endif
+</td>
 
                             </tr>
                             @empty
@@ -321,6 +318,15 @@
         if (activeItem) {
             activeItem.classList.add('active-list-item');
         }
+    }
+
+    function confirmCancel(event) {
+        // Show confirmation dialog
+        const userConfirmed = confirm('Are you sure you want to cancel this order?');
+        
+        // If user clicks 'Yes', return true to proceed with the link
+        // If user clicks 'No', return false to prevent the action
+        return userConfirmed;
     }
 </script>
 @endpush
