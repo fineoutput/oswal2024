@@ -111,7 +111,7 @@ if(!function_exists('sendProduct')) {
         if($trid){ 
             
             $products = $products->whereHas('trending', function($query) {
-                $query->where('is_active', 1)->orderBy('trending', 'asc');
+                    $query->where('is_active', 1);
             });
         }
 
