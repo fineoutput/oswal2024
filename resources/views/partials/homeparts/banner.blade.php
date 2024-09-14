@@ -4,13 +4,7 @@
     width: 100%;
 }
 
-.settts {
-    position: relative;
-    height: 100vh !important;
-    width: 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
+
 
 .stationary-text {
     position: absolute;
@@ -19,7 +13,6 @@
     transform: translate(-50%, -50%);
     z-index: 10;
 }
-
 .slide-text {
     color: #f8161c;
     font-size: 6rem;
@@ -27,31 +20,21 @@
     font-family: popins;
     text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.8);
 }
-@media (min-width: 900px) and (max-width: 1280px) {
-    .settts {
-        background-size: contain;
-    }
-    .stationary-text {
-    bottom: -30px;
-}
-}
-@media (min-width: 312px) and (max-width: 900px) {
-    .settts {
-        height: 200px !important;
-        background-size: contain;
-    }
+.splide__slide img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Optional: Set a max-width for the slider */
+        .splide {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 312px) and (max-width: 900px) {
     .slide-text {
     font-size: 1rem;
-}
-.module {
-    margin-top: -90px !important;
-    padding: 83px 0px;
-}
-.home-orangepatch-yellow {
-    font-size: 15px;
-}
-.home-orangepatch {
-    font-size: 15px;
 }
 }
     </style>
@@ -116,9 +99,11 @@
         <div class="splide__track">
             <ul class="splide__list">
             @foreach (App\Models\Websliders2::where('is_active', 1)->orderBy('id', 'desc')->get() as $slider)
-                <li class="splide__slide settts" style="background-image: url('{{ asset($slider->image) }}');">
+                <li class="splide__slide" >
+                    <img src="{{ asset($slider->image) }}" alt="">
+                </li>
             @endforeach      
-                <!-- </li>
+                <!-- 
                 <li class="splide__slide settts" style="background-image: url('{{ asset('images/web_slide2.png') }}');">
                     
                 </li>
@@ -156,11 +141,23 @@
 <script>
         document.addEventListener('DOMContentLoaded', function () {
             new Splide('#alv_slider', {
-                type       : 'loop',
-                heightRatio: 1,
-                drag       : true, // Allows for drag to scroll
-                pagination : false,
-                arrows     : false,
+                type: 'loop',
+                perPage: 1,
+                perMove: 1,
+                breakpoints: {
+                    640: {
+                        perPage: 1,
+                    },
+                    768: {
+                        perPage: 1,
+                    },
+                    1024: {
+                        perPage: 1,
+                    },
+                },
+                autoplay: true,
+                interval: 3000,
+                pauseOnHover: true,
             }).mount();
         });
 </script>
