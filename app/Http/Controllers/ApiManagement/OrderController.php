@@ -17,6 +17,8 @@ use App\Models\TransferOrder;
 
 use Illuminate\Http\Request;
 
+use App\Models\DeliveryBoy;
+
 use App\Models\OrderDetail;
 
 use App\Models\Promocode;
@@ -26,7 +28,7 @@ use App\Models\Address;
 use App\Models\Order;
 
 use App\Models\Cart;
-use App\Models\DeliveryBoy;
+
 use App\Models\User;
 
 use App\Models\Type;
@@ -1137,6 +1139,7 @@ class OrderController extends Controller
             'deliveryBoy' => [
                 'latitude'  => $deliveryBoy->latitude,
                 'longitude' => $deliveryBoy->longitude,
+                 'detail' =>  $deliveryBoy,
             ],
             'user' => [
                 'latitude'  => $order->address->latitude,
