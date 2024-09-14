@@ -1137,13 +1137,13 @@ class OrderController extends Controller
     
         $data = [
             'deliveryBoy' => [
-                'latitude'  => $deliveryBoy->latitude,
-                'longitude' => $deliveryBoy->longitude,
+                'latitude'  => (float)$deliveryBoy->latitude,
+                'longitude' => (float)$deliveryBoy->longitude,
                  'detail' =>  $deliveryBoy,
             ],
             'user' => [
-                'latitude'  => $order->address->latitude,
-                'longitude' => $order->address->longitude,
+                'latitude'  => (float)$order->address->latitude,
+                'longitude' => (float)$order->address->longitude,
             ],
         ];
     
