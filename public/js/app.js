@@ -378,37 +378,49 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Gift card selection setup
-function setupSelectableSection(sectionId, listId, itemClass) {
+// function setupSelectableSection(sectionId, listId, itemClass) {
 
-  const sectionElement = document.getElementById(sectionId);
-  const listElement = document.getElementById(listId);
+//   const sectionElement = document.getElementById(sectionId);
+//   const listElement = document.getElementById(listId);
 
+//   sectionElement.addEventListener('click', () => {
+//     // Toggle the list visibility
+//     listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+//   });
 
-  sectionElement.addEventListener('click', () => {
-      listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Handle gift card item selection
-  document.querySelectorAll(`.${itemClass}`).forEach(item => {
+//   // Handle gift card item selection
+//   document.querySelectorAll(`.${itemClass}`).forEach(item => {
     
-      item.addEventListener('click', function () {
-          // Deselect all items and select the clicked one
-          document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-          this.classList.add('selected');
+//     item.addEventListener('click', function () {
+//       // Deselect all items and select the clicked one
+//       document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+//       this.classList.add('selected');
 
-          // Update the selected gift card information in the section
-          const selectedText = this.querySelector('p').innerText;
-          const selectedImageSrc = this.querySelector('img').src;
-          sectionElement.innerHTML = `
-              <p>${selectedText}</p>
-              <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
-          `;
+//       // Update the selected gift card information in the section
+//       const selectedText = this.querySelector('p').innerText;
+//       const selectedImageSrc = this.querySelector('img').src;
+//       sectionElement.innerHTML = `
+//         <p>${selectedText}</p>
+//         <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
+//         <button id="removeSelected" style="margin-left: 10px;">Remove</button>
+//       `;
 
-          // Hide the list after selection
-          listElement.style.display = 'none';
-      });
-  });
-}
+//       // Hide the list after selection
+//       listElement.style.display = 'none';
+
+//       // Add event listener for the remove button
+//       document.getElementById('removeSelected').addEventListener('click', function () {
+//         // Clear selection
+//         document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+//         sectionElement.innerHTML = '<p>Select a product</p>'; // Reset the section content
+
+//         // Show the list again if needed
+//         listElement.style.display = 'block';
+//       });
+//     });
+//   });
+// }
+
 
 // Promo code selection setup
 document.addEventListener('DOMContentLoaded', function() {
