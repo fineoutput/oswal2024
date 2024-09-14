@@ -14,7 +14,7 @@
 
             @foreach ($categorys as $category)
                 
-                <div class="product_lien mobile_lien"  onclick="renderproductview('{{ route('getproducts', ['slug' => $category->url]) }}')">
+                <div class="product_lien mobile_lien"  onclick="renderproductview('{{ route('getproducts', ['slug' => $category->url, 'type' => 'category']) }}')">
 
                     <img src="{{asset($category->image)}}" alt="" />
 

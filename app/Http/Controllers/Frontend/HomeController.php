@@ -121,26 +121,43 @@ class HomeController extends Controller
         return view('products.productdetails', compact('product', 'images'))->with('title', 'Product Details');
     }
 
-    public function renderProducts($slug)
+    public function renderProducts($slug, $type = null)
     {
-        $category = EcomCategory::where('url', $slug)->first();
+        $products = [];
 
-        $products = sendProduct($category->id, false, false, false, false, false, false, 6);
+        $categoryDetails = [
+            'description' => null,
+            'banner_image' => null,
+            'category_name' => null,
+        ];
+
+        if ($type === 'category' && $slug) {
+            $category = EcomCategory::where('url', $slug)->first();
+
+            if ($category) {
+                $products = sendProduct($category->id, false, false, false, false, false, false, 6);
+
+                $categoryDetails = [
+                    'description' => $category->long_desc ?? null,
+                    'banner_image' => $category->image ? asset($category->image) : null,
+                    'category_name' => $category->name,
+                ];
+            }
+            
+        } elseif ($type === 'search' && $slug) {
+            $products = sendProduct(false, false, false, false, false, $slug, false, 6);
+        }
 
         $htmlProducts = view('products.partials.product-list', compact('products'))->render();
-
         $htmlPagination = $products->links('vendor.pagination.bootstrap-4')->render();
 
         return response()->json([
-            'categoryDetails' => [
-                'description' => $category->long_desc,
-                'banner_image' => asset($category->image),
-                'category_name' => $category->name,
-            ],
+            'categoryDetails' => $categoryDetails,
             'products' => $htmlProducts,
             'pagination' => $htmlPagination,
         ]);
     }
+
 
     public function renderProduct(Request $request)
 
@@ -214,9 +231,7 @@ class HomeController extends Controller
 
         $query = $request->input('query');
 
-        $products = EcomProduct::where('name', 'LIKE', "%$query%")->paginate(10);
-
-        return view('all_products', compact('products'));
+        return view('all_products', compact('query'));
 
     }
 }
