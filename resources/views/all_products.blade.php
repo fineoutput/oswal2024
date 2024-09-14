@@ -4,12 +4,13 @@
 
 @section('content')
 
+@php
+    $products = sendProduct(false, false, false, false, false, $query, false , 6);
+@endphp
+
 <input type="hidden" value="{{ route('getproducts', ['slug' => $query, 'type' => 'search']) }}" id="category-url-route">
 
-<div class="row" id="product-list-container">
-
-
-</div>
+@include('products.partials.product-list', $products)
 
 @endsection
 
