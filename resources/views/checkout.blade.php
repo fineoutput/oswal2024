@@ -37,9 +37,7 @@
         <div class="py-5 text-center">
 
             <h2>Checkout Page</h2>
-
-            <p class="lead" style="font-size: 0.8rem;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt consequatur aperiam laboriosam?</p>
-
+]
         </div>
 
         <div class="row">
@@ -776,7 +774,13 @@ function placeOrder() {
         type: 'POST',
         data: $('#placeOrder').serialize(),
         success: function(response) {
-            // console.log();
+
+            if(!response.success){
+
+                showNotification(response.message, 'error');  
+                return;
+            }
+
             if (response.data.form != 1) {
 
                 var options = {

@@ -207,7 +207,7 @@ class HomeController extends Controller
                 "cod_charge"        => $request->cod_charge,
                 "wallet_use_amount" => $request->wallet_use_amount,
                 "gift_min_amount"   => $request->gift_min_amount,
-                "gift1_min_amount"  => $request->gift1_min_amount,
+                "cod_max_process_amount"  => $request->cod_max_process_amount,
                 "quantity"          => $request->quantity,
                 "referrer_amount"   => $request->referrer_amount,
                 "referee_amount"    => $request->referee_amount

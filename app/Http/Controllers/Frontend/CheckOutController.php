@@ -34,8 +34,6 @@ use App\Models\Cart;
 
 use App\Models\Type;
 
-use App\Models\User;
-
 class CheckOutController extends Controller
 {
     protected $razorpayOrder;
@@ -538,7 +536,6 @@ class CheckOutController extends Controller
 
     }
 
-
     public function applyWallet(Request $request)
     {
         
@@ -618,7 +615,7 @@ class CheckOutController extends Controller
         $user = Auth::user();
 
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
+            return response()->json(['successs' => false , 'message' => 'Unauthorized']);
         }
 
         // Fetch the order
@@ -627,15 +624,25 @@ class CheckOutController extends Controller
             ->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+            return response()->json(['successs' => false ,'message' => 'Order not found or invalid status']);
         }
 
         if ($paymentType != 1) {
-            return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
+            return response()->json(['successs' => false ,'message' => 'Invalid payment type']);
+        }
+
+        $maxCodAmount = getConstant()->cod_max_process_amount;
+
+        if ($order->sub_total > $maxCodAmount) {
+            return response()->json([
+                'success' => false,
+                'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
+            ]);
         }
 
         // Handle COD payment type
         $codCharge = getConstant()->cod_charge;
+
         $order->update([
             'order_status'   => 1,
             'payment_type'   => 1,
@@ -688,11 +695,11 @@ class CheckOutController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
+            return response()->json(['success' => true , 'message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
         }
 
         // Handle case where invoice generation fails
-        return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
+        return response()->json(['success' => false, 'message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
     public function paidCheckout($orderId, $paymentType)
@@ -702,7 +709,7 @@ class CheckOutController extends Controller
         $user = Auth::user();
 
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
+            return response()->json(['success'=> false, 'message' => 'Unauthorized']);
         }
 
         // Fetch the order
@@ -711,11 +718,11 @@ class CheckOutController extends Controller
             ->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+            return response()->json(['success'=> false, 'message' => 'Order not found or invalid status']);
         }
 
         if ($paymentType != 2) {
-            return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
+            return response()->json(['success'=> false, 'message' => 'Invalid payment type']);
         }
 
         $razorpayOrder = $this->razorpayService->createOrder($order->total_amount, $order->id);
@@ -733,7 +740,7 @@ class CheckOutController extends Controller
             'name'           => $user->first_name,
         ];
 
-        return response()->json(['data' => $data], 200);
+        return response()->json(['success'=> true, 'data' => $data], 200);
     }
 
     public function verifyPayment(Request $request)
@@ -754,7 +761,7 @@ class CheckOutController extends Controller
             ->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+            return response()->json(['success'=> false, 'message' => 'Order not found or invalid status']);
         }
 
         $signatureStatus = $this->razorpayService->verifySignature($request->all());
