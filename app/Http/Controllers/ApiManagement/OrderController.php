@@ -1101,7 +1101,7 @@ class OrderController extends Controller
 
     public function trackOrder(Request $request)
     {
-        dd('hello');
+        
         $validator = Validator::make($request->all(), [
             'device_id'=>'required|exists:users,id',
             'user_id'  => 'required|exists:users,id',
