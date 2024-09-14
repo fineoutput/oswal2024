@@ -483,121 +483,121 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
         });
     }
 
-    // function applyPromocode(promoode) {
+    function applyPromocode(promoode) {
 
-    //     const order_id = "{{ $orderdetails->id }}";
+        const order_id = "{{ $orderdetails->id }}";
 
-    //     const totalorderAmount = $('#totalorderAmount');
+        const totalorderAmount = $('#totalorderAmount');
 
-    //     const promoCodeName = $('#promoCodeName');
+        const promoCodeName = $('#promoCodeName');
 
-    //     const promoCodeAmount = $('#promoCodeAmount');
+        const promoCodeAmount = $('#promoCodeAmount');
 
-    //     const total_amount = "{{ $orderdetails->sub_total }}";
+        const total_amount = "{{ $orderdetails->sub_total }}";
 
-    //     const removpromo = $('#removpromo');
+        const removpromo = $('#removpromo');
 
-    //     $.ajax({
-    //         url: "{{ route('checkout.apply-promocode') }}",
-    //         type: 'POST',
-    //         data: {
-    //             order_id: order_id,
-    //             promoode: promoode,
-    //             amount: total_amount,
-    //             _token: "{{ csrf_token() }}"
-    //         },
-    //         success: function(response) {
+        $.ajax({
+            url: "{{ route('checkout.apply-promocode') }}",
+            type: 'POST',
+            data: {
+                order_id: order_id,
+                promoode: promoode,
+                amount: total_amount,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
 
-    //             if (response.success) {
+                if (response.success) {
 
-    //                 promoCodeAmount.text(`-${response.promo_discount}`);
+                    promoCodeAmount.text(`-${response.promo_discount}`);
 
-    //                 promoCodeName.text(response.promocode_name);
+                    promoCodeName.text(response.promocode_name);
 
-    //                 if ($('input[name="payment_option"]:checked').val() == 1) {
+                    if ($('input[name="payment_option"]:checked').val() == 1) {
 
-    //                     final_amount = response.cod_amount;
+                        final_amount = response.cod_amount;
 
-    //                 } else {
+                    } else {
 
-    //                     final_amount = response.prepared_amount;
-    //                 }
+                        final_amount = response.prepared_amount;
+                    }
 
-    //                 totalorderAmount.text(final_amount);
+                    totalorderAmount.text(final_amount);
 
-    //                 removpromo.removeClass('d-none')
+                    removpromo.removeClass('d-none')
 
-    //                 $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+                    $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
 
-    //                 showNotification(response.message, 'success');
+                    showNotification(response.message, 'success');
 
-    //             } else {
+                } else {
 
-    //                 showNotification(response.message, 'error');
-    //             }
-    //         },
-    //         error: function(xhr) {
-    //             console.error('An error occurred while applying the wallet option.');
-    //         }
-    //     });
-    // }
+                    showNotification(response.message, 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error('An error occurred while applying the wallet option.');
+            }
+        });
+    }
 
-    // function removePromocode() {
+    function removePromocode() {
 
-    //     const order_id = "{{ $orderdetails->id }}";
+        const order_id = "{{ $orderdetails->id }}";
 
-    //     const totalorderAmount = $('#totalorderAmount');
+        const totalorderAmount = $('#totalorderAmount');
 
-    //     const promoCodeName = $('#promoCodeName');
+        const promoCodeName = $('#promoCodeName');
 
-    //     const promoCodeAmount = $('#promoCodeAmount');
+        const promoCodeAmount = $('#promoCodeAmount');
 
-    //     const removpromo = $('#removpromo');
+        const removpromo = $('#removpromo');
 
-    //     $.ajax({
-    //         url: "{{ route('checkout.remove-promocode') }}",
-    //         type: 'POST',
-    //         data: {
-    //             order_id: order_id,
-    //             _token: "{{ csrf_token() }}"
-    //         },
-    //         success: function(response) {
+        $.ajax({
+            url: "{{ route('checkout.remove-promocode') }}",
+            type: 'POST',
+            data: {
+                order_id: order_id,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
 
-    //             if (response.success) {
+                if (response.success) {
 
-    //                 promoCodeAmount.text(`-${response.promo_discount}`);
+                    promoCodeAmount.text(`-${response.promo_discount}`);
 
-    //                 promoCodeName.text(response.promocode_name);
+                    promoCodeName.text(response.promocode_name);
 
-    //                 if ($('input[name="payment_option"]:checked').val() == 1) {
+                    if ($('input[name="payment_option"]:checked').val() == 1) {
 
-    //                     final_amount = response.cod_amount;
+                        final_amount = response.cod_amount;
 
-    //                 } else {
+                    } else {
 
-    //                     final_amount = response.prepared_amount;
-    //                 }
+                        final_amount = response.prepared_amount;
+                    }
 
-    //                 totalorderAmount.text(final_amount);
+                    totalorderAmount.text(final_amount);
 
-    //                 $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+                    $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
 
-    //                 removpromo.addClass('d-none')
+                    removpromo.addClass('d-none')
 
-    //                 showNotification(response.message, 'success');
+                    showNotification(response.message, 'success');
 
-    //             } else {
+                } else {
 
-    //                 showNotification(response.message, 'error');
+                    showNotification(response.message, 'error');
 
-    //             }
+                }
 
-    //         },
-    //         error: function(xhr) {
-    //             console.error('An error occurred while applying the wallet option.');
-    //         }
-    //     });
-    // }
+            },
+            error: function(xhr) {
+                console.error('An error occurred while applying the wallet option.');
+            }
+        });
+    }
 
     function applyGiftCard(giftCardID) {
 
