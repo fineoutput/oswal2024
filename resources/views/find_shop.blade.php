@@ -3,6 +3,19 @@
 @section('title', $title ?? '')
 
 @section('content')
+<style>
+  .backkks_shop{
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+  }
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+</style>
+<div class="backkks_shop" style="background-image: url('{{ asset('images/oswal_shop_shop.png') }}');">
 <div class="container">
         <div class="row">
             <div class="col-lg-12 col-sm-12">
@@ -12,7 +25,8 @@
     </div>
 
     <div class="container" style="margin-top:10px;">
-        <table id="example" class="table table-striped table-bordered table-responsive" style="width:100%">
+        <div class="table-responsive">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -395,7 +409,12 @@
             </tbody>
           
         </table>
+        </div>
     </div>
+</div>
+
+
+<!-- Bootstrap JS (Optional for full functionality) -->
 
     @endsection
     
