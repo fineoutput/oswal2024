@@ -138,13 +138,13 @@
 
                                             <div class="form-floating">
 
-                                                <input class="form-control" type="text" value="{{ $constant ? $constant->gift1_min_amount : old('gift1_min_amount') }}" id="gift1_min_amount" name="gift1_min_amount" placeholder="gift1_min_amount">
+                                                <input class="form-control" type="text" value="{{ $constant ? $constant->cod_max_process_amount : old('cod_max_process_amount') }}" id="cod_max_process_amount" name="cod_max_process_amount" placeholder="cod_max_process_amount">
 
-                                                <label for="gift1_min_amount">Gift1 Amount &nbsp;<span style="color:red;">*</span></label>
+                                                <label for="cod_max_process_amount">COD Max. Process Amount &nbsp;<span style="color:red;">*</span></label>
 
                                             </div>
 
-                                            @error('gift1_min_amount')
+                                            @error('cod_max_process_amount')
 
                                                 <div style="color:red">{{ $message }}</div>
 

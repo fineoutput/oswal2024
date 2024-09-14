@@ -175,4 +175,6 @@ Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')-
 
     Route::post('complete-order', [DeliveryBoyController::class , 'completeOrder'])->name('complete-order');
 
+    Route::post('update-current-location', [DeliveryBoyController::class , 'currentLocation'])->name('update-current-location');
+
 });

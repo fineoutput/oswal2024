@@ -67,7 +67,7 @@
 
     <div class="button-container addButton">
 
-        <span class="buttonText" id="add-to-cart-section{{ $product->id }}"  @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
+        <span class="buttonText" id="mob_add-to-cart-section{{ $product->id }}" @if($cart) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
 
         <div class="controlButtons" @if(!$cart) style="display: none;" @endif id="mob_quantity-section{{ $product->id }}">
 

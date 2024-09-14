@@ -846,6 +846,67 @@ $.ajax({
             }
         });
     }
+
+function convertCurrencyToFloat(value) {
+
+    const cleanedValue = value.replace(/[^\d.]/g, '');
+
+    return parseFloat(cleanedValue);
+}
+
+function placeOrder() {
+
+    $.ajax({
+        url: "{{ route('checkout.place-order') }}",
+        type: 'POST',
+        data: $('#placeOrder').serialize(),
+        success: function(response) {
+
+            if(!response.success){
+
+                showNotification(response.message, 'error');  
+                return;
+            }
+
+            if (response.data.form != 1) {
+
+                var options = {
+                    "key": "{{ config('services.razorpay.key_id') }}",
+                    "amount": response.data.amount,
+                    "currency": "INR",
+                    "name": "OSwal",
+                    "description": "Test Transaction",
+                    "image": "{{ asset('images/oswal-logo.png') }}",
+                    "order_id": response.data.razor_order_id, // Razorpay Order ID
+                    "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+                    "prefill": {
+                        "name": response.data.name,
+                        "email": response.data.email,
+                        "phone": response.data.phone
+                    },
+                    "notes": {
+                        "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+
+                // Initialize and open the Razorpay payment gateway
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }else{
+               
+                window.location.href=`{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+                
+            }
+        },
+        error: function(xhr) {
+            console.error('An error occurred while processing the payment option.');
+        }
+    });
+}
+
 </script>
 
 @endpush
