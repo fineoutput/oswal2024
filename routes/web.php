@@ -40,7 +40,7 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('/product/{slug}/details', [HomeController::class, 'productDetail'])->name('product-detail');
 
-    Route::get('render/{slug}/products',[HomeController::class, 'renderProducts'])->name('getproducts');
+    Route::get('render/{slug}/{type?}/products',[HomeController::class, 'renderProducts'])->name('getproducts');
 
     Route::get('render/product',[HomeController::class, 'renderProduct'])->name('getproduct');
     
