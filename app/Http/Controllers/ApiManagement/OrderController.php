@@ -1144,7 +1144,7 @@ class OrderController extends Controller
             ],
         ];
     
-        return response()->json(['status' => 200, 'response' => $data]);
+        return response()->json(['status' => 200, 'data' => $data]);
     }
     
 }
