@@ -411,7 +411,7 @@ p.botmname_top:hover {
     <div class="row slept_through bg-3" style="background-image: url('{{ asset('images/bg-3.png') }}');">
         <div class="col-lg-4">
             <div class="abts_imngs">
-                <img src="{{asset('images/Poha_2.png')}}" width="100%" alt="">
+                <img src="{{asset('images/product_diversification.png')}}" width="100%" alt="">
             </div>
         </div>
         <div class="col-lg-4">
@@ -433,14 +433,14 @@ p.botmname_top:hover {
         </div>
         <div class="col-lg-4">
             <div class="abts_imngs">
-                <img src="{{asset('images/daal_1.png')}}" width="100%" alt="">
+                <img src="{{asset('images/nationwide.png')}}" width="100%" alt="">
             </div>
         </div>
     </div>
     <div class="row slept_through bg-3" style="background-image: url('{{ asset('images/bg-3.png') }}');">
         <div class="col-lg-4">
             <div class="abts_imngs">
-                <img src="{{asset('images/oswal_rice.png')}}" width="100%" alt="">
+                <img src="{{asset('images/achive.jpeg')}}" width="100%" alt="">
             </div>
         </div>
         <div class="col-lg-4">

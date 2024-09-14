@@ -2978,7 +2978,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .cehc_txt h6 {
-  font-size: 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .accordion-button:not(.collapsed) {

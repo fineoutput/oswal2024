@@ -6,7 +6,7 @@
 
 <div class="container">
 <div class="row">
-<div class="col-md-12 col-lg-12 privacy_heads" style="text-align:justify;">
+<div class="col-md-12 col-lg-12 privacy_heads section-padding" style="text-align:justify;">
     <h1>Terms & Conditions</h1>
 Please read the following terms and conditions very carefully as your use of service is subject to your acceptance of and compliance with the following terms and conditions ("Terms").
 <br><br>
