@@ -12,7 +12,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                 <div class="product-head-text">
 
-                    <p class="text-center subtop">Nourish your skin</p>
+                    <p class="text-center subtop">Oswal Premium Products</p>
 
                     <h2 class="text-center sect-text mb-5 aos-init aos-animate" data-aos=""
                         style="color: #373737; text-align: center;" data-aos-duration="800">
@@ -28,31 +28,31 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
         </div>
 
         <div class="row">
+    @php
+        $productsChunked = $products->take(8)->chunk(4); // Limits to 8 products and chunks into groups of 4
+    @endphp
 
-            @foreach ($products as $product)
+    @foreach ($productsChunked as $productChunk)
+        @foreach ($productChunk as $product)
+            @php
+                $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
+                    return $type->state_id == $globalState && $type->city_id == $globalCity;
+                });
 
-                @php
+                $product->load('cart', 'wishlist');
 
-                    $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
-                        return $type->state_id == $globalState && $type->city_id == $globalCity;
-                    });
+                $cart = null;
+                $wishlist = null;
 
-                    $product->load('cart', 'wishlist');
+                if (Auth::check()) {
+                    $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
+                    $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
+                } else {
+                    $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
+                }
+            @endphp
 
-                    $cart = null;
-                    $wishlist = null;
-
-                    if (Auth::check()) {
-
-                        $cart = $product->cart->firstWhere('user_id', Auth::user()->id);
-                        $wishlist = $product->wishlist->firstWhere('user_id', Auth::user()->id);
-                    } else {
-
-                        $cart = $product->cart->firstWhere('persistent_id', request()->cookie('persistent_id'));
-                    }
-                @endphp
-
-                <div class="col-lg-3 col-sm-6 col-md-6 col-xs-6">
+            <div class="col-lg-3 col-sm-6 col-md-6 col-xs-6">
 
                     <form id="addtocart{{$product->id}}">
 
@@ -70,7 +70,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                                     <a href="{{ route('product-detail' ,['slug' => $product->url]) }}">
 
-                                    <div class="card_upper_img">
+                                    <div class="card_upper_img"  style=" height: 250px; width: 250px; ">
 
                                         <img src="{{ asset($product->img2) }}" alt="Primary Image" class="first-image"
                                             style="width: 100%; height: 100%;" />
@@ -206,7 +206,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
                 </div>
 
             @endforeach
-
+            @endforeach
         </div>
 
     </div>

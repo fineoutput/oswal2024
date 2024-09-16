@@ -416,12 +416,17 @@ class AppController extends Controller {
 
         foreach($completedTransactions as $value){
 
+            if ($value->amount == "0.0"){
+                continue;
+            }
+            
+
             $data[] = [
                 'user'             => $value->user_id,
                 'transaction_type' => $value->transaction_type,
                 'amount'           => $value->amount,
                 'description'      => $value->description,
-                'date'             => $value->created_at,
+                'date'             => date('Y-m-d', strtotime($value->created_at)) .' | '. date('H:i:s A', strtotime($value->created_at)),
             ];
         }
 
