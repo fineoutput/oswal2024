@@ -320,7 +320,7 @@ class DeliveryBoyController extends Controller
         ->where('id', $request->transfer_id) 
         ->where('delivery_user_id', $user->id) 
         ->first();
-          
+       
         if (!$transferOrder) {
             return response()->json([
                 'success' => false,
