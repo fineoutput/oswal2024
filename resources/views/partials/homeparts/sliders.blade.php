@@ -4,7 +4,7 @@
 {{-- sec --}}
 </div>
 
-<div class="splide_secound mb-5" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">
+<div class="splide_secound mb-5" style="background-image: url('{{ asset('images/navratri.png') }}');">
 
     <div class="splide" id="splide2">
 
