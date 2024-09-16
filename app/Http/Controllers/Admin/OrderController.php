@@ -333,7 +333,7 @@ class OrderController extends Controller
             $data_insert = [
                 'order_id' => $order_id,
                 'delivery_user_id' => $delivery_user_id,
-                'status' => 0,
+                'status' => 1,
                 'ip' => $ip,
                 'added_by' => $addedby,
                 'date' => $cur_date
