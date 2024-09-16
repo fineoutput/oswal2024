@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Http;
+
 use App\Models\DeliveryAmount;
 
 use App\Models\TransferOrder;
@@ -23,7 +25,7 @@ use App\Models\OrderDetail;
 use GuzzleHttp\Client;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\Http;
+
 
 class DeliveryBoyController extends Controller
 {
@@ -159,41 +161,6 @@ class DeliveryBoyController extends Controller
     //     }
     // }
 
-    // public function getDrivingDistance($lat1, $long1, $lat2, $long2)
-    // {
-        
-    //     $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$lat1},{$long1}&destinations={$lat2},{$long2}&mode=driving&language=pl-PL&key=" . config('constants.GOOGLE_MAP_KEY');
-    
-    //     $client = new Client();
-    
-    //     try {
-           
-    //         $response = $client->get($url);
-    
-    //         $responseArray = json_decode($response->getBody(), true);
-    
-    //         if (!empty($responseArray['rows'][0]['elements'][0]['distance']['text']) && 
-    //             !empty($responseArray['rows'][0]['elements'][0]['duration']['text'])) {
-                    
-    //             return [
-    //                 'distance' => $responseArray['rows'][0]['elements'][0]['distance']['text'],
-    //                 'time' => $responseArray['rows'][0]['elements'][0]['duration']['text'],
-    //             ];
-    //         } else {
-    //             return [
-    //                 'distance' => 'N/A',
-    //                 'time' => 'N/A',
-    //             ];
-    //         }
-    //     } catch (\Exception $e) {
-
-    //         return [
-    //             'distance' => 'Error retrieving data',
-    //             'time' => 'Error retrieving data',
-    //         ];
-    //     }
-    // }
-
     public function getDrivingDistance($lat1, $long1, $lat2, $long2)
     {
         $apiKey = config('constants.GOOGLE_MAP_KEY');
@@ -242,22 +209,23 @@ class DeliveryBoyController extends Controller
 
     public function orderList(Request $request) {
    
-        $validator = Validator::make($request->all(), [
-            'latitude'  => 'required',
-            'longitude' => 'required'
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'latitude'  => 'required',
+        //     'longitude' => 'required'
+        // ]);
     
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-                'status' => 400
-            ]);
-        }
-    
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'message' => $validator->errors()->first(),
+        //         'status' => 400
+        //     ]);
+        // }
+       
         $user = Auth::user();
+
+        $latitude =  $user->latitude;
+        
+        $longitude =  $user->longitude;
 
         $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
                         ->with(['Orders.user', 'Orders.address'])
