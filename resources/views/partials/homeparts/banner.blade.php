@@ -114,7 +114,7 @@
             </ul>
         </div>
         <div class="stationary-text">
-        <div class="slide-text">Oswal <span><img style="width: 10%;" src="{{asset('images/oswal-logo.png')}}" alt=""></span> Soap</div>
+        <!-- <div class="slide-text">Oswal <span><img style="width: 10%;" src="{{asset('images/oswal-logo.png')}}" alt=""></span> Soap</div> -->
     </div>
     </div>
 
