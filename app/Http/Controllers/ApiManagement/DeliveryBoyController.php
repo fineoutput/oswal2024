@@ -42,16 +42,23 @@ class DeliveryBoyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
-            ], 422);
+            ]);
         }
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
+
+        if($deliveryBoy->is_active != 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'Please Contact Admin',
+            ]);
+        }
 
         if (!$deliveryBoy || !Hash::check(trim($request->password), $deliveryBoy->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid credentials',
-            ], 401);
+            ]);
         }
 
         //add Device Token 
@@ -209,22 +216,10 @@ class DeliveryBoyController extends Controller
 
     public function orderList(Request $request) {
    
-        // $validator = Validator::make($request->all(), [
-        //     'latitude'  => 'required',
-        //     'longitude' => 'required'
-        // ]);
-    
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'message' => $validator->errors()->first(),
-        //         'status' => 400
-        //     ]);
-        // }
-       
         $user = Auth::user();
 
         $latitude =  $user->latitude;
-        
+
         $longitude =  $user->longitude;
 
         $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
@@ -306,8 +301,9 @@ class DeliveryBoyController extends Controller
 
         }
 
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
+        $latitude =  $user->latitude;
+
+        $longitude =  $user->longitude;
         
         $dist = $this->calculate_distance($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
@@ -420,22 +416,12 @@ class DeliveryBoyController extends Controller
 
     public function orders(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'latitude' => 'required',
-            'longitude' => 'required'
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-                'status' => 400
-            ]);
-        }
-    
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-    
+        
         $deliveryBoy = Auth::user();
+
+        $latitude =  $deliveryBoy->latitude;
+        $longitude =  $deliveryBoy->longitude;
+    
     
         $orders = TransferOrder::where('status', '>=', 1)->where('status','!=', 4)
                     ->where('delivery_user_id', $deliveryBoy->id)
