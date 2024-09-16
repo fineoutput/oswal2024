@@ -256,7 +256,13 @@ class OrderController extends Controller
             $finalAmount += $applyGiftCard['amount'];
         }
         
+        $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+
+        $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+
         $reponse['wallet_discount']  = $walletDescount;
+        $reponse['promoStatus']  = $promoStatus == 1 ? 'Active' : 'Inactive';
+        $reponse['giftCardStatus']  = $giftCardStatus ==1 ? 'Active' : 'Inactive';
         $reponse['wallet_amount']    = $totalwalletAmount;
         $reponse['total_discount' ]  = $promo_discount + $walletDescount;
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
