@@ -3,7 +3,14 @@
 @section('title', $title ?? '') 
 
 @section('content') 
-
+<style>
+    .no_products {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+</style>
 {{-- @dd($productData); --}}
 <div class="wish_main_sect">
 
@@ -107,7 +114,15 @@
                                 </tr>
 
                             @empty
+                            <tr>
+                                <td colspan="6">
+                                <div class="no_products">
                                 No Product Found
+                                <img src="{{(asset('images/no_products.webp'))}}" width="20%" alt="">
+                                </div>
+                                </td>
+                            </tr>
+                            
                             @endforelse
 
                         </tbody>
