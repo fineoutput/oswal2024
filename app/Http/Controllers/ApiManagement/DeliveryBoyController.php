@@ -111,8 +111,8 @@ class DeliveryBoyController extends Controller
         
             // Prepare response data
             $data = [
-                'wallet_amount' => $tamount,
-                'total_collection' => $tfamount,
+                'wallet_amount' => formatPrice($tamount),
+                'total_collection' => formatPrice($tfamount),
                 'pending_orders' => $pendingOrders,
                 'completed_orders' => $completedOrders,
             ];
