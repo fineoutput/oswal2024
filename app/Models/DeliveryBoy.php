@@ -15,6 +15,7 @@ class DeliveryBoy extends Authenticatable
 
     protected $fillable = [
         'device_token',
+        'fcm_token',
         'name',
         'email',
         'phone',

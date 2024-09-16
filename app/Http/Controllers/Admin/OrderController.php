@@ -2,22 +2,47 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\User;
-use App\Models\UserDeviceToken;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\OrderStatusMail;
-use App\Models\OrderDetail;
+use App\Services\GoogleAccessTokenService;
+
 use Illuminate\Support\Facades\Session;
-use App\Models\DeliveryBoy;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Http;
+
+use Illuminate\Support\Facades\Mail;
+
+use App\Models\UserDeviceToken;
+
 use App\Models\TransferOrder;
+
+use App\Mail\OrderStatusMail;
+
+use Illuminate\Http\Request;
+
+use App\Models\DeliveryBoy;
+
+use App\Models\OrderDetail;
+
+use App\Models\Order;
+
+use App\Models\User;
+
 
 class OrderController extends Controller
 {
+
+    protected $googleAccessTokenService;
+
+    public function __construct(GoogleAccessTokenService $googleAccessTokenService)
+    {
+        $this->googleAccessTokenService = $googleAccessTokenService;
+    }
+
 
     public function index()
 
@@ -108,12 +133,10 @@ class OrderController extends Controller
         if ($order_status == 2 || $order_status == 3 || $order_status == 4) {
 
             $user = User::find($order->user_id);
+  
+            if ($user) {
 
-            $deviceToken = UserDeviceToken::where('user_id', $order->user_id)->first();
-            
-            if ($user && $deviceToken) {
-
-                $this->sendPushNotification($deviceToken->device_token, $order_status);
+                $this->sendPushNotification($user->fcm_token, $order_status);
 
                 $this->sendEmailNotification($user, $order, $order_status);
 
@@ -131,8 +154,9 @@ class OrderController extends Controller
 
     }
 
-    private function sendPushNotification($deviceToken, $type)
+    private function sendPushNotification($fcm_token, $type)
     {
+
         $title = '';
         $message = '';
 
@@ -156,34 +180,30 @@ class OrderController extends Controller
             // Add cases for other types if needed
         }
 
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $msg = [
-            'body' => $message,
-            'title' => $title,
-            'sound' => 'default',
+        $payload = [
+            'message' => [
+                'token' => $fcm_token,
+                'notification' => [
+                    'body' => $message,
+                    'title' => $title,
+                ],
+            ],
         ];
 
-        $fields = [
-            'to' => $deviceToken,
-            'notification' => $msg,
-            'priority' => 'high',
-        ];
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+            'Content-Type' => 'application/json',
+        ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+       
+        if ($response->successful()) {
 
-        $headers = [
-            'Authorization: key=' . config('constants.FCM_SERVER_KEY'),
-            'Content-Type: application/json',
-        ];
+            // return $response->body(); 
+            return true;
+        } else {
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-        curl_exec($ch);
-        curl_close($ch);
-
-        return true;
+            throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+        }
+     
     }
 
     private function sendEmailNotification($user, $order, $type)
@@ -327,36 +347,28 @@ class OrderController extends Controller
                 $delivery_user_data = DeliveryBoy::find($delivery_user_id);
 
                 if ($delivery_user_data) {
-                        
-                        $url = 'https://fcm.googleapis.com/fcm/send';
-                        $title = "New Order Arrived";
-                        $message = "New delivery order transferred to you from admin. Please check.";
-                        $msg2 = [
-                            'body' => $title,
-                            'title' => $message,
-                            "sound" => "default"
+                       
+                        $payload = [
+                            'message' => [
+                                'token' => $delivery_user_data->fcm_token,
+                                'notification' => [
+                                    'body' => "New delivery order transferred to you from admin. Please check.",
+                                    'title' => "New Order Arrived",
+                                ],
+                            ],
                         ];
-                        $fields = [
-                            'to' => $delivery_user_data->device_token,
-                            'notification' => $msg2,
-                            'priority' => 'high'
-                        ];
-                        $fields = json_encode($fields);
-                        $headers = [
-                            'Authorization: key=' . env('FCM_SERVER_KEY'),
-                            'Content-Type: application/json'
-                        ];
-
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $url);
-                        curl_setopt($ch, CURLOPT_POST, true);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-                        $result = curl_exec($ch);
-                        curl_close($ch);
+                
+                        $response = Http::withHeaders([
+                            'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+                            'Content-Type' => 'application/json',
+                        ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+                       
+                        if ($response->successful()) {
+                            return $response->body(); 
+                        } else {
+                            throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+                        }
                     
-
                     Session::flash('smessage', 'Order Transferred successfully');
                     return redirect()->back();
 

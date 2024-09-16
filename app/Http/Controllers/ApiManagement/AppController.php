@@ -32,6 +32,8 @@ use App\Models\Address;
 
 use App\Models\Comment;
 
+use App\Models\Slider;
+
 use App\Models\Popup;
 
 use App\Models\State;
@@ -39,7 +41,8 @@ use App\Models\State;
 use App\Models\Blog;
 
 use App\Models\City;
-use App\Models\Slider;
+
+use App\Models\User;
 
 class AppController extends Controller {
 
@@ -163,11 +166,11 @@ class AppController extends Controller {
        
         $state_id = $city ? $city->state_id : null;
 
-        // $shippingData = ShippingCharge::where('city_id',$city->id)->first();
+        $shippingData = ShippingCharge::where('city_id',$city->id)->first();
 
-        // if (!$shippingData) {
-        //     return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'],400);
-        // }
+        if (!$shippingData) {
+            return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'],400);
+        }
         
         $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name ."". $city->state->state_name ." ".$request->zipcode ." ". 'India';
 
@@ -198,6 +201,7 @@ class AppController extends Controller {
         $userAddress->load('states', 'citys');
       
         $response = $userAddress;
+
         $response['custom_address'] = $custom_address;
        
         return response()->json(['success' => true, 'message' => 'Address Add Sucessfully.' , 'data' =>  $response ],201);
@@ -521,4 +525,41 @@ class AppController extends Controller {
 
         return response()->json(['success' => true, 'data' => $data]);
     }
+
+    public function updateFcm(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'user_id'   => 'required|integer|exists:users,id',
+            'fcm_token' => 'required|string',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
+        $user = User::find($request->user_id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'status' => 401,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+
+        return response()->json([
+            'success'=>true,
+            'status' => 200,
+            'message' => 'FCM token updated successfully'
+        ], 200);
+    }
+
 }

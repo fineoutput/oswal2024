@@ -7,7 +7,6 @@ use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckOutController;
 use App\Http\Controllers\Frontend\Auth\UserAuthController;
-use App\Http\Controllers\Frontend\Users\OrderController;
 use App\Http\Controllers\Frontend\Users\UserController;
 use App\Http\Controllers\Frontend\Users\WishlistController;
 use Illuminate\Support\Facades\Artisan;
@@ -75,6 +74,8 @@ Route::group(['prefix' => '/'], function () {
     Route::get('career',[HomeController::class, 'career'])->name('career');
 
     Route::get('search', [HomeController::class, 'Search'])->name('search');
+
+    Route::get('token', [HomeController::class, 'getAccessToken'])->name('token');
 
 });
 

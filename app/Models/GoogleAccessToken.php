@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Shiprockettoken extends Model
+class GoogleAccessToken extends Model
 {
     use HasFactory;
 
-    protected $table = 'shiprocket_tokens';
+    protected $table = 'google_access_tokens';
 
     protected $fillable = ['token', 'expires_at'];
 

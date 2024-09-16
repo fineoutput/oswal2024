@@ -310,63 +310,6 @@ if(!function_exists('calculateShippingCharges')){
 
 }
 
-if(!function_exists('getShipRocketToken')){
-
-    function getShipRocketToken() {
-
-        $client = new Client();
-
-        $tokenRecord = Shiprockettoken::latest()->first();
-
-        if ($tokenRecord && Carbon::now()->lt($tokenRecord->expires_at)) {
-            return $tokenRecord->token;
-        }
-    
-        // Authenticate with Shiprocket
-        $response = $client->post('https://apiv2.shiprocket.in/v1/external/auth/login', [
-            'json' => [
-                'email' => config('constants.SHIPROCFET_EMAIL'),
-                'password' => config('constants.SHIPROCFET_PASSWORD'),
-            ],
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-        ]);
-    
-        $respo = json_decode($response->getBody()->getContents());
-
-        $token = $respo->token;
-    
-        $expiresAt = Carbon::now()->addDays(9);  // Set token expiry to 9 days
-    
-        Shiprockettoken::updateOrCreate(
-            ['id' => $tokenRecord ? $tokenRecord->id : null],
-            ['token' => $token, 'expires_at' => $expiresAt]
-        );
-    
-        return $token;
-    }
-}
-
-if(!function_exists('trackOrderApi')){
-
-    function trackOrderApi($token ,$track_id) {
-
-        $client = new Client();
-
-        $response = $client->get('https://apiv2.shiprocket.in/v1/external/courier/track/awb/' . $track_id, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $token,
-            ],
-        ]);
-    
-        $respo = json_decode($response->getBody()->getContents());
-
-        return  $respo;
-    }
-}
-
 if(!function_exists('handleReferral')) {
 
      function handleReferral($referrerCode, $newUserId)
