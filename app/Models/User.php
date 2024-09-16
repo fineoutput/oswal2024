@@ -20,6 +20,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'role_type',
         'first_name',
         'first_name_hi',
         'device_id',
@@ -105,6 +106,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Address::class, 'user_id');
     }
+
+    public function vendors()
+    {
+        return $this->hasMany(Vendor::class, 'user_id');
+    }
+
     /**
      * Generate a unique referral code.
      *
