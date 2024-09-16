@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="container" style="margin-top:10px;">
+    <div class="container section-padding" style="margin-top:10px;">
         <div class="table-responsive">
         <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
