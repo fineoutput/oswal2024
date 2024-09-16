@@ -42,7 +42,7 @@ class DeliveryBoyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
-            ], 422);
+            ]);
         }
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
@@ -51,17 +51,15 @@ class DeliveryBoyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Please Contact Admin',
-            ], 401);
+            ]);
         }
-        
+
         if (!$deliveryBoy || !Hash::check(trim($request->password), $deliveryBoy->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid credentials',
-            ], 401);
+            ]);
         }
-
-        
 
         //add Device Token 
         if($request->device_token){
