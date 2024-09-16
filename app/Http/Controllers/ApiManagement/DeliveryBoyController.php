@@ -47,6 +47,13 @@ class DeliveryBoyController extends Controller
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
 
+        if($deliveryBoy->is_active != 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'Please Contact Admin',
+            ], 401);
+        }
+        
         if (!$deliveryBoy || !Hash::check(trim($request->password), $deliveryBoy->password)) {
             return response()->json([
                 'success' => false,
@@ -54,12 +61,7 @@ class DeliveryBoyController extends Controller
             ], 401);
         }
 
-        if($deliveryBoy->is_active != 1){
-            return response()->json([
-                'success' => false,
-                'message' => 'Please Contact Admin',
-            ], 401);
-        }
+        
 
         //add Device Token 
         if($request->device_token){
