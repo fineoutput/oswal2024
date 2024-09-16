@@ -12,7 +12,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                 <div class="product-head-text">
 
-                    <p class="text-center subtop">Nourish your skin</p>
+                    <p class="text-center subtop">Oswal Premium Products</p>
 
                     <h2 class="text-center sect-text mb-5 aos-init aos-animate" data-aos=""
                         style="color: #373737; text-align: center;" data-aos-duration="800">
