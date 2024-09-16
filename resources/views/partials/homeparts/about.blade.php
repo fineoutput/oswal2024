@@ -185,7 +185,7 @@
    <img src="{{ asset('images/oswal_banner.') }}jpg" alt="" width="100%" />
     <canvas id="confetti"></canvas>
 </div>
-<div class="splide_secound_set mb-5">
+<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri.png') }}');">
     
     <div class="splide" id="splide3">
         
