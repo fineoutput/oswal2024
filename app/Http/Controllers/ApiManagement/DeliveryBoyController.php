@@ -23,6 +23,7 @@ use App\Models\OrderDetail;
 use GuzzleHttp\Client;
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Http;
 
 class DeliveryBoyController extends Controller
 {
@@ -158,39 +159,85 @@ class DeliveryBoyController extends Controller
     //     }
     // }
 
+    // public function getDrivingDistance($lat1, $long1, $lat2, $long2)
+    // {
+        
+    //     $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$lat1},{$long1}&destinations={$lat2},{$long2}&mode=driving&language=pl-PL&key=" . config('constants.GOOGLE_MAP_KEY');
+    
+    //     $client = new Client();
+    
+    //     try {
+           
+    //         $response = $client->get($url);
+    
+    //         $responseArray = json_decode($response->getBody(), true);
+    
+    //         if (!empty($responseArray['rows'][0]['elements'][0]['distance']['text']) && 
+    //             !empty($responseArray['rows'][0]['elements'][0]['duration']['text'])) {
+                    
+    //             return [
+    //                 'distance' => $responseArray['rows'][0]['elements'][0]['distance']['text'],
+    //                 'time' => $responseArray['rows'][0]['elements'][0]['duration']['text'],
+    //             ];
+    //         } else {
+    //             return [
+    //                 'distance' => 'N/A',
+    //                 'time' => 'N/A',
+    //             ];
+    //         }
+    //     } catch (\Exception $e) {
+
+    //         return [
+    //             'distance' => 'Error retrieving data',
+    //             'time' => 'Error retrieving data',
+    //         ];
+    //     }
+    // }
+
     public function getDrivingDistance($lat1, $long1, $lat2, $long2)
     {
+        $apiKey = config('constants.GOOGLE_MAP_KEY');
         
-        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$lat1},{$long1}&destinations={$lat2},{$long2}&mode=driving&language=pl-PL&key=" . config('constants.GOOGLE_MAP_KEY');
+        $origin = $lat1 . ',' . $long1;
     
-        $client = new Client();
+        $destination = $lat2 . ',' . $long2;
+
+        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
     
-        try {
-           
-            $response = $client->get($url);
-    
-            $responseArray = json_decode($response->getBody(), true);
-    
-            if (!empty($responseArray['rows'][0]['elements'][0]['distance']['text']) && 
-                !empty($responseArray['rows'][0]['elements'][0]['duration']['text'])) {
-                    
+        $response = Http::get($url, [
+            'origins' => $origin,
+            'destinations' => $destination,
+            'key' => $apiKey
+        ]);
+
+        if ($response->successful()) {
+
+            $data = $response->json();
+
+            if ($data['status'] === 'OK' && $data['rows'][0]['elements'][0]['status'] === 'OK') {
+            
+                $distance = $data['rows'][0]['elements'][0]['distance']['text'];
+                $duration = $data['rows'][0]['elements'][0]['duration']['text'];
+
                 return [
-                    'distance' => $responseArray['rows'][0]['elements'][0]['distance']['text'],
-                    'time' => $responseArray['rows'][0]['elements'][0]['duration']['text'],
+                    'distance' => $distance,
+                    'time' => $duration
                 ];
+                
             } else {
                 return [
-                    'distance' => 'N/A',
-                    'time' => 'N/A',
+                        'distance' => 'N/A',
+                        'time' => 'N/A',
                 ];
             }
-        } catch (\Exception $e) {
-
-            return [
-                'distance' => 'Error retrieving data',
-                'time' => 'Error retrieving data',
-            ];
+        } else {
+            
+                return [
+                    'distance' => 'Error retrieving data',
+                    'time' => 'Error retrieving data',
+                ];
         }
+
     }
 
     public function orderList(Request $request) {
@@ -215,15 +262,20 @@ class DeliveryBoyController extends Controller
         $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
                         ->with(['Orders.user', 'Orders.address'])
                         ->get();
-    
+                        
         $data = [];
         
         foreach($transferOrders as $value){
 
             $order =$value->orders;
 
+            if(!$order){
+                continue;
+            }
+
             $userAddress = $order->address;
 
+            
             $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
 
             $data[] = [
