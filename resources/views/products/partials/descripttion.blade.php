@@ -120,20 +120,20 @@ $wishlist = Auth::check()
 
     <div class="details-social-links">
         <p class="m-0">Share At:</p>
-        <a href="#">
+        <a href="https://www.facebook.com/oswalsoaps/">
             <i class="fab fa-facebook-f"></i>
         </a>
-        <a href="#">
+        <a href="https://x.com/oswallgroup">
             <i class="fa-brands fa-x-twitter"></i>
         </a>
-        <a href="#">
+        <a href="https://www.instagram.com/oswalsoapgroup/">
             <i class="fab fa-instagram"></i>
         </a>
-        <a href="#">
-            <i class="fab fa-whatsapp"></i>
+        <a href="https://www.youtube.com/channel/UCjfUqRsCurC0bbbmDlJuc3w">
+            <i class="fab fa-youtube"></i>
         </a>
-        <a href="#">
-            <i class="fab fa-pinterest"></i>
+        <a href="https://www.linkedin.com/in/oswal-products-375979114">
+            <i class="fab fa-linkedin"></i>
         </a>
     </div>
 </div>
