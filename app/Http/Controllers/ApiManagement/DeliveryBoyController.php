@@ -54,6 +54,13 @@ class DeliveryBoyController extends Controller
             ], 401);
         }
 
+        if($deliveryBoy->is_active != 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'Please Contact Admin',
+            ], 401);
+        }
+
         //add Device Token 
         if($request->device_token){
             $deliveryBoy->update(['device_token' => $request->device_token]);
