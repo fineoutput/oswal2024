@@ -5597,3 +5597,13 @@ top: 120px;
 iframe{
 border-radius: 20px;;
 }
+.upper_txt h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  width: 70%;
+}
+.rates p {
+  font-size: 15px;
+}
