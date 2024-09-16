@@ -257,7 +257,6 @@ class DeliveryBoyController extends Controller
         $latitude = $request->latitude;
         $longitude = $request->longitude;
 
-        dd($latitude, $longitude);
         $user = Auth::user();
 
         $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
