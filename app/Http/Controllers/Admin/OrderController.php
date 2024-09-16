@@ -36,12 +36,12 @@ use App\Models\User;
 class OrderController extends Controller
 {
 
-    protected $googleAccessTokenService;
+    // protected $googleAccessTokenService;
 
-    public function __construct(GoogleAccessTokenService $googleAccessTokenService)
-    {
-        $this->googleAccessTokenService = $googleAccessTokenService;
-    }
+    // public function __construct(GoogleAccessTokenService $googleAccessTokenService)
+    // {
+    //     $this->googleAccessTokenService = $googleAccessTokenService;
+    // }
 
 
     public function index()
@@ -136,7 +136,7 @@ class OrderController extends Controller
   
             if ($user) {
 
-                $this->sendPushNotification($user->fcm_token, $order_status);
+                // $this->sendPushNotification($user->fcm_token, $order_status);
 
                 $this->sendEmailNotification($user, $order, $order_status);
 
@@ -348,26 +348,26 @@ class OrderController extends Controller
 
                 if ($delivery_user_data) {
                        
-                        $payload = [
-                            'message' => [
-                                'token' => $delivery_user_data->fcm_token,
-                                'notification' => [
-                                    'body' => "New delivery order transferred to you from admin. Please check.",
-                                    'title' => "New Order Arrived",
-                                ],
-                            ],
-                        ];
+                        // $payload = [
+                        //     'message' => [
+                        //         'token' => $delivery_user_data->fcm_token,
+                        //         'notification' => [
+                        //             'body' => "New delivery order transferred to you from admin. Please check.",
+                        //             'title' => "New Order Arrived",
+                        //         ],
+                        //     ],
+                        // ];
                 
-                        $response = Http::withHeaders([
-                            'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
-                            'Content-Type' => 'application/json',
-                        ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+                        // $response = Http::withHeaders([
+                        //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+                        //     'Content-Type' => 'application/json',
+                        // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
                        
-                        if ($response->successful()) {
-                            return $response->body(); 
-                        } else {
-                            throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
-                        }
+                        // if ($response->successful()) {
+                        //     return $response->body(); 
+                        // } else {
+                        //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+                        // }
                     
                     Session::flash('smessage', 'Order Transferred successfully');
                     return redirect()->back();
