@@ -426,7 +426,7 @@ class AppController extends Controller {
                 'transaction_type' => $value->transaction_type,
                 'amount'           => $value->amount,
                 'description'      => $value->description,
-                'date'             => date('Y-m-d', strtotime($value->created_at)) .'|'. date('H:i:s', strtotime($value->created_at)),
+                'date'             => date('Y-m-d', strtotime($value->created_at)) .' | '. date('H:i:s', strtotime($value->created_at)),
             ];
         }
 
