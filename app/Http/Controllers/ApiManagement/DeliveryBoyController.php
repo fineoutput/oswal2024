@@ -257,6 +257,7 @@ class DeliveryBoyController extends Controller
         $latitude = $request->latitude;
         $longitude = $request->longitude;
 
+        dd($latitude, $longitude);
         $user = Auth::user();
 
         $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
@@ -320,7 +321,7 @@ class DeliveryBoyController extends Controller
         ->where('id', $request->transfer_id) 
         ->where('delivery_user_id', $user->id) 
         ->first();
-          
+       
         if (!$transferOrder) {
             return response()->json([
                 'success' => false,
