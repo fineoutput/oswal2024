@@ -23,7 +23,6 @@ use App\Models\OrderDetail;
 use GuzzleHttp\Client;
 
 use App\Models\Order;
-use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 class DeliveryBoyController extends Controller
 {
@@ -703,7 +702,44 @@ class DeliveryBoyController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Location updated successfully'
+            'message' => 'Location updated successfully',
+            'delivery_boy_status' =>  $user->is_active == 1 ? 'Active' : 'Inactive',
+        ], 200);
+    }
+
+    public function updateFcm(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'delivery_boy_id'   => 'required|integer|exists:delivery_boy,id',
+            'fcm_token' => 'required|string',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
+        $user = DeliveryBoy::find($request->delivery_boy_id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'status' => 401,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+
+        return response()->json([
+            'success'=>true,
+            'status' => 200,
+            'message' => 'FCM token updated successfully'
         ], 200);
     }
 

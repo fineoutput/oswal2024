@@ -47,6 +47,20 @@ class CheckOutController extends Controller
     {
         $addressId = $request->input('address_id') ?? session('address_id');
 
+        $totalWeight = 0;
+
+        $subtotal = 0;
+
+        $deductionAmount = 0;
+
+        $type_rate_amount = 0;
+
+        $applyGiftCard = [];
+
+        $applyGiftCardSec = [];
+
+        $walletDescount = 0;
+
         if ($addressId != session('address_id')) {
             
             session()->forget('address_id');
@@ -66,7 +80,22 @@ class CheckOutController extends Controller
 
                 $userAddress = Address::findOrFail($addressId);
 
-                return view('checkout', compact('orderdetails', 'cartData', 'userAddress'));
+                if ($orderdetails->gift1_id) {
+
+                    $giftCard = GiftCardSec::find($orderdetails->gift1_id);
+
+                    $applyGiftCardSec = [
+                        'id'          => $giftCard->id,
+                        'product_id'  => $giftCard->product_id,
+                        'product_name'=> $giftCard->product->name,
+                        'type_id'     => $giftCard->type_id,
+                        'price'       => $giftCard->price,
+                        'image'       => asset($giftCard->image),
+                    ];
+
+                }
+
+                return view('checkout', compact('orderdetails', 'cartData', 'userAddress', 'applyGiftCardSec'));
 
             }
 
@@ -85,20 +114,6 @@ class CheckOutController extends Controller
             return redirect()->route('/')->with('error', 'Order Not Found');
 
         }
-
-        $totalWeight = 0;
-
-        $subtotal = 0;
-
-        $deductionAmount = 0;
-
-        $type_rate_amount = 0;
-
-        $applyGiftCard = [];
-
-        $applyGiftCardSec = [];
-
-        $walletDescount = 0;
 
         $order =  Order::create([
             'order_status'    => 0,
@@ -197,7 +212,7 @@ class CheckOutController extends Controller
 
         $orderdetails = Order::with('orderDetails', 'orderDetails.product', 'orderDetails.type')->where('id', $order->id)->first();
 
-        return view('checkout', compact('orderdetails', 'cartData', 'userAddress'));
+        return view('checkout', compact('orderdetails', 'cartData', 'userAddress', 'applyGiftCardSec'));
     }
 
     public function comboProduct($type_id, $product, $lang)
@@ -260,11 +275,12 @@ class CheckOutController extends Controller
                 'message' => 'gift card applied successfully.',
                 'success' => true,
                 'gift_detail' => [
-                    'id'         => $giftCard->id,
-                    'product_id' => $giftCard->product_id,
-                    'type_id'    => $giftCard->type_id,
+                    'id'          => $giftCard->id,
+                    'product_id'  => $giftCard->product_id,
+                    'product_name'=> $giftCard->product->name,
+                    'type_id'     => $giftCard->type_id,
                     'price'       => $giftCard->price,
-                    'image'      => asset($giftCard->appimage),
+                    'image'       => asset($giftCard->image),
                 ]
             ], 200);
         } else {

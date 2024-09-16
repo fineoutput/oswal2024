@@ -72,9 +72,8 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                         <img width="80px" src="{{ asset($product->img1) }}" alt="" />
 
-
-
                     </div>
+
                     <div class="cehc_txt text-center">
 
                         <h6 class="">{{ $product->name }} <span style="color:#d81828; font-size:1rem; font-family:'Courier New', Courier, monospace;"></span></h6>
@@ -86,6 +85,29 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 </li>
                 @endforeach
+
+                @if (count($applyGiftCardSec) > 0)
+
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+
+                    <div class="clls">
+
+                        <img width="80px" src="{{ $applyGiftCardSec['image'] }}" alt="" />
+
+                    </div>
+                    <div class="cehc_txt text-center">
+
+                        <h6 class="">{{ $applyGiftCardSec['product_name'] }} <span style="color:#d81828; font-size:1rem; font-family:'Courier New', Courier, monospace;"></span></h6>
+                        <small class="text-muted">Free</small>
+                        <p>({{ formatPrice($applyGiftCardSec['price']) }} <b> X 1 )</b></p>
+                    </div>
+
+                    <span class="text-muted"> {{formatPrice($applyGiftCardSec['price']) }}</span>
+
+                </li>
+
+                @endif
+                
 
                 <li class="list-group-item d-flex justify-content-between bg-light">
 

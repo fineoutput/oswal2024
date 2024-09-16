@@ -110,6 +110,8 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
 
+    Route::post('user/update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');    
+
     Route::prefix('wishlist')->name('wishlist.')->group(function () {
 
         Route::post('/', [WishlistController::class, 'Show'])->name('index');
@@ -177,4 +179,5 @@ Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')-
 
     Route::post('update-current-location', [DeliveryBoyController::class , 'currentLocation'])->name('update-current-location');
 
+    Route::post('update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 
 });

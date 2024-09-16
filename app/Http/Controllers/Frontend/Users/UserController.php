@@ -266,94 +266,94 @@ class UserController extends Controller
 
     }
 
-    public function trackOrder(Request $request, $id)
-    {
+    // public function trackOrder(Request $request, $id)
+    // {
         
 
-        $user_id = Auth::user()->id;
-        $order_id = $id;
+    //     $user_id = Auth::user()->id;
+    //     $order_id = $id;
 
-        $user = User::find($user_id);
+    //     $user = User::find($user_id);
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'User does not exist',
-                'status' => 201,
-            ]);
-        }
+    //     if (!$user) {
+    //         return response()->json([
+    //             'message' => 'User does not exist',
+    //             'status' => 201,
+    //         ]);
+    //     }
 
-        $order = Order::find($order_id);
+    //     $order = Order::find($order_id);
 
-        if (!$order) {
-            return response()->json([
-                'message' => 'Order not found!',
-                'status' => 201,
-                'data' => [],
-            ]);
-        }
+    //     if (!$order) {
+    //         return response()->json([
+    //             'message' => 'Order not found!',
+    //             'status' => 201,
+    //             'data' => [],
+    //         ]);
+    //     }
 
-        if (empty($order->track_id)) {
+    //     if (empty($order->track_id)) {
 
-            $res4[] = [
-                'date' => $order->date,
-                'title' => 'Ordered',
-                'activity' => 'Order Placed',
-                'location' => '',
-            ];
+    //         $res4[] = [
+    //             'date' => $order->date,
+    //             'title' => 'Ordered',
+    //             'activity' => 'Order Placed',
+    //             'location' => '',
+    //         ];
 
-            return response()->json([
-                'message' => 'Track id not found!',
-                'status' => 201,
-                'data' => $res4,
-            ]);
-        }
+    //         return response()->json([
+    //             'message' => 'Track id not found!',
+    //             'status' => 201,
+    //             'data' => $res4,
+    //         ]);
+    //     }
 
-        $track_id = $order->track_id;
+    //     $track_id = $order->track_id;
 
-        $token = getShipRocketToken();
+    //     $token = getShipRocketToken();
 
-        // Track the order with Shiprocket
+    //     // Track the order with Shiprocket
 
-        $main_respo = trackOrderApi($token ,$track_id);
+    //     $main_respo = trackOrderApi($token ,$track_id);
 
-        $tracking_data = $main_respo->tracking_data;
+    //     $tracking_data = $main_respo->tracking_data;
 
-        $track_status = $tracking_data->track_status;
+    //     $track_status = $tracking_data->track_status;
 
-        if ($track_status != 0) {
+    //     if ($track_status != 0) {
 
-            $res2 = [];
+    //         $res2 = [];
 
-            foreach ($tracking_data->shipment_track_activities as $activity) {
+    //         foreach ($tracking_data->shipment_track_activities as $activity) {
 
-                $activity_parts = explode('-', $activity->activity);
+    //             $activity_parts = explode('-', $activity->activity);
 
-                $activity_title = $activity_parts[0];
+    //             $activity_title = $activity_parts[0];
 
-                $activity_detail = implode(' ', array_slice($activity_parts, 1));
+    //             $activity_detail = implode(' ', array_slice($activity_parts, 1));
                 
-                $res2[] = [
-                    'date' => $activity->date,
-                    'title' => $activity_title,
-                    'activity' => $activity_detail,
-                    'location' => $activity->location,
-                ];
-            }
+    //             $res2[] = [
+    //                 'date' => $activity->date,
+    //                 'title' => $activity_title,
+    //                 'activity' => $activity_detail,
+    //                 'location' => $activity->location,
+    //             ];
+    //         }
 
-            return response()->json([
-                'message' => 'success',
-                'status' => 200,
-                'data' => $res2,
-            ]);
+    //         return response()->json([
+    //             'message' => 'success',
+    //             'status' => 200,
+    //             'data' => $res2,
+    //         ]);
             
-        } else {
-            return response()->json([
-                'message' => 'wrong order id',
-                'status' => 201,
-                'data' => [],
-            ]);
-        }
-    }
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'wrong order id',
+    //             'status' => 201,
+    //             'data' => [],
+    //         ]);
+    //     }
+    // }
 
     public function getAddress() {
         
