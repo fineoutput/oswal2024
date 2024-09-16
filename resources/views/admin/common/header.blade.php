@@ -8,7 +8,7 @@
     <title>{{config('constants.options.SITE_NAME')}} | @if(!empty($title)) {{$title}}@else Admin @endif</title>
     <meta content="Admin Dashboard" name="description" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <link rel="icon" href="{{asset('admin/assets/images/favicon.png')}}">
+    <link rel="icon" href="{{asset('images/oswal-logo.png')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{asset('admin/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css">
@@ -37,10 +37,10 @@
             <div class="topbar-left">
                 <a href="{{route('admin_index')}}" class="logo">
                     <span>
-                        <img src="{{asset('admin/assets/images/logo.png')}}" alt="" style="width: 90px;">
+                        <img src="{{asset('images/oswal-logo.png')}}" alt="" style="width: 70px;">
                     </span>
                     <i>
-                        <img src="{{asset('admin/assets/images/favicon-bae.png')}}" alt="">
+                        <img src="{{asset('images/oswal-logo.png')}}" alt="">
                     </i>
                 </a>
             </div>
