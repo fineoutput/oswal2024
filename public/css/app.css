@@ -4258,13 +4258,12 @@ p.prev_rate {
 }
 
 /* ///////////////Header drop Down */
-.dropdown {
+/* .dropdown {
   position: relative;
 }
 
 .dropdown-menu {
   display: none;
-  /* Hide the dropdown menu by default */
   position: absolute;
   top: 100%;
   right:-100% !important;
@@ -4275,12 +4274,10 @@ p.prev_rate {
   z-index: 1000;
   width: 250px;
   padding:1rem 2rem !important;
-  /* Adjust width as needed */
 }
 
 .dropdown:hover .dropdown-menu {
   display: block;
-  /* Show the dropdown menu on hover */
 }
 
 .dropdown-item {
@@ -4294,8 +4291,7 @@ p.prev_rate {
 .dropdown-item:hover {
   background-color: #fff6e6 !important;
   color: #D19221 !important;
-  /* Change hover color if needed */
-}
+} */
 
 .order_review {
   background-color: #f7f8fb00;
@@ -5078,7 +5074,7 @@ h4.payment {
   background-color: white;
   margin-left: 1rem;
 }
-
+/* 
 .header {
   padding: 1rem;
 }
@@ -5096,16 +5092,15 @@ h4.payment {
   margin-right: 2rem;
 }
 
-/* Default link style */
 .nav-links li a {
   text-decoration: none;
   padding: 0.5rem 0;
   font-size: .9rem !important;
   font-weight: 500;
   font-family: fangsong;
-  position: relative; /* Required for absolute positioning of the pseudo-element */
-  overflow: hidden; /* Ensures that the underline doesn’t overflow outside the element */
-  transition: color 0.5s ease; /* Smooth color transition */
+  position: relative; 
+  overflow: hidden;
+  transition: color 0.5s ease; 
 }
 
 
@@ -5136,7 +5131,7 @@ h4.payment {
 
 .menu-toggle {
   display: none;
-  /* Initially hidden on larger screens */
+
 }
 
 .mobile_search_box {
@@ -5148,30 +5143,28 @@ h4.payment {
   color: #343434;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 968px) {
-  .header-line {
+{
     flex-direction: column;
     align-items: stretch;
-  }
-  .nav.active {
+  } */
+  /* .nav.active {
     display: flex !important;
     z-index: 2;
-  }
-  .nav {
+  } */
+  /* .nav {
     display: none !important;
-    /* Hide navigation links on small screens */
+   
     flex-direction: column;
     position: absolute;
     top: 100%;
-    /* Adjust as needed */
+    
     left: 0;
     width: 60%;
     background-color: white;
     padding: 20px !important;
-  }
+  } */
 
- 
+/*  
 
   .nav-links {
     flex-direction: column;
@@ -5205,8 +5198,8 @@ h4.payment {
 
   .mobile_search_box {
     display: block;
-  }
-
+  } */
+  @media (max-width: 968px) {
   .bottom-bar {
     position: fixed;
     bottom: 0;
@@ -5243,7 +5236,7 @@ h4.payment {
   }
 
 }
-
+/* 
 .mobile_logo {
   margin-left:100%;
 }
@@ -5273,7 +5266,7 @@ h4.payment {
   display: flex !important;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .bottom-bar-item a {
   color: #d62837;

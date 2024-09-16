@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (localStorage.getItem('clickedLink') === link.href) {
           link.classList.add('clicked');
       }
-
+     
       link.addEventListener('click', function() {
           // Remove 'clicked' class from all links
           links.forEach(link => link.classList.remove('clicked'));
