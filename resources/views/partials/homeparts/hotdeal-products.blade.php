@@ -17,7 +17,7 @@
 
 
 
- <section class="product-sect py-5 hot-deals" style="background-image: url('{{ asset('images/hot_bg.jpg') }}');">
+ <section class="product-sect py-5 hot-deals" style="background-image: url('{{ asset('images/rice1.png') }}');">
 
     <div class="container-fluid">
 
@@ -71,7 +71,7 @@
 
                                         </div>
 
-                                        <div class="lower_cntnt_prod">
+                                        <div class="lower_cntnt_prod" style=" background-color: #fff; ">
 
                                             <div class="card__size">
 
