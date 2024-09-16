@@ -8,6 +8,33 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="{{asset('admin/assets/images/favicon.png')}}">
   <meta name="keywords" content="" />
+  <style>
+    .stationary-text {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+.slide-text {
+    color: #eff929;
+    font-size: 6rem;
+    text-align: center;
+    font-family: popins;
+    text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.8);
+}
+.site_namings{
+  background-size:cover;
+  background-position: center;
+  height: 100vh;
+  background-repeat: no-repeat;
+}
+@media (min-width: 312px) and (max-width: 900px) {
+    .slide-text {
+    font-size: 1rem;
+}
+}
+  </style>
   <script>
     addEventListener("load", function() {
       setTimeout(hideURLbar, 0);
@@ -51,15 +78,18 @@
 </head>
 
 <body>
-  <div class="video-w3l">
+  <div class="site_namings" style="background-image: url('{{ asset('images/navratri.png') }}');">
     <div id="tsparticles"></div>
     <!--header-->
     <div class="header-w3l">
-      <h1>
+      <!-- <h1>
         <span>{{config('constants.options.SITE_NAME')}}</span>
         <span>L</span>ogin
 
-      </h1>
+      </h1> -->
+    </div>
+    <div class="stationary-text">
+        <div class="slide-text">Oswal <span><img style="width: 10%;" src="{{asset('images/oswal-logo.png')}}" alt=""></span> Soap</div>
     </div>
     <!--//header-->
     <div class="main-content-agile">
