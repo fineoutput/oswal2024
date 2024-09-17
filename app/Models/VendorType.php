@@ -42,7 +42,7 @@ class VendorType extends Model
         parent::boot();
 
 
-        static::deleting(function (Type $type) {
+        static::deleting(function (VendorType $type) {
 
             $type->giftcardsec()->delete();
 
