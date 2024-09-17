@@ -428,61 +428,6 @@ class TypeController extends Controller
 
     public function vendorIndex($pid, $cid, $pcid) {
 
-        // try {
-           
-        //     $p_id = decrypt($pid);
-        //     $c_id = decrypt($cid);
-        //     $pc_id = decrypt($pcid);
-    
-           
-        //     $distinctTypeNames = VendorType::where('product_id', $p_id)
-        //         ->where('category_id', $c_id)
-        //         ->distinct()
-        //         ->pluck('type_name');
-    
-         
-        //     function parseTypeName($typeName) {
-        //         if (strpos($typeName, 'gm') !== false) {
-        //             return (int)preg_replace('/[^0-9]/', '', $typeName);
-        //         }
-        //         if (strpos($typeName, 'kg') !== false) {
-        //             return (int)preg_replace('/[^0-9]/', '', $typeName) * 1000; 
-        //         }
-        //         return 999999; 
-        //     }
-    
-           
-        //     $typeOrder = [];
-        //     foreach ($distinctTypeNames as $typeName) {
-        //         $weight = parseTypeName($typeName);
-        //         $typeOrder[$typeName] = $weight;
-        //     }
-    
-           
-        //     asort($typeOrder);
-    
-        //     $caseStatement = 'CASE type_name ';
-        //     foreach ($typeOrder as $typeName => $weight) {
-        //         $caseStatement .= "WHEN '$typeName' THEN $weight ";
-        //     }
-        //     $caseStatement .= 'ELSE 999999 END'; 
-    
-           
-        //     $types = VendorType::with('state', 'city')
-        //         ->where('product_id', $p_id)
-        //         ->where('category_id', $c_id)
-        //         ->orderByRaw($caseStatement)
-        //         ->orderBy('id', 'DESC') 
-        //         ->get();
-    
-           
-        //     return view('admin.Ecommerce.Vendor-Type.type-index', compact('types', 'p_id', 'c_id', 'pc_id'));
-    
-        // } catch (\Exception $e) {
-
-        //     return response()->json(['error' => 'Unable to retrieve vendor data'], 400);
-        // }
-
         $p_id  = decrypt($pid);
 
         $c_id  = decrypt($cid);
@@ -496,7 +441,7 @@ class TypeController extends Controller
         ->get();
 
 
-        return view('admin.Ecommerce.Type.type-index', compact('types', 'p_id', 'c_id', 'pc_id'));
+        return view('admin.Ecommerce.Vendor-Type.type-create', compact('types', 'p_id', 'c_id', 'pc_id'));
     }
     
 
