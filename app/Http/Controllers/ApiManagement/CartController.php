@@ -18,6 +18,8 @@ use App\Models\GiftCardSec;
 
 use App\Models\EcomProduct;
 
+use App\Models\VendorType;
+
 use App\Models\Promocode;
 
 use App\Models\GiftCard;
@@ -31,7 +33,6 @@ use App\Models\Cart;
 use App\Models\Type;
 
 use App\Models\User;
-
 
 class CartController extends Controller
 {
@@ -55,6 +56,13 @@ class CartController extends Controller
 
             $rules['quantity']  = 'required|integer|min:1';
 
+            $type = VendorType::find($request->type_id);
+
+            if($request->quantity < $type->min_qty){
+
+                return response()->json(['success' => false, 'errors' => "The quantity must be at least {$type->min_qty}."], 400);
+            };
+
         }else{
 
             $rules['quantity']  = 'required|integer|max:' . getConstant()->quantity;
@@ -69,8 +77,16 @@ class CartController extends Controller
         }
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'type_id', 'type_price', 'quantity', 'cart_from']);
+        
+        if($user && $user->role_type == 2){
+            
+            $data['total_qty_price'] = $data['type_price'];
 
-        $data['total_qty_price'] = $data['type_price'] * $data['quantity'];
+        }else{
+
+            $data['total_qty_price'] = $data['type_price'] * $data['quantity'];
+        }
+
         $data['ip'] = $request->ip();
         // $cartModel  = Cart::class;
 
@@ -114,7 +130,7 @@ class CartController extends Controller
             })
 
             ->first();
-
+            
 
         if (empty($cartItem)) {
             
