@@ -77,7 +77,7 @@ class CartController extends Controller
         }
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'type_id', 'type_price', 'quantity', 'cart_from']);
-        
+
         if($user && $user->role_type == 2){
             
             $data['total_qty_price'] = $data['type_price'];
@@ -224,16 +224,32 @@ class CartController extends Controller
         $wallet_status   = $request->input('wallet_status');
 
         $cartQuery = Cart::query()
+
         ->where(function ($query) use ($user_id, $device_id) {
             $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
         });
 
-        $cartItems = $cartQuery->with(['type' => function ($query) use ($state_id, $city_id) {
-            $query->when($state_id, function ($query) use ($state_id, $city_id) {
-                $query->where('state_id', $state_id)
-                    ->where('city_id', $city_id);
-            });
-        }])->get();
+
+        $user = User::where('device_id', $device_id)->first();
+
+        if($user && $user->role_type == 2){
+
+            $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
+                $query->when($state_id, function ($query) use ($state_id, $city_id) {
+                    $query->where('state_id', 629)
+                        ->where('city_id', 29);
+                });
+            }])->get();
+
+        }else{
+
+            $cartItems = $cartQuery->with(['type' => function ($query) use ($state_id, $city_id) {
+                $query->when($state_id, function ($query) use ($state_id, $city_id) {
+                    $query->where('state_id', $state_id)
+                        ->where('city_id', $city_id);
+                });
+            }])->get();
+        }
 
 
         if ($cartItems->isEmpty()) {
@@ -243,13 +259,27 @@ class CartController extends Controller
             ]);
         }
 
-        $cartItems->each(function ($cartItem) {
-            if ($cartItem->type) {
-                $cartItem->type_price = $cartItem->type->selling_price;
-                $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
-                $cartItem->save();
-            }
-        });
+        if($user && $user->role_type == 2){
+
+            $cartItems->each(function ($cartItem) {
+                if ($cartItem->type) {
+                    $cartItem->type_price = $cartItem->type->selling_price;
+                    $cartItem->total_qty_price = $cartItem->type_price;
+                    $cartItem->save();
+                }
+            });
+
+        }else{
+            
+            $cartItems->each(function ($cartItem) {
+                if ($cartItem->type) {
+                    $cartItem->type_price = $cartItem->type->selling_price;
+                    $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
+                    $cartItem->save();
+                }
+            });
+
+        }
 
         // Calculate totals
         $cartItemTotal    = $cartItems->sum('total_qty_price'); //totalamount
@@ -265,7 +295,15 @@ class CartController extends Controller
 
             $userAddress = Address::findOrFail($address_id);
 
-            $cartItems->load('type');
+            if($user && $user->role_type == 2){
+
+                $cartItems->load('vendortype');
+                
+            }else{
+                
+                $cartItems->load('type');
+
+            }
 
             $total_order_weight = $cartItems->sum(function ($cartItem) {
 
