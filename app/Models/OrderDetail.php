@@ -42,4 +42,9 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Type::class, 'type_id');
     }
+
+    public function vendortype()
+    {
+        return $this->belongsTo(VendorType::class, 'type_id');
+    }
 }

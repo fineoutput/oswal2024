@@ -28,6 +28,11 @@ class City extends Model
         return $this->hasMany(Type::class ,'city_id' ,'id');
     }
 
+    public function vendortype()
+    {
+        return $this->hasMany(VendorType::class ,'city_id' ,'id');
+    }
+
     public function shipingPrice() {
 
         return $this->hasOne(ShippingCharge::class, 'city_id', 'id');

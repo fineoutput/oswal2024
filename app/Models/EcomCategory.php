@@ -34,6 +34,11 @@ class EcomCategory extends Model
                 $type->delete();
             }
 
+            foreach ($ecomCategory->vendortype as $vendortype) {
+                $vendortype->delete();
+            }
+
+
             foreach ($ecomCategory->carts as $cart) {
                 $cart->delete();
             }
@@ -77,6 +82,11 @@ class EcomCategory extends Model
     public function type()
     {
         return $this->hasMany(Type::class ,'category_id' , 'id');
+    }
+
+    public function vendortype()
+    {
+        return $this->hasMany(VendorType::class ,'category_id' , 'id');
     }
 
     public function carts()

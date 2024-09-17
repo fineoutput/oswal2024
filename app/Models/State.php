@@ -26,6 +26,11 @@ class State extends Model
         return $this->hasMany(Type::class ,'state_id' , 'id');
     }
 
+    public function vendortype() 
+    {
+        return $this->hasMany(Type::class ,'state_id' , 'id');
+    }
+
     public function shipingPrice() {
 
         return $this->hasOne(ShippingCharge::class , 'state_id', 'id');
