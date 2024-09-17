@@ -2415,10 +2415,10 @@ input[type="range"]::-moz-range-thumb {
 
   .sticky-button {
     position: fixed;
-    bottom: 9%;
+    bottom: 15%;
     left: 0;
     width: 100%;
-    z-index: 999;
+    z-index: 1100;
   }
 
   .hidden-button {
