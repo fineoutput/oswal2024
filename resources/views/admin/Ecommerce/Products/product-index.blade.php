@@ -179,7 +179,22 @@
 
                                                             <a href="{{route('product.create',base64_encode($product->id))}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
-                                                            <a href="{{route('type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Type">Type</a>
+                                                            @if ( $product->product_view == 3 )
+                                                                
+                                                                <a href="{{route('type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Type">Type</a>
+
+                                                                <a href="{{route('vendor.type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Type">Vendor Type</a>
+
+                                                            @elseif ($product->product_view == 2)
+
+                                                                <a href="{{route('vendor.type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Type">Vendor Type</a>
+                                                            
+                                                            @else
+
+                                                                <a href="{{route('type.index',['pid' => encrypt($product->id), 'cid' => encrypt($product->category_id),'pcid' => encrypt($product->product_category_id)])}}" data-toggle="tooltip" data-placement="top" title="Type">Type</a>
+                                                                
+                                                            @endif
+
 
                                                             <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
 

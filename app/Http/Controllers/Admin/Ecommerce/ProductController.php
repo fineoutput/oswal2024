@@ -66,6 +66,7 @@ class ProductController extends Controller
             'status'            => 'required|numeric',
             'productCategorie'  => 'required',
             'hot_selling'       => 'required',
+            'product_view'      => 'required',
         ];
 
         if (!isset($request->product_id)) {
@@ -133,6 +134,8 @@ class ProductController extends Controller
             'is_hot'        => $request->hot_selling,
 
             'is_featured'   => $request->is_featured,
+
+            'product_view'   => $request->product_view,
 
         ]);
 

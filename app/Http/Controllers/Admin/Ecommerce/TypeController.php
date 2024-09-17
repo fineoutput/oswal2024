@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\State;
 use App\Models\Type;
+use App\Models\VendorType;
 use Illuminate\Support\Facades\DB;
 
 class TypeController extends Controller
@@ -74,7 +75,7 @@ class TypeController extends Controller
 
         $request->validate($rules);
 
-        $type = isset($request->type_id) ? Type::find($request->type_id) : new Type;
+        $type = isset($request->type_id) ? Type::find($request->type_id) : new VendorType;
 
         $type->fill([
 
@@ -422,9 +423,251 @@ class TypeController extends Controller
         
     }
 
-    // public function changeProductPrice() {
-        
-    //     dd('hello');
 
-    // }
+    /*****************Vendor Type Function ********************/
+
+    public function vendorIndex($pid, $cid, $pcid) {
+
+        try {
+           
+            $p_id = decrypt($pid);
+            $c_id = decrypt($cid);
+            $pc_id = decrypt($pcid);
+    
+           
+            $distinctTypeNames = VendorType::where('product_id', $p_id)
+                ->where('category_id', $c_id)
+                ->distinct()
+                ->pluck('type_name');
+    
+         
+            function parseTypeName($typeName) {
+                if (strpos($typeName, 'gm') !== false) {
+                    return (int)preg_replace('/[^0-9]/', '', $typeName);
+                }
+                if (strpos($typeName, 'kg') !== false) {
+                    return (int)preg_replace('/[^0-9]/', '', $typeName) * 1000; 
+                }
+                return 999999; 
+            }
+    
+           
+            $typeOrder = [];
+            foreach ($distinctTypeNames as $typeName) {
+                $weight = parseTypeName($typeName);
+                $typeOrder[$typeName] = $weight;
+            }
+    
+           
+            asort($typeOrder);
+    
+            $caseStatement = 'CASE type_name ';
+            foreach ($typeOrder as $typeName => $weight) {
+                $caseStatement .= "WHEN '$typeName' THEN $weight ";
+            }
+            $caseStatement .= 'ELSE 999999 END'; 
+    
+           
+            $types = VendorType::with('state', 'city')
+                ->where('product_id', $p_id)
+                ->where('category_id', $c_id)
+                ->orderByRaw($caseStatement)
+                ->orderBy('id', 'DESC') 
+                ->get();
+    
+           
+            return view('admin.Ecommerce.Vendor-Type.type-index', compact('types', 'p_id', 'c_id', 'pc_id'));
+    
+        } catch (\Exception $e) {
+
+            return response()->json(['error' => 'Unable to retrieve vendor data'], 400);
+        }
+    }
+    
+
+    public function vendorCreate($pid, $cid , $pcid) {
+
+        $p_id  = decrypt($pid);
+
+        $c_id  = decrypt($cid);
+        
+        $pc_id = decrypt($pcid);
+
+        $type = null;
+
+        return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
+    }
+
+    public function vendorEdit($pid, $cid , $pcid , $tid) {
+
+        $p_id  = decrypt($pid);
+
+        $c_id  = decrypt($cid);
+        
+        $pc_id = decrypt($pcid);
+
+        $t_id = decrypt($tid);
+
+        $type = VendorType::with('state','city')->where('id', $t_id)->where('product_id', $p_id)->where('category_id', $c_id)->first();
+
+        return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
+    }
+
+    public function vendorStore(Request $request) {
+
+        $rules = [
+            'name'                 => 'required|string|max:255',
+            'del_mrp'              => 'required|numeric',
+            'min_qty'              => 'required|numeric',
+            'start_range'          => 'required|numeric',
+            'end_range'            => 'required|numeric',
+            'gst_percentage'       => 'required|numeric',
+            'mrp'                  => 'required|numeric',
+            'gst_percentage_price' => 'required|numeric',
+            'selling_price'        => 'required|numeric',
+            'weight'               =>'required|string|max:255',
+            'rate'                 => 'required|string|max:255',
+        ];
+
+        $request->validate($rules);
+
+        $type = isset($request->type_id) ? VendorType::find($request->type_id) : new VendorType;
+
+        $type->fill([
+
+            'type_name'     => $request->name,
+
+            'type_name_hi'  => lang_change($request->name),
+
+            'del_mrp'       => $request->del_mrp,
+
+            'min_qty'       => $request->min_qty,
+
+            'start_range'   => $request->start_range,
+
+            'end_range'     => $request->end_range,
+
+            'mrp'           => $request->mrp,
+
+            'gst_percentage'=> $request->gst_percentage,
+
+            'gst_percentage_price' => $request->gst_percentage_price,
+
+            'selling_price' => $request->selling_price,
+
+            'weight'        => $request->weight,
+
+            'rate'          => $request->rate,
+
+            'ip'            => $request->ip(),
+
+            'date'          => now(),
+
+            'added_by'      => Auth::user()->id,
+
+            'is_active'     => 1,
+
+            'state_id'      => 29,
+
+            'city_id'       => 629,
+
+        ]);
+
+        $type->product_id = $request->product_id;
+
+        $type->category_id = $request->category_id;
+
+        $routeParameters = [
+            'pid'  => encrypt($type->product_id),
+            'cid'  => encrypt($type->category_id),
+            'pcid' => encrypt($request->product_category_id),
+        ];
+
+        if($type->save()){
+
+            if (isset($request->type_id)) {
+
+                return redirect()->route('vendor.type.index', $routeParameters)->with('success', 'Type updated successfully.');
+    
+            } else {
+    
+               return redirect()->route('vendor.type.index', $routeParameters)->with('success', 'Type Create successfully.');
+    
+            }
+
+        }else{
+
+            return redirect()->route('product.index', encrypt($request->product_category_id))->with('error', 'Something went wrong. Please try again later.');
+        }
+        
+    }
+    
+    public function vendor_update_status($pid, $cid , $pcid ,$tid ,$status, Request $request) {
+
+        $id = decrypt($tid);
+
+        $admin_position = $request->session()->get('position');
+
+        $type = VendorType::find($id);
+        
+        // if ($admin_position == "Super Admin") {
+
+            if ($status == "active") {
+
+                $type->updateStatus(strval(1));
+            } else {
+
+                $type->updateStatus(strval(0));
+            }
+
+            $routeParameters = [
+                'pid'  => $pid,
+                'cid'  => $cid,
+                'pcid' => $pcid,
+            ];
+
+            return redirect()->route('vendor.type.index', $routeParameters)->with('success', 'Status Updated Successfully.');
+      
+
+        // } else {
+
+        // 	return  redirect()->route('category.index')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+
+        // }
+    }
+
+    public function vendor_destroy($pid, $cid , $pcid ,$tid) {
+
+        $id = decrypt($tid);
+
+        $type = VendorType::find($id);
+
+        // $admin_position = $request->session()->get('position');
+
+        // if ($admin_position == "Super Admin") {
+
+        
+            $routeParameters = [
+                'pid'  => $pid,
+                'cid'  => $cid,
+                'pcid' => $pcid,
+            ];
+
+            if ($type->destory()) {
+        
+                return redirect()->route('vendor.type.index', $routeParameters)->with('success', 'Type Deleted Successfully.');
+
+            } else {
+
+                return redirect()->route('vendor.type.index', $routeParameters)->with('success', 'Some Error Occurred.');
+            }
+
+        // } else {
+
+        // 	return  redirect()->route('category.index')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
+
+        // }
+
+    }
+
 }

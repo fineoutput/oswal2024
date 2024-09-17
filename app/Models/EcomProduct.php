@@ -12,7 +12,7 @@ class EcomProduct extends Model
 
     protected $fillable = [
         'category_id ', 'product_category_id ', 'name', 'long_desc', 'name_hi', 
-        'long_desc_hi', 'url', 'url', 'hsn_code', 'video', 'img1', 'img2', 'img3', 'img4', 'img_app1', 'img_app2', 'img_app3', 'img_app4', 'is_active', 'is_cat_delete', 'cur_date', 'ip', 'added_by', 'is_hot', 'is_featured'
+        'long_desc_hi', 'url', 'url', 'hsn_code', 'video', 'img1', 'img2', 'img3', 'img4', 'img_app1', 'img_app2', 'img_app3', 'img_app4', 'is_active', 'is_cat_delete', 'cur_date', 'ip', 'added_by', 'is_hot', 'is_featured', 'product_view'
     ];
 
     public function updateStatus(string $newStatus)

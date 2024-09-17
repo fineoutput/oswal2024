@@ -201,6 +201,33 @@ Route::prefix('ecom/type')->name('type.')->group(function () {
     
 });
 
+
+/*=========Ecommerce vendor Type Routes ========*/
+
+Route::prefix('ecom/vendor/type')->name('vendor.type.')->group(function () {
+
+    Route::get('index/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorIndex'])->name('index');
+
+    Route::get('create/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorCreate'])->name('create');
+
+    Route::get('edit/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'vendorEdit'])->name('edit');
+  
+    Route::post('store', [TypeController::class, 'VendorStore'])->name('store');
+
+    Route::get('update-status/{pid}/{cid}/{pcid}/{tid}/{status}', [TypeController::class, 'vendor_update_status'])->name('update-status');
+
+    Route::get('destroy/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'vendor_destroy'])->name('destroy');
+
+    Route::post('update-city-type' , [TypeController::class , 'updateCityType'])->name('update_city_type');
+
+    Route::get('update-all/{pid}/{cid}/{pcid}' , [TypeController::class , 'updateAll'])->name('update_all');
+
+    Route::post('update-all-data' ,[TypeController::class, 'updateAllData'])->name('update-all-data');
+
+    Route::get('change-product-price' ,[TypeController::class, 'changeProductPrice'])->name('change-product-price');
+    
+});
+
 /*=========Ecommerce Shiping Charges Routes ========*/
 
 Route::prefix('ecom/shipping-charge')->name('shipping-charge.')->group(function () {

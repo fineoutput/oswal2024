@@ -409,7 +409,35 @@
 
                                         </div>
 
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
+
+                                            <div class="form-floating">
+
+                                                <select class="form-control" name="product_view" id="product_view">
+
+                                                    <option value="" {{ (!isset($product) || is_null($product->product_view)) && is_null(old('product_view')) ? 'selected' : '' }}>select product view</option>
+
+                                                    <option value="1" {{ (isset($product) && $product->product_view == 1) || (is_null($product) && old('product_view') == 1) ? 'selected' : '' }}>Retailer</option>
+
+                                                    <option value="2" {{ (isset($product) && $product->product_view == 2) || (is_null($product) && old('product_view') == 2) ? 'selected' : '' }}>Reseller</option>
+
+                                                    <option value="3" {{ (isset($product) && $product->product_view == 3) || (is_null($product) && old('product_view') == 3) ? 'selected' : '' }}>Both</option>
+
+                                                </select>
+                                                
+                                                <label for="product_view">product_view</label>
+
+                                            </div>
+
+                                            @error('product_view')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-2">
 
                                             <div class="form-floating">
 
@@ -435,13 +463,13 @@
 
                                         </div>
 
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
 
                                             <div class="form-floating">
 
                                                 <select class="form-control" name="productCategorie" id="productCategorie">
 
-                                                    <option >----select Product Category -----</option>
+                                                    <option >Select Product Type</option>
 
                                                     @foreach ($productCategories as $productCategorie)
                                                     
@@ -463,7 +491,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
 
                                             <div class="form-floating">
 
@@ -489,7 +517,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
 
                                             <div class="form-floating">
 

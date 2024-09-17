@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Validator;
 
-use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Route;
 
 use App\Models\EcomProductCategory;
@@ -16,15 +14,21 @@ use App\Models\ShippingCharge;
 
 use App\Models\MajorCategory;
 
+use App\Models\ProductRating;
+
 use App\Models\MajorProduct;
 
-use App\Models\Type;
+use Illuminate\Http\Request;
+
+use App\Models\VendorType;
 
 use App\Models\Wishlist;
 
-use App\Models\Cart;
+use App\Models\Type;
 
-use App\Models\ProductRating ;
+use App\Models\User;
+
+use App\Models\Cart;
 
 class EcommerceController extends Controller
 {
@@ -82,8 +86,8 @@ class EcommerceController extends Controller
         $currentRouteName = Route::currentRouteName();
 
         $rules = [
-            'device_id' => 'required|string',
-            'user_id' => 'nullable|integer',
+            'device_id' => 'required|string|exists:users,device_id',
+            'user_id' => 'nullable|integer|exists:users,id',
             'lang' => 'required|string',
             'state_id' => 'nullable|integer',
             'city_id' => 'nullable|integer',
@@ -156,6 +160,17 @@ class EcommerceController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 201]);
         }
 
+        $user = User::where('device_id', $request->device_id)->first();
+
+        if($user){
+
+            $roleType = $user->role_type;
+
+        }else{
+
+            $roleType = 1;
+        }
+
         $category_id = $request->input('category_id');
         $device_id   = $request->input('device_id');
         $user_id     = $request->input('user_id');
@@ -165,7 +180,7 @@ class EcommerceController extends Controller
         $page        = $request->input('page', 1);
         $per_page    = $request->input('per_page', 15);
 
-        $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea);
+        $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea, false,$roleType);
 
         $total = $products->count();
 
@@ -174,19 +189,34 @@ class EcommerceController extends Controller
         $product_data = [];
 
         foreach ($products as $product) {
-            $typeQuery = Type::where('product_id', $product->id)
-                ->where('is_active', 1);
+
+            
+            if($roleType == 1){
+
+                $typeQuery = Type::where('product_id', $product->id)
+                    ->where('is_active', 1);
+            }else{
+
+                $typeQuery = VendorType::where('product_id', $product->id)
+                    ->where('is_active', 1);
+
+            }
 
             if ($state_id) {
+
                 $typeQuery->where('state_id', $state_id);
+
                 if ($city_id) {
+                    
                     $typeQuery->where('city_id', $city_id);
                 }
+
             } else {
                 $typeQuery->groupBy('type_name');
             }
 
             $types = $typeQuery->get();
+
             $typedata = [];
 
             foreach ($types as $type) {
@@ -203,6 +233,7 @@ class EcommerceController extends Controller
                     'type_weight' => $type->weight,
                     'type_rate' => $type->rate,
                     'percent_off' => $percent_off,
+                    'min_qty' => $type->min_qty ?? 1,
                 ];
             }
 
@@ -249,6 +280,7 @@ class EcommerceController extends Controller
                     $selected_type_percent_off = $percent_off;
     
                 }else{
+
                     $selected_type_id = isset($typedata[0]) ? $typedata[0]['type_id'] : '';
                     $selected_type_name = isset($typedata[0]) ? $typedata[0]['type_name'] : '';
                     $selected_type_selling_price = isset($typedata[0]) ? $typedata[0]['selling_price'] : '';
