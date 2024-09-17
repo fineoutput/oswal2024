@@ -44,4 +44,9 @@ class Cart extends Model
     {
         return $this->belongsTo(Type::class , 'type_id' , 'id');
     }
+
+    public function vendortype()
+    {
+        return $this->belongsTo(VendorType::class , 'type_id' , 'id');
+    }
 }
