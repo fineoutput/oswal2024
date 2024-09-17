@@ -456,9 +456,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+let currentRequest = null;
+
+let cache = {};
+
 function renderproductview(url) {
 
-  $.ajax({
+  if (currentRequest) {
+
+    currentRequest.abort();
+
+  }
+
+  $('#product-list-container').html('<div class="spinner">Loading...</div>');
+
+  if (cache[url]) {
+
+    updateUI(cache[url]);
+
+    return; 
+
+  }
+
+  currentRequest = $.ajax({
 
     url: url,
 
@@ -468,19 +488,9 @@ function renderproductview(url) {
 
     success: function (response) {
 
-      const category = response.categoryDetails;
+      cache[url] = response;
 
-      // Update category details
-
-      $('#category-description').text(category.description);
-
-      // $('.category_banner_img').css('background-image', 'url(' + category.banner_image + ')');
-
-      $('#category_name').text(category.category_name);
-
-      $('#product-list-container').html(response.products);
-
-      bindPaginationLinks();
+      updateUI(response);
 
     },
 
@@ -494,15 +504,22 @@ function renderproductview(url) {
 
 }
 
-function bindPaginationLinks() {
-  $('.pagination-links a').on('click', function (e) {
-    e.preventDefault();
+function updateUI(response) {
 
-    var url = $(this).attr('href');
-    if (url) {
-      loadProducts(url);
-    }
-  });
+  const category = response.categoryDetails;
+
+  // Update category details
+
+  $('#category-description').text(category.description);
+
+  // $('.category_banner_img').css('background-image', 'url(' + category.banner_image + ')');
+
+  $('#category_name').text(category.category_name);
+
+  $('#product-list-container').html(response.products);
+
+  bindPaginationLinks();
+
 }
 
 function bindPaginationLinks() {
