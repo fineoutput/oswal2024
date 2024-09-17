@@ -669,7 +669,8 @@ class CartController extends Controller
                     $selectedType = [];
                 }
                 
-                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+                $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
+
             }else{
 
                 $typeData = $product->type->map(function ($type) use ($cartItem, $lang) {
