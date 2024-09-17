@@ -13,6 +13,7 @@ use App\Models\OrderInvoice;
 use App\Models\WalletTransactionHistory;
 use Illuminate\Support\Facades\DB;
 use App\adminmodel\Team;
+use App\Models\VendorType;
 use Illuminate\Support\Facades\Cookie;
 
 if (!function_exists('lang_change')) {
@@ -172,9 +173,17 @@ if(!function_exists('formatPrice')){
 
 if(!function_exists('sendType')){
 
-    function sendType($cid = null, $pid = null, $id = null) {
+    function sendType($cid = null, $pid = null, $id = null , $fortype=null) {
        
-        $query = Type::orderBy('id', 'desc')->where('is_active', 1);
+        if($fortype){
+
+            $query = VendorType::orderBy('id', 'desc')->where('is_active', 1);
+
+        }else{
+            
+            $query = Type::orderBy('id', 'desc')->where('is_active', 1);
+
+        }
     
         if ($cid) {
             $query->where('category_id', $cid);

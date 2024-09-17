@@ -233,7 +233,7 @@ class EcommerceController extends Controller
                     'type_weight' => $type->weight,
                     'type_rate' => $type->rate,
                     'percent_off' => $percent_off,
-                    'min_qty' => intval($type->min_qty) ?? 1,
+                    'min_qty' => $type->min_qty ?? 1,
                 ];
             }
 
@@ -269,7 +269,7 @@ class EcommerceController extends Controller
 
                 if(isset($request->type_id)){
 
-                    $getSelectedtype = sendType($product->category_id, $product->id ,$request->type_id)[0];
+                    $getSelectedtype = sendType($product->category_id, $product->id ,$request->type_id ,$roleType)[0];
     
                     $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
     
@@ -278,6 +278,7 @@ class EcommerceController extends Controller
                     $selected_type_selling_price = $getSelectedtype->selling_price;
                     $selected_type_mrp = $getSelectedtype->del_mrp;
                     $selected_type_percent_off = $percent_off;
+                    $selected_min_qty = isset($typedata[0]) ? $typedata[0]['min_qty'] : '';
     
                 }else{
 
@@ -286,6 +287,7 @@ class EcommerceController extends Controller
                     $selected_type_selling_price = isset($typedata[0]) ? $typedata[0]['selling_price'] : '';
                     $selected_type_mrp = isset($typedata[0]) ? $typedata[0]['type_mrp'] : '';
                     $selected_type_percent_off = isset($typedata[0]) ? $typedata[0]['percent_off'] : '';
+                    $selected_min_qty = isset($typedata[0]) ? $typedata[0]['min_qty'] : '';
                 }
 
             $product_data[] = [
@@ -318,6 +320,7 @@ class EcommerceController extends Controller
                 'selected_type_selling_price' => $selected_type_selling_price,
                 'selected_type_mrp' => $selected_type_mrp,
                 'selected_type_percent_off' => $selected_type_percent_off,
+                'selected_min_qty' => $selected_min_qty,
             ];
           
         }
