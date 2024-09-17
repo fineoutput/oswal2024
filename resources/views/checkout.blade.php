@@ -38,7 +38,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
         <h2>Checkout Page</h2>
 
-        <!-- <p class="lead" style="font-size: 0.8rem;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt consequatur aperiam laboriosam?</p> -->
+        <p class="lead" style="font-size: 0.8rem;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt consequatur aperiam laboriosam?</p>
 
     </div>
 
