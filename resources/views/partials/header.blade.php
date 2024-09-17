@@ -227,7 +227,7 @@
         color: red !important;
       
     }
-    nav {
+   .bottom_bar {
         position: fixed;
         bottom: 0;
         width: 100%;
@@ -555,7 +555,7 @@
 </div>
 
 <!-- --------------------------------Bottom Bar----------------------------------------------------------------------- -->
-<nav>
+<nav class="bottom_bar">
     <div class="nav-box d-lg-none">
         <ul class="nav-container">
             <li class="nav__item active">
