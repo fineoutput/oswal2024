@@ -441,7 +441,7 @@ class TypeController extends Controller
         ->get();
 
 
-        return view('admin.Ecommerce.Vendor-Type.type-create', compact('types', 'p_id', 'c_id', 'pc_id'));
+        return view('admin.Ecommerce.Vendor-Type.type-index', compact('types', 'p_id', 'c_id', 'pc_id'));
     }
     
 
