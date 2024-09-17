@@ -233,7 +233,7 @@ class EcommerceController extends Controller
                     'type_weight' => $type->weight,
                     'type_rate' => $type->rate,
                     'percent_off' => $percent_off,
-                    'min_qty' => $type->min_qty ?? 1,
+                    'min_qty' => intval($type->min_qty) ?? 1,
                 ];
             }
 
