@@ -299,17 +299,22 @@ class CartController extends Controller
 
                 $cartItems->load('vendortype');
                 
+                $total_order_weight = $cartItems->sum(function ($cartItem) {
+
+                    return (float)$cartItem->vendortype->weight * (int)$cartItem->quantity;
+                });
+    
             }else{
                 
                 $cartItems->load('type');
 
+                $total_order_weight = $cartItems->sum(function ($cartItem) {
+
+                    return (float)$cartItem->type->weight * (int)$cartItem->quantity;
+                });
             }
 
-            $total_order_weight = $cartItems->sum(function ($cartItem) {
-
-                return (float)$cartItem->type->weight * (int)$cartItem->quantity;
-            });
-
+        
             $shipingCharges =  calculateShippingCharges($total_order_weight, $userAddress->city);
 
             if ($shipingCharges->original['success']) {
