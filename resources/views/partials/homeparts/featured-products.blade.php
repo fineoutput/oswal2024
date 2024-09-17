@@ -12,7 +12,7 @@
 
                 <div class="product-head-text text-center">
 
-                    <p class="subtop">Nourish your skin</p>
+                    <p class="subtop">Oswal Premium Products</p>
 
                     <h2 class="sect-text mb-5 aos-init aos-animate" style="color: #373737;" data-aos-duration="800">
 

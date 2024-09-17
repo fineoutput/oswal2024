@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ApiManagement\UserAuthController;
 
+use App\Http\Controllers\ApiManagement\VendorAuthController;
+
 use App\Http\Controllers\ApiManagement\EcommerceController;
 
 use App\Http\Controllers\ApiManagement\AppController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\ApiManagement\OrderController;
 
 use App\Http\Controllers\ApiManagement\DeliveryBoyController;
 
+
 Route::post('register', [UserAuthController::class, 'register']);
 
 Route::post('login', [UserAuthController::class, 'login']);
@@ -26,9 +29,19 @@ Route::post('register-otp', [UserAuthController::class, 'verifyOtpProcess'])->na
 
 Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name('login.otp');
 
+
 Route::post('delivery-boy/login', [DeliveryBoyController::class, 'login']);
 
 Route::post('delivery-boy/logout', [DeliveryBoyController::class, 'logout'])->middleware('auth:sanctum');
+
+
+Route::post('vendor/register', [VendorAuthController::class, 'register']);
+
+Route::post('vendor/login', [VendorAuthController::class, 'login']);
+
+Route::post('vendor/register-otp', [VendorAuthController::class, 'verifyOtpProcess'])->name('register.otp');
+
+Route::post('vendor/login-otp', [VendorAuthController::class, 'verifyOtpProcess'])->name('login.otp');
 
 
 Route::get('state' , [AppController::class , 'GetState']);

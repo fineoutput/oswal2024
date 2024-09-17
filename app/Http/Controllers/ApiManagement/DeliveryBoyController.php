@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Http;
+
 use App\Models\DeliveryAmount;
 
 use App\Models\TransferOrder;
@@ -23,7 +25,7 @@ use App\Models\OrderDetail;
 use GuzzleHttp\Client;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\Http;
+
 
 class DeliveryBoyController extends Controller
 {
@@ -40,16 +42,23 @@ class DeliveryBoyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
-            ], 422);
+            ]);
         }
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
+
+        if($deliveryBoy->is_active != 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'Please Contact Admin',
+            ]);
+        }
 
         if (!$deliveryBoy || !Hash::check(trim($request->password), $deliveryBoy->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid credentials',
-            ], 401);
+            ]);
         }
 
         //add Device Token 
@@ -159,41 +168,6 @@ class DeliveryBoyController extends Controller
     //     }
     // }
 
-    // public function getDrivingDistance($lat1, $long1, $lat2, $long2)
-    // {
-        
-    //     $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$lat1},{$long1}&destinations={$lat2},{$long2}&mode=driving&language=pl-PL&key=" . config('constants.GOOGLE_MAP_KEY');
-    
-    //     $client = new Client();
-    
-    //     try {
-           
-    //         $response = $client->get($url);
-    
-    //         $responseArray = json_decode($response->getBody(), true);
-    
-    //         if (!empty($responseArray['rows'][0]['elements'][0]['distance']['text']) && 
-    //             !empty($responseArray['rows'][0]['elements'][0]['duration']['text'])) {
-                    
-    //             return [
-    //                 'distance' => $responseArray['rows'][0]['elements'][0]['distance']['text'],
-    //                 'time' => $responseArray['rows'][0]['elements'][0]['duration']['text'],
-    //             ];
-    //         } else {
-    //             return [
-    //                 'distance' => 'N/A',
-    //                 'time' => 'N/A',
-    //             ];
-    //         }
-    //     } catch (\Exception $e) {
-
-    //         return [
-    //             'distance' => 'Error retrieving data',
-    //             'time' => 'Error retrieving data',
-    //         ];
-    //     }
-    // }
-
     public function getDrivingDistance($lat1, $long1, $lat2, $long2)
     {
         $apiKey = config('constants.GOOGLE_MAP_KEY');
@@ -242,23 +216,11 @@ class DeliveryBoyController extends Controller
 
     public function orderList(Request $request) {
    
-        $validator = Validator::make($request->all(), [
-            'latitude'  => 'required',
-            'longitude' => 'required'
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-                'status' => 400
-            ]);
-        }
-    
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-
-        dd($latitude, $longitude);
         $user = Auth::user();
+
+        $latitude =  $user->latitude;
+
+        $longitude =  $user->longitude;
 
         $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
                         ->with(['Orders.user', 'Orders.address'])
@@ -339,8 +301,9 @@ class DeliveryBoyController extends Controller
 
         }
 
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
+        $latitude =  $user->latitude;
+
+        $longitude =  $user->longitude;
         
         $dist = $this->calculate_distance($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
@@ -453,22 +416,12 @@ class DeliveryBoyController extends Controller
 
     public function orders(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'latitude' => 'required',
-            'longitude' => 'required'
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-                'status' => 400
-            ]);
-        }
-    
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-    
+        
         $deliveryBoy = Auth::user();
+
+        $latitude =  $deliveryBoy->latitude;
+        $longitude =  $deliveryBoy->longitude;
+    
     
         $orders = TransferOrder::where('status', '>=', 1)->where('status','!=', 4)
                     ->where('delivery_user_id', $deliveryBoy->id)
