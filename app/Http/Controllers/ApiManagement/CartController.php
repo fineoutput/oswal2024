@@ -73,7 +73,7 @@ class CartController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            return response()->json(['success' => false, 'errors' => $validator->errors()]);
         }
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'type_id', 'type_price', 'quantity', 'cart_from']);
