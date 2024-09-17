@@ -3,7 +3,11 @@
 @section('title', $title ?? '')
 
 @section('content')
-
+<style>
+    .free_offer_imag {
+        position: relative;
+    }
+</style>
 @php
 $OrderDetails = $orderdetails->orderDetails;
 
@@ -90,10 +94,16 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
 
-                    <div class="clls">
-
-                        <img width="80px" src="{{ $applyGiftCardSec['image'] }}" alt="" />
-
+                <div class="clls">
+                        <div class="free_offer_imag">
+                            <img width="80px" src="{{ $applyGiftCardSec['image'] }}" alt="" />
+                            <img class="offer_badge" width="20px" src="http://127.0.0.1:8000/images/width_793.png" alt="" style="
+    position: absolute;
+    top: -20px;
+    left: 50px;
+    width: 100%;
+">
+                        </div>
                     </div>
                     <div class="cehc_txt text-center">
 
