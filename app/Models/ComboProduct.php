@@ -50,6 +50,18 @@ class ComboProduct extends Model
         return $this->belongsTo(Type::class, 'combo_type' , 'id');
     }
 
+
+    public function vendormaintype()
+    {
+        return $this->belongsTo(Type::class, 'main_type' , 'id');
+    }
+
+    public function vendorcombotype()
+    {
+        return $this->belongsTo(Type::class, 'combo_type' , 'id');
+    }
+
+
     public function updateStatus($status) {
         
         $this->is_active = $status;
