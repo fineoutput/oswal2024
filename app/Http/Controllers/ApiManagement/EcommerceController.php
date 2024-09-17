@@ -86,7 +86,7 @@ class EcommerceController extends Controller
         $currentRouteName = Route::currentRouteName();
 
         $rules = [
-            'device_id' => 'required|string|exists:users,device_id',
+            'device_id' => 'required|string',
             'user_id' => 'nullable|integer|exists:users,id',
             'lang' => 'required|string',
             'state_id' => 'nullable|integer',
@@ -207,7 +207,7 @@ class EcommerceController extends Controller
                 $typeQuery->where('state_id', $state_id);
 
                 if ($city_id) {
-                    
+
                     $typeQuery->where('city_id', $city_id);
                 }
 

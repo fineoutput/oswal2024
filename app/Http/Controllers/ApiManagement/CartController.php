@@ -46,9 +46,20 @@ class CartController extends Controller
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
             'type_price'  => 'required|numeric',
-            'quantity'    => 'required|integer|max:' . getConstant()->quantity, 
             'cart_from'   => 'required|string',
         ];
+
+        $user = User::where('device_id', $request->device_id)->first();
+
+        if($user && $user->role_type == 2){
+
+            $rules['quantity']  = 'required|integer|min:1';
+
+        }else{
+
+            $rules['quantity']  = 'required|integer|max:' . getConstant()->quantity;
+        }
+
 
         $validator = Validator::make($request->all(),  $rules);
 
