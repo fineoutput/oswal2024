@@ -339,7 +339,7 @@ class CartController extends Controller
                 $promocode_name       = $input_promocode;
             } else {
 
-                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 200);
+                return $this->generateCartResponse($user_id, $user->role_type, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 200);
             }
         }
 
@@ -350,7 +350,7 @@ class CartController extends Controller
 
             if (!$applyGiftCard->original['success']) {
 
-                return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 200);
+                return $this->generateCartResponse($user_id, $user->role_type, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 200);
 
             }else{
                 $applyGiftCard = $applyGiftCard->original['data'];
@@ -372,7 +372,7 @@ class CartController extends Controller
 
         }
         
-        return $this->generateCartResponse($user_id, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
+        return $this->generateCartResponse($user_id, $user->role_type, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
     }
 
     public function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
@@ -513,13 +513,24 @@ class CartController extends Controller
         }
     }
     
-    public function comboProduct($type_id, $product, $lang)
+    public function comboProduct($type_id, $product, $lang , $role_type)
     {
         $comboProduct = [];
 
-        $comboDetails = ComboProduct::with(['maintype', 'combotype', 'comboproduct'])
-        ->where('main_product', $product->id)
-        ->first();
+        if($role_type == 2){
+
+            $comboDetails = ComboProduct::with(['vendormaintype', 'vendorcombotype', 'comboproduct'])
+            ->where('main_product', $product->id)
+            ->first();
+
+        }else{
+
+            $comboDetails = ComboProduct::with(['maintype', 'combotype', 'comboproduct'])
+            ->where('main_product', $product->id)
+            ->first();
+
+        }
+        
     
         if (!$comboDetails) {
             // return response()->json(['message' => 'No combo details found for the given product ID.'], 404);
@@ -559,25 +570,50 @@ class CartController extends Controller
 
     }
     
-    private function generateCartResponse($userId, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null, $applyGiftCardSec =null ,$wallet_status=false)
+    private function generateCartResponse($userId,$role_type, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null, $applyGiftCardSec =null ,$wallet_status=false)
     {
 
-        $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
-            $query->where('is_active', 1)
-                ->when($stateId, function ($query, $stateId) {
-                    return $query->where('state_id', $stateId);
-                })
-                ->when($cityId, function ($query, $cityId) {
-                    return $query->where('city_id', $cityId);
-                })
-                ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                    return $query->groupBy('type_name');
-                });
-        }])
-        ->where(function ($query) use ($userId, $deviceId) {
-            $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
-        })
-        ->get();
+        if($role_type == 2){
+
+            $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
+                $query->where('is_active', 1)
+                    ->when($stateId, function ($query, $stateId) {
+                        return $query->where('state_id', $stateId);
+                    })
+                    ->when($cityId, function ($query, $cityId) {
+                        return $query->where('city_id', $cityId);
+                    })
+                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                        return $query->groupBy('type_name');
+                    });
+            }])
+    
+            ->where(function ($query) use ($userId, $deviceId) {
+                $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
+            })
+    
+            ->get();
+        }else{
+            
+            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
+                $query->where('is_active', 1)
+                    ->when($stateId, function ($query, $stateId) {
+                        return $query->where('state_id', $stateId);
+                    })
+                    ->when($cityId, function ($query, $cityId) {
+                        return $query->where('city_id', $cityId);
+                    })
+                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                        return $query->groupBy('type_name');
+                    });
+            }])
+    
+            ->where(function ($query) use ($userId, $deviceId) {
+                $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
+            })
+    
+            ->get();
+        }
         
 
         $totalWeight = 0;
@@ -595,42 +631,83 @@ class CartController extends Controller
                 continue;
             }
 
-            $comboProduct = $this->comboProduct($cartItem->type_id , $product , $lang);
+            $comboProduct = $this->comboProduct($cartItem->type_id , $product , $lang ,$role_type);
 
-            $typeData = $product->type->map(function ($type) use ($cartItem, $lang) {
+            if($role_type == 2){
 
-                $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
-
-                return [
-                    'type_id' => $type->id,
-                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                    'type_category_id' => $type->category_id,
-                    'type_product_id' => $type->product_id,
-                    'type_mrp' => $type->del_mrp,
-                    'gst_percentage' => $type->gst_percentage,
-                    'gst_percentage_price' => $type->gst_percentage_price,
-                    'selling_price' => $type->selling_price,
-                    'type_weight' => $type->weight,
-                    'type_rate' => $type->rate,
-                    'total_typ_qty_price' => $totalTypeQuantityPrice
-                ];
-            })->toArray();
-
-            if ($cartItem->type) {
-
-                $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
+                $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang) {
+    
+                    $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
+    
+                    return [
+                        'type_id' => $type->id,
+                        'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                        'type_category_id' => $type->category_id,
+                        'type_product_id' => $type->product_id,
+                        'type_mrp' => $type->del_mrp,
+                        'gst_percentage' => $type->gst_percentage,
+                        'gst_percentage_price' => $type->gst_percentage_price,
+                        'selling_price' => $type->selling_price,
+                        'type_weight' => $type->weight,
+                        'type_rate' => $type->rate,
+                        'total_typ_qty_price' => $totalTypeQuantityPrice
+                    ];
+    
+                })->toArray();
+    
+                if ($cartItem->vendortype) {
+    
+                    $totalSaveAmount += $cartItem->quantity * $cartItem->vendortype->del_mrp;
+                    
+                    $selectedType = [
+                        'type_id' => $cartItem->vendortype->id ??'',
+                        'type_name' => $lang !== "hi" ? $cartItem->vendortype->type_name ?? '' : $cartItem->vendortype->type_name_hi ?? '',
+                        'type_mrp' => $cartItem->vendortype->del_mrp,
+                        'selling_price' => $cartItem->vendortype->selling_price ??'',
+                    ];
+                } else {
+                    $selectedType = [];
+                }
                 
-                $selectedType = [
-                    'type_id' => $cartItem->type->id ??'',
-                    'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
-                    'type_mrp' => $cartItem->type->del_mrp,
-                    'selling_price' => $cartItem->type->selling_price ??'',
-                ];
-            } else {
-                $selectedType = [];
+                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+            }else{
+
+                $typeData = $product->type->map(function ($type) use ($cartItem, $lang) {
+    
+                    $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
+    
+                    return [
+                        'type_id' => $type->id,
+                        'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                        'type_category_id' => $type->category_id,
+                        'type_product_id' => $type->product_id,
+                        'type_mrp' => $type->del_mrp,
+                        'gst_percentage' => $type->gst_percentage,
+                        'gst_percentage_price' => $type->gst_percentage_price,
+                        'selling_price' => $type->selling_price,
+                        'type_weight' => $type->weight,
+                        'type_rate' => $type->rate,
+                        'total_typ_qty_price' => $totalTypeQuantityPrice
+                    ];
+    
+                })->toArray();
+    
+                if ($cartItem->type) {
+    
+                    $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
+                    
+                    $selectedType = [
+                        'type_id' => $cartItem->type->id ??'',
+                        'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
+                        'type_mrp' => $cartItem->type->del_mrp,
+                        'selling_price' => $cartItem->type->selling_price ??'',
+                    ];
+                } else {
+                    $selectedType = [];
+                }
+                
+                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
             }
-            
-            $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
 
             $totalAmount += $cartItem->total_qty_price;
 
