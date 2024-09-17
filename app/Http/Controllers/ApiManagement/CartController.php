@@ -637,7 +637,7 @@ class CartController extends Controller
 
                 $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang) {
     
-                    $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
+                    $totalTypeQuantityPrice = $type->selling_price;
     
                     return [
                         'type_id' => $type->id,
