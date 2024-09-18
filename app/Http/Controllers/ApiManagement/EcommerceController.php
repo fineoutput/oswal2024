@@ -160,7 +160,7 @@ class EcommerceController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 201]);
         }
 
-        $user = User::where('device_id', $request->device_id)->first();
+        $user = User::where('id', $request->user_id)->first();
 
         if($user){
 
@@ -212,6 +212,7 @@ class EcommerceController extends Controller
                 }
 
             } else {
+                
                 $typeQuery->groupBy('type_name');
             }
 

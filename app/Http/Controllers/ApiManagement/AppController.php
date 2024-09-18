@@ -152,8 +152,8 @@ class AppController extends Controller {
             'state_id'       => 'required|integer',
             'zipcode'        => 'required|integer',
             'address'        => 'nullable|string',
-            'latitude'       => 'required|string',
-            'longitude'      => 'required|string',
+            'latitude'       => 'nullable|string',
+            'longitude'      => 'nullable|string',
             'location_address'  => 'nullable|string',
 
         ]);
@@ -172,7 +172,7 @@ class AppController extends Controller {
             return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'],400);
         }
         
-        $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name ."". $city->state->state_name ." ".$request->zipcode ." ". 'India';
+        $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name ." ". $city->state->state_name ." ".$request->zipcode ." ". 'India';
 
         if(!getLatLngFromAddress($custom_address)) {
             return response()->json(['success' => false, 'message' => 'Address Not Found.'],400);

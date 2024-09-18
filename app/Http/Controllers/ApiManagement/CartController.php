@@ -48,51 +48,62 @@ class CartController extends Controller
             'type_id'     => 'required|string',
             'type_price'  => 'required|numeric',
             'cart_from'   => 'required|string',
+            'quantity'    => 'required|integer|min:1'
         ];
 
-        $user = User::where('device_id', $request->device_id)->first();
+        $user = User::find($request->user_id);
 
-        if($user && $user->role_type == 2){
+        $typePrice = $request->type_price;
 
-            $rules['quantity']  = 'required|integer|min:1';
+        $typeId = $request->type_id;
 
-            $type = VendorType::find($request->type_id);
+        if ($user && $user->role_type == 2) {
 
-            if($request->quantity < $type->min_qty){
+            $type = VendorType::find($typeId);
 
-                return response()->json(['success' => false, 'errors' => "The quantity must be at least {$type->min_qty}."], 400);
-            };
+            if ($request->quantity < $type->min_qty) {
+                return response()->json(['success' => false, 'errors' => "The quantity must be at least {$type->min_qty}."]);
+            }
 
-        }else{
+            if ($request->quantity > $type->end_range) {
 
-            $rules['quantity']  = 'required|integer|max:' . getConstant()->quantity;
+                $filteredType = VendorType::where('product_id', $request->product_id)
+                    ->where('type_name', $type->type_name)
+                    ->where('start_range', '<=', $request->quantity)
+                    ->where('end_range', '>=', $request->quantity)
+                    ->first();
+
+                $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
+                $typeId = $filteredType ? $filteredType->id : $typeId;
+            }
+
+        } else {
+        
+            $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
         }
-
 
         $validator = Validator::make($request->all(),  $rules);
 
         if ($validator->fails()) {
 
-            return response()->json(['success' => false, 'errors' => $validator->errors()]);
+            return response()->json(['success' => false, 'errors' => $validator->errors()->first()]);
         }
 
-        $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'type_id', 'type_price', 'quantity', 'cart_from']);
+        $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
 
-        if($user && $user->role_type == 2){
-            
-            $data['total_qty_price'] = $data['type_price'];
+        $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
 
-        }else{
+        $data['type_id'] = $typeId;
 
-            $data['total_qty_price'] = $data['type_price'] * $data['quantity'];
-        }
+        $data['type_price'] = $typePrice;
+
+        $data['total_qty_price'] = $user && $user->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
 
         $data['ip'] = $request->ip();
-        // $cartModel  = Cart::class;
 
-        date_default_timezone_set("Asia/Calcutta");
-        $cur_date = date("Y-m-d H:i:s");
-        $data['updated_at'] = $cur_date;
+        $curDate = now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'); 
+
+        $data['updated_at'] = $curDate;
 
         // Handle backup in CartOld
         $backupCartItem = CartOld::where('device_id', $data['device_id'])
@@ -108,12 +119,14 @@ class CartController extends Controller
 
         if (empty($backupCartItem)) {
 
-            $data['created_at'] = $cur_date;
+            $data['created_at'] = $curDate;
 
             CartOld::create($data);
+
         } elseif ($data['quantity'] == 0) {
 
             $backupCartItem->delete();
+
         } else {
 
             $backupCartItem->update($data);
@@ -134,11 +147,7 @@ class CartController extends Controller
 
         if (empty($cartItem)) {
             
-            $data['created_at'] = $cur_date;
-
-            // $user_imfo =  User::where('device_id',$data['device_id'])->first();
-
-            // $data['user_id'] = $user_imfo->id;
+            $data['created_at'] = $curDate;
 
             Cart::create($data);
 
@@ -154,7 +163,7 @@ class CartController extends Controller
 
             $cartItem->update($data);
 
-            return response()->json(['success' => true, 'message' => 'Product updated to Cart successfully.', 'data' => $data], 200);
+            return response()->json(['success' => true, 'message' => 'Product updated to Cart successfully.', 'data' => $cartItem], 200);
         }
     }
 
