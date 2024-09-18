@@ -47,10 +47,10 @@ class OrderController extends Controller
     {
         
         $rules = [
-            'user_id'    => 'required|exists:users,id',
-            'device_id'  => 'required',
-            'address_id' => 'required|exists:user_address,id',
-            'promocode'  => 'nullable|string',
+            'user_id'         => 'required|exists:users,id',
+            'device_id'       => 'required|exists:users,device_id',
+            'address_id'      => 'required|exists:user_address,id',
+            'promocode'       => 'nullable|string',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
         ];
@@ -58,14 +58,21 @@ class OrderController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+
+            return response()->json(['success' => false, 'errors' => $validator->errors()]);
+
         }
 
         $deviceId       = $request->input('device_id');
+
         $userId         = $request->input('user_id');
+
         $promocode      = $request->input('promocode');
+
         $addressId      = $request->input('address_id');
+
         $gift_card_id   = $request->input('gift_card_id');
+
         $wallet_status  = $request->input('wallet_status');
 
         $userAddress  = Address::findOrFail($addressId);
@@ -85,12 +92,27 @@ class OrderController extends Controller
         ];
 
         $cartItems = Cart::query()
-                    ->where(function ($query) use ($userId, $deviceId) {
-                        $query->Where('device_id', $deviceId)
-                        ->orwhere('user_id', $userId);
-                    })
-                    ->with(['type' => fn($query) => $query->where('state_id', $stateId)->where('city_id', $cityId)])
-                    ->get();
+
+            ->where(function ($query) use ($userId, $deviceId) {
+                $query->where('device_id', $deviceId)
+                    ->orWhere('user_id', $userId);
+            })
+
+            ->when(Auth::check() && Auth::user()->role_type == 2, function ($query) use ($stateId, $cityId) {
+                $query->with(['vendortype' => function ($query) use ($stateId, $cityId) {
+                    $query->where('state_id', $stateId)
+                        ->where('city_id', $cityId);
+                }]);
+            })
+
+            ->when(Auth::check() && Auth::user()->role_type == 1, function ($query) {
+                $query->with(['type' => function ($query) {
+                    $query->where('state_id', 29)
+                        ->where('city_id', 629);
+                }]);
+            })
+
+        ->get();
 
 
         if ($cartItems->isEmpty()) {
@@ -98,13 +120,22 @@ class OrderController extends Controller
         }
 
         $cartItems->each(function ($cartItem) {
-            if ($cartItem->type) {
-                $cartItem->type_price = $cartItem->type->selling_price;
-                $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
+
+            $type = Auth::user()->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
+
+            if ($type) {
+
+                $cartItem->type_price = $type->selling_price;
+
+                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $type->selling_price :$cartItem->quantity * $cartItem->type_price;
+
                 $cartItem->save();
+
             }
+
         });
 
+        
         $cartItemTotal    = $cartItems->sum('total_qty_price'); 
         $deliveryCharge   = 0;
         $promocode_id     = null;
@@ -114,13 +145,14 @@ class OrderController extends Controller
         
         if (!empty($addressId)) {
 
-            $cartItems->load('type');
-
             $total_order_weight = $cartItems->sum(function ($cartItem) {
 
-                return (float)$cartItem->type->weight * (int)$cartItem->quantity;
-            });
+                $type = Auth::user()->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
 
+                return (float)($type->weight ?? 0) * (int)$cartItem->quantity;
+
+            });
+            
             $shipingCharges =  calculateShippingCharges($total_order_weight, $userAddress->city);
 
             if ($shipingCharges->original['success']) {
@@ -171,22 +203,44 @@ class OrderController extends Controller
 
     public function generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,$status,$message) {
 
-        $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
-            $query->where('is_active', 1)
-                ->when($stateId, function ($query, $stateId) {
-                    return $query->where('state_id', $stateId);
-                })
-                ->when($cityId, function ($query, $cityId) {
-                    return $query->where('city_id', $cityId);
-                })
-                ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                    return $query->groupBy('type_name');
-                });
-        }])
-        ->where(function ($query) use ($userId, $deviceId) {
-            $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
-        })
-        ->get();
+        if(Auth::check() && Auth::user()->role_type == 2){
+
+            $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
+                $query->where('is_active', 1)
+                    ->when($stateId, function ($query, $stateId) {
+                        return $query->where('state_id', 629);
+                    })
+                    ->when($cityId, function ($query, $cityId) {
+                        return $query->where('city_id', 29);
+                    })
+                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                        return $query->groupBy('type_name');
+                    });
+            }])
+            ->where(function ($query) use ($userId, $deviceId) {
+                $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
+            })
+            ->get();
+
+        }else{
+
+            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
+                $query->where('is_active', 1)
+                    ->when($stateId, function ($query, $stateId) {
+                        return $query->where('state_id', $stateId);
+                    })
+                    ->when($cityId, function ($query, $cityId) {
+                        return $query->where('city_id', $cityId);
+                    })
+                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                        return $query->groupBy('type_name');
+                    });
+            }])
+            ->where(function ($query) use ($userId, $deviceId) {
+                $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
+            })
+            ->get();
+        }
 
         $totalAmount = 0;
         $totalSaveAmount = 0;
@@ -278,15 +332,13 @@ class OrderController extends Controller
     {
         // Validation rules
         $rules = [
-            'user_id'      => 'required|exists:users,id',
-            'device_id'    => 'required|',
-            'address_id'   => 'required|exists:user_address,id',
-            // 'state_id'     => 'required|exists:all_states,id',
-            // 'city_id'      => 'required|exists:all_cities,id',
-            'promocode_id' => 'nullable|exists:promocodes,id',
-            'gift_card_id' => 'nullable|exists:gift_cards,id',
-            'wallet_status'   => 'required|integer',
-            'total_amount'  => 'required',
+            'user_id'       => 'required|exists:users,id',
+            'device_id'     => 'required',
+            'address_id'    => 'required|exists:user_address,id',
+            'promocode_id'  => 'nullable|exists:promocodes,id',
+            'gift_card_id'  => 'nullable|exists:gift_cards,id',
+            'wallet_status' => 'required|integer',
+            'total_amount'  => 'required|numeric',
             'payment_type'  => 'required|integer'
         ];
  
@@ -322,24 +374,51 @@ class OrderController extends Controller
         $payment_type = $request->input('payment_type');
 
         // Fetch cart data with related products and types
-        $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
 
-            $query->where('is_active', 1)
+        if(Auth::check() && Auth::user()->role_type == 2){
 
-                ->when($stateId, fn ($query) => $query->where('state_id', $stateId))
+            $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
 
-                ->when($cityId, fn ($query) => $query->where('city_id', $cityId))
+                $query->where('is_active', 1)
+    
+                    ->when($stateId, fn ($query) => $query->where('state_id', 29))
+    
+                    ->when($cityId, fn ($query) => $query->where('city_id', 629))
+    
+                    ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
+    
+            }])->where(function ($query) use ($userId, $deviceId) {
+    
+                    $query->where('user_id', $userId)
+    
+                        ->orWhere('device_id', $deviceId);
+    
+                })->get();
+        }else{
 
-                ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
+            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
 
-        }])->where(function ($query) use ($userId, $deviceId) {
-
-                $query->where('user_id', $userId)
-
-                    ->orWhere('device_id', $deviceId);
-
-            })->get();
-
+                $query->where('is_active', 1)
+    
+                    ->when($stateId, fn ($query) => $query->where('state_id', $stateId))
+    
+                    ->when($cityId, fn ($query) => $query->where('city_id', $cityId))
+    
+                    ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
+    
+            }])->where(function ($query) use ($userId, $deviceId) {
+    
+                    $query->where('user_id', $userId)
+    
+                        ->orWhere('device_id', $deviceId);
+    
+                })->get();
+        }
+       
+        
+        if ($cartData->isEmpty()) {
+            return response()->json(['message' => 'Order Not Found.', 'status' => 400]);
+        }
 
         $totalWeight = 0;
 
@@ -375,72 +454,59 @@ class OrderController extends Controller
                 continue;
             }
 
-            $typeData = $product->type->filter(function ($type) use ($cartItem) {
-                return $cartItem->type->id == $type->id;
-            })->map(function ($type) use ($cartItem) {
+             // Apply Combo Product if exsit
+           $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en', Auth::user()->role_type);
 
-                    $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
+            if(Auth::check() && Auth::user()->role_type == 2) {
 
-                    return [
-                        'type_id'               => $type->id,
-                        'type_name'             => $type->type_name,
-                        'type_category_id'      => $type->category_id,
-                        'type_product_id'       => $type->product_id,
-                        'type_mrp'              => $type->del_mrp,
-                        'gst_percentage'        => $type->gst_percentage,
-                        'gst_percentage_price'  => $type->gst_percentage_price,
-                        'selling_price'         => $type->selling_price,
-                        'type_weight'           => $type->weight,
-                        'type_rate'             => $type->rate,
-                        'total_typ_qty_price'   => $totalTypeQuantityPrice
-                    ];
+                $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
 
-                });
+                $subtotal    += $cartItem->total_qty_price;
+            
+                $type_rate_amount += $cartItem->quantity * (float)$cartItem->vendortype->rate ?? 0;
 
-            $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+                OrderDetail::create([      
+                    'main_id'               =>  $order->id,
+                    'product_id'            =>  $product->id,
+                    'type_id'               =>  $cartItem->type_id,
+                    'type_mrp'              =>  $cartItem->vendortype->mrp,
+                    'gst'                   =>  $cartItem->vendortype->gst_percentage,
+                    'gst_percentage_price'  =>  $cartItem->vendortype->gst_percentage_price,
+                    'quantity'              =>  $cartItem->quantity,
+                    'combo_gst'             =>  0,
+                    'combo_product'         =>  (count($comboProduct) > 0) ? $comboProduct['product']['product_name'] : '',
+                    'combo_name'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['combo_type_name'] : '',
+                    'combo_type'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['id'] : '',
+                    'amount'                =>  $cartItem->total_qty_price,
+                    'ip'                    =>  $request->ip(),
+                    'date'                  =>  now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
+                ]);
 
-            $subtotal    += $cartItem->total_qty_price;
-        
-            $type_rate_amount += $cartItem->quantity * (float)$cartItem->type->rate ?? 0;
+            }else {
 
-            $productData[] = [
-                'id'                => $cartItem->id,
-                'product_id'        => $product->id,
-                'category_id'       => $cartItem->category_id,
-                'type_id'           => $cartItem->type_id,
-                'type_price'        => $cartItem->type_price,
-                'quantity'          => $cartItem->quantity,
-                'total_qty_price'   => round($cartItem->total_qty_price),
-                'product_name'      => $product->name,
-                'long_desc'         => $product->long_desc,
-                'url'               => $product->url,
-                'image1'            => asset($product->img1),
-                'image2'            => asset($product->img2),
-                'image3'            => asset($product->img3),
-                'image4'            => asset($product->img4),
-                'is_active'         => $product->is_active,
-                'type'              => $typeData
-            ];
+                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+    
+                $subtotal    += $cartItem->total_qty_price;
+            
+                $type_rate_amount += $cartItem->quantity * (float)$cartItem->type->rate ?? 0;
 
-          // Apply Combo Product if exsit
-          $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en');
-         
-            OrderDetail::create([      
-                'main_id'               =>  $order->id,
-                'product_id'            =>  $product->id,
-                'type_id'               =>  $cartItem->type_id,
-                'type_mrp'              =>  $cartItem->type->mrp,
-                'gst'                   =>  $cartItem->type->gst_percentage,
-                'gst_percentage_price'  =>  $cartItem->type->gst_percentage_price,
-                'quantity'              =>  $cartItem->quantity,
-                'combo_gst'             =>  0,
-                'combo_product'         =>  (count($comboProduct) > 0) ? $comboProduct['product']['product_name'] : '',
-                'combo_name'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['combo_type_name'] : '',
-                'combo_type'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['id'] : '',
-                'amount'                =>  $cartItem->total_qty_price,
-                'ip'                    =>  $request->ip(),
-                'date'                  =>  now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
-            ]);
+                OrderDetail::create([      
+                    'main_id'               =>  $order->id,
+                    'product_id'            =>  $product->id,
+                    'type_id'               =>  $cartItem->type_id,
+                    'type_mrp'              =>  $cartItem->type->mrp,
+                    'gst'                   =>  $cartItem->type->gst_percentage,
+                    'gst_percentage_price'  =>  $cartItem->type->gst_percentage_price,
+                    'quantity'              =>  $cartItem->quantity,
+                    'combo_gst'             =>  0,
+                    'combo_product'         =>  (count($comboProduct) > 0) ? $comboProduct['product']['product_name'] : '',
+                    'combo_name'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['combo_type_name'] : '',
+                    'combo_type'            =>  (count($comboProduct) > 0) ? $comboProduct['combodetail']['id'] : '',
+                    'amount'                =>  $cartItem->total_qty_price,
+                    'ip'                    =>  $request->ip(),
+                    'date'                  =>  now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
+                ]);
+            }
 
         }
 
@@ -583,15 +649,18 @@ class OrderController extends Controller
             return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
         }
 
-        $maxCodAmount = getConstant()->cod_max_process_amount;
+        if(Auth::check() && Auth::user()->role_type != 2) {
 
-        if ($order->sub_total > $maxCodAmount) {
-            return response()->json([
-                'status' => 400,
-                'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
-            ]);
+            $maxCodAmount = getConstant()->cod_max_process_amount;
+
+            if ($order->sub_total > $maxCodAmount) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
+                ]);
+            }
+
         }
-
         // Handle COD payment type
         $codCharge = getConstant()->cod_charge;
 
