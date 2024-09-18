@@ -62,7 +62,7 @@ class CartController extends Controller
             $type = VendorType::find($typeId);
 
             if ($request->quantity < $type->min_qty) {
-                return response()->json(['success' => false, 'errors' => "The quantity must be at least {$type->min_qty}."]);
+                return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
             }
 
             if ($request->quantity > $type->end_range) {
@@ -86,7 +86,7 @@ class CartController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['success' => false, 'errors' => $validator->errors()->first()]);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
