@@ -130,38 +130,66 @@ padding-left: 0;
 ">
           <div class="contact-page-form" method="post">
             <h2>Get in Touch</h2> 
-            <form action="contact-mail.php" method="post">
-              <div class="row">
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="single-input-field">
-                  <input type="text" placeholder="Your Name" name="name"/>
-                </div>
-              </div>  
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="single-input-field">
-                  <input type="email" placeholder="E-mail" name="email" required/>
-                </div>
-              </div>                              
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="single-input-field">
-                  <input type="text" placeholder="Phone Number" name="phone"/>
-                </div>
-              </div>  
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="single-input-field">
-                  <input type="text" placeholder="Subject" name="subject"/>
-                </div>
-              </div>                
-              <div class="col-md-12 message-input">
-                <div class="single-input-field">
-                  <textarea  placeholder="Write Your Message" name="message"></textarea>
-                </div>
-              </div>                                                
-              <div class="single-input-fieldsbtn">
-                <input type="submit" value="Send Now"/>
-              </div>                          
+            <form action="{{ route('career_contact') }}" method="post">
+    @csrf
+    <div class="row">
+        <!-- Name Field -->
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="single-input-field">
+                <input type="text" placeholder="Your Name" name="name" required/>
+                @error('name')
+                <div class="error">{{ $message }}</div>
+                @enderror
             </div>
-            </form>   
+        </div>
+
+        <!-- Email Field -->
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="single-input-field">
+                <input type="email" placeholder="E-mail" name="email" required/>
+                @error('email')
+                <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Phone Field -->
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="single-input-field">
+                <input type="text" placeholder="Phone Number" name="phone" required/>
+                @error('phone')
+                <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Subject Field -->
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="single-input-field">
+                <input type="text" placeholder="Subject" name="subject" required/>
+                @error('subject')
+                <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Message Field -->
+        <div class="col-md-12 message-input">
+            <div class="single-input-field">
+                <textarea placeholder="Write Your Message" name="message" required></textarea>
+                @error('message')
+                <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="single-input-fieldsbtn">
+            <input type="submit" value="Send Now"/>
+        </div>
+    </div>
+</form>
+  
           </div>      
         </div>
         <div class="col-md-4">        

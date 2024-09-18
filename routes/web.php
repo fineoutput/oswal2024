@@ -83,6 +83,10 @@ Route::group(['prefix' => '/'], function () {
         Route::post('contact-us', [HomeController::class, 'contact_us'])->name('contact_us');
     });
     
+    Route::middleware(['web'])->group(function () {
+        Route::post('career_contact', [HomeController::class, 'career_contact'])->name('career_contact');
+    });
+    
 
 });
 
