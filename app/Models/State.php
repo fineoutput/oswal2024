@@ -40,4 +40,9 @@ class State extends Model
 
         return $this->hasMany(Address::class, 'state', 'id');
     }
+
+    public function vendor() {
+
+        return $this->hasOne(vendor::class, 'state_id', 'id');
+    }
 }

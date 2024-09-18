@@ -51,7 +51,15 @@ class CartController extends Controller
             'quantity'    => 'required|integer|min:1'
         ];
 
-        $user = User::find($request->user_id);
+        $vendoruser = User::where('device_id', $request->device_id)->first();
+
+        if ($vendoruser && $vendoruser->role_type == 2) {
+
+            return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
+
+        }
+
+        $user = User::where('id', $request->user_id)->first();
 
         $typePrice = $request->type_price;
 
@@ -61,8 +69,11 @@ class CartController extends Controller
 
             $type = VendorType::find($typeId);
 
+            if($type)
             if ($request->quantity < $type->min_qty) {
+
                 return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+
             }
 
             if ($request->quantity > $type->end_range) {
@@ -217,9 +228,27 @@ class CartController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-
         if ($validator->fails()) {
+
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            
+        }
+
+        $user = User::find($request->user_id);
+
+        if($user != null){
+            
+            $roleType =  $user->role_type;
+            
+            if($roleType == 2){
+
+                Cart::where('device_id', $request->device_id)->where('user_id','=',null)->delete();
+            }
+
+        }else{
+            
+            $roleType = 1;
+
         }
 
         $device_id       = $request->input('device_id');
@@ -239,14 +268,8 @@ class CartController extends Controller
         });
 
 
-        $user = User::where('id', $user_id)->first();
+        if($roleType == 2){
 
-        if($user != null){
-          $roleType =  $user->role_type;
-        }else{
-            $roleType = 1;
-        }
-        if($$roleType = 2){
 
             $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
                 $query->when($state_id, function ($query) use ($state_id, $city_id) {
@@ -273,7 +296,7 @@ class CartController extends Controller
             ]);
         }
 
-        if($$roleType = 2){
+        if($roleType == 2){
 
             $cartItems->each(function ($cartItem) {
                 if ($cartItem->vendortype) {
@@ -311,7 +334,7 @@ class CartController extends Controller
 
             $userAddress = Address::findOrFail($address_id);
 
-            if($$roleType = 2){
+            if($roleType == 2){
 
                 $cartItems->load('vendortype');
                 
@@ -611,6 +634,7 @@ class CartController extends Controller
             })
     
             ->get();
+
         }else{
             
             $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
@@ -633,7 +657,6 @@ class CartController extends Controller
             ->get();
         }
         
-
         $totalWeight = 0;
         $totalAmount = 0;
         $totalSaveAmount = 0;

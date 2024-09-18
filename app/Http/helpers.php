@@ -120,7 +120,7 @@ if(!function_exists('sendProduct')) {
 
         if($is_fea){$products = $products->where('is_featured', 1);}
         
-        if($forproduct){
+        if($forproduct == 2){
             $products = $products->whereIn('product_view', [3, 2]);
         }
 
