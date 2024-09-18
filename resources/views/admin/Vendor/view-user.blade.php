@@ -127,7 +127,7 @@
                                                 @foreach ($users as $key => $user)
                                                 @php
                                                    $vendor =  $user->vendor;
-                                                  dd($vendor['shopname']);
+                                                 
                                                 @endphp
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
@@ -138,9 +138,9 @@
 
                                                     <td>{{ $vendor['shopname'] }}</td>
 
-                                                    <td>{{ $vendor->state->state_name }}</td>
+                                                    <td>as</td>
 
-                                                    <td>{{ $vendor->city->city_name }}</td>
+                                                    <td>as</td>
 
                                                     <td>{{ $vendor['address'] }}</td>
 
