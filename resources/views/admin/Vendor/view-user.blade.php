@@ -127,7 +127,7 @@
                                                 @foreach ($users as $key => $user)
                                                 @php
                                                    $vendor =  $user->vendor;
-                                                  
+                                                  dd($vendor);
                                                 @endphp
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
