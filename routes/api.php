@@ -119,6 +119,8 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::get('user/logout' , [UserAuthController::class, 'logout']);
 
+    Route::get('vendor/logout' , [VendorAuthController::class, 'logout']);
+
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
