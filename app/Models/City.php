@@ -43,4 +43,9 @@ class City extends Model
 
         return $this->hasMany(Address::class, 'city', 'id');
     }
+
+    public function vendor() {
+
+        return $this->hasOne(vendor::class, 'city_id', 'id');
+    }
 }

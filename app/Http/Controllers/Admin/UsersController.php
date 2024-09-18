@@ -1,11 +1,18 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Models\WalletTransactionHistory;
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Http\Request;
+
 use App\Models\User;
 
 class UsersController extends Controller
@@ -13,10 +20,26 @@ class UsersController extends Controller
 
     public function index()
     {
+        
+        $currentRouteName = Route::currentRouteName();
 
-        $users = User::orderBy('id', 'desc')->get();
+        if($currentRouteName == 'user.vendor') {
 
-        return view('admin.Users.view-user', compact('users'));
+            $pageTittle = 'Vendor Users';
+
+            $users = User::with('vendor')->where('role_type', 2)->orderBy('id', 'desc')->get();
+
+            return view('admin.Vendor.view-user', compact('users', 'pageTittle'));
+
+        }elseif($currentRouteName == 'user.index'){
+
+            $pageTittle = 'Customer Users';
+
+            $users = User::where('role_type', '!=' , 2)->orderBy('id', 'desc')->get();
+
+            return view('admin.Users.view-user', compact('users', 'pageTittle'));
+        }
+
     }
 
     public function create($id = null, Request $request)
@@ -113,6 +136,8 @@ class UsersController extends Controller
 
     {
 
+        $currentRouteName = Route::currentRouteName();
+
         $id = base64_decode($id);
 
         $admin_position = $request->session()->get('position');
@@ -129,7 +154,14 @@ class UsersController extends Controller
             $user->updateStatus(strval(0));
         }
 
-        return  redirect()->route('user.index')->with('success', 'Status Updated Successfully.');
+        if($currentRouteName == 'user.vendor.update-status'){
+
+            return  redirect()->route('user.vendor')->with('success', 'Status Updated Successfully.');
+
+        }else{
+
+            return  redirect()->route('user.index')->with('success', 'Status Updated Successfully.');
+        }
 
         // } else {
 

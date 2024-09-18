@@ -107,9 +107,9 @@ class User extends Authenticatable
         return $this->hasMany(Address::class, 'user_id');
     }
 
-    public function vendors()
+    public function vendor()
     {
-        return $this->hasMany(Vendor::class, 'user_id');
+        return $this->hasOne(Vendor::class, 'user_id');
     }
 
     /**
