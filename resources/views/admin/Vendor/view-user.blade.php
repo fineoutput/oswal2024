@@ -126,8 +126,7 @@
                                                 
                                                 @foreach ($users as $key => $user)
                                                 @php
-                                                   $uservendor =  $user->vendor;
-                                                 
+                                                   $vendor =  $user->vendor;
                                                 @endphp
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
@@ -136,19 +135,19 @@
 
                                                     <td>{{ $user->contact }}</td>
 
-                                                    <td>{{ $uservendor['shopname'] }}</td>
+                                                    <td>{{ $user->vendor->shopname }}</td>
 
-                                                    <td>as</td>
+                                                    <td>{{ $user->vendor->state->state_name }}</td>
 
-                                                    <td>as</td>
+                                                    <td>{{ $user->vendor->city->city_name }}</td>
 
-                                                    <td>{{ $uservendor['address'] }}</td>
+                                                    <td>{{ $user->vendor->address }}</td>
 
                                                     <td>
 
-                                                        @if ($uservendor['addhar_front_image'])
+                                                        @if ($user->vendor->addhar_front_image)
 
-                                                        <img src="{{ asset($uservendor['addhar_front_image']) }}" alt="" height="100px" width="100px">
+                                                        <img src="{{ asset($vendor->addhar_front_image) }}" alt="" height="100px" width="100px">
 
                                                         @else
 
@@ -160,9 +159,9 @@
 
                                                     <td>
 
-                                                        @if ( $uservendor['addhar_back_image'])
+                                                        @if ( $user->vendor->addhar_back_image)
 
-                                                        <img src="{{ asset( $uservendor['addhar_back_image']) }}" alt="" height="100px" width="100px">
+                                                        <img src="{{ asset( $user->vendor->addhar_back_image) }}" alt="" height="100px" width="100px">
 
                                                         @else
 
@@ -172,7 +171,7 @@
                                                         
                                                     </td>
 
-                                                    <td>{{ $uservendor['gstno'] ?? 'Not Found' }}</td>
+                                                    <td>{{ $user->vendor->gstno ?? 'Not Found' }}</td>
 
                                                     <td>{{ $user->wallet_amount }}</td>
 
