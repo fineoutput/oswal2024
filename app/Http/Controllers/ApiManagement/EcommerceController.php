@@ -87,12 +87,12 @@ class EcommerceController extends Controller
 
         $rules = [
             'device_id' => 'required|string',
-            'user_id' => 'nullable|integer|exists:users,id',
-            'lang' => 'required|string',
-            'state_id' => 'nullable|integer',
-            'city_id' => 'nullable|integer',
-            'page' => 'nullable|integer|min:1',
-            'per_page' => 'nullable|integer|min:1|max:100',
+            'user_id'   => 'nullable|integer|exists:users,id',
+            'lang'      => 'required|string',
+            'state_id'  => 'nullable|integer',
+            'city_id'   => 'nullable|integer',
+            'page'      => 'nullable|integer|min:1',
+            'per_page'  => 'nullable|integer|min:1|max:100',
         ];
     
         $is_hot = false;
@@ -162,13 +162,13 @@ class EcommerceController extends Controller
 
         $user = User::where('id', $request->user_id)->first();
 
-        if($user){
+        if($user != null){
 
             $roleType = $user->role_type;
 
         }else{
 
-            $roleType = 1;
+            $roleType = false;
         }
 
         $category_id = $request->input('category_id');
@@ -361,12 +361,13 @@ class EcommerceController extends Controller
 
         }else{
 
-            $roleType = 1;
+            $roleType = false;
         }
+
         $types = sendType($request->cid, $request->pid, $request->tid , $roleType);
     
         if ($types->isEmpty()) {
-            return response()->json(['success' => false, 'message' => 'No types found'], 404);
+            return response()->json(['success' => false, 'message' => 'No types found']);
         }
     
         $type = $types->first();
