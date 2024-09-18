@@ -14,6 +14,8 @@ use App\Models\EcomCategory;
 
 use App\Models\EcomProduct;
 
+use App\Models\ContactUs;
+
 use App\Models\Address;
 
 use App\Models\Type;
@@ -105,7 +107,33 @@ class HomeController extends Controller
 
         return view('career')->with('title', 'career');
     }
+    public function achivements1(Request $request)
+    {
+
+        return view('achivements1')->with('title', 'achivements1');
+    }
     
+    public function contact_us(Request $request){
+        $request -> validate([
+            'name'=> 'required|string',
+            'phone'=> 'required|numeric|min:11',
+            'email'=> 'required|string|email',
+            'message'=> 'required|string|max:255'
+
+        ]);
+        $data = new ContactUs;
+
+        $data->fname = $request->name;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->message = $request->message;
+        $data->ip = $request->ip();
+
+        $data->save();
+
+        return redirect()->route('contact')->with('success', 'Message sent succesfully');
+
+    }
     public function productDetail(Request $request, $slug)
     {
         $product = EcomProduct::where('url', $slug)->first();
