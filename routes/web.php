@@ -77,6 +77,13 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('token', [HomeController::class, 'getAccessToken'])->name('token');
 
+    Route::get('achivements1', [HomeController::class, 'achivements1'])->name('achivements1');
+
+    Route::middleware(['web'])->group(function () {
+        Route::post('contact-us', [HomeController::class, 'contact_us'])->name('contact_us');
+    });
+    
+
 });
 
 Route::prefix('cart')->name('cart.')->group(function () {
@@ -88,7 +95,6 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('removeToCart/{cart_id?}',[CartController::class, 'removeToCart'])->name('remove-to-cart');
     
     Route::get('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
-
 });
 
 Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(function () {

@@ -12,7 +12,7 @@ class ContactUs extends Model
     protected $table = 'contact_us';
 
     protected $fillable = [
-        'fname', 'lname', 'phone', 'email', 'message', 'reply',
+        'fname', 'lname', 'phone', 'email', 'message','subject', 'reply',
         'reply_message', 'cur_date', 'phone2', 
     ];
 
