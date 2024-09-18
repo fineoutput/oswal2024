@@ -3025,7 +3025,7 @@ p.prev_rate {
   display: none !important;
 }
 
-@media (max-width: 968px) {
+@media (max-width: 992px) {
   .d-lg-none {
     display: block !important;
   }
@@ -4872,6 +4872,24 @@ h4.payment {
     left: 0%;
     margin-left: 0px;
   }
+  .module,
+.module-small {
+  padding: 75px 0 !important;
+  margin-top: -120px !important;
+}
+.home-orangepatch {
+  font-size: 18px;
+}
+.home-orangepatch-yellow {
+  font-size: 18px;
+}
+.naminfs {
+  height: 100% !important;
+}
+iframe{
+  height: auto;
+}
+
 }
 
 /* For screens smaller than 1280px */
@@ -5199,7 +5217,7 @@ h4.payment {
   .mobile_search_box {
     display: block;
   } */
-  @media (max-width: 968px) {
+  @media (max-width: 992px) {
   .bottom-bar {
     position: fixed;
     bottom: 0;
@@ -5234,7 +5252,25 @@ h4.payment {
     display: flex;
     justify-content: start !important;
   }
-
+  .mobile_upper_txt h4 {
+    font-size: 13px !important;
+    font-weight: bolder;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    width: 100%;
+  }
+  .splide__slide img {
+    object-fit: contain !important;
+  }
+  .rates p {
+    font-size: 10px !important;
+  }
+  .card_upper_img {
+    height: 150px;
+    object-fit: contain;
+  }
 }
 /* 
 .mobile_logo {
