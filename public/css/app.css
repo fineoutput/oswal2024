@@ -2517,7 +2517,7 @@ input[type="range"]::-moz-range-thumb {
 #splide3 img {
   width: 100%;
   border-radius: 20px;
-  height: 50vh;
+  height: 100%;
   object-fit: fill;
   display: block;
 }
@@ -3055,7 +3055,7 @@ p.prev_rate {
   }
 
   #splide3 img {
-    height: 20vh;
+    height: 100%;
   }
 
   .coach {
