@@ -190,32 +190,40 @@ class EcommerceController extends Controller
 
         foreach ($products as $product) {
 
-            
-            if($roleType && $roleType == 2){
+            if ($roleType && $roleType == 2) {
 
                 $typeQuery = VendorType::where('product_id', $product->id)
-                ->where('is_active', 1);
-            }else{
-                
-                $typeQuery = Type::where('product_id', $product->id)
                     ->where('is_active', 1);
 
-            }
-
-            if ($state_id) {
-
-                $typeQuery->where('state_id', $state_id);
-
-                if ($city_id) {
-
-                    $typeQuery->where('city_id', $city_id);
+                if ($state_id) {
+                    $typeQuery->where('state_id', 29);
+    
+                    if ($city_id) {
+                        $typeQuery->where('city_id', 629);
+                    }
                 }
 
-            } else {
-                
                 $typeQuery->groupBy('type_name');
+
+            } else {
+
+                $typeQuery = Type::where('product_id', $product->id)
+                    ->where('is_active', 1);
+                
+                if ($state_id) {
+                    $typeQuery->where('state_id', 29);
+    
+                    if ($city_id) {
+                        $typeQuery->where('city_id', 629);
+                    }
+
+                }else{
+                    $typeQuery->groupBy('type_name');
+                }
+
             }
 
+            // Execute the query and get the results
             $types = $typeQuery->get();
 
             $typedata = [];
