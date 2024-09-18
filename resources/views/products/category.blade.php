@@ -53,7 +53,7 @@
 
             <div class="container-fluid">
 
-                <div class="row">
+                <div class="row" style="--bs-gutter-x: 0;">
 
                     <div class="col-lg-12 col-sm-12 col-md-12 product_category_title">
 
@@ -63,7 +63,7 @@
 
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="--bs-gutter-x: 0;">
 
                         <div class="col-lg-3 col-3">
 
