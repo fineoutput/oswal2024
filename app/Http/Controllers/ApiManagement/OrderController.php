@@ -1053,13 +1053,21 @@ class OrderController extends Controller
         }
 
         foreach ($orderDetails as $detail) {
+
             $product = $detail->product;
 
             if (!$product) {
                 continue;
             }
 
-            $type = $detail->type;
+            if($user->role_type == 2){
+
+                $type = $detail->vendortype;
+
+            }else{
+
+                $type = $detail->type;
+            }
 
             if (!$type) {
                 continue;
