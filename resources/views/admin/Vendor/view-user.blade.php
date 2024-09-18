@@ -125,99 +125,67 @@
                                             <tbody>
                                                 
                                                 @foreach ($users as $key => $user)
-                                                @php
-                                                   $vendor =  $user->vendor;
-                                                @endphp
-                                                <tr>
-                                                    <td>{{ ++$key }}</td>
+                                                    @php
+                                                        $vendor = $user->vendor;
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ ++$key }}</td>
+                                                        <td>{{ $user->first_name }}</td>
+                                                        <td>{{ $user->contact }}</td>
 
-                                                    <td>{{ $user->first_name }}</td>
+                                                        <!-- Check if vendor exists before accessing its properties -->
+                                                        <td>{{ $vendor ? $vendor->shopname : 'Not Found' }}</td>
+                                                        <td>{{ $vendor && $vendor->state ? $vendor->state->state_name : 'Not Found' }}</td>
+                                                        <td>{{ $vendor && $vendor->city ? $vendor->city->city_name : 'Not Found' }}</td>
+                                                        <td>{{ $vendor ? $vendor->address : 'Not Found' }}</td>
 
-                                                    <td>{{ $user->contact }}</td>
-
-                                                    <td>{{ $user->vendor->shopname }}</td>
-
-                                                    <td>{{ $user->vendor->state->state_name }}</td>
-
-                                                    <td>{{ $user->vendor->city->city_name }}</td>
-
-                                                    <td>{{ $user->vendor->address }}</td>
-
-                                                    <td>
-
-                                                        @if ($user->vendor->addhar_front_image)
-
-                                                        <img src="{{ asset($vendor->addhar_front_image) }}" alt="" height="100px" width="100px">
-
-                                                        @else
-
-                                                         Not Found
-
-                                                        @endif
-                                                      
-                                                    </td>
-
-                                                    <td>
-
-                                                        @if ( $user->vendor->addhar_back_image)
-
-                                                        <img src="{{ asset( $user->vendor->addhar_back_image) }}" alt="" height="100px" width="100px">
-
-                                                        @else
-
-                                                         Not Found
-
-                                                        @endif
-                                                        
-                                                    </td>
-
-                                                    <td>{{ $user->vendor->gstno ?? 'Not Found' }}</td>
-
-                                                    <td>{{ $user->wallet_amount }}</td>
-
-                                                    <td> 
-                                                        @if($user->is_active == 1)  
-                                                           <p class="label pull-right status-active">Active</p>  
-                                                        @else 
-                                                           <p class="label pull-right status-inactive">InActive</p> 
-                                                        @endif
-                                                    </td>
-
-                                                    <td>
-                                                        
-                                                        <div class="btn-group" id="btns<?php echo $key ?>">
-
-                                                            @if ($user->is_active == 0)
-
-                                                            <a href="{{route('user.vendor.update-status',['active',base64_encode($user->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
-
+                                                        <td>
+                                                            @if ($vendor && $vendor->addhar_front_image)
+                                                                <img src="{{ asset($vendor->addhar_front_image) }}" alt="" height="100px" width="100px">
                                                             @else
-
-                                                            <a href="{{route('user.vendor.update-status',['inactive',base64_encode($user->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
-
+                                                                Not Found
                                                             @endif
+                                                        </td>
 
-                                                            {{-- <a href="{{route('user.create',[base64_encode($user->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a> --}}
+                                                        <td>
+                                                            @if ($vendor && $vendor->addhar_back_image)
+                                                                <img src="{{ asset($vendor->addhar_back_image) }}" alt="" height="100px" width="100px">
+                                                            @else
+                                                                Not Found
+                                                            @endif
+                                                        </td>
 
-                                                            {{-- <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a> --}}
+                                                        <td>{{ $vendor ? $vendor->gstno : 'Not Found' }}</td>
+                                                        <td>{{ $user->wallet_amount }}</td>
 
-                                                        </div>
+                                                        <td>
+                                                            @if($user->is_active == 1)  
+                                                                <p class="label pull-right status-active">Active</p>  
+                                                            @else 
+                                                                <p class="label pull-right status-inactive">Inactive</p> 
+                                                            @endif
+                                                        </td>
 
-                                                          <!-- Button to trigger modal -->
-                                                          {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal" data-id="{{ $user->id }}" data-name="{{ $user->first_name }}" data-wallet="{{ $user->wallet_amount }}">
-                                                            Edit Wallet Amount
-                                                        </button> --}}
+                                                        <td>
+                                                            <div class="btn-group" id="btns{{ $key }}">
+                                                                @if ($user->is_active == 0)
+                                                                    <a href="{{ route('user.vendor.update-status', ['active', base64_encode($user->id)]) }}" data-toggle="tooltip" data-placement="top" title="Active">
+                                                                        <i class="fas fa-check success-icon"></i>
+                                                                    </a>
+                                                                @else
+                                                                    <a href="{{ route('user.vendor.update-status', ['inactive', base64_encode($user->id)]) }}" data-toggle="tooltip" data-placement="top" title="Inactive">
+                                                                        <i class="fas fa-times danger-icon"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
 
-                                                        <div style="display:none" id="cnfbox<?php echo $key ?>">
-                                                            <p> Are you sure delete this </p>
-                                                            <a href="{{route('user.destroy', base64_encode($user->id))}}" class="btn btn-danger">Yes</a>
-                                                            <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
-                                                        </div>
-
-                                                    </td>
-
-                                                </tr>
-
+                                                            <div style="display:none" id="cnfbox{{ $key }}">
+                                                                <p>Are you sure you want to delete this?</p>
+                                                                <a href="{{ route('user.destroy', base64_encode($user->id)) }}" class="btn btn-danger">Yes</a>
+                                                                <a href="javascript:;" class="cans btn btn-default" mydatas="{{ $key }}">No</a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
 
                                             </tbody>
