@@ -678,6 +678,7 @@ class CartController extends Controller
                         'type_name' => $lang !== "hi" ? $cartItem->vendortype->type_name ?? '' : $cartItem->vendortype->type_name_hi ?? '',
                         'type_mrp' => $cartItem->vendortype->del_mrp,
                         'selling_price' => $cartItem->vendortype->selling_price ??'',
+                        'min_qty' => $cartItem->vendortype->min_qty ?? 1,
                     ];
                 } else {
                     $selectedType = [];
@@ -717,6 +718,7 @@ class CartController extends Controller
                         'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
                         'type_mrp' => $cartItem->type->del_mrp,
                         'selling_price' => $cartItem->type->selling_price ??'',
+                        'min_qty' => $cartItem->type->min_qty ?? 1,
                     ];
                 } else {
                     $selectedType = [];
