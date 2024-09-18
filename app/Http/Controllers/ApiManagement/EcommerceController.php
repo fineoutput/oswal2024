@@ -342,17 +342,28 @@ class EcommerceController extends Controller
     public function type(Request $request) {
         
         $validator = Validator::make($request->all(), [
-            'pid'  => 'required|numeric',
-            'cid'  => 'required|numeric',
-            'tid'  => 'required|numeric',
-            'lang' => 'required|string',
+            'user_id'  => 'nullable|numeric|exists:users,id',
+            'pid'      => 'required|numeric',
+            'cid'      => 'required|numeric',
+            'tid'      => 'required|numeric',
+            'lang'     => 'required|string',
         ]);
     
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
     
-        $types = sendType($request->cid, $request->pid, $request->tid);
+        $user = User::find($request->user_id);
+
+        if($user) {
+
+            $roleType = $user->role_type;
+
+        }else{
+
+            $roleType = 1;
+        }
+        $types = sendType($request->cid, $request->pid, $request->tid , $roleType);
     
         if ($types->isEmpty()) {
             return response()->json(['success' => false, 'message' => 'No types found'], 404);
