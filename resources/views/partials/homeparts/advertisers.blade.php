@@ -491,7 +491,9 @@
 
 <!--ADVERTISERS SERVICE CARD  Carousel in Mobile Screen End -->
 
-<div class="container section-padding">
+
+<!-- /////R&D section Desktop -->
+<div class="container section-padding d-none d-lg-block">
 
     <header class="header_editsless">
 
@@ -559,6 +561,56 @@
     </main>
 
 </div>
+<!-- /////R&D section Desktop END -->
+
+
+<!-- /////R&D section MOBILE -->
+<div class="container section-padding d-lg-none">
+    <header class="header_editsless">
+        <h1 class="header_title_editsless">Research & Development</h1>
+        <p class="header_description_editsless">R&D is an essential part of Oswal Soap Group as it leads to product innovation and development.<br /></p>
+    </header>
+
+    <!-- Splide slider wrapper -->
+    <div class="splide" id="research-splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide">
+                    <section class="card_editsless cyan_editsless" data-aos="fade-right" data-aos-duration="1000">
+                        <p class="card_content_editsless">Our products comply with all the high standards followed by our global competitors, per se, quality, usage, and effectiveness.</p>
+                        <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="{{ asset('images/rd1.jpg') }}" alt="Supervisor" />
+                    </section>
+                </li>
+                <li class="splide__slide">
+                    <section class="card_editsless red_editsless" data-aos="fade-left" data-aos-duration="1000">
+                        <p class="card_content_editsless">We are constantly innovating our products to meet the current trends of the market.</p>
+                        <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="{{ asset('images/rd3.avif') }}" alt="page-home" />
+                    </section>
+                </li>
+                <li class="splide__slide">
+                    <section class="card_editsless orange_editsless" data-aos="fade-right" data-aos-duration="1000">
+                        <p class="card_content_editsless">R&D is an essential part of Oswal Soap Group as it leads to product innovation and development.</p>
+                        <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="https://media.istockphoto.com/id/1295900106/photo/data-scientists-male-programmer-using-laptop-analyzing-and-developing-in-various-information.jpg?s=612x612&w=0&k=20&c=2z9VEOlF7mAgeZDEsnetqFMyQS6xqjmXDoryrQ_LeOc=" alt="Calculator" />
+                    </section>
+                </li>
+                <li class="splide__slide">
+                    <section class="card_editsless blue_editsless" data-aos="fade-left" data-aos-duration="1000">
+                        <p class="card_content_editsless">We invest in technology to enhance our capability and transform them into new products.</p>
+                        <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="https://media.istockphoto.com/id/968289874/photo/team-of-computer-engineers-lean-on-the-desk-and-choose-printed-circuit-boards-to-work-with.jpg?s=612x612&w=0&k=20&c=23WG5p4NHJjiFmYeB44Vmi71rDqoIJB_SvwuQ_uasY4=" alt="Karma" />
+                    </section>
+                </li>
+                <li class="splide__slide">
+                    <section class="card_editsless green_editsless" data-aos="fade-up" data-aos-duration="1000">
+                        <p class="card_content_editsless"><b>A team of highly trained professionals is constantly working towards the innovation of new products & the development of the existing product line.</b></p>
+                        <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="{{ asset('images/rd2.jpeg') }}" alt="Analytics" />
+                    </section>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /////R&D section MOBILE END -->
+
 
 <!-- //////////////////////numbers That MAtters STARRTS/////////////////////////////// -->
 
@@ -908,7 +960,7 @@
 
 <!--Quality CARD  Carousel in Mobile Screen Start -->
 
-<div class="container d-lg-none">
+<div class="container section-padding d-lg-none">
     <div id="carousel3" class="splide">
         <div class="splide__track">
             <ul class="splide__list">
@@ -1022,3 +1074,26 @@
 
 
 <!-- /////////////BANNER section ENDS////////// -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var splide = new Splide('#research-splide', {
+            type: 'loop',
+            perPage: 1,
+            breakpoints: {
+                768: {
+                    perPage: 1,
+                },
+                1024: {
+                    perPage: 2,
+                },
+            },
+            autoplay: true,
+            interval: 3000,
+            pauseOnHover: true,
+            arrows: false,
+            pagination: true,
+        });
+
+        splide.mount();
+    });
+</script>

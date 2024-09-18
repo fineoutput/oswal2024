@@ -1,4 +1,4 @@
-<div class="row" id="product-list-container">
+<div class="row" style="--bs-gutter-x: 0;" id="product-list-container">
 
     @foreach ($products as $product)
         @php
@@ -223,7 +223,7 @@
                         <div class="mobile_common">
 
                             @if ($productType->isNotEmpty())
-                                <div class="d-flex flex-wrap" style="font-size: 0.8rem; gap: 5px;">
+                                <div class="d-flex " style="font-size: 0.6rem; gap: 5px;">
 
                                     <del style="color: red;">{{ formatPrice($productType->first()->del_mrp) }}</del>
 
@@ -292,7 +292,7 @@
             </form>
 
         </div>
-
+            
     @endforeach
 
     <div class="pagination-links" style="display: flex;justify-content: center;">
