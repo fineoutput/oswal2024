@@ -191,13 +191,13 @@ class EcommerceController extends Controller
         foreach ($products as $product) {
 
             
-            if($roleType == 1){
-
-                $typeQuery = Type::where('product_id', $product->id)
-                    ->where('is_active', 1);
-            }else{
+            if($roleType && $roleType == 2){
 
                 $typeQuery = VendorType::where('product_id', $product->id)
+                ->where('is_active', 1);
+            }else{
+                
+                $typeQuery = Type::where('product_id', $product->id)
                     ->where('is_active', 1);
 
             }

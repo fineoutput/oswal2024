@@ -239,9 +239,9 @@ class CartController extends Controller
         });
 
 
-        $user = User::where('device_id', $device_id)->first();
+        $user = User::where('id', $user_id)->first();
 
-        if($user && $user->role_type == 2){
+        if($user != null && $user->role_type == 2){
 
             $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
                 $query->when($state_id, function ($query) use ($state_id, $city_id) {
@@ -268,12 +268,12 @@ class CartController extends Controller
             ]);
         }
 
-        if($user && $user->role_type == 2){
+        if($user != null && $user->role_type == 2){
 
             $cartItems->each(function ($cartItem) {
-                if ($cartItem->type) {
-                    $cartItem->type_price = $cartItem->type->selling_price;
-                    $cartItem->total_qty_price = $cartItem->type_price;
+                if ($cartItem->vendortype) {
+                    $cartItem->type_price = $cartItem->vendortype->selling_price;
+                    $cartItem->total_qty_price = $cartItem->vendortype->selling_price;
                     $cartItem->save();
                 }
             });
@@ -290,6 +290,7 @@ class CartController extends Controller
 
         }
 
+    
         // Calculate totals
         $cartItemTotal    = $cartItems->sum('total_qty_price'); //totalamount
         $deliveryCharge   = 0;
@@ -300,11 +301,12 @@ class CartController extends Controller
         $applyGiftCardSec = [];
         $promocode_name   = '';
 
+
         if (!empty($address_id)) {
 
             $userAddress = Address::findOrFail($address_id);
 
-            if($user && $user->role_type == 2){
+            if($user != null && $user->role_type == 2){
 
                 $cartItems->load('vendortype');
                 
@@ -321,6 +323,8 @@ class CartController extends Controller
 
                     return (float)$cartItem->type->weight * (int)$cartItem->quantity;
                 });
+                
+
             }
 
         
@@ -659,7 +663,8 @@ class CartController extends Controller
                         'selling_price' => $type->selling_price,
                         'type_weight' => $type->weight,
                         'type_rate' => $type->rate,
-                        'total_typ_qty_price' => $totalTypeQuantityPrice
+                        'total_typ_qty_price' => $totalTypeQuantityPrice,
+                        'min_qty' => $type->min_qty ?? 1,
                     ];
     
                 })->toArray();
@@ -673,6 +678,7 @@ class CartController extends Controller
                         'type_name' => $lang !== "hi" ? $cartItem->vendortype->type_name ?? '' : $cartItem->vendortype->type_name_hi ?? '',
                         'type_mrp' => $cartItem->vendortype->del_mrp,
                         'selling_price' => $cartItem->vendortype->selling_price ??'',
+                        'min_qty' => $cartItem->vendortype->min_qty ?? 1,
                     ];
                 } else {
                     $selectedType = [];
@@ -697,7 +703,8 @@ class CartController extends Controller
                         'selling_price' => $type->selling_price,
                         'type_weight' => $type->weight,
                         'type_rate' => $type->rate,
-                        'total_typ_qty_price' => $totalTypeQuantityPrice
+                        'total_typ_qty_price' => $totalTypeQuantityPrice,
+                        'min_qty' => $type->min_qty ?? 1,
                     ];
     
                 })->toArray();
@@ -711,6 +718,7 @@ class CartController extends Controller
                         'type_name' => $lang !== "hi" ? $cartItem->type->type_name ?? '' : $cartItem->type->type_name_hi ?? '',
                         'type_mrp' => $cartItem->type->del_mrp,
                         'selling_price' => $cartItem->type->selling_price ??'',
+                        'min_qty' => $cartItem->type->min_qty ?? 1,
                     ];
                 } else {
                     $selectedType = [];
