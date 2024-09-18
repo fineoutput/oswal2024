@@ -605,11 +605,15 @@ Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('index', [UsersController::class, 'index'])->name('index');
 
+    Route::get('vendor', [UsersController::class, 'index'])->name('vendor');
+
     Route::get('create/{id?}', [UsersController::class, 'create'])->name('create');
 
     Route::post('store', [UsersController::class, 'store'])->name('store');
 
     Route::get('update-status/{status}/{id}', [UsersController::class, 'update_status'])->name('update-status');
+
+    Route::get('vendor/update-status/{status}/{id}', [UsersController::class, 'update_status'])->name('vendor.update-status');
 
     Route::get('destroy/{id}', [UsersController::class, 'destroy'])->name('destroy');
 
