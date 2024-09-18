@@ -134,6 +134,7 @@ class VendorAuthController extends Controller
             'added_by'      => 1,
             'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'            => $request->ip(),
+            'is_active'     => 0,
         ];
 
         $user = User::create($date);
@@ -238,7 +239,8 @@ class VendorAuthController extends Controller
         $otpRecord = Otp::find($userOtpId);
 
         if ($otpRecord && $otpRecord->otp == $enteredOtp) {
-            $otpRecord->is_active = 1;
+
+            $otpRecord->is_active = 0;
 
             $otpRecord->save();
 
@@ -288,11 +290,17 @@ class VendorAuthController extends Controller
         $validator = Validator::make($request->all(), ['phone_no' => 'required|digits:10']);
 
         if ($validator->fails()) {
+
             return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
         $user = User::where('contact', $request->phone_no)->first();
 
+        if ($user->is_active != 1) {
+
+            return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
+        }
+        
         if ($user) {
             $OTP = generateOtp();
 

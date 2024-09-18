@@ -241,7 +241,12 @@ class CartController extends Controller
 
         $user = User::where('id', $user_id)->first();
 
-        if($user != null && $user->role_type == 2){
+        if($user != null){
+          $roleType =  $user->role_type;
+        }else{
+            $roleType = 1;
+        }
+        if($$roleType = 2){
 
             $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
                 $query->when($state_id, function ($query) use ($state_id, $city_id) {
@@ -268,7 +273,7 @@ class CartController extends Controller
             ]);
         }
 
-        if($user != null && $user->role_type == 2){
+        if($$roleType = 2){
 
             $cartItems->each(function ($cartItem) {
                 if ($cartItem->vendortype) {
@@ -306,7 +311,7 @@ class CartController extends Controller
 
             $userAddress = Address::findOrFail($address_id);
 
-            if($user != null && $user->role_type == 2){
+            if($$roleType = 2){
 
                 $cartItems->load('vendortype');
                 
@@ -352,7 +357,7 @@ class CartController extends Controller
                 $promocode_name       = $input_promocode;
             } else {
 
-                return $this->generateCartResponse($user_id, $user->role_type, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 200);
+                return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 200);
             }
         }
 
@@ -363,7 +368,7 @@ class CartController extends Controller
 
             if (!$applyGiftCard->original['success']) {
 
-                return $this->generateCartResponse($user_id, $user->role_type, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 200);
+                return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyGiftCard->original['message'], 200);
 
             }else{
                 $applyGiftCard = $applyGiftCard->original['data'];
@@ -385,7 +390,7 @@ class CartController extends Controller
 
         }
         
-        return $this->generateCartResponse($user_id, $user->role_type, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
+        return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
     }
 
     public function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
