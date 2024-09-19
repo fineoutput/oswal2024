@@ -578,6 +578,9 @@ class OrderController extends Controller
             $applyGiftCardSec = [];
         }
 
+        // Apply reward if Exsit
+        $this->cart->applyReward($totalWeight, Auth::user()->id, 'checkout' , $order->id);
+        
         Order::where('id', $order->id)->update([
             'user_id'                    => $userId ?? Auth::user()->id,
             'total_amount'               => $request->total_amount ?? $totalAmount,

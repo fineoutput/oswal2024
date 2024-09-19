@@ -613,7 +613,7 @@ class CartController extends Controller
 
     }
 
-    public function applyReward($weight) {
+    public function applyReward($weight, $userId, $position, $orderId = null) {
         
         $reward = Reward::where('weight', '<=', $weight)
                         ->orderBy('weight', 'desc')
@@ -621,6 +621,18 @@ class CartController extends Controller
 
             if ($reward) {
           
+                if ($position == 'checkout') {
+                    DB::table('vendor_rewards')->insert([
+                        'vendor_id'     => $userId,
+                        'order_id'      => $orderId,
+                        'reward_name'   => $reward->name,
+                        'reward_image'  => $reward->image,
+                        'reward_id'     => $reward->id,
+                        'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+                    ]);
+                }
+                
+
                 return response()->json([
                     'message' => 'Reward applied successfully.',
                     'success' => true,
@@ -834,7 +846,7 @@ class CartController extends Controller
 
         if($role_type == 2){
 
-            $reward = $this->applyReward($totalWeight);
+            $reward = $this->applyReward($totalWeight, $userId, 'cart');
 
             if (!$reward->original['success']) {
     
