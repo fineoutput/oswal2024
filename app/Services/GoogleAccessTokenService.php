@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\GoogleAccessToken;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use Google_Client;
+use Google\Client as Google_Client;
 
 class GoogleAccessTokenService
 {
