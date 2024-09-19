@@ -133,234 +133,6 @@ textarea.form-control{
 }
 </style>
 
-<!-- <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-sm-12 col-md-12">
-                <h2>Dealer's Enquiry form
-                </h2>
-                <p>Looking Forword To Becoming A Dealer? .Share Yourt Details Here.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5 dealer_puts">
-        <div class="row"> 
-            <div class="col-6">
-                <form>
-                    <h2 class="mb-4">Personal Details</h2>
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="number" class="form-control" id="age" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="qualification" class="form-label">Qualification</label>
-                        <input type="text" class="form-control" id="qualification" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="city" class="form-label">City/Town/Village</label>
-                        <input type="text" class="form-control" id="city" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="state" class="form-label">State</label>
-                        <select class="form-select" id="state" required>
-                            <option value="">Select State</option>
-                            <option value="AR">Arunachal Pradesh [AR]</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="district" class="form-label">District</label>
-                        <select class="form-select" id="district" required>
-                            <option value="">Select District</option>
-                            <option value="Anjaw">Anjaw</option>
-                        </select>
-                    </div>
-
-                    <h2 class="mb-4 mt-5">Business Details</h2>
-                    <div class="mb-3">
-                        <label for="firmName" class="form-label">Name of the Firm</label>
-                        <input type="text" class="form-control" id="firmName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="firmAddress" class="form-label">Full Address of the Firm</label>
-                        <input type="text" class="form-control" id="firmAddress" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="currentBusinessName" class="form-label">Current Name of Business</label>
-                        <input type="text" class="form-control" id="currentBusinessName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="yearsExperience" class="form-label">No. of Years Experience in Current Business</label>
-                        <input type="number" class="form-control" id="yearsExperience" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="businessType" class="form-label">Business Type</label>
-                        <input type="text" class="form-control" id="businessType" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="mobile" class="form-label">Mobile</label>
-                        <input type="text" class="form-control" id="mobile" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="annualTurnover" class="form-label">Annual Turnover</label>
-                        <input type="text" class="form-control" id="annualTurnover" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="businessDescription" class="form-label">Your Current Business Brief Description of Infrastructure (Storage Space, Etc.)</label>
-                        <textarea class="form-control" id="businessDescription" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vehicleType" class="form-label">Vehicle (Type)</label>
-                        <input type="text" class="form-control" id="vehicleType" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vehicleModel" class="form-label">Vehicle (Model)</label>
-                        <input type="text" class="form-control" id="vehicleModel" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vehicleCount" class="form-label">Vehicle (How Many)</label>
-                        <input type="number" class="form-control" id="vehicleCount" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="investmentCapacity" class="form-label">Capacity to Invest</label>
-                        <select class="form-select" id="investmentCapacity" required>
-                            <option value="">Select Investment Capacity</option>
-                            <option value="10-15">10-15 lac</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="manpower" class="form-label">Manpower/Salesman</label>
-                        <input type="number" class="form-control" id="manpower" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="existingManpower" class="form-label">Existing Manpower/Salesman</label>
-                        <input type="number" class="form-control" id="existingManpower" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="gstCertificate" class="form-label">Attachment (Upload GST Certificate)</label>
-                        <input type="file" class="form-control" id="gstCertificate" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="referenceName" class="form-label">Reference By: Name / Agency Name</label>
-                        <input type="text" class="form-control" id="referenceName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="referenceCity" class="form-label">Reference By: City Name</label>
-                        <input type="text" class="form-control" id="referenceCity" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="interestReason" class="form-label">Why Are You Interested in Becoming a Dealer for OSWAL SOAP GROUP?</label>
-                        <textarea class="form-control" id="interestReason" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="animated-button"><span>Submit</span><span></span></button>
-                    
-                    
-            </div>
-        </div>
-        
-        <div class="container">
-	<header class="header">
-		<h1 id="title" class="text-center">Survey Form</h1>
-		<p id="description" class="text-center">
-			Thank you for taking the time to help us improve the platform
-		</p>
-	</header>
-	<div class="form-wrap">	
-		<form id="survey-form">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label id="name-label" for="name">Name</label>
-						<input type="text" name="name" id="name" placeholder="Enter your name" class="form-control" required>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label id="email-label" for="email">Email</label>
-						<input type="email" name="email" id="email" placeholder="Enter your email" class="form-control" required>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label id="number-label" for="number">Age <small>(optional)</small></label>
-						<input type="number" name="age" id="number" min="10" max="99" class="form-control" placeholder="Age" >
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label>current role</label>
-						<select id="dropdown" name="role" class="form-control" required>
-							<option disabled selected value>Select</option>
-							<option value="student">Student</option>
-							<option value="job">Full Time Job</option>
-							<option value="learner">Full Time Learner</option>
-							<option value="preferNo">Prefer not to say</option>
-							<option value="other">Other</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label>Would you recommend survey to a friend?</label>
-						<div class="custom-control custom-radio custom-control-inline">
-							<input type="radio" id="customRadioInline1" value="Definitely" name="customRadioInline1" class="custom-control-input" checked="">
-							<label class="custom-control-label" for="customRadioInline1">Definitely</label>
-						</div>
-						<div class="custom-control custom-radio custom-control-inline">
-							<input type="radio" id="customRadioInline2" value="Maybe" name="customRadioInline1" class="custom-control-input">
-							<label class="custom-control-label" for="customRadioInline2">Maybe</label>
-						</div>
-						<div class="custom-control custom-radio custom-control-inline">
-							<input type="radio" id="customRadioInline3" value="Not sure" name="customRadioInline1" class="custom-control-input">
-							<label class="custom-control-label" for="customRadioInline3">Not sure</label>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-6">
-					<div class="form-group">
-						<label>This survey useful yes or no?</label>
-						<div class="custom-control custom-checkbox custom-control-inline">
-							<input type="checkbox" class="custom-control-input" name="yes" value="yes" id="yes" checked="">
-							<label class="custom-control-label" for="yes">Yes</label>
-						</div>
-						<div class="custom-control custom-checkbox custom-control-inline">
-							<input type="checkbox" class="custom-control-input" name="no" value="no" id="no">
-							<label class="custom-control-label" for="no">No</label>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<label>Leave Message</label>
-						<textarea  id="comments" class="form-control" name="comment" placeholder="Enter your comment here..."></textarea>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-md-4">
-					<button type="submit" id="submit" class="btn btn-primary btn-block">Submit Survey</button>
-				</div>
-			</div>
-
-		</form>
-	</div>	
-</div> -->
 
 <div class="container">
 	<header class="header">
@@ -368,19 +140,26 @@ textarea.form-control{
 		<p id="description" class="text-center">Please fill out the form below with your personal and business details.</p>
 	</header>
 	<div class="form-wrap section-padding">
-		<form>
+		<form action=" {{ route('dealer_contact') }} " method="post" enctype="multipart/form-data">
+		@csrf
 			<h2 class="mb-4">Personal Details</h2>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="name" class="form-label">Name</label>
-						<input type="text" class="form-control" id="name" required>
+						<input type="text" class="form-control" value="{{old('name') }}" id="name" name="name" required>
+                        @error('name')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="age" class="form-label">Age</label>
-						<input type="number" class="form-control" id="age" required>
+						<input type="number" class="form-control" value="{{old('age') }}" id="age" name="age" required>
+                        @error('age')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
@@ -388,13 +167,19 @@ textarea.form-control{
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="qualification" class="form-label">Qualification</label>
-						<input type="text" class="form-control" id="qualification" required>
+						<input type="text" class="form-control" value="{{old('qualification') }}" id="qualification" name="qualification" required>
+                        @error('qualification')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="city" class="form-label">City/Town/Village</label>
-						<input type="text" class="form-control" id="city" required>
+						<input type="text" class="form-control" value="{{old('city') }}" name="city" id="city" required>
+                        @error('city')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
@@ -404,19 +189,21 @@ textarea.form-control{
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="state" class="form-label">State</label>
-						<select class="form-control" id="state" required>
-							<option value="">Select State</option>
-							<option value="AR">Arunachal Pradesh [AR]</option>
-						</select>
+						<select name="state" id="dealerstate" style="width: 100%;" onchange="getCity('{{ route('getcity') }}', 'city-container3')">
+                        <option value="99999">Choose State</option>
+                        @foreach (App\Models\State::all() as $state)
+                        <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+                        @endforeach
+                    </select>
+                   
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="district" class="form-label">District</label>
-						<select class="form-control" id="district" required>
-							<option value="">Select District</option>
-							<option value="Anjaw">Anjaw</option>
-						</select>
+						<select id="city-container3" name="city" class="form-control">
+                          <option value="">----- Select City -----</option>
+                         </select>
 					</div>
 				</div>
 			</div>
@@ -426,13 +213,19 @@ textarea.form-control{
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="firmName" class="form-label">Name of the Firm</label>
-						<input type="text" class="form-control" id="firmName" required>
+						<input type="text" class="form-control" id="firmName" value="{{old('firmname') }}" name="firmname" required>
+                        @error('firmname')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="firmAddress" class="form-label">Full Address of the Firm</label>
-						<input type="text" class="form-control" id="firmAddress" required>
+						<label for="firmaddress" class="form-label">Full Address of the Firm</label>
+						<input type="text" class="form-control" id="firmAddress" value="{{old('firmaddress') }}" name="firmaddress" required>
+                        @error('firmaddress')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
@@ -441,56 +234,80 @@ textarea.form-control{
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="currentBusinessName" class="form-label">Current Name of Business</label>
-						<input type="text" class="form-control" id="currentBusinessName" required>
+						<label for="businessname" class="form-label">Current Name of Business</label>
+						<input type="text" class="form-control" id="currentBusinessName" value="{{old('businessname') }}" name="businessname" required>
+                        @error('businessname')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="yearsExperience" class="form-label">No. of Years Experience in Current Business</label>
-						<input type="number" class="form-control" id="yearsExperience" required>
+						<label for="businessexperience" class="form-label">No. of Years Experience in Current Business</label>
+						<input type="number" class="form-control" id="yearsExperience" value="{{old('businessexperience') }}" name="businessexperience" required>
+                        @error('businessexperience')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="BusinessType" class="form-label">Business Type</label>
-						<input type="text" class="form-control" id="BusinessType" required>
+						<label for="businesstype" class="form-label">Business Type</label>
+						<input type="text" class="form-control" id="BusinessType" value="{{old('businesstype') }}" name="businesstype" required>
+                        @error('businesstype')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="mobile" class="form-label">Mobile</label>
-						<input type="number" class="form-control" id="yearsExperience" required>
+						<input type="number" class="form-control" id="yearsExperience" value="{{old('mobile') }}" name="mobile" required>
+                        @error('mobile')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="annualTurnover" class="form-label">Annual Turnover</label>
-						<input type="number" class="form-control" id="annualTurnover" required>
+						<label for="annualturnover" class="form-label">Annual Turnover</label>
+						<input type="number" class="form-control" id="annualTurnover" value="{{old('annualturnover') }}" name="annualturnover" required>
+                        @error('annualturnover')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="vehicleType" class="form-label">Vehicle (Type)</label>
-						<input type="text" class="form-control" id="vehicleType" required>
+						<label for="type" class="form-label">Vehicle (Type)</label>
+						<input type="text" class="form-control" id="vehicleType" value="{{old('type') }}" name="type" required>
+                        @error('type')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="vehicleModel" class="form-label">Vehicle (Model)</label>
-						<input type="text" class="form-control" id="vehicleModel" required>
+						<label for="vehicle" class="form-label">Vehicle (Model)</label>
+						<input type="text" class="form-control" id="vehicleModel" value="{{old('vehicle') }}" name="vehicle" required>
+                        @error('vehicle')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="vehicleHowMany" class="form-label">Vehicle (How Many)</label>
-						<input type="number" class="form-control" id="vehicleHowMany" required>
+						<label for="vehicle_count" class="form-label">Vehicle (How Many)</label>
+						<input type="text" class="form-control" id="vehicleModel" value="{{old('vehicle_count') }}" name="vehicle_count" required>
+                        @error('vehicle_count')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
@@ -498,7 +315,10 @@ textarea.form-control{
             <div class="col-md-6">
 					<div class="form-group">
 						<label for="manpower" class="form-label">Manpower/Salesman</label>
-						<input type="number" class="form-control" id="manpower" required>
+						<input type="number" class="form-control" id="manpower" value="{{old('manpower') }}" name="manpower" required>
+                        @error('manpower')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -512,16 +332,25 @@ textarea.form-control{
 				</div>
 			</div>
             <div class="row">
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
 					<div class="form-group">
 						<label for="exitingmanpower" class="form-label">Existing Manpower/Salesman</label>
 						<input type="number" class="form-control" id="exitingmanpower" required>
 					</div>
-				</div>
+				</div> -->
 				<div class="col-md-6">
 					<div class="form-group">
-                    <label for="gstCertificate" class="form-label">Attachment (Upload GST Certificate)</label>
-                    <input type="file" class="form-control" id="gstCertificate" required="">
+
+                    <label for="file" class="form-label">Attachment (Upload GST Certificate)</label>
+
+                    <input type="file" class="form-control" id="gstCertificate" value="{{old('gstcertificate') }}" name="gstcertificate" required>
+
+                    @error('gstcertificate')
+
+                    	{{$message}}
+
+                    @enderror
+
 					</div>
 				</div>
 			</div>
@@ -529,13 +358,19 @@ textarea.form-control{
             <div class="col-md-6">
 					<div class="form-group">
 						<label for="agencyName" class="form-label">Reference By: Name / Agency Name</label>
-						<input type="text" class="form-control" id="agencyName" required>
+						<input type="text" class="form-control" id="agencyName" value="{{old('agencyName') }}" name="agencyName" required>
+                        @error('agencyName')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
                     <label for="cityName" class="form-label">Reference By: City Name</label>
-                    <input type="text" class="form-control" id="cityName" required="">
+                    <input type="text" class="form-control" id="cityName" value="{{old('details') }}" name="details" required>
+                    @error('details')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
@@ -543,13 +378,19 @@ textarea.form-control{
             <div class="col-md-6">
 					<div class="form-group">
                     <label for="interestReason" class="form-label">Why Are You Interested in Becoming a Dealer for OSWAL SOAP GROUP?</label>
-                    <textarea class="form-control" id="interestReason" rows="3" required=""></textarea>
+                    <textarea class="form-control" id="interestReason" rows="3" value="{{old('details') }}" name="details" required></textarea>
+                    @error('details')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-                    <label for="businessDescription" class="form-label">Your Current Business Brief Description of Infrastructure (Storage Space, Etc.)</label>
-                    <textarea class="form-control" id="businessDescription" rows="3" required=""></textarea>
+                    <label for="businessbrief" class="form-label">Your Current Business Brief Description of Infrastructure (Storage Space, Etc.)</label>
+                    <textarea class="form-control" id="businessDescription" value="{{old('businessbrief') }}" name="businessbrief" rows="3" required></textarea>
+                    @error('businessbrief')
+                    {{$message}}
+                    @enderror
 					</div>
 				</div>
 			</div>
