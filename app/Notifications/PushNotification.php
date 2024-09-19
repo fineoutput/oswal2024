@@ -15,17 +15,18 @@ class PushNotification extends Notification implements ShouldQueue
     protected $title;
     protected $description;
     protected $imagePath;
-
+    protected $googleAccessTokenService;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($title, $description, $imagePath = null)
+    public function __construct($title, $description, $imagePath = null, $googleAccessTokenService)
     {
         $this->title = $title;
         $this->description = $description;
         $this->imagePath = $imagePath;
+        $this->googleAccessTokenService = $googleAccessTokenService;
     }
 
     /**
@@ -56,28 +57,29 @@ class PushNotification extends Notification implements ShouldQueue
 
     public function toFcm($notifiable)
     {
-        $url = 'https://fcm.googleapis.com/fcm/send';
+        $url = 'https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send';
 
-        $serverKey = config('constants.FCM_SERVER_KEY');
-
-        $data = [
-            'to' => '/topics/all',
-            'notification' => [
-                'title' => $this->title,
-                'body' => $this->description,
-                'image' => asset($this->imagePath),
-                'sound' => 'default',
+        $payload = [
+            'message' => [
+                'topic' => 'OswalSoap',
+                'notification' => [
+                    'title' => $this->title,
+                    'body' => $this->description,
+                    'image' => asset($this->imagePath),
+                    'sound' => 'default',
+                ],
+                'priority' => 'high',
             ],
-            'priority' => 'high',
         ];
 
         $headers = [
-            'Authorization' => 'key=' . $serverKey,
+            'Authorization' => 'key=' .$this->googleAccessTokenService,
             'Content-Type' => 'application/json',
         ];
 
-        $response = Http::withHeaders($headers)->post($url, $data);
+        $response = Http::withHeaders($headers)->post($url, $payload);
 
+       
         if ($response->failed()) {
 
             Log::error('FCM send error: ' . $response->body());

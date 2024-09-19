@@ -2,14 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\PushNotification as PushNotificationModel;
+
+use App\Services\GoogleAccessTokenService;
+
 use App\Notifications\PushNotification;
+
+use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
 
 class PushNotificationController extends Controller
 {
+    protected $googleAccessTokenService;
+
+    public function __construct(GoogleAccessTokenService $googleAccessTokenService)
+    {
+        $this->googleAccessTokenService = $googleAccessTokenService;
+    }
+
     public function index()
     {
 
@@ -43,7 +57,7 @@ class PushNotificationController extends Controller
     public function store(Request $request)
 
     {
-        // dd($request->for_admin);
+        // dd($request->all());
 
         $rules = [
             'title'         => 'required|string',
@@ -69,13 +83,17 @@ class PushNotificationController extends Controller
 
         }
         
-        $notification->fill($request->all());
+        // $notification->fill($request->all());
 
         if($request->hasFile('img')){
 
             $notification->image = uploadImage($request->file('img'), 'notifaction');
 
         }
+
+        $notification->title = $request->title;
+
+        $notification->description = $request->description;
 
         $notification->ip = $request->ip();
 
@@ -89,7 +107,7 @@ class PushNotificationController extends Controller
 
             $message = isset($request->notification_id) ? 'Notification updated successfully.' : 'Notification inserted successfully.';
             
-            $notification->notify(new PushNotification($notification->title, $notification->description, $notification->image));
+            $notification->notify(new PushNotification($notification->title, $notification->description, $notification->image, $this->googleAccessTokenService->getAccessToken()));
             
             return redirect()->route('notification.index')->with('success', $message);
 
