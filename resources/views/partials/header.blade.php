@@ -701,8 +701,13 @@
         <a href="{{ url('/user') }}"><i class="fa-solid fa-user"></i></a>
     </div>
 </div> -->
+@php
+  $persistent =  DB::table('user_state_city')->where('persistent_id', request()->cookie('persistent_id'))->first()
+@endphp
 
-<!-- <script>
+@if (!$persistent)
+    
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         var myModal = new bootstrap.Modal(document.getElementById('basicModal'), {
             backdrop: 'static', 
@@ -710,7 +715,10 @@
         });
         myModal.show();
     });
-</script> -->
+</script>
+
+@endif
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
