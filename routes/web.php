@@ -79,12 +79,9 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('achivements1', [HomeController::class, 'achivements1'])->name('achivements1');
 
-        Route::post('contact-us', [HomeController::class, 'contact_us'])->name('contact_us');
+    Route::post('contact-us', [HomeController::class, 'contact_us'])->name('contact_us');
 
-    
-        Route::post('career_contact', [HomeController::class, 'career_contact'])->name('career_contact');
-    
-    
+    Route::post('career_contact', [HomeController::class, 'career_contact'])->name('career_contact');
 
 });
 

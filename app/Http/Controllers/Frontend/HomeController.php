@@ -108,6 +108,7 @@ class HomeController extends Controller
     {
 
         return view('career')->with('title', 'career');
+
     }
     public function achivements1(Request $request)
     {
@@ -136,10 +137,11 @@ class HomeController extends Controller
         return redirect()->route('contact')->with('success', 'Message sent succesfully');
 
     }
+    
     public function career_contact(Request $request) {
         $request->validate([
             'name' => 'required|string',
-            'phone' => 'required|numeric', // Check if the phone number is exactly 11 digits
+            'phone' => 'required|numeric', 
             'email' => 'required|string|email',
             'message' => 'required|string|max:255'
         ]);
@@ -156,6 +158,7 @@ class HomeController extends Controller
     
         return redirect()->route('career')->with('success', 'Message sent successfully');
     }
+
     public function productDetail(Request $request, $slug)
     {
         $product = EcomProduct::where('url', $slug)->first();
