@@ -689,17 +689,41 @@ Route::prefix('order')->name('order.')->group(function () {
 
     Route::get('rejected', [OrderController::class, 'index'])->name('rejected-order');
 
+
+    Route::get('vendor/new', [OrderController::class, 'VendorIndex'])->name('vendor.new-order');
+
+    Route::get('vendor/dispatched', [OrderController::class, 'VendorIndex'])->name('vendor.dispatched-order');
+
+    Route::get('vendor/completed', [OrderController::class, 'VendorIndex'])->name('vendor.completed-order');
+
+    Route::get('vendor/rejected', [OrderController::class, 'VendorIndex'])->name('vendor.rejected-order');
+
+
     Route::get('update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('update-status');
+
+    Route::get('vendor/update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('vendor.update-status');
+
 
     Route::get('view-product/{id}', [OrderController::class, 'view_product'])->name('view-product');
 
+    Route::get('vendor/view-product/{id}', [OrderController::class, 'view_product'])->name('vendor.view-product');
+
+
     Route::get('view-bill/{id}', [OrderController::class, 'view_bill'])->name('view-bill');
+
+    Route::get('vendor/view-bill/{id}', [OrderController::class, 'view_bill'])->name('vendor.view-bill');
+
 
     Route::get('view-delivery-challan/{id}', [OrderController::class, 'deliveryChallan'])->name('view-delivery-challan');
 
+    Route::get('vendor/view-delivery-challan/{id}', [OrderController::class, 'deliveryChallan'])->name('vendor.view-delivery-challan');
+
     Route::get('destroy/{id}', [ComboProductController::class, 'destroy'])->name('destroy');
 
+    Route::get('vendor/destroy/{id}', [ComboProductController::class, 'destroy'])->name('vendor.destroy');
+
 });
+
 
 /*=========Users Routes ========*/
 
