@@ -33,9 +33,9 @@
 
                 <div class="product_part_upper">
                     <a href="{{ route('product-detail' ,['slug' => $webproduct->url]) }}">
-                    <div class="card_upper_img">
+                    <div class="card_upper_img" style="width: 250px; height: 250px; ">
 
-                        <img src="{{ asset($webproduct->img2) }}" alt="Primary Image" class="first-image" style="width: 100%; height: 100%;" />
+                        <img src="{{ asset($webproduct->img2) }}" alt="Primary Image" class="first-image" style="width: 100%; height: 100%; object-fit:contain; " />
 
                         <img src="{{ asset($webproduct->img1) }}" alt="PrimaryImage" class="secound-image" style="width: 100%; height: 100%;"/>
 
