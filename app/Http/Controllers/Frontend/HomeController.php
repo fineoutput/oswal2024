@@ -16,6 +16,8 @@ use App\Models\EcomProduct;
 
 use App\Models\ContactUs;
 
+use App\Models\Carrier_contact;
+
 use App\Models\Address;
 
 use App\Models\Type;
@@ -133,6 +135,26 @@ class HomeController extends Controller
 
         return redirect()->route('contact')->with('success', 'Message sent succesfully');
 
+    }
+    public function career_contact(Request $request) {
+        $request->validate([
+            'name' => 'required|string',
+            'phone' => 'required|numeric', // Check if the phone number is exactly 11 digits
+            'email' => 'required|string|email',
+            'message' => 'required|string|max:255'
+        ]);
+    
+        $data = new Carrier_contact;
+    
+        $data->fname = $request->name;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->message = $request->message;
+        $data->ip = $request->ip();
+    
+        $data->save();
+    
+        return redirect()->route('career')->with('success', 'Message sent successfully');
     }
     public function productDetail(Request $request, $slug)
     {
