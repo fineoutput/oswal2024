@@ -112,7 +112,8 @@
 
                 if(response.success){
 
-                      $('#cart_count').text(response.count);
+                      $('.cart_count').text(response.count);
+
                      showNotification(response.message, 'success');
                 }else{
                     showNotification(response.message, 'error');
@@ -149,7 +150,7 @@
                         $wishlistIcon.removeClass('fa-regular hollow_icon').addClass('fa-solid colored_icon');
                         $wishlistIcon.css('color', '#f20232');
 
-                        $('#wishlist_count').text(response.count);
+                        $('.wishlist_count').text(response.count);
                         
                         showNotification(response.message, 'success');
                     }else{
@@ -176,7 +177,7 @@
                         $wishlistIcon.css('color', '#cdd5e5');
 
                         
-                        $('#wishlist_count').text(response.count);
+                        $('.wishlist_count').text(response.count);
 
 
                         
