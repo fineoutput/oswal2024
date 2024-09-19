@@ -91,16 +91,20 @@ class OrderController extends Controller
 
         $orders = is_array($status)? Order::whereIn('order_status', $status)->orderBy('id', 'desc'): Order::where('order_status', $status)->orderBy('id', 'desc');
 
+        $orders = $orders->whereHas('user', function ($query) {
+            $query->where('role_type', '!=' , 2);
+        });
+
         $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices' )->get();
 
-        // dd($orders);
+       
         return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle'));
        
     }
 
     public function update_status(Request $request, $id , $status)
-
     {
+        $routeName = Route::currentRouteName();
 
         $id = base64_decode($id);
 
@@ -143,8 +147,13 @@ class OrderController extends Controller
             }
 
         }
+        if($routeName == 'order.vendor.update-status'){
 
-        return redirect()->route('order.new-order')->with('success', 'Order status updated successfully');
+            return redirect()->route('order.vendor.new-order')->with('success', 'Order status updated successfully');
+        }else{
+
+            return redirect()->route('order.new-order')->with('success', 'Order status updated successfully');
+        }
 
         // } else {
 
@@ -234,6 +243,7 @@ class OrderController extends Controller
     public function destroy($id, Request $request)
 
     {
+        $routeName = Route::currentRouteName();
 
         $id = base64_decode($id);
 
@@ -243,11 +253,25 @@ class OrderController extends Controller
 
         if (Order::where('id', $id)->delete()) {
 
-            return  redirect()->route('order.new-order')->with('success', 'Order Deleted Successfully.');
+            if($routeName == 'order.vendor.destroy'){
+
+                return  redirect()->route('order.vendor.new-order')->with('success', 'Order Deleted Successfully.');
+
+            }else{
+
+                return  redirect()->route('order.new-order')->with('success', 'Order Deleted Successfully.');
+            }
 
         } else {
 
-            return redirect()->route('order.new-order')->with('error', 'Some Error Occurred.');
+            if($routeName == 'order.vendor.destroy'){
+
+                return  redirect()->route('order.vendor.new-order')->with('error', 'Some Error Occurred.');
+
+            }else{
+
+                return redirect()->route('order.new-order')->with('error', 'Some Error Occurred.');
+            }
 
         }
 
@@ -261,19 +285,40 @@ class OrderController extends Controller
 
     public function view_product($id, Request $request) {
 
+        $routeName = Route::currentRouteName();
+
         $id = base64_decode($id);
 
         $orders = OrderDetail::where('main_id' , $id)->get();
 
         $pageTitle ='Products Details';
 
-        return view('admin.Orders.view_product_details', compact('orders', 'pageTitle'));
+        if($routeName == 'order.vendor.view-product'){
+
+            return view('admin.VendorOrders.view_product_details', compact('orders', 'pageTitle'));
+
+        }else{
+
+            return view('admin.Orders.view_product_details', compact('orders', 'pageTitle'));
+        }
 
     }
 
     public function view_bill($id, Request $request) {
+
         $id = base64_decode($id);
-        $order = Order::with(['user', 'address.citys', 'address.states','orderDetails.product', 'orderDetails.type', 'invoices', 'gift'])->findOrFail( $id );
+
+        $routeName = Route::currentRouteName();
+
+        if($routeName == 'order.vendor.view-bill'){
+
+            $order = Order::with(['user', 'address.citys', 'address.states','orderDetails.product', 'orderDetails.vendortype', 'invoices', 'gift'])->findOrFail( $id );
+
+        }else{
+
+            $order = Order::with(['user', 'address.citys', 'address.states','orderDetails.product', 'orderDetails.type', 'invoices', 'gift'])->findOrFail( $id );
+        }
+
         $user = $order->user;
         $address = $order->address;
         $city = $address->city ? $address->citys->name : '';
@@ -284,7 +329,13 @@ class OrderController extends Controller
         $giftCard = $order->gift;
         $promocode = $order->promocodes;
 
-        return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+        if($routeName == 'order.vendor.view-bill'){
+
+            return view('admin.VendorOrders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+
+        }else{
+            return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+        }
     }
 
     public function deliveryChallan($id, Request $request)  {
@@ -383,5 +434,64 @@ class OrderController extends Controller
         // } else {
         //     return redirect()->route('admin_login');
         // }
+    }
+
+    public function VendorIndex()
+    {
+        
+        $routeName = Route::currentRouteName();
+     
+        switch ($routeName) {
+
+            case 'order.vendor.new-order':
+
+                $status = [1, 2]; 
+
+                $pageTitle = 'New Orders';
+
+                break;
+
+            case 'order.vendor.dispatched-order':
+
+                $status = 3;
+
+                $pageTitle = 'Dispatched Orders';
+
+                break;
+
+            case 'order.vendor.completed-order':
+
+                $status = 4;
+
+                $pageTitle = 'Completed Orders';
+
+                break;
+
+            case 'order.vendor.rejected-order':
+
+                $status = 5;
+
+                $pageTitle = 'Rejected Orders';
+
+                break;
+
+            default:
+
+                abort(404, 'Order status not found');
+        }
+
+        $orders = is_array($status)
+           ? Order::whereIn('order_status', $status)->orderBy('id', 'desc')
+           : Order::where('order_status', $status)->orderBy('id', 'desc');
+
+        $orders = $orders->whereHas('user', function ($query) {
+            $query->where('role_type', 2);
+        });
+
+        $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices' )->get();
+
+       
+        return view('admin.VendorOrders.view_all_orders', compact('orders', 'pageTitle'));
+       
     }
 }

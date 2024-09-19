@@ -127,13 +127,14 @@
                                                 @foreach ($users as $key => $user)
                                                     @php
                                                         $vendor = $user->vendor;
+
                                                     @endphp
+                                                    
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
                                                         <td>{{ $user->first_name }}</td>
                                                         <td>{{ $user->contact }}</td>
 
-                                                        <!-- Check if vendor exists before accessing its properties -->
                                                         <td>{{ $vendor ? $vendor->shopname : 'Not Found' }}</td>
                                                         <td>{{ $vendor && $vendor->state ? $vendor->state->state_name : 'Not Found' }}</td>
                                                         <td>{{ $vendor && $vendor->city ? $vendor->city->city_name : 'Not Found' }}</td>
