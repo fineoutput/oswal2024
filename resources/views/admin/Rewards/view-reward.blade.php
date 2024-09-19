@@ -73,7 +73,7 @@
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" href="{{ route('reward.create') }}" role="button" style="margin-left: 20px;"> Add Sticker</a>
+                                        <a class="btn btn-info cticket" href="{{ route('reward.create') }}" role="button" style="margin-left: 20px;"> Add Reward</a>
 
                                     </div>
 
@@ -98,7 +98,7 @@
 
                                                     <th data-priority="3">Images</th>
 
-                                                    <th data-priority="3">Quentity</th>
+                                                    <th data-priority="3">Quantity</th>
 
                                                     <th data-priority="3">Type (in gm)</th>
 
