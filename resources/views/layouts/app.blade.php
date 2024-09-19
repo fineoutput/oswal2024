@@ -218,7 +218,22 @@
 
     function getCity(url, cityContainerId) {
        
-        const stateSelectorId = cityContainerId === 'city-container1' ? '#addressstate' : '#typesstate';
+        let stateSelectorId;
+
+        switch (cityContainerId) {
+            case 'city-container1':
+                stateSelectorId = '#addressstate';
+                break;
+            case 'city-container2':
+                stateSelectorId = '#typesstate';
+                break;
+            case 'city-container3':
+                stateSelectorId = '#dealerstate';
+                break;
+            default:
+                break;
+        }
+
         const selectedId = $(stateSelectorId).val();
 
         if (selectedId) {

@@ -13,10 +13,11 @@ class DealerEnquiry extends Model
     protected $table = 'dealer_enquirys';
 
     protected $fillable = [
-        'name', 'email', 'phone', 'pincode', 'area', 'city',
-        'state', 'message', 'age', 'qualification', 'district', 'mobile',
-        'invest', 'manpower', 'ref_name', 'ref_city_name', 'firmname', 'firmaddress',
-        'businessname', 'businessexperience', 'businesstype', 'annualturnover', 'currbussberif', 'infra','vehicle', 'ans', 'file', 'date', 'ip', 'type',
+        'name', 'age', 'qualification', 'city', 'state', 'district', 'firmname',
+        'firmaddress', 'businessname', 'businessexperience', 'businesstype', 
+        'mobile', 'annualturnover', 'type', 'vehicle', 'vehicle_count', 
+        'manpower', 'capacity', 'file', 'agencyName', 'details', 'businessbrief',
     ];
+         
 
 }

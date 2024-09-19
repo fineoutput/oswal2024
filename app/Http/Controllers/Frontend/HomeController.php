@@ -18,6 +18,8 @@ use App\Models\ContactUs;
 
 use App\Models\Carrier_contact;
 
+use App\Models\DealerEnquiry;
+
 use App\Models\Address;
 
 use App\Models\Type;
@@ -155,6 +157,63 @@ class HomeController extends Controller
         $data->save();
     
         return redirect()->route('career')->with('success', 'Message sent successfully');
+    }
+
+    public function dealer_contact( Request $request ){
+        $request->validate([
+            'name' => 'required|string',
+            'age' => 'nullable|integer',
+            'qualification' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'district' => 'nullable|string',
+            'firmname' => 'nullable|string',
+            'firmaddress' => 'nullable|string',
+            'businessname' => 'nullable|string',
+            'businessexperience' => 'nullable|string',
+            'businesstype' => 'nullable|string',
+            'mobile' => 'nullable|string',
+            'annualturnover' => 'nullable|numeric',
+            'type' => 'nullable|string',
+            'vehicle' => 'nullable|string',
+            'vehicle_count' => 'nullable|integer',
+            'manpower' => 'nullable|integer',
+            'capacity' => 'nullable|string',
+            'gstcertificate' => 'nullable',
+            'agencyName' => 'nullable|string',
+            'details' => 'nullable|string',
+            'businessbrief' => 'nullable|string',
+        ]);
+
+        if($request->hasFile('gstcertificate')){
+
+            $gstfile = uploadImage($request->file('gstcertificate'), 'gstcertificate');
+        }
+
+        $data= new DealerEnquiry;
+        
+        $data->name = $request->name;
+        $data->age = $request->age;
+        $data->qualification = $request->qualification;
+        $data->city = $request->city;
+        $data->state = $request->state;
+        $data->district = $request->district;
+        $data->firmname = $request->firmname;
+        $data->file = $gstfile;
+        $data->firmaddress = $request->firmaddress;
+        $data->businessname = $request->businessname;
+        $data->businessexperience = $request->businessexperience;
+        $data->businesstype = $request->businesstype;
+        $data->mobile = $request->mobile;
+        $data->annualturnover = $request->annualturnover;
+        $data->type = $request->type;
+        $data->vehicle = $request->vehicle;
+        $data->manpower = $request->manpower;
+        $data->ip = $request->ip();
+    
+        $data->save();
+
+        return redirect()->route('dealer_enq')->with('success', 'Message sent successfully');
     }
     public function productDetail(Request $request, $slug)
     {

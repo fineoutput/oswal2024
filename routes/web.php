@@ -83,6 +83,8 @@ Route::group(['prefix' => '/'], function () {
 
     
         Route::post('career_contact', [HomeController::class, 'career_contact'])->name('career_contact');
+
+        Route::post('dealer_contact', [HomeController::class, 'dealer_contact'])->name('dealer_contact');
     
     
 
