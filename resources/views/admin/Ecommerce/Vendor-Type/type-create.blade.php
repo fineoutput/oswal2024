@@ -296,7 +296,7 @@
 
                                                 <input type="text" class="form-control" value="{{ $type ? $type->weight : old('weight')}}"  id="weight" placeholder="Weight" name="weight">
 
-                                                <label for="weight">Weight &nbsp;<span style="color:red;">*</span></label>
+                                                <label for="weight">Weight (in gm)&nbsp;<span style="color:red;">*</span></label>
 
                                             </div>
 

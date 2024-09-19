@@ -56,7 +56,7 @@ use App\Http\Controllers\Admin\TrendingController;
 
 use App\Http\Controllers\Admin\ThemeTrendingController;
 
-use App\Http\Controllers\Admin\StickerController;
+use App\Http\Controllers\Admin\RewardController;
 
 use App\Http\Controllers\Admin\UsersController;
 
@@ -585,17 +585,17 @@ Route::prefix('theme-trending')->name('theme-trending.')->group(function () {
 
 /*=========Stickers Routes ========*/
 
-Route::prefix('stickers')->name('sticker.')->group(function () {
+Route::prefix('rewards')->name('reward.')->group(function () {
 
-    Route::get('index', [StickerController::class, 'index'])->name('index');
+    Route::get('index', [RewardController::class, 'index'])->name('index');
 
-    Route::get('create/{id?}', [StickerController::class, 'create'])->name('create');
+    Route::get('create/{id?}', [RewardController::class, 'create'])->name('create');
 
-    Route::post('store', [StickerController::class, 'store'])->name('store');
+    Route::post('store', [RewardController::class, 'store'])->name('store');
 
-    Route::get('update-status/{status}/{id}', [StickerController::class, 'update_status'])->name('update-status');
+    Route::get('update-status/{status}/{id}', [RewardController::class, 'update_status'])->name('update-status');
 
-    Route::get('destroy/{id}', [StickerController::class, 'destroy'])->name('destroy');
+    Route::get('destroy/{id}', [RewardController::class, 'destroy'])->name('destroy');
 
 });
 

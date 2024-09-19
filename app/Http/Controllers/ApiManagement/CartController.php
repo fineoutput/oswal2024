@@ -28,6 +28,8 @@ use App\Models\CartOld;
 
 use App\Models\Address;
 
+use App\Models\Reward;
+
 use App\Models\Cart;
 
 use App\Models\Type;
@@ -53,7 +55,7 @@ class CartController extends Controller
 
         $vendoruser = User::where('device_id', $request->device_id)->first();
 
-        if ($vendoruser && $vendoruser->role_type == 2) {
+        if ($request->user_id == null && ($vendoruser && $vendoruser->role_type == 2)) {
 
             return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
 
@@ -610,6 +612,33 @@ class CartController extends Controller
         return $comboProduct;
 
     }
+
+    public function applyReward($weight) {
+        
+        $reward = Reward::where('weight', '<=', $weight)
+                        ->orderBy('weight', 'desc')
+                        ->first(); 
+
+            if ($reward) {
+          
+                return response()->json([
+                    'message' => 'Reward applied successfully.',
+                    'success' => true,
+                    'reward_detail' => [
+                        'id'         => $reward->id,
+                        'name'       => $reward->name,
+                        'weight'     => $reward->weight,
+                        'image'      => asset($reward->image),
+                    ]
+                ], 200);
+            } else {
+                return response()->json([
+                    'message'       => 'Reward card not found',
+                    'success'       => false,
+                    'reward_detail' => [],
+                ], 200);
+            }
+    }
     
     private function generateCartResponse($userId,$role_type, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null, $applyGiftCardSec =null ,$wallet_status=false)
     {
@@ -802,6 +831,21 @@ class CartController extends Controller
             // 'total_discount'   => $promo_discount + $extraDiscount + $walletDescount,
             // 'final_amount'     => $finalAmount
         ];
+
+        if($role_type == 2){
+
+            $reward = $this->applyReward($totalWeight);
+
+            if (!$reward->original['success']) {
+    
+                $reponse['reward'] = [];
+    
+            }else{
+    
+                $reponse['reward'] = $reward->original['reward_detail'];
+    
+            }
+        }
 
         $reponse['promocode'] = [
             'promo_id'       => $promo_id,

@@ -6,17 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Sticker extends Model
+class Reward extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'stickers';
+    protected $table = 'rewards';
 
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'name',
         'image',
+        'quantity',
+        'type',
+        'weight',
         'ip',
         'date',
         'added_by',

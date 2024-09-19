@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Sticker;
+use App\Models\Reward;
 
-class StickerController extends Controller
+class RewardController extends Controller
 {
 
     public function index()
     {
 
-        $stickers = Sticker::orderBy('id', 'desc')->get();
+        $stickers = Reward::orderBy('id', 'desc')->get();
 
-        return view('admin.Sticker.view-sticker', compact('stickers'));
+        return view('admin.Rewards.view-reward', compact('stickers'));
     }
 
     public function create($id = null, Request $request)
@@ -32,10 +32,10 @@ class StickerController extends Controller
 
             }
 
-            $sticker = Sticker::find(base64_decode($id));
+            $sticker = Reward::find(base64_decode($id));
         }
 
-        return view('admin.Sticker.add-sticker', compact('sticker'));
+        return view('admin.Rewards.add-reward', compact('sticker'));
     }
 
 
@@ -46,22 +46,25 @@ class StickerController extends Controller
 
         $rules = [
             'name'              => 'required|string',
+            'quantity'          => 'required|integer',
+            'type'              => 'required|integer',
+            'weight'            => 'required|integer',
         ];
 
         if (!isset($request->sticker_id)) {
 
             $rules['img'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
-            $sticker = new Sticker;
+            $sticker = new Reward;
 
         } else {
             $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
-            $sticker = Sticker::find($request->sticker_id);
+            $sticker = Reward::find($request->sticker_id);
             
             if (!$sticker) {
                 
-                return redirect()->route('sticker.index')->with('error', 'Sticker not found.');
+                return redirect()->route('reward.index')->with('error', 'Sticker not found.');
                 
             }
 
@@ -73,7 +76,7 @@ class StickerController extends Controller
 
         if($request->hasFile('img')){
 
-            $sticker->image = uploadImage($request->file('img'), 'sticker');
+            $sticker->image = uploadImage($request->file('img'), 'reward');
 
         }
 
@@ -87,13 +90,13 @@ class StickerController extends Controller
 
         if ($sticker->save()) {
 
-            $message = isset($request->sticker_id) ? 'Sticker updated successfully.' : 'Sticker inserted successfully.';
+            $message = isset($request->sticker_id) ? 'Reward updated successfully.' : 'Reward inserted successfully.';
 
-            return redirect()->route('sticker.index')->with('success', $message);
+            return redirect()->route('reward.index')->with('success', $message);
 
         } else {
 
-            return redirect()->route('sticker.index')->with('error', 'Something went wrong. Please try again later.');
+            return redirect()->route('reward.index')->with('error', 'Something went wrong. Please try again later.');
 
         }
     }
@@ -106,7 +109,7 @@ class StickerController extends Controller
 
         $admin_position = $request->session()->get('position');
 
-        $sticker = Sticker::find($id);
+        $sticker = Reward::find($id);
 
         // if ($admin_position == "Super Admin") {
 
@@ -138,7 +141,7 @@ class StickerController extends Controller
 
         // if ($admin_position == "Super Admin") {
 
-        if (Sticker::where('id', $id)->delete()) {
+        if (Reward::where('id', $id)->delete()) {
 
             return  redirect()->route('sticker.index')->with('success', 'Sticker Deleted Successfully.');
         } else {

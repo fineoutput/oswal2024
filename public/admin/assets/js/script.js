@@ -201,4 +201,13 @@ function getType(url , pid , cid) {
     }
 }
 
+function calculateTotalWeight() {
+    
+    const quantity = $('#quantity').val();
+    const weight = $('#type').val();
 
+    const totalWeight = (quantity && weight) ? (quantity * weight) : 0;
+
+    $('#totalweight').val(totalWeight);
+
+}

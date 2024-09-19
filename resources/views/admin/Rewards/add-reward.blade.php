@@ -87,7 +87,7 @@
 
                                 <hr style="margin-bottom: 50px;background-color: darkgrey;">
 
-                                <form action="{{ route('sticker.store') }}" method="post" enctype="multipart/form-data">
+                                <form action="{{ route('reward.store') }}" method="post" enctype="multipart/form-data">
 
                                     @csrf
 
@@ -97,7 +97,7 @@
 
                                     <div class="form-group row">
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -105,8 +105,7 @@
                                                     value="{{ $sticker ? $sticker->name : old('name') }}"
                                                     name="name" placeholder="Enter name" required>
 
-                                                <label for="name">Slider Name &nbsp;<span
-                                                        style="color:red;">*</span></label>
+                                                <label for="name">Reward Name &nbsp;<span style="color:red;">*</span></label>
 
                                             </div>
 
@@ -116,7 +115,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -137,6 +136,62 @@
 
                                         </div>
 
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="number" class="form-control" id="quantity"
+                                                    value="{{ $sticker ? $sticker->quantity : old('quantity') }}"
+                                                    name="quantity" placeholder="Enter quantity" required onkeyup="calculateTotalWeight()">
+
+                                                <label for="quantity">Quentity &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('quantity')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control" id="type"
+                                                    value="{{ $sticker ? $sticker->type : old('type') }}"
+                                                    name="type" placeholder="Enter type" required onkeyup="calculateTotalWeight()">
+
+                                                <label for="type">Type &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('type')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control" id="totalweight"
+                                                    value="{{ $sticker ? $sticker->weight : old('weight') }}"
+                                                    name="weight" placeholder="Enter weight" required>
+
+                                                <label for="weight">Total Weight &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('weight')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group row">
@@ -145,8 +200,7 @@
 
                                             <div class="w-100 text-center">
 
-                                                <button type="submit" style="margin-top: 10px;" class="btn btn-danger"><i
-                                                        class="fa fa-user"></i> Submit</button>
+                                                <button type="submit" style="margin-top: 10px;" class="btn btn-danger"><i class="fa fa-user"></i> Submit</button>
 
                                             </div>
 

@@ -12,13 +12,13 @@
 
                     <div class="page-title-box">
 
-                        <h4 class="page-title">View Sticker</h4>
+                        <h4 class="page-title">View Reward</h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Sticker</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Reward</a></li>
 
-                            <li class="breadcrumb-item active">View Sticker</li>
+                            <li class="breadcrumb-item active">View Reward</li>
 
                         </ol>
 
@@ -69,11 +69,11 @@
 
                                 <div class="row">
 
-                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View Sticker</h4> </div>
+                                    <div class="col-md-9"> <h4 class="mt-0 header-title">View Reward</h4> </div>
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" href="{{ route('sticker.create') }}" role="button" style="margin-left: 20px;"> Add Sticker</a>
+                                        <a class="btn btn-info cticket" href="{{ route('reward.create') }}" role="button" style="margin-left: 20px;"> Add Sticker</a>
 
                                     </div>
 
@@ -94,9 +94,15 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">Name</th>
+                                                    <th data-priority="1">Reward Name</th>
 
                                                     <th data-priority="3">Images</th>
+
+                                                    <th data-priority="3">Quentity</th>
+
+                                                    <th data-priority="3">Type (in gm)</th>
+
+                                                    <th data-priority="3">Weight</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -122,6 +128,12 @@
 
                                                    </td>
 
+                                                   <td>{{ $sticker->quantity }}</td>
+
+                                                   <td>{{ $sticker->type }}</td>
+
+                                                   <td>{{ $sticker->weight }}</td>
+
                                                     <td> 
                                                         @if($sticker->is_active == 1)  
                                                            <p class="label pull-right status-active">Active</p>  
@@ -136,15 +148,15 @@
 
                                                             @if ($sticker->is_active == 0)
 
-                                                            <a href="{{route('sticker.update-status',['active',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
+                                                            <a href="{{route('reward.update-status',['active',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
 
                                                             @else
 
-                                                            <a href="{{route('sticker.update-status',['inactive',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
+                                                            <a href="{{route('reward.update-status',['inactive',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
 
                                                             @endif
 
-                                                            <a href="{{route('sticker.create',[base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+                                                            <a href="{{route('reward.create',[base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                             <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
 
@@ -152,7 +164,7 @@
 
                                                         <div style="display:none" id="cnfbox<?php echo $key ?>">
                                                             <p> Are you sure delete this </p>
-                                                            <a href="{{route('sticker.destroy', base64_encode($sticker->id))}}" class="btn btn-danger">Yes</a>
+                                                            <a href="{{route('reward.destroy', base64_encode($sticker->id))}}" class="btn btn-danger">Yes</a>
                                                             <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
                                                         </div>
                                                     </td>
@@ -183,3 +195,4 @@
     </div> <!-- content -->
 
 @endsection
+
