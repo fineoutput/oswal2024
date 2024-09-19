@@ -26,7 +26,7 @@
 
                                         <h1 class="fw-bold mb-0">Shopping Cart</h1>
 
-                                        <h6 class="mb-0 text-muted cart_count">{{ count($cartItems) }} items</h6>
+                                        <h6 class="mb-0 text-muted"><span class="cart_count"> {{ count($cartItems) }} </span> items</h6>
 
                                     </div>
 
@@ -265,7 +265,7 @@
 
                 $('#totalamount').text(response.totalAmount);
 
-                $(',cart_count').text(response.count);
+                $('.cart_count').text(response.count);
 
                 // $('#cart_counts').text(response.count);
 
