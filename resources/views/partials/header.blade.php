@@ -381,7 +381,7 @@
                                     stroke-linecap="round"
                                 />
                             </svg>
-                            <div class="count" id="wishlist_count">{{ $count }}</div>
+                            <div class="count wishlist_count" id="wishlist_count">{{ $count }}</div>
                         </div>
                         <p>Wishlist</p>
                     </div>
@@ -416,7 +416,7 @@
                                 />
                                 <path d="M7.5 9L7.71501 5.98983C7.87559 3.74176 9.7462 2 12 2C14.2538 2 16.1244 3.74176 16.285 5.98983L16.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
-                            <div class="count_bag" id="cart_count">{{ $cartCount }}</div>
+                            <div class="count_bag cart_count" id="cart_count">{{ $cartCount }}</div>
                         </div>
                         <p class="text-dark">Bag</p>
                     </div>
@@ -618,7 +618,7 @@
                                     stroke-linecap="round"
                                 />
                             </svg>
-                            <div class="count" id="wishlist_count">{{ $count }}</div>
+                            <div class="count wishlist_count" id="wishlist_count">{{ $count }}</div>
                         </div>
                     </div>
                     <span class="nav__item-text">Wishlist</span>
@@ -637,7 +637,7 @@
                                 />
                                 <path d="M7.5 9L7.71501 5.98983C7.87559 3.74176 9.7462 2 12 2C14.2538 2 16.1244 3.74176 16.285 5.98983L16.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
-                            <div class="count_bag" id="cart_count">{{$cartCount}}</div>
+                            <div class="count_bag cart_count" id="cart_count">{{$cartCount}}</div>
                         </div>
                     </div>
                     <span class="nav__item-text">Cart</span>
