@@ -643,16 +643,34 @@ class AppController extends Controller
 
         foreach ($rewardlists as $reward) {
 
-            $exists = VendorReward::where('reward_id', $reward->id)
+            $vendorStatus = VendorReward::where('reward_id', $reward->id)
                 ->where('vendor_id', $user->id)
-                ->where('status', '!=', 3)
-                ->exists();
+                ->first();
 
-            if ($exists) {
-                $status = 'applied';
+            if ($vendorStatus) {
+                
+                if($vendorStatus->status == 1){
+
+                    $status = 'applied';
+
+                }elseif ($vendorStatus->status == 2) {
+
+                    $status = 'accepted';
+
+                }elseif($totalWeight >= $reward->weight){
+
+                    $status = 'eligible';
+
+                }else{
+                    $status = 'not eligible';
+                }
+                
             } elseif ($totalWeight >= $reward->weight) {
+
                 $status = 'eligible';
+
             } else {
+
                 $status = 'not eligible';
             }
 
@@ -671,7 +689,6 @@ class AppController extends Controller
 
     public function claimReward(Request $request)
     {
-        
         $user = Auth::user();
 
         if (!$user) {
