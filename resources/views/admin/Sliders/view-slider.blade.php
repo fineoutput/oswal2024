@@ -100,7 +100,11 @@
                                                     
                                                     <th data-priority="1">App Slider name</th>
 
-                                                    <th data-priority="3">AppImages</th>
+                                                    <th data-priority="3">App Images</th>
+
+                                                    <th data-priority="3">Vendor Slider Name</th>
+
+                                                    <th data-priority="3">Vendor Images</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -135,6 +139,16 @@
                                                         @endif 
 
                                                     </td>
+
+                                                    <td>{{ $slider->vendor_slider_name }}</td>
+
+                                                   <td>
+
+                                                        @if ($slider->vendor_image != null)
+                                                            <img src="{{ asset($slider->vendor_image)}}" width="50px" height="50px" alt="">
+                                                        @endif 
+
+                                                   </td>
 
                                                     <td> 
                                                         @if($slider->is_active == 1)  

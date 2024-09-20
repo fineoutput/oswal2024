@@ -63,15 +63,18 @@ class SliderController extends Controller
         $rules = [
             'category_id'              => 'required|string',
             'product_id'               => 'required|string',
-            'slider_name'              => 'required|string',
-            'app_slider_name'          => 'required|string',
+            'slider_name'              => 'nullable|string',
+            'app_slider_name'          => 'nullable|string',
+            'vendor_slider_name'       => 'nullable|string',
         ];
 
         if (!isset($request->slider_id)) {
 
-            $rules['img'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
-            $rules['img2'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            $rules['img2'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
+            $rules['img3'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $slider = new Slider;
 
@@ -80,6 +83,8 @@ class SliderController extends Controller
             $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $rules['img2'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
+            $rules['img3'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $slider = Slider::find($request->slider_id);
             
@@ -107,9 +112,17 @@ class SliderController extends Controller
 
         }
 
+        if($request->hasFile('img3')){
+
+            $slider->vendor_image = uploadImage($request->file('img3'), 'slider' ,'vendor');
+
+        }
+
         $slider->slider_name_hi = lang_change($request->input('slider_name'));
 
         $slider->app_slider_name_hi = lang_change($request->input('app_slider_name'));
+
+        $slider->vendor_slider_name_hi = lang_change($request->input('vendor_slider_name'));
 
         $slider->ip = $request->ip();
 

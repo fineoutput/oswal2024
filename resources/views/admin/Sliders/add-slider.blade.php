@@ -242,6 +242,46 @@
 
                                         </div>
 
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control"
+                                                    value="{{ $slider ? $slider->vendor_slider_name : old('vendor_slider_name') }}"
+                                                    name="vendor_slider_name" placeholder="Enter slider_name" required>
+
+                                                <label for="vendor_slider_name">Vendor Slider Name &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('vendor_slider_name')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="file" id="img3" name="img3"
+                                                    placeholder="img">
+
+                                                @if ($slider != null)
+                                                    <img src="{{ asset($slider->vendor_image) }}" width="100px" height="100px">
+                                                @endif
+
+                                                <label class="mb-2" for="img">Image </label>
+
+                                            </div>
+
+                                            @error('img3')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group row">
