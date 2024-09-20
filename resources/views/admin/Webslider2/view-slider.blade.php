@@ -97,10 +97,14 @@
                                                     <th data-priority="3">Web Images</th>
 
                                                     <th data-priority="3">App Images</th>
+
+                                                    <th data-priority="3">Vendor Images</th>
                                                     
                                                     <th data-priority="1">Web Text</th>
 
                                                     <th data-priority="1">App Text</th>
+
+                                                    <th data-priority="1">Vendor Text</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -132,9 +136,19 @@
 
                                                    </td>
 
+                                                   <td>
+
+                                                    @if ($slider->vendor_image != null)
+                                                        <img src="{{ asset($slider->vendor_image)}}" width="50px" height="50px" alt="">
+                                                    @endif 
+
+                                                   </td>
+
                                                     <td>{{ $slider->link }}</td>
 
                                                     <td>{{ $slider->app_link }}</td>
+
+                                                    <td>{{ $slider->vendor_link }}</td>
 
                                                     <td> 
                                                         @if($slider->is_active == 1)  

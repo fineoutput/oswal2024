@@ -61,20 +61,26 @@ class WebSliderSecoundController extends Controller
         $rules = [
             'link'              => 'nullable|string',
             'apptext'           => 'nullable|string',
+            'vendortext'        => 'nullable|string',
         ];
 
         if (!isset($request->slider_id)) {
 
-            $rules['img'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            $rules['img']  = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             
-            $rules['img2'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            $rules['img2'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
+            $rules['img3'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $slider = new Websliders2;
 
         } else {
+            
             $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-
+            
             $rules['img2'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            
+            $rules['img3'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
             $slider = Websliders2::find($request->slider_id);
             
@@ -92,6 +98,8 @@ class WebSliderSecoundController extends Controller
 
         $slider->app_link = $request->apptext;
 
+        $slider->vendor_link = $request->vendortext;
+
         if($request->hasFile('img')){
 
             $slider->image = uploadImage($request->file('img'), 'webslider2' ,'web');
@@ -101,6 +109,12 @@ class WebSliderSecoundController extends Controller
         if($request->hasFile('img2')){
 
             $slider->app_img = uploadImage($request->file('img2'), 'webslider2' ,'app');
+
+        }
+
+        if($request->hasFile('img3')){
+
+            $slider->vendor_image = uploadImage($request->file('img3'), 'webslider2' ,'vendor');
 
         }
 

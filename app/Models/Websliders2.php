@@ -17,8 +17,10 @@ class Websliders2 extends Model
     protected $fillable = [
         'link',
         'app_link',
+        'vendor_link',
         'image',
         'app_img',
+        'vendor_image',
         'ip',
         'date',
         'added_by',

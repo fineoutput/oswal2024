@@ -120,25 +120,6 @@
 
                                             <div class="form-floating">
 
-                                                <input type="text" class="form-control"
-                                                    value="{{ $slider ? $slider->app_link : old('apptext') }}"
-                                                    name="apptext" placeholder="Enter text" required>
-
-                                                <label for="apptext"> App Text &nbsp;<span
-                                                        style="color:red;">*</span></label>
-
-                                            </div>
-
-                                            @error('apptext')
-                                                <div style="color:red">{{ $message }}</div>
-                                            @enderror
-
-                                        </div>
-
-                                        <div class="col-sm-6 mb-3">
-
-                                            <div class="form-floating">
-
                                                 <input class="form-control" type="file" id="img" name="img"
                                                     placeholder="img">
 
@@ -160,6 +141,25 @@
 
                                             <div class="form-floating">
 
+                                                <input type="text" class="form-control"
+                                                    value="{{ $slider ? $slider->app_link : old('apptext') }}"
+                                                    name="apptext" placeholder="Enter text" required>
+
+                                                <label for="apptext"> App Text &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('apptext')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
                                                 <input class="form-control" type="file" id="img2" name="img2"
                                                     placeholder="img2">
 
@@ -172,6 +172,46 @@
                                             </div>
 
                                             @error('img2')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control"
+                                                    value="{{ $slider ? $slider->vendor_link : old('vendortext') }}"
+                                                    name="vendortext" placeholder="Enter text" required>
+
+                                                <label for="vendortext"> Vendor Text &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('vendortext')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="file" id="img3" name="img3"
+                                                    placeholder="img2">
+
+                                                @if ($slider->vendor_image != null)
+                                                    <img src="{{ asset($slider->vendor_image) }}" width="100px" height="100px">
+                                                @endif
+
+                                                <label class="mb-2" for="img"> Vendor Image </label>
+
+                                            </div>
+
+                                            @error('img3')
                                                 <div style="color:red">{{ $message }}</div>
                                             @enderror
 
