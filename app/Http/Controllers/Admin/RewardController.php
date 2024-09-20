@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reward;
+use App\Models\VendorReward;
 
 class RewardController extends Controller
 {
@@ -28,7 +29,7 @@ class RewardController extends Controller
 
             if ($admin_position !== "Super Admin") {
 
-                return redirect()->route('sticker.index')->with('error', "Sorry You Don't Have Permission To edit Anything.");
+                return redirect()->route('reward.index')->with('error', "Sorry You Don't Have Permission To edit Anything.");
 
             }
 
@@ -121,7 +122,7 @@ class RewardController extends Controller
             $sticker->updateStatus(strval(0));
         }
 
-        return  redirect()->route('sticker.index')->with('success', 'Status Updated Successfully.');
+        return  redirect()->route('reward.index')->with('success', 'Status Updated Successfully.');
 
         // } else {
 
@@ -143,9 +144,9 @@ class RewardController extends Controller
 
         if (Reward::where('id', $id)->delete()) {
 
-            return  redirect()->route('sticker.index')->with('success', 'Sticker Deleted Successfully.');
+            return  redirect()->route('reward.index')->with('success', 'Reward Deleted Successfully.');
         } else {
-            return redirect()->route('sticker.index')->with('error', 'Some Error Occurred.');
+            return redirect()->route('reward.index')->with('error', 'Some Error Occurred.');
 
         }
 
@@ -157,4 +158,44 @@ class RewardController extends Controller
 
     }
 
+    public function applied(Request $request) {
+
+      $rewards = VendorReward::with('vendor' ,'vendor.orders')->get();
+  
+      return view('admin.Rewards.applied-reward' , compact('rewards'));
+
+    }
+
+    public function accepted($status, $id, Request $request)
+
+    {
+
+        $id = base64_decode($id);
+
+        $admin_position = $request->session()->get('position');
+
+        $sticker =  VendorReward::find($id);
+
+        // if ($admin_position == "Super Admin") {
+
+        if ($status == "accepted") {
+
+            $sticker->status = VendorReward::STATUS_ACCEPTED;
+
+        } else {
+
+             $sticker->status = VendorReward::STATUS_REJECTED;
+        }
+
+        $sticker->save();
+
+        return  redirect()->route('reward.applied')->with('success', 'Status Updated Successfully.');
+
+        // } else {
+
+        // 	return  redirect()->route('sticker.index')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
+
+        // }
+
+    }
 }

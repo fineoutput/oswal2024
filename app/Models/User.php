@@ -112,6 +112,10 @@ class User extends Authenticatable
         return $this->hasOne(Vendor::class, 'user_id' , 'id');
     }
 
+    public function reward() {
+
+        return $this->hasMany(VendorReward::class, 'user_id' , 'id');
+    }
     /**
      * Generate a unique referral code.
      *

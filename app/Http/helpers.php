@@ -653,3 +653,23 @@ if(! function_exists('getLatLngFromAddress')){
     }
 
 } 
+
+if (!function_exists('formatWeight')) {
+    function formatWeight($totalWeight)
+    {
+        $kg = floor($totalWeight / 1000); 
+        $gm = $totalWeight % 1000; 
+
+        $result = '';
+
+        if ($kg > 0) {
+            $result .= $kg . ' kg ';
+        }
+
+        if ($gm > 0) {
+            $result .= $gm . ' gm';
+        }
+
+        return trim($result) ?: '--'; 
+    }
+}

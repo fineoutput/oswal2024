@@ -597,6 +597,12 @@ Route::prefix('rewards')->name('reward.')->group(function () {
 
     Route::get('destroy/{id}', [RewardController::class, 'destroy'])->name('destroy');
 
+    Route::get('destroy/{id}', [RewardController::class, 'destroy'])->name('destroy');
+
+    Route::get('applied', [RewardController::class, 'applied'])->name('applied');
+
+    Route::get('status/{status}/{id}', [RewardController::class, 'accepted'])->name('status');
+
 });
 
 /*=========Users Routes ========*/
