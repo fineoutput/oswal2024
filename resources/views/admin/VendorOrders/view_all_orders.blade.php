@@ -158,7 +158,7 @@
 
                                                         <td>{{ $order->user->first_name }}</td>
 
-                                                        <td> {{ $order->sub_total }}</td>
+                                                        <td> {{ $order->total_amount }}</td>
 
                                                         <td>
                                                             @if ($order->promocodes != null && $order->promocodes != '' )
