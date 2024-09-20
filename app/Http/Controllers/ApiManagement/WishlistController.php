@@ -7,15 +7,20 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
-
-use App\Models\Wishlist;
-
-use App\Models\Cart;
 
 use App\Models\EcomProduct;
 
+use App\Models\VendorType;
+
+use App\Models\Wishlist;
+
 use App\Models\Type;
+
+use App\Models\Cart;
+
 
 class WishlistController extends Controller
 {
@@ -27,9 +32,14 @@ class WishlistController extends Controller
             'user_id'    => 'nullable|exists:users,id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
-            'type_id'    => 'required|exists:types,id',
             'type_price' => 'required|string',
         ];
+
+        if(Auth::check() && Auth::user()->role_type == 2){
+            $rules['type_id'] = 'required|exists:vendor_types,id';
+        }else{
+            $rules['type_id'] = 'required|exists:types,id';
+        }
 
         $validator = Validator::make($request->all(),  $rules);
 
@@ -101,41 +111,47 @@ class WishlistController extends Controller
         $state_id  = $request->state_id ?? null;
         $city_id   = $request->city_id ?? null;
     
-        // Initialize an array to hold wishlist data
+        
         $productData = [];
     
-        // Fetch wishlist data based on user login status
+      
         if (empty($user_id)) {
-            // Without login
+        
             $wishlistData = Wishlist::where('device_id', $device_id)->get();
         } else {
-            // With login
+       
             $wishlistData = Wishlist::where('user_id', $user_id)->get();
         }
     
-        // Process each item in the wishlist
         foreach ($wishlistData as $wishlistItem) {
 
             $product_id = $wishlistItem->product_id;
 
             $category_id = $wishlistItem->category_id;
 
-            // Fetch product details
             $products = sendProduct($category_id, $product_id, false);
       
-            // If product not found, skip to next iteration
+      
             if (count($products) <= 0) {
                 continue;
             }else{
 
                 $product=  $products[0];
             }
-            // Initialize an array to hold type data
+           
             $typedata = [];
     
-            // Query type data based on state and city (if provided)
-            $typeQuery = Type::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                            ->where('is_active', 1);
+          
+            if(Auth::check() && Auth::user()->role_type == 2){
+                
+                $typeQuery =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
+                                ->where('is_active', 1);
+            }else{
+             
+                $typeQuery = Type::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
+                                ->where('is_active', 1);
+            }
+    
     
             if (!empty($state_id)) {
                 $typeQuery->where('state_id', $state_id);
