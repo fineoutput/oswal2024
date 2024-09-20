@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 
-use App\Models\ShippingCharge; 
+use App\Models\ShippingCharge;
 
 use Illuminate\Http\Request;
+
+use App\Models\VendorReward;
 
 use App\Models\GiftCardSec;
 
@@ -34,6 +36,8 @@ use App\Models\Comment;
 
 use App\Models\Slider;
 
+use App\Models\Reward;
+
 use App\Models\Popup;
 
 use App\Models\State;
@@ -44,17 +48,19 @@ use App\Models\City;
 
 use App\Models\User;
 
-class AppController extends Controller {
+class AppController extends Controller
+{
 
-    public function blog() {
-       
-        $blogs = Blog::with('comment')->orderby('id', 'desc')->where('is_active' , 1)->get();
+    public function blog()
+    {
 
-        return response()->json(['success' => true,'data' => $blogs] , 200);
+        $blogs = Blog::with('comment')->orderby('id', 'desc')->where('is_active', 1)->get();
 
+        return response()->json(['success' => true, 'data' => $blogs], 200);
     }
 
-    public function add_blog_comment(Request $request) {
+    public function add_blog_comment(Request $request)
+    {
 
         $routeName = Route::currentRouteName();
 
@@ -66,7 +72,7 @@ class AppController extends Controller {
         ];
 
         if ($routeName === 'blog.edit-comment') {
-            $validationRules['comment_id'] = 'required|numeric'; 
+            $validationRules['comment_id'] = 'required|numeric';
         }
 
         $validator = Validator::make($request->all(), $validationRules);
@@ -79,7 +85,7 @@ class AppController extends Controller {
         if (!isset($request->comment_id)) {
 
             $comment =  new Comment;
-            
+
             $comment->ip = $request->ip();
 
             $comment->cur_date = now();
@@ -87,17 +93,14 @@ class AppController extends Controller {
             $comment->reply_status = 0;
 
             $comment->is_active = 1;
-
         } else {
 
             $comment = Comment::find($request->comment_id);
-            
-            if (!$comment) {
-                
-                return response()->json(['success' => false, 'message' => 'Comment not found.'], 404);
-                
-            }
 
+            if (!$comment) {
+
+                return response()->json(['success' => false, 'message' => 'Comment not found.'], 404);
+            }
         }
 
         $comment->fill($request->all());
@@ -107,37 +110,33 @@ class AppController extends Controller {
             $message = isset($request->comment_id) ? 'Comment updated successfully.' : 'Comment inserted successfully.';
 
             return response()->json(['success' => true, 'message' => $message], 200);
-
         } else {
 
             return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again later.'], 500);
-
         }
-
     }
 
-    public function GetState() {
-        
-        $states = State::OrderBy('state_name' , 'ASC')->get();
+    public function GetState()
+    {
 
-        return response()->json(['success' => true, 'data' => $states] , 200);
+        $states = State::OrderBy('state_name', 'ASC')->get();
 
+        return response()->json(['success' => true, 'data' => $states], 200);
     }
 
-    public function GetCity($sid = null) {
-        
-        $citys = City::OrderBy('city_name' , 'ASC');
-        
-        if($sid != null){
+    public function GetCity($sid = null)
+    {
 
-            $citys = $citys->where('state_id' , $sid);
+        $citys = City::OrderBy('city_name', 'ASC');
 
+        if ($sid != null) {
+
+            $citys = $citys->where('state_id', $sid);
         }
 
         $citys = $citys->get();
 
-        return response()->json(['success' => true, 'data' => $citys] , 200);
-
+        return response()->json(['success' => true, 'data' => $citys], 200);
     }
 
     public function addAddress(Request $request)
@@ -163,19 +162,19 @@ class AppController extends Controller {
         }
 
         $city = City::find($request->city_id);
-       
+
         $state_id = $city ? $city->state_id : null;
 
-        $shippingData = ShippingCharge::where('city_id',$city->id)->first();
+        $shippingData = ShippingCharge::where('city_id', $city->id)->first();
 
         if (!$shippingData) {
-            return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'],400);
+            return response()->json(['success' => false, 'message' => 'Shipping services not available in this area.'], 400);
         }
-        
-        $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name ." ". $city->state->state_name ." ".$request->zipcode ." ". 'India';
 
-        if(!getLatLngFromAddress($custom_address)) {
-            return response()->json(['success' => false, 'message' => 'Address Not Found.'],400);
+        $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name . " " . $city->state->state_name . " " . $request->zipcode . " " . 'India';
+
+        if (!getLatLngFromAddress($custom_address)) {
+            return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
         }
 
         $location = getLatLngFromAddress($custom_address);
@@ -199,18 +198,17 @@ class AppController extends Controller {
         $userAddress = Address::create($addressData);
 
         $userAddress->load('states', 'citys');
-      
+
         $response = $userAddress;
 
         $response['custom_address'] = $custom_address;
-       
-        return response()->json(['success' => true, 'message' => 'Address Add Sucessfully.' , 'data' =>  $response ],201);
 
+        return response()->json(['success' => true, 'message' => 'Address Add Sucessfully.', 'data' =>  $response], 201);
     }
 
     public function getAddress(Request $request)
     {
-       
+
         $validator = Validator::make($request->all(), [
             'device_id' => 'required|string|exists:users',
             'user_id'   => 'nullable|integer|exists:users,id'
@@ -221,7 +219,7 @@ class AppController extends Controller {
         }
 
         $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id') ;
+        $user_id   = $request->input('user_id');
         $address_data = [];
 
         if (empty($user_id)) {
@@ -248,11 +246,12 @@ class AppController extends Controller {
             $address_data[] =  $address;
         }
 
-       return response()->json(['success' => true, 'data' =>  $address_data ],200);
+        return response()->json(['success' => true, 'data' =>  $address_data], 200);
     }
 
-    public function headerSlider(Request $request)  {
-        
+    public function headerSlider(Request $request)
+    {
+
         $validator = Validator::make($request->all(), [
             'role_type'        => 'nullable|integer',
         ]);
@@ -261,45 +260,44 @@ class AppController extends Controller {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
-       $sliders =  Websliders2::where('is_active', 1)->get();
+        $sliders =  Websliders2::where('is_active', 1)->get();
 
-       $data = [];
+        $data = [];
 
-       foreach ($sliders as $key => $value) {
+        foreach ($sliders as $key => $value) {
 
-        if($request->role_type == 2){
+            if ($request->role_type == 2) {
 
-            if ($value->vendor_image == null) {
+                if ($value->vendor_image == null) {
 
-                continue;
+                    continue;
+                }
+
+                $data[] = [
+                    'id'    => $value->id,
+                    'url'   => $value->vendor_link,
+                    'image' => asset($value->vendor_image),
+                ];
+            } else {
+
+                if ($value->app_img == null) {
+
+                    continue;
+                }
+
+                $data[] = [
+                    'id'    => $value->id,
+                    'url'   => $value->app_link,
+                    'image' => asset($value->app_img),
+                ];
             }
-
-            $data[] =[
-               'id'    => $value->id,
-               'url'   => $value->vendor_link,
-               'image' => asset($value->vendor_image),
-            ];
-
-        }else{
-
-            if ($value->app_img == null) {
-
-                continue;
-            }
-
-            $data[] =[
-               'id'    => $value->id,
-               'url'   => $value->app_link,
-               'image' => asset($value->app_img),
-            ];
         }
-       }
 
-       return response()->json(['success' => true, 'data' =>  $data ],200);
-
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
-    public function footerSlider(Request $request)  {
+    public function footerSlider(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'lang'      => 'required|string',
@@ -311,41 +309,41 @@ class AppController extends Controller {
         }
 
         $sliders =  Slider2::where('is_active', 1)->get();
- 
+
         $data = [];
- 
+
         foreach ($sliders as $key => $value) {
 
-            if($request->role_type == 2){
+            if ($request->role_type == 2) {
 
                 if ($value->vendor_image == null) {
                     continue;
                 }
-    
-                $data[] =[
+
+                $data[] = [
                     'id'            => $value->id,
                     'slider_name'   => ($request->lang == 'hi') ? $value->vendor_slider_name_hi : $value->vendor_slider_name,
                     'image'         => asset($value->vendor_image),
                 ];
-
-            }else{
+            } else {
 
                 if ($value->app_image == null) {
                     continue;
                 }
-    
-                $data[] =[
+
+                $data[] = [
                     'id'            => $value->id,
                     'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
                     'image'         => asset($value->app_image),
                 ];
             }
         }
- 
-        return response()->json(['success' => true, 'data' =>  $data ],200);
+
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
- 
-    public function festivalSlider(Request $request)  {
+
+    public function festivalSlider(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'lang'      => 'required|string',
@@ -357,66 +355,68 @@ class AppController extends Controller {
         }
 
         $sliders =  Slider::where('is_active', 1)->get();
- 
-        $data = [];
- 
-        foreach ($sliders as $key => $value) {
-            if($request->role_type == 2){
 
-                if($value->vendor_image == null) {
+        $data = [];
+
+        foreach ($sliders as $key => $value) {
+            if ($request->role_type == 2) {
+
+                if ($value->vendor_image == null) {
                     continue;
                 }
-    
-                $data[] =[
+
+                $data[] = [
                     'id'            => $value->id,
                     'slider_name'   => ($request->lang == 'hi') ? $value->vendor_slider_name_hi : $value->vendor_slider_name,
                     'image'         => asset($value->vendor_image),
                 ];
+            } else {
 
-            }else{
-
-                if($value->app_image == null) {
+                if ($value->app_image == null) {
                     continue;
                 }
-    
-                $data[] =[
+
+                $data[] = [
                     'id'            => $value->id,
                     'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
                     'image'         => asset($value->app_image),
                 ];
             }
         }
- 
-        return response()->json(['success' => true, 'data' =>  $data ],200);
+
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
-    public function getPromoCode() {
+    public function getPromoCode()
+    {
 
         $promocodes  =  Promocode::where('is_active', 1)->get();
- 
-        return response()->json(['success' => true, 'data' =>  $promocodes ],200);
+
+        return response()->json(['success' => true, 'data' =>  $promocodes], 200);
     }
 
-    public function giftCard() {
+    public function giftCard()
+    {
 
         $giftcards  =  giftCard::where('is_active', 1)->get();
 
         $data = [];
- 
+
         foreach ($giftcards as $key => $value) {
-          $data[] =[
-             'id'              => $value->id,
-             'name'            => $value->name,
-             'description'     => $value->description,
-             'price'           => $value->price,
-             'image'           => asset($value->image),
-          ];
+            $data[] = [
+                'id'              => $value->id,
+                'name'            => $value->name,
+                'description'     => $value->description,
+                'price'           => $value->price,
+                'image'           => asset($value->image),
+            ];
         }
- 
-        return response()->json(['success' => true, 'data' =>  $data ],200);
+
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
-    public function giftCardSec(Request $request) {
+    public function giftCardSec(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'product_id'   => 'required|integer|exists:ecom_products,id',
@@ -427,42 +427,44 @@ class AppController extends Controller {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
 
-        $giftcards  =  giftCardSec::where('product_id', $request->product_id)->where('type_id' ,$request->type_id)->where('is_active' , 1)->get();
+        $giftcards  =  giftCardSec::where('product_id', $request->product_id)->where('type_id', $request->type_id)->where('is_active', 1)->get();
 
         $data = [];
- 
+
         foreach ($giftcards as $key => $value) {
-          $data[] =[
-             'id'              => $value->id,
-             'name'            => $value->name,
-             'price'           => $value->price,
-             'image'           => asset($value->appimage),
-          ];
+            $data[] = [
+                'id'              => $value->id,
+                'name'            => $value->name,
+                'price'           => $value->price,
+                'image'           => asset($value->appimage),
+            ];
         }
- 
-        return response()->json(['success' => true, 'data' =>  $data ],200);
+
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
-    public function popup(Request $request) {
+    public function popup(Request $request)
+    {
 
-      $popups =  Popup::where('is_active', 1)->get();
+        $popups =  Popup::where('is_active', 1)->get();
 
-      $data = [];
- 
-      foreach ($popups  as $key => $value) {
-        $data[] =[
-           'id'              => $value->id,
-           'name'            => $value->name,
-           'image'           => asset($value->image),
-        ];
-      }
+        $data = [];
 
-      return response()->json(['success' => true, 'data' =>  $data ],200);
+        foreach ($popups  as $key => $value) {
+            $data[] = [
+                'id'              => $value->id,
+                'name'            => $value->name,
+                'image'           => asset($value->image),
+            ];
+        }
+
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
 
-    public function walletTransaction(Request $request) {
-        
+    public function walletTransaction(Request $request)
+    {
+
         $completedTransactions = WalletTransactionHistory::getByStatus(
             WalletTransactionHistory::STATUS_COMPLETED,
             Auth::id()
@@ -470,27 +472,27 @@ class AppController extends Controller {
 
         $data = [];
 
-        foreach($completedTransactions as $value){
+        foreach ($completedTransactions as $value) {
 
-            if ($value->amount == "0.0"){
+            if ($value->amount == "0.0") {
                 continue;
             }
-            
+
 
             $data[] = [
                 'user'             => $value->user_id,
                 'transaction_type' => $value->transaction_type,
                 'amount'           => $value->amount,
                 'description'      => $value->description,
-                'date'             => date('Y-m-d', strtotime($value->created_at)) .' | '. date('H:i:s A', strtotime($value->created_at)),
+                'date'             => date('Y-m-d', strtotime($value->created_at)) . ' | ' . date('H:i:s A', strtotime($value->created_at)),
             ];
         }
 
-        return response()->json(['success' => true, 'data' =>  $data ],200);
+        return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
     // public function giveRating(Request $request) {
-        
+
     //     $validator = Validator::make($request->all(), [
     //         'device_id'   => 'required|string|exists:users,device_id',
     //         'user_id'     => 'required|string|exists:users,id',
@@ -517,12 +519,12 @@ class AppController extends Controller {
     //     $productRating->ip  = $request->ip();
     //     $productRating->date  = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
     //     $productRating->save();
-    
+
     //     return response()->json(['success' => true,'message' => 'Rating submitted successfully','data' => $productRating], 201);
     // }
     public function giveRating(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(), [
             'device_id'   => 'required|string|exists:users,device_id',
             'user_id'     => 'required|integer|exists:users,id',
@@ -544,7 +546,7 @@ class AppController extends Controller {
             'order_id'      => $request->input('order_id'),
             'rating'        => (float) $request->input('rating'),
             'description'   => $request->input('description'),
-            'description_hi'=> lang_change($request->input('description')),
+            'description_hi' => lang_change($request->input('description')),
             'ip'            => $request->ip(),
             'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
         ];
@@ -565,7 +567,8 @@ class AppController extends Controller {
         }
     }
 
-    public function getWalletAmount(Request $request) {
+    public function getWalletAmount(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'device_id'   => 'required|string|exists:users,device_id',
@@ -578,10 +581,10 @@ class AppController extends Controller {
                 'message' => $validator->errors()->first()
             ], 400);
         }
-        
+
         $data = [
             'user_id' => $request->user_id,
-            'wallet_amount' =>Auth::user()->wallet_amount,
+            'wallet_amount' => Auth::user()->wallet_amount,
         ];
 
         return response()->json(['success' => true, 'data' => $data]);
@@ -589,7 +592,7 @@ class AppController extends Controller {
 
     public function updateFcm(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(), [
             'user_id'   => 'required|integer|exists:users,id',
             'fcm_token' => 'required|string',
@@ -617,10 +620,107 @@ class AppController extends Controller {
         $user->save();
 
         return response()->json([
-            'success'=>true,
+            'success' => true,
             'status' => 200,
             'message' => 'FCM token updated successfully'
         ], 200);
+    }
+
+    public function getReward()
+    {
+
+        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        }
+
+        $totalWeight = $user->orders->sum('total_order_weight');
+
+        $data = [];
+
+        foreach ($rewardlists as $reward) {
+
+            $exists = VendorReward::where('reward_id', $reward->id)
+                ->where('vendor_id', $user->id)
+                ->where('status', '!=', 3)
+                ->exists();
+
+            if ($exists) {
+                $status = 'applied';
+            } elseif ($totalWeight >= $reward->weight) {
+                $status = 'eligible';
+            } else {
+                $status = 'not eligible';
+            }
+
+            $data[] = [
+                'id'     => $reward->id,
+                'name'   => $reward->name,
+                'image'  => asset($reward->image),
+                'weight' => formatWeight($reward->weight),
+                'order_weight' => formatWeight($totalWeight),
+                'status' => $status,
+            ];
+        }
+
+        return response()->json(['success' =>  true, 'data' => $data], 200);
+    }
+
+    public function claimReward(Request $request)
+    {
+        
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'reward_id' => 'required|integer|exists:rewards,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        $rewardId = $request->reward_id;
+        $reward = Reward::find($rewardId);
+
+        if (!$reward || !$reward->is_active) {
+            return response()->json(['success' => false, 'message' => 'Reward is not available']);
+        }
+
+        $totalWeight = $user->orders->sum('total_order_weight');
+
+        $lastOrder = $user->orders()->latest()->first();
+
+        if ($totalWeight < $reward->weight) {
+            return response()->json(['success' => false, 'message' => 'Not eligible for this reward']);
+        }
+
+        $exists = VendorReward::where('reward_id', $rewardId)
+            ->where('vendor_id', $user->id)
+            ->where('status', '!=', 3)
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['success' => false, 'message' => 'Reward already applied']);
+        }
+
+        VendorReward::create([
+            'vendor_id'     => $user->id,
+            'order_id'      => $lastOrder ? $lastOrder->id : null, 
+            'reward_name'   => $reward->name,
+            'reward_image'  => $reward->image,
+            'reward_id'     => $reward->id,
+            'status'        => VendorReward::STATUS_APPLIED,
+            'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
     }
 
 }
