@@ -251,23 +251,48 @@ class AppController extends Controller {
        return response()->json(['success' => true, 'data' =>  $address_data ],200);
     }
 
-    public function headerSlider()  {
+    public function headerSlider(Request $request)  {
         
+        $validator = Validator::make($request->all(), [
+            'role_type'        => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        }
+
        $sliders =  Websliders2::where('is_active', 1)->get();
 
        $data = [];
 
        foreach ($sliders as $key => $value) {
 
-        if ($value->app_img == null) {
-            continue;
+        if($request->role_type == 2){
+
+            if ($value->vendor_image == null) {
+
+                continue;
+            }
+
+            $data[] =[
+               'id'    => $value->id,
+               'url'   => $value->vendor_link,
+               'image' => asset($value->vendor_image),
+            ];
+
+        }else{
+
+            if ($value->app_img == null) {
+
+                continue;
+            }
+
+            $data[] =[
+               'id'    => $value->id,
+               'url'   => $value->app_link,
+               'image' => asset($value->app_img),
+            ];
         }
-        
-         $data[] =[
-            'id'    => $value->id,
-            'url'   => $value->app_link,
-            'image' => asset($value->app_img),
-         ];
        }
 
        return response()->json(['success' => true, 'data' =>  $data ],200);
@@ -277,7 +302,8 @@ class AppController extends Controller {
     public function footerSlider(Request $request)  {
 
         $validator = Validator::make($request->all(), [
-            'lang'      => 'required|string'
+            'lang'      => 'required|string',
+            'role_type' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -290,15 +316,30 @@ class AppController extends Controller {
  
         foreach ($sliders as $key => $value) {
 
-            if ($value->app_image == null) {
-                continue;
-            }
+            if($request->role_type == 2){
 
-          $data[] =[
-             'id'            => $value->id,
-             'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
-             'image'         => asset($value->app_image),
-          ];
+                if ($value->vendor_image == null) {
+                    continue;
+                }
+    
+                $data[] =[
+                    'id'            => $value->id,
+                    'slider_name'   => ($request->lang == 'hi') ? $value->vendor_slider_name_hi : $value->vendor_slider_name,
+                    'image'         => asset($value->vendor_image),
+                ];
+
+            }else{
+
+                if ($value->app_image == null) {
+                    continue;
+                }
+    
+                $data[] =[
+                    'id'            => $value->id,
+                    'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
+                    'image'         => asset($value->app_image),
+                ];
+            }
         }
  
         return response()->json(['success' => true, 'data' =>  $data ],200);
@@ -307,7 +348,8 @@ class AppController extends Controller {
     public function festivalSlider(Request $request)  {
 
         $validator = Validator::make($request->all(), [
-            'lang'      => 'required|string'
+            'lang'      => 'required|string',
+            'role_type' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -319,16 +361,30 @@ class AppController extends Controller {
         $data = [];
  
         foreach ($sliders as $key => $value) {
+            if($request->role_type == 2){
 
-            if($value->app_image == null) {
-                continue;
+                if($value->vendor_image == null) {
+                    continue;
+                }
+    
+                $data[] =[
+                    'id'            => $value->id,
+                    'slider_name'   => ($request->lang == 'hi') ? $value->vendor_slider_name_hi : $value->vendor_slider_name,
+                    'image'         => asset($value->vendor_image),
+                ];
+
+            }else{
+
+                if($value->app_image == null) {
+                    continue;
+                }
+    
+                $data[] =[
+                    'id'            => $value->id,
+                    'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
+                    'image'         => asset($value->app_image),
+                ];
             }
-
-          $data[] =[
-             'id'            => $value->id,
-             'slider_name'   => ($request->lang == 'hi') ? $value->app_slider_name_hi : $value->app_slider_name,
-             'image'         => asset($value->app_image),
-          ];
         }
  
         return response()->json(['success' => true, 'data' =>  $data ],200);
