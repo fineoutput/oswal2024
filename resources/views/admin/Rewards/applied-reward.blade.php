@@ -132,8 +132,10 @@
                                                     <td> 
                                                         @if($reward->status == 1) 
                                                            <p class="label pull-right status-active">Applied</p>  
-                                                        @else 
-                                                           <p class="label pull-right status-active">Accepted</p> 
+                                                        @elseif ($reward->status == 3) 
+                                                           <p class="label pull-right status-inactive">Rejected</p> 
+                                                        @else
+                                                        <p class="label pull-right status-active">Accepted</p>  
                                                         @endif
                                                     </td>
 
@@ -141,7 +143,7 @@
                                                         
                                                         <div class="btn-group" id="btns<?php echo $key ?>">
 
-                                                            @if ($reward->status != 2)
+                                                            @if ($reward->status != 2 && $reward->status != 3)
 
                                                             <a href="{{route('reward.status',['accepted',base64_encode($reward->id)])}}" data-toggle="tooltip" data-placement="top" title="Accepted">Accepted</a>
 
