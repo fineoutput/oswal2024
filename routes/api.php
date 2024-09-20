@@ -172,6 +172,9 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     
     Route::post('wallet' ,[AppController::class, 'getWalletAmount']);
     
+    Route::get('vendor/reward-list' , [AppController::class , 'getReward']);
+    
+    Route::get('vendor/reward-claim' , [AppController::class , 'claimReward']);
 });
 
 Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
