@@ -175,14 +175,12 @@
                                                                 ' ' .
                                                                 $order->address->address .
                                                                 ' ' .
-                                                                $order->address->location_address .
-                                                                ' ' .
                                                                 $order->address->zipcode;
                                                         @endphp
 
                                                         <td> {{ $custom_address }}</td>
 
-                                                        <td> {{ $custom_address }}</td>
+                                                        <td> {{ $order->address->location_address  }}</td>
 
                                                         <td> {{ $order->user->contact }}</td>
 
