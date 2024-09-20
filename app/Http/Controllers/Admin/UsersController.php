@@ -23,11 +23,11 @@ class UsersController extends Controller
         
         $currentRouteName = Route::currentRouteName();
 
-        if($currentRouteName == 'user.vendor') {
+        if($currentRouteName == 'user.vendor.approve') {
 
             $pageTittle = 'Vendor Users';
 
-            $users = User::with('vendor')->where('role_type', 2)->orderBy('id', 'desc')->get();
+            $users = User::with('vendor')->where('role_type', 2)->where('is_active', 1)->orderBy('id', 'desc')->get();
 
             return view('admin.Vendor.view-user', compact('users', 'pageTittle'));
 
@@ -38,6 +38,15 @@ class UsersController extends Controller
             $users = User::where('role_type', '!=' , 2)->orderBy('id', 'desc')->get();
 
             return view('admin.Users.view-user', compact('users', 'pageTittle'));
+
+        }elseif($currentRouteName == 'user.vendor.pending') {
+
+            $pageTittle = 'Vendor Users';
+
+            $users = User::with('vendor')->where('role_type', 2)->where('is_active', 0)->orderBy('id', 'desc')->get();
+
+            return view('admin.Vendor.view-user', compact('users', 'pageTittle'));
+
         }
 
     }
