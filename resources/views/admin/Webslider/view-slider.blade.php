@@ -94,13 +94,17 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">web name</th>
+                                                    <th data-priority="1">web img name</th>
 
                                                     <th data-priority="3">web Images</th>
 
-                                                    <th data-priority="3">App name</th>
+                                                    <th data-priority="3">App img name</th>
 
                                                     <th data-priority="3">App Images</th>
+
+                                                    <th data-priority="3">Vendor img Name</th>
+
+                                                    <th data-priority="3">Vendor Images</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -132,6 +136,16 @@
 
                                                         @if ($slider->app_image != null)
                                                             <img src="{{ asset($slider->app_image)}}" width="50px" height="50px" alt="">
+                                                        @endif 
+
+                                                   </td>
+
+                                                   <td>{{ $slider->vendor_slider_name }}</td>
+
+                                                   <td>
+
+                                                        @if ($slider->vendor_image != null)
+                                                            <img src="{{ asset($slider->vendor_image)}}" width="50px" height="50px" alt="">
                                                         @endif 
 
                                                    </td>
