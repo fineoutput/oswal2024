@@ -165,7 +165,7 @@ class UsersController extends Controller
 
         if($currentRouteName == 'user.vendor.update-status'){
 
-            return  redirect()->route('user.vendor')->with('success', 'Status Updated Successfully.');
+            return  redirect()->route('user.vendor.approve')->with('success', 'Status Updated Successfully.');
 
         }else{
 
