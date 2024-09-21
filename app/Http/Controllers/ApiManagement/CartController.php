@@ -73,23 +73,29 @@ class CartController extends Controller
 
             $type = vendorType::where('type_name',  $Rtype->type_name)->first();
 
-            if($type)
-            if ($request->quantity < $type->min_qty) {
+            if($type) {
+                
+                if ($request->quantity < $type->min_qty) {
+    
+                    return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+    
+                }
+    
+                if ($request->quantity > $type->end_range) {
+    
+                    $filteredType = VendorType::where('product_id', $request->product_id)
+                        ->where('type_name', $type->type_name)
+                        ->where('start_range', '<=', $request->quantity)
+                        ->where('end_range', '>=', $request->quantity)
+                        ->first();
+    
+                    $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
+                    $typeId = $filteredType ? $filteredType->id : $typeId;
+                }
 
-                return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+            }else{
 
-            }
-
-            if ($request->quantity > $type->end_range) {
-
-                $filteredType = VendorType::where('product_id', $request->product_id)
-                    ->where('type_name', $type->type_name)
-                    ->where('start_range', '<=', $request->quantity)
-                    ->where('end_range', '>=', $request->quantity)
-                    ->first();
-
-                $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
-                $typeId = $filteredType ? $filteredType->id : $typeId;
+                return response()->json(['success' => false, 'message' => "type Not found."]);
             }
 
         } else {
