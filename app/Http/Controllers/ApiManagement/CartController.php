@@ -69,7 +69,9 @@ class CartController extends Controller
 
         if ($user && $user->role_type == 2) {
 
-            $type = VendorType::find($typeId);
+            $Rtype = Type::find($typeId);
+
+            $type = vendorType::where('type_name',  $Rtype->type_name)->first();
 
             if($type)
             if ($request->quantity < $type->min_qty) {
