@@ -18,7 +18,7 @@ class RewardController extends Controller
         return view('admin.Rewards.view-reward', compact('stickers'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id=null)
 
     {
         $sticker = null;
