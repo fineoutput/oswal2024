@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\GoogleAccessTokenService;
+// use App\Services\GoogleAccessTokenService;
 
 use Illuminate\Support\Facades\Session;
 
@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 use Illuminate\Support\Facades\Mail;
+
+use App\Services\FirebaseService;
 
 use App\Models\UserDeviceToken;
 
@@ -31,17 +33,19 @@ use App\Models\OrderDetail;
 use App\Models\Order;
 
 use App\Models\User;
-
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
 
-    // protected $googleAccessTokenService;
+    protected $googleAccessTokenService;
 
-    // public function __construct(GoogleAccessTokenService $googleAccessTokenService)
-    // {
-    //     $this->googleAccessTokenService = $googleAccessTokenService;
-    // }
+    protected $firebaseService;
+
+    public function __construct(FirebaseService $firebaseService)
+    {
+        $this->firebaseService = $firebaseService;
+    }
 
 
     public function index()
@@ -140,8 +144,8 @@ class OrderController extends Controller
   
             if ($user) {
 
-                // $this->sendPushNotification($user->fcm_token, $order_status);
-
+                $this->sendPushNotification($user->fcm_token, $order_status);
+        
                 $this->sendEmailNotification($user, $order, $order_status);
 
             }
@@ -189,29 +193,39 @@ class OrderController extends Controller
             // Add cases for other types if needed
         }
 
-        $payload = [
-            'message' => [
-                'token' => $fcm_token,
-                'notification' => [
-                    'body' => $message,
-                    'title' => $title,
-                ],
-            ],
-        ];
+        // $payload = [
+        //     'message' => [
+        //         'token' => $fcm_token,
+        //         'notification' => [
+        //             'body' => $message,
+        //             'title' => $title,
+        //         ],
+        //     ],
+        // ];
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
-            'Content-Type' => 'application/json',
-        ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
-       
-        if ($response->successful()) {
+        $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
 
-            // return $response->body(); 
-            return true;
-        } else {
+        if(!$response['success']) {
+            
+            if (!$response['success']) {
 
-            throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+                Log::error('FCM send error: ' . $response['error']);
+                
+            }
         }
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+       
+        // if ($response->successful()) {
+
+        //     // return $response->body(); 
+        //     return true;
+        // } else {
+
+        //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+        // }
      
     }
 
@@ -399,6 +413,10 @@ class OrderController extends Controller
 
                 if ($delivery_user_data) {
                        
+                    $title = "New Order Arrived";
+
+                    $body = "New delivery order transferred to you from admin. Please check.";
+
                         // $payload = [
                         //     'message' => [
                         //         'token' => $delivery_user_data->fcm_token,
@@ -409,6 +427,16 @@ class OrderController extends Controller
                         //     ],
                         // ];
                 
+                        $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
+
+                        if(!$response['success']) {
+            
+                            if (!$response['success']) {
+                
+                                Log::error('FCM send error: ' . $response['error']);
+                                
+                            }
+                        }
                         // $response = Http::withHeaders([
                         //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
                         //     'Content-Type' => 'application/json',
