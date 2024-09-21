@@ -190,61 +190,63 @@ class EcommerceController extends Controller
 
         foreach ($products as $product) {
 
-            if ($roleType && $roleType == 2) {
+            // if ($roleType && $roleType == 2) {
 
-                $typeQuery = VendorType::where('product_id', $product->id)
-                    ->where('is_active', 1);
+            //     $typeQuery = VendorType::where('product_id', $product->id)
+            //         ->where('is_active', 1);
 
-                if ($state_id) {
-                    $typeQuery->where('state_id', 29);
+            //     if ($state_id) {
+            //         $typeQuery->where('state_id', 29);
     
-                    if ($city_id) {
-                        $typeQuery->where('city_id', 629);
-                    }
-                }
+            //         if ($city_id) {
+            //             $typeQuery->where('city_id', 629);
+            //         }
+            //     }
 
-                $typeQuery->groupBy('type_name');
+            //     $typeQuery->groupBy('type_name');
 
-            } else {
+            // } else {
 
-                $typeQuery = Type::where('product_id', $product->id)
-                    ->where('is_active', 1);
+            //     $typeQuery = Type::where('product_id', $product->id)
+            //         ->where('is_active', 1);
                 
-                if ($state_id) {
-                    $typeQuery->where('state_id', 29);
+            //     if ($state_id) {
+            //         $typeQuery->where('state_id', 29);
     
-                    if ($city_id) {
-                        $typeQuery->where('city_id', 629);
-                    }
+            //         if ($city_id) {
+            //             $typeQuery->where('city_id', 629);
+            //         }
 
-                }else{
-                    $typeQuery->groupBy('type_name');
-                }
+            //     }else{
+            //         $typeQuery->groupBy('type_name');
+            //     }
 
-            }
+            // }
 
-            // Execute the query and get the results
-            $types = $typeQuery->get();
+            // // Execute the query and get the results
+            // $types = $typeQuery->get();
 
-            $typedata = [];
+            $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang);
 
-            foreach ($types as $type) {
-                $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
-                $typedata[] = [
-                    'type_id' => $type->id,
-                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                    'type_category_id' => $type->category_id,
-                    'type_product_id' => $type->product_id,
-                    'type_mrp' => $type->del_mrp,
-                    'gst_percentage' => $type->gst_percentage,
-                    'gst_percentage_price' => $type->gst_percentage_price,
-                    'selling_price' => $type->selling_price,
-                    'type_weight' => $type->weight,
-                    'type_rate' => $type->rate,
-                    'percent_off' => $percent_off,
-                    'min_qty' => $type->min_qty ?? 1,
-                ];
-            }
+            // dd($typedata['regular_types']);
+
+            // foreach ($types as $type) {
+            //     $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
+            //     $typedata[] = [
+            //         'type_id' => $type->id,
+            //         'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+            //         'type_category_id' => $type->category_id,
+            //         'type_product_id' => $type->product_id,
+            //         'type_mrp' => $type->del_mrp,
+            //         'gst_percentage' => $type->gst_percentage,
+            //         'gst_percentage_price' => $type->gst_percentage_price,
+            //         'selling_price' => $type->selling_price,
+            //         'type_weight' => $type->weight,
+            //         'type_rate' => $type->rate,
+            //         'percent_off' => $percent_off,
+            //         'min_qty' => $type->min_qty ?? 1,
+            //     ];
+            // }
 
             $wishlist = Wishlist::where('product_id', $product->id)
             ->when($user_id, function ($query) use ($user_id) {
@@ -286,7 +288,7 @@ class EcommerceController extends Controller
 
                 if(isset($request->type_id)){
 
-                    $getSelectedtype = sendType($product->category_id, $product->id ,$request->type_id ,$roleType)[0];
+                    $getSelectedtype = sendType($product->category_id, $product->id ,$request->type_id)[0];
     
                     $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
     
@@ -299,12 +301,12 @@ class EcommerceController extends Controller
     
                 }else{
 
-                    $selected_type_id = isset($typedata[0]) ? $typedata[0]['type_id'] : '';
-                    $selected_type_name = isset($typedata[0]) ? $typedata[0]['type_name'] : '';
-                    $selected_type_selling_price = isset($typedata[0]) ? $typedata[0]['selling_price'] : '';
-                    $selected_type_mrp = isset($typedata[0]) ? $typedata[0]['type_mrp'] : '';
-                    $selected_type_percent_off = isset($typedata[0]) ? $typedata[0]['percent_off'] : '';
-                    $selected_min_qty = isset($typedata[0]) ? $typedata[0]['min_qty'] : '';
+                    $selected_type_id = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['type_id'] : '';
+                    $selected_type_name = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['type_name'] : '';
+                    $selected_type_selling_price = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['selling_price'] : '';
+                    $selected_type_mrp = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['type_mrp'] : '';
+                    $selected_type_percent_off = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['percent_off'] : '';
+                    $selected_min_qty = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['min_qty'] : '';
                 }
 
             $product_data[] = [
@@ -435,51 +437,70 @@ class EcommerceController extends Controller
         }
     }
 
-    // public function major_category(Request $request) {
+    private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang)
+    {
+        $vendorTypes = [];
+        $regularTypes = [];
 
-    //     $validator = Validator::make($request->all(), [
-    //         'id' => 'numeric',
-    //     ]);
+        if ($roleType && $roleType == 2) {
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
-    //     }
-        
-    //     $categorys = MajorCategory::orderby('id', 'desc')->where('is_active' , 1);
+            $typeQuery = VendorType::where('product_id', $product_id)->where('is_active', 1);
 
-    //     if($request->id){
-    //         $categorys = $categorys->where('id' , $request->id);
-    //     }
+            if ($state_id) {
+                $typeQuery->where('state_id', $state_id);
+                if ($city_id) {
+                    $typeQuery->where('city_id', $city_id);
+                }
+            }
 
-    //     $categorys = $categorys->get();
+            $typeQuery->groupBy('type_name');
 
-    //     return response()->json(['success' => true,'data' => $categorys] , 200);
+            $vendorTypes = $typeQuery->get();
+        }
 
-    // }
+        $typeQuery = Type::where('product_id', $product_id)->where('is_active', 1);
 
-    // public function major_products(Request $request) {
-        
-    //     $validator = Validator::make($request->all(), [
-    //         'pid' =>  'numeric',
-    //         'mcid' => 'numeric',
-    //     ]);
+        if ($state_id) {
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
-    //     }
+            $typeQuery->where('state_id', $state_id);
 
-    //     $products = MajorProduct::with('majorcategory')->OrderBy('id' ,'Desc')->where('is_active' , 1);
+            if ($city_id) {
 
-    //     if($request->pid != null){
-    //         $products = $products->where('id' , $request->pid);
-    //     }
-    //     if($request->mcid != null){
-    //         $products = $products->where('major_id' , $request->mcid);
-    //     }
+                $typeQuery->where('city_id', $city_id);
 
-    //     $products = $products->get();
+            }
 
-    //     return response()->json(['success' => true,'data' => $products] , 200);
-        
-    // }
+        } else {
+
+            $typeQuery->groupBy('type_name');
+
+        }
+
+        $regularTypes = $typeQuery->get();
+
+        $formatTypes = function ($types) use ($lang) {
+            return $types->map(function ($type) use ($lang) {
+                $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
+                return [
+                    'type_id' => $type->id,
+                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                    'type_category_id' => $type->category_id,
+                    'type_product_id' => $type->product_id,
+                    'type_mrp' => $type->del_mrp,
+                    'gst_percentage' => $type->gst_percentage,
+                    'gst_percentage_price' => $type->gst_percentage_price,
+                    'selling_price' => $type->selling_price,
+                    'type_weight' => $type->weight,
+                    'type_rate' => $type->rate,
+                    'percent_off' => $percent_off,
+                    'min_qty' => $type->min_qty ?? 0,
+                ];
+            });
+        };
+
+        return [
+            'vendor_types' => $vendorTypes ? $formatTypes($vendorTypes) : $vendorTypes,
+            'regular_types' =>$regularTypes ? $formatTypes($regularTypes) : $regularTypes,
+        ];
+    }
 }
