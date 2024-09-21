@@ -17,7 +17,7 @@ class TestimonialController extends Controller
         return view('admin.Testimonial.view-testimonial', compact('footerimages'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $footerimage = null;
