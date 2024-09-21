@@ -246,25 +246,33 @@ class EcommerceController extends Controller
                 ];
             }
 
-            $wishlist = Wishlist::where('device_id', $device_id)
+            $wishlist = Wishlist::where('product_id', $product->id)
             ->when($user_id, function ($query) use ($user_id) {
-                $query->orWhere('user_id', $user_id);
+                return $query->Where('user_id', $user_id);
             })
-            ->where('product_id', $product->id)
             ->first();
         
-            $wish_status = $wishlist ? 1 : 0;
-            $wishlist_id = $wishlist ? $wishlist->id : null;
-        
+            $wish_status = 0;
+            $wishlist_id = null;
+
+            if ($wishlist != null) {
+                $wish_status = 1;
+                $wishlist_id = $wishlist->id ;
+            }
+            
 
             $cart = Cart::where('device_id', $device_id)
-                ->when($user_id, function ($query) use ($user_id) {
-                    $query->orWhere('user_id', $user_id);
-                })
-                ->where('product_id', $product->id)
+                  ->where('product_id', $product->id)
+                    ->when($user_id, function ($query) use ($user_id) {
+                        $query->orWhere('user_id', $user_id);
+                    })
                 ->first();
 
-            $cart_type = $cart ? Type::find($cart->type_id) : null;
+                $cart_type = ($roleType && $roleType == 2) 
+                            ? ($cart ? VendorType::find($cart->type_id) : null)
+                            : ($cart ? Type::find($cart->type_id) : null);
+
+
             $cart_type_name = $cart_type ? ($lang != "hi" ? $cart_type->type_name : $cart_type->type_name_hi) : "";
 
             $rating_avg = ProductRating::where('product_id', $product->id)
