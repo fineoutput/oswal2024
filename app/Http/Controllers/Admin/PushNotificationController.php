@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\PushNotification as PushNotificationModel;
 
-use App\Services\GoogleAccessTokenService;
+// use App\Services\GoogleAccessTokenService;
+
+use App\Services\FirebaseService;
 
 use App\Notifications\PushNotification;
 
@@ -12,16 +14,18 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
+use Illuminate\Http\Request;
 
 class PushNotificationController extends Controller
 {
-    protected $googleAccessTokenService;
+    // protected $googleAccessTokenService;
+    protected $firebaseService;
 
-    public function __construct(GoogleAccessTokenService $googleAccessTokenService)
+    public function __construct(FirebaseService $firebaseService)
     {
-        $this->googleAccessTokenService = $googleAccessTokenService;
+        $this->firebaseService = $firebaseService;
     }
 
     public function index()
@@ -107,7 +111,15 @@ class PushNotificationController extends Controller
 
             $message = isset($request->notification_id) ? 'Notification updated successfully.' : 'Notification inserted successfully.';
             
-            $notification->notify(new PushNotification($notification->title, $notification->description, $notification->image, $this->googleAccessTokenService->getAccessToken()));
+            // $notification->notify(new PushNotification($notification->title, $notification->description, $notification->image, $this->googleAccessTokenService->getAccessToken()));
+
+            $response = $this->firebaseService->sendNotificationToTopic('OswalSoap', $notification->title, $notification->description, asset($notification->image));
+            
+            if (!$response['success']) {
+
+                Log::error('FCM send error: ' . $response['error']);
+                
+            }
             
             return redirect()->route('notification.index')->with('success', $message);
 
