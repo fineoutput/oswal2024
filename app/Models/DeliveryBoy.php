@@ -18,6 +18,7 @@ class DeliveryBoy extends Authenticatable
         'fcm_token',
         'name',
         'email',
+        'role_type',
         'phone',
         'password',
         'address',

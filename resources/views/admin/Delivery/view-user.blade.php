@@ -96,6 +96,8 @@
 
                                                     <th data-priority="1">Name</th>
 
+                                                    <th data-priority="1">Role Type</th>
+
                                                     <th data-priority="3">Contact</th>
 
                                                     <th data-priority="3">Email</th>
@@ -121,6 +123,20 @@
                                                     <td>{{ ++$key }}</td>
 
                                                     <td>{{ $user->name }}</td>
+
+                                                    <td>
+                                                        
+                                                        @if ( $user->role_type == 2)
+
+                                                            Vendor
+
+                                                        @else
+
+                                                            Delivery Boy
+
+                                                        @endif
+
+                                                    </td>
 
                                                     <td>{{ $user->phone }}</td>
 

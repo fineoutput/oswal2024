@@ -18,7 +18,7 @@ class DeliveryBoyController extends Controller
         return view('admin.Delivery.view-user', compact('users'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $user = null;
@@ -47,18 +47,18 @@ class DeliveryBoyController extends Controller
             'name'              => 'required',
             'pincode'           => 'required',
             'email'             => 'required|email',
-            'phone'             => 'required|digits:10',
-            'password'          => 'nullable',
+            'phone'             => 'required|digits:10',   
             'img'               => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ];
-
-        $request->validate($rules);
 
         if (!isset($request->user_id)) {
 
             $user = new DeliveryBoy;
 
+            $rules['password'] = 'required';
         } else {
+
+            $rules['password'] = 'nullable';
 
             $user = DeliveryBoy::find($request->user_id);
             
@@ -70,9 +70,12 @@ class DeliveryBoyController extends Controller
 
         }
 
+        $request->validate($rules);
+
        
        $user->fill([
         'name'     => $request->name,
+        'role_type'=> $request->role_type,
         'email'    => $request->email,
         'phone'    => $request->phone,
         'pincode'  => $request->pincode,

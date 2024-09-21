@@ -97,7 +97,7 @@
 
                                     <div class="form-group row">
 
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
 
@@ -112,6 +112,32 @@
 
                                             @error('name')
                                                 <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <select class="form-control" name="role_type" id="role_type">
+
+                                                    <option value="" {{ (!isset($user) || is_null($user->role_type)) && is_null(old('role_type')) ? 'selected' : '' }}>----select role type-----</option>
+
+                                                    <option value="1" {{ (isset($user) && $user->role_type == 1) || (is_null($user) && old('role_type') == 1) ? 'selected' : '' }}>delivery boy</option>
+
+                                                    <option value="2" {{ (isset($user) && $user->role_type == 2) || (is_null($user) && old('role_type') == 2) ? 'selected' : '' }}>vendor</option>
+
+                                                </select>
+                                                
+                                                <label for="-image3">Role type</label>
+
+                                            </div>
+
+                                            @error('role_type')
+
+                                                <div style="color:red">{{ $message }}</div>
+
                                             @enderror
 
                                         </div>
@@ -181,7 +207,7 @@
 
                                                 <input type="password" class="form-control"
                                                     value="{{ old('password') }}"
-                                                    name="password" placeholder="Enter Password" required>
+                                                    name="password" placeholder="Enter Password" >
 
                                                 <label for="password"> password &nbsp;<span
                                                         style="color:red;">*</span></label>
