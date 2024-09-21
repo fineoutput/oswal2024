@@ -289,6 +289,8 @@ class EcommerceController extends Controller
                 if(isset($request->type_id)){
 
                     $getSelectedtype = sendType($product->category_id, $product->id ,$request->type_id)[0];
+
+                    $vendorSelectedType = vendorType::where('type_name', $getSelectedtype->type_name)->first();
     
                     $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
     
@@ -297,16 +299,21 @@ class EcommerceController extends Controller
                     $selected_type_selling_price = $getSelectedtype->selling_price;
                     $selected_type_mrp = $getSelectedtype->del_mrp;
                     $selected_type_percent_off = $percent_off;
-                    $selected_min_qty = isset($typedata[0]) ? $typedata[0]['min_qty'] : '';
+                    $selected_min_qty = $vendorSelectedType->min_qty ?? '';
     
                 }else{
+
+                  
+
+                    $vendorSelectedType = vendorType::where('type_name',  $typedata['regular_types'][0]['type_name'])->first();
 
                     $selected_type_id = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['type_id'] : '';
                     $selected_type_name = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['type_name'] : '';
                     $selected_type_selling_price = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['selling_price'] : '';
                     $selected_type_mrp = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['type_mrp'] : '';
                     $selected_type_percent_off = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['percent_off'] : '';
-                    $selected_min_qty = isset($typedata['regular_types'][0]) ? $typedata['regular_types'][0]['min_qty'] : '';
+
+                    $selected_min_qty =  $vendorSelectedType->min_qty ?? '';
                 }
 
             $product_data[] = [
