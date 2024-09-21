@@ -17,19 +17,19 @@
                                 Edit
                             @else
                                 Add New
-                            @endif Footer Image
+                            @endif Testimonial
                         </h4>
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a href="javascript:void(0);"> Footer Image </a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);"> Testimonial </a></li>
 
                             <li class="breadcrumb-item active">
                                 @if ($footerimage != null)
                                     Edit
                                 @else
                                     Add
-                                @endif Footer Image
+                                @endif Testimonial
                             </li>
 
                         </ol>
@@ -82,12 +82,12 @@
                                         Edit
                                     @else
                                         Add
-                                    @endif Footer Image Form
+                                    @endif Testimonial Form
                                 </h4>
 
                                 <hr style="margin-bottom: 50px;background-color: darkgrey;">
 
-                                <form action="{{ route('footerimage.store') }}" method="post" enctype="multipart/form-data">
+                                <form action="{{ route('testimonial.store') }}" method="post" enctype="multipart/form-data">
 
                                     @csrf
 
@@ -101,81 +101,54 @@
 
                                             <div class="form-floating">
 
-                                                <select class="form-control" name="category_id" id="category_id" onchange="getProduct('{{ route('slider.get-product') }}')">
+                                                <input type="text" class="form-control"
+                                                    value="{{ $footerimage ? $footerimage->name : old('name') }}"
+                                                    name="name" placeholder="Enter name" required>
 
-                                                    <option>----select Category-----</option>
-
-                                                    @foreach ($categories as $categorie)
-
-                                                        <option value="{{ $categorie->id }}"{{ old('category_id') == $categorie->id || (isset($footerimage) && $footerimage->category_id == $categorie->id) ? ' selected' : '' }}>{{ $categorie->name }}</option>
-
-                                                    @endforeach
-
-                                                </select>
-
-                                                <label for="-image3">Category &nbsp;<span style="color:red;">*</span></label>
+                                                <label for="name">Testimonial Name &nbsp;<span
+                                                        style="color:red;">*</span></label>
 
                                             </div>
 
-                                            @error('category_id')
-
+                                            @error('name')
                                                 <div style="color:red">{{ $message }}</div>
-
                                             @enderror
 
                                         </div>
-
-
-                                        <div class="col-sm-12 mb-3">
-
-                                            <div class="form-floating">
-                                                
-                                                <select class="form-control" name="product_id" id="product-container">
-
-                                                    <option>----No product-----</option>
-
-                                                    @if ($footerimage != null)
-
-                                                        @foreach ($products as $product)
-
-                                                            <option
-                                                                value="{{ $product->id }}"{{ old('product_id') == $product->id || (isset($footerimage) && $footerimage->product_id == $product->id) ? ' selected' : '' }}>
-                                                                {{ $product->name }}
-                                                            </option>
-
-                                                        @endforeach
-
-                                                    @endif
-
-                                                </select>
-
-                                                <label for="-image3">Product &nbsp;<span style="color:red;">*</span></label>
-
-                                            </div>
-
-                                            @error('product_id')
-
-                                                <div style="color:red">{{ $message }}</div>
-
-                                            @enderror
-
-                                        </div>
-
 
                                         <div class="col-sm-12 mb-3">
 
                                             <div class="form-floating">
 
                                                 <input type="text" class="form-control"
-                                                    value="{{ $footerimage ? $footerimage->image_name : old('image_name') }}"
-                                                    name="image_name" placeholder="Enter image_name" required>
+                                                    value="{{ $footerimage ? $footerimage->description : old('description') }}"
+                                                    name="description" placeholder="Enter description" required>
 
-                                                <label for="image_name">Image Name &nbsp;<span
+                                                <label for="description">Description &nbsp;<span
                                                         style="color:red;">*</span></label>
 
                                             </div>
 
-                                            @error('image_name')
+                                            @error('description')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
+
+                                        </div>
+
+                                        <div class="col-sm-12 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control"
+                                                    value="{{ $footerimage ? $footerimage->rating : old('rating') }}"
+                                                    name="rating" placeholder="Enter rating" required>
+
+                                                <label for="rating">Rating &nbsp;<span
+                                                        style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('rating')
                                                 <div style="color:red">{{ $message }}</div>
                                             @enderror
 

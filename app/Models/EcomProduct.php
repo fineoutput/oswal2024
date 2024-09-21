@@ -58,7 +58,7 @@ class EcomProduct extends Model
 
             $ecomProduct->comboproduct2()->delete();
 
-            $ecomProduct->footerimages()->delete();
+            // $ecomProduct->footerimages()->delete();
 
             $ecomProduct->wishlist()->delete();
             
@@ -129,10 +129,10 @@ class EcomProduct extends Model
         
     }
 
-    public function footerimages()
-    {
-        return $this->hasMany(FooterImage::class, 'product_id' , 'id');
-    }
+    // public function footerimages()
+    // {
+    //     return $this->hasMany(FooterImage::class, 'product_id' , 'id');
+    // }
 
     public function wishlist()
     {

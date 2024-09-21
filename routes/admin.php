@@ -44,7 +44,7 @@ use App\Http\Controllers\Admin\OfferSliderfirstController;
 
 use App\Http\Controllers\Admin\OfferSliderSecoundController;
 
-use App\Http\Controllers\Admin\FooterImageController;
+use App\Http\Controllers\Admin\TestimonialController;
 
 use App\Http\Controllers\Admin\WebSliderController;
 
@@ -485,17 +485,17 @@ Route::prefix('offer-slider-2')->name('offerslidersecound.')->group(function () 
 
 /*=========Footer Image Routes ========*/
 
-Route::prefix('footer-image')->name('footerimage.')->group(function () {
+Route::prefix('testimonial')->name('testimonial.')->group(function () {
 
-    Route::get('index', [FooterImageController::class, 'index'])->name('index');
+    Route::get('index', [TestimonialController::class, 'index'])->name('index');
 
-    Route::get('create/{id?}', [FooterImageController::class, 'create'])->name('create');
+    Route::get('create/{id?}', [TestimonialController::class, 'create'])->name('create');
 
-    Route::post('store', [FooterImageController::class, 'store'])->name('store');
+    Route::post('store', [TestimonialController::class, 'store'])->name('store');
 
-    Route::get('update-status/{status}/{id}', [FooterImageController::class, 'update_status'])->name('update-status');
+    Route::get('update-status/{status}/{id}', [TestimonialController::class, 'update_status'])->name('update-status');
 
-    Route::get('destroy/{id}', [FooterImageController::class, 'destroy'])->name('destroy');
+    Route::get('destroy/{id}', [TestimonialController::class, 'destroy'])->name('destroy');
 
 });
 

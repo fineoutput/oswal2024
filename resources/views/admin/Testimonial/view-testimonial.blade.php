@@ -73,7 +73,7 @@
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" href="{{ route('footerimage.create') }}" role="button" style="margin-left: 20px;"> Add Footer Image</a>
+                                        <a class="btn btn-info cticket" href="{{ route('testimonial.create') }}" role="button" style="margin-left: 20px;"> Add Footer Image</a>
 
                                     </div>
 
@@ -94,9 +94,13 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">Image name</th>
+                                                    <th data-priority="1"> Name</th>
 
-                                                    <th data-priority="3">Images</th>
+                                                    <th data-priority="3">Image</th>
+
+                                                    <th data-priority="3">Description</th>
+
+                                                    <th data-priority="3">Rating</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -112,7 +116,7 @@
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
 
-                                                    <td>{{ $footerimage->image_name }}</td>
+                                                    <td>{{ $footerimage->name }}</td>
 
                                                     <td>
 
@@ -121,6 +125,10 @@
                                                         @endif 
 
                                                    </td>
+
+                                                   <td>{{ $footerimage->description }}</td>
+
+                                                   <td>{{ $footerimage->rating }}</td>
 
                                                     <td> 
                                                         @if($footerimage->is_active == 1)  
@@ -136,15 +144,15 @@
 
                                                             @if ($footerimage->is_active == 0)
 
-                                                            <a href="{{route('footerimage.update-status',['active',base64_encode($footerimage->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
+                                                            <a href="{{route('testimonial.update-status',['active',base64_encode($footerimage->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
 
                                                             @else
 
-                                                            <a href="{{route('footerimage.update-status',['inactive',base64_encode($footerimage->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
+                                                            <a href="{{route('testimonial.update-status',['inactive',base64_encode($footerimage->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
 
                                                             @endif
 
-                                                            <a href="{{route('footerimage.create',[base64_encode($footerimage->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+                                                            <a href="{{route('testimonial.create',[base64_encode($footerimage->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                             <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
 
@@ -152,7 +160,7 @@
 
                                                         <div style="display:none" id="cnfbox<?php echo $key ?>">
                                                             <p> Are you sure delete this </p>
-                                                            <a href="{{route('footerimage.destroy', base64_encode($footerimage->id))}}" class="btn btn-danger">Yes</a>
+                                                            <a href="{{route('testimonial.destroy', base64_encode($footerimage->id))}}" class="btn btn-danger">Yes</a>
                                                             <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
                                                         </div>
                                                     </td>

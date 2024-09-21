@@ -26,7 +26,7 @@ class EcomCategory extends Model
            
              $ecomCategory->products()->delete();
 
-             $ecomCategory->footerimages()->delete();
+            //  $ecomCategory->footerimages()->delete();
              
              $ecomCategory->wishlist()->delete();
 
@@ -109,10 +109,10 @@ class EcomCategory extends Model
         return $this->hasMany(Slider::class, 'category_id');
     }
 
-    public function footerimages()
-    {
-        return $this->hasMany(FooterImage::class, 'category_id');
-    }
+    // public function footerimages()
+    // {
+    //     return $this->hasMany(FooterImage::class, 'category_id');
+    // }
 
     public function wishlist()
     {
