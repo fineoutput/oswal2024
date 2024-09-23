@@ -262,20 +262,29 @@ class EcommerceController extends Controller
                 $wishlist_id = $wishlist->id ;
             }
             
+            $cart = Cart::where('product_id', $product->id)
+                ->where('device_id', $device_id);
 
-            $cart = Cart::where('device_id', $device_id)
-                  ->where('product_id', $product->id)
-                    ->when($user_id, function ($query) use ($user_id) {
-                        $query->orWhere('user_id', $user_id);
-                    })
-                ->first();
+            if ($user_id) {
+                $cart->where('user_id', $user_id);
+            }
 
+            $cart = $cart->first();
+
+            $cart_type_name = '';
+
+            if ($cart) {
                 $cart_type = ($roleType && $roleType == 2) 
-                            ? ($cart ? VendorType::find($cart->type_id) : null)
-                            : ($cart ? Type::find($cart->type_id) : null);
+                    ? VendorType::find($cart->type_id) 
+                    : Type::find($cart->type_id);
+
+                $cart_type_name = $cart_type 
+                    ? ($lang !== "hi" ? $cart_type->type_name : $cart_type->type_name_hi) 
+                    : '';
+            }
 
 
-            $cart_type_name = $cart_type ? ($lang != "hi" ? $cart_type->type_name : $cart_type->type_name_hi) : "";
+
 
             $rating_avg = ProductRating::where('product_id', $product->id)
                 ->where('category_id', $product->category_id)
