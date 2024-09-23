@@ -178,7 +178,7 @@ class WishlistController extends Controller
             }
     
     
-           
+           dd($typeData);
     
             // Process each type data
             foreach ($typeData as $type) {
