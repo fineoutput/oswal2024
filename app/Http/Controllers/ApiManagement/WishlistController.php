@@ -157,24 +157,28 @@ class WishlistController extends Controller
           
             if(Auth::check() && Auth::user()->role_type == 2){
                 
-                $typeQuery =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                                ->where('is_active', 1);
+                $typeData =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
+                                ->where('is_active', 1)->get();
             }else{
              
-                $typeQuery = Type::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                                ->where('is_active', 1);
+                $typeData = Type::where('product_id', $product_id)
+                            ->where('id', $wishlistItem->type_id)
+                            ->where('is_active', 1);
+
+                            if (!empty($state_id)) {
+                                $typeData->where('state_id', $state_id);
+                            }
+
+                            if (!empty($city_id)) {
+                                $typeData->where('city_id', $city_id);
+                            }
+
+                            $typeData = $typeData->get();
+
             }
     
     
-            if (!empty($state_id)) {
-                $typeQuery->where('state_id', $state_id);
-            }
-    
-            if (!empty($city_id)) {
-                $typeQuery->where('city_id', $city_id);
-            }
-    
-            $typeData = $typeQuery->get();
+           
     
             // Process each type data
             foreach ($typeData as $type) {
@@ -195,6 +199,7 @@ class WishlistController extends Controller
                 ];
             }
     
+            dd($typedata);
             // Fetch cart data
             $cartDataQuery = Cart::where('product_id', $product_id);
     
