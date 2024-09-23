@@ -32,14 +32,10 @@ class WishlistController extends Controller
             'user_id'    => 'nullable|exists:users,id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
+            'type_id'    => 'required|required|exists:types,id',
             'type_price' => 'required|string',
         ];
 
-        if(Auth::check() && Auth::user()->role_type == 2){
-            $rules['type_id'] = 'required|exists:vendor_types,id';
-        }else{
-            $rules['type_id'] = 'required|exists:types,id';
-        }
 
         $validator = Validator::make($request->all(),  $rules);
 
@@ -48,6 +44,21 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
         
+        if(Auth::check() && Auth::user()->role_type == 2){
+            
+            $Rtype = Type::find($request->type_id);
+
+            $type = VendorType::where('product_id', $Rtype->product_id)
+                ->where('type_name', $Rtype->type_name)
+                ->first();
+
+            $typeid = $type->id;
+
+        }else{
+            
+            $typeid = $request->type_id;
+        }
+
         if($request->user_id){
             
             $existingWishlist = Wishlist::where('user_id', $request->user_id)->where('product_id', $request->product_id)->first();
@@ -74,6 +85,8 @@ class WishlistController extends Controller
 
             $wishlist->fill($request->all());
 
+            $wishlist->type_id = $typeid;
+            
             $wishlist->date = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
             if($wishlist->save()){
