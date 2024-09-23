@@ -298,7 +298,7 @@
 @php $count = 0; if(Auth::check()){ $identifierColumn = 'user_id'; $identifierValue = Auth::user()->id; $count = App\Models\Wishlist::where('user_id', Auth::user()->id)->count(); }else{ $identifierColumn = 'persistent_id'; $identifierValue
 = sendPersistentId(request()); } $cartCount = App\Models\Cart::where($identifierColumn, $identifierValue)->count(); @endphp
 <!--------------------------------- Web Header Start--------------------------------------------------------- -->
-<div class="container-fluid p-3 d-none d-lg-block shadow-lg sticky-top bg-light" style="z-index: 999;">
+<div class="container-fluid p-2 d-none d-lg-block shadow-lg sticky-top bg-light" style="z-index: 999;">
     <div class="row align-items-center">
         <div class="col-3 col-md-3">
             <div class="text-center mb-3 mb-md-0">
@@ -450,7 +450,7 @@
 </div>
 <!--------------------------------- Web Header end--------------------------------------------------------- -->
 <!--------------------------------- Mobile Header Start--------------------------------------------------------- -->
-<div class="container-fluid d-lg-none d-block p-3 sticky-top shadow-lg bg-light" style="z-index: 999;">
+<div class="container-fluid d-lg-none d-block p-2 sticky-top shadow-lg bg-light" style="z-index: 999;">
     <div class="row align-items-center">
         <div class="col-3">
             <div>
