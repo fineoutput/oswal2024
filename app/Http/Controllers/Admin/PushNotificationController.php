@@ -36,7 +36,7 @@ class PushNotificationController extends Controller
         return view('admin.Notifaction.view-notifaction', compact('notifactions'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $notifaction = null;

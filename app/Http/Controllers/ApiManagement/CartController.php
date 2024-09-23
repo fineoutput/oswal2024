@@ -71,7 +71,7 @@ class CartController extends Controller
 
             $Rtype = Type::find($typeId);
 
-            $type = vendorType::where('type_name',  $Rtype->type_name)->first();
+            $type = vendorType::where('product_id', $Rtype->product_id)->where('type_name',  $Rtype->type_name)->first();
 
             if($type) {
 

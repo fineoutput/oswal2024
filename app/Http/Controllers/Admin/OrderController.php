@@ -203,14 +203,17 @@ class OrderController extends Controller
         //     ],
         // ];
 
-        $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+        if($fcm_token != null){
 
-        if(!$response['success']) {
-            
-            if (!$response['success']) {
-
-                Log::error('FCM send error: ' . $response['error']);
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
                 
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
             }
         }
         // $response = Http::withHeaders([
@@ -297,7 +300,7 @@ class OrderController extends Controller
 
     }
 
-    public function view_product($id, Request $request) {
+    public function view_product(Request $request, $id) {
 
         $routeName = Route::currentRouteName();
 
@@ -375,7 +378,7 @@ class OrderController extends Controller
 
             $addedby = Auth::id();
 
-            $order = Order::with('address')->find($order_id);
+            $order = Order::with('address','user')->find($order_id);
 
             if (!$order) {
                Session::flash('emessage', 'Order not found');
@@ -384,7 +387,15 @@ class OrderController extends Controller
 
             $pincode = $order->address->zipcode;
 
-            $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->get();
+            if ($order->user->role_type == 2) {
+               
+                $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->get();
+
+            }else{
+
+                $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->get();
+
+            }
 
             if ($delivery_users->isEmpty()) {
                 Session::flash('emessage', 'No delivery users available for this pincode');
@@ -403,6 +414,7 @@ class OrderController extends Controller
                 'added_by' => $addedby,
                 'date' => $cur_date
             ];
+
             $last_id = TransferOrder::create($data_insert)->id;
 
             $order->update(['delivery_status' => 1]);
@@ -426,16 +438,20 @@ class OrderController extends Controller
                         //         ],
                         //     ],
                         // ];
-                
-                        $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
 
-                        if(!$response['success']) {
-            
-                            if (!$response['success']) {
+                        if($delivery_user_data->fcm_token != null){
+
+                            $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
+    
+                            if(!$response['success']) {
                 
-                                Log::error('FCM send error: ' . $response['error']);
-                                
+                                if (!$response['success']) {
+                    
+                                    Log::error('FCM send error: ' . $response['error']);
+                                    
+                                }
                             }
+                            
                         }
                         // $response = Http::withHeaders([
                         //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
