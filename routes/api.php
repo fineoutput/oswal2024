@@ -109,6 +109,10 @@ Route::prefix('cart')->name('cart.')->group(function () {
     
 });
 
+Route::post('user/update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
+
+Route::post('delivery-boy/update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 
+
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::get('user', function (Request $request) {
@@ -124,8 +128,6 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
 
     Route::post('get-address',[AppController::class , 'getAddress'])->name('get-adress');    
-
-    Route::post('user/update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');    
 
     Route::prefix('wishlist')->name('wishlist.')->group(function () {
 
@@ -197,5 +199,4 @@ Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')-
 
     Route::post('update-current-location', [DeliveryBoyController::class , 'currentLocation'])->name('update-current-location');
 
-    Route::post('update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 
 });

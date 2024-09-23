@@ -269,6 +269,13 @@ class UserAuthController extends Controller
 
         if ($user) {
 
+            if($user->role_type == 2) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'You do not have permission to log in with this number. Please contact the administrator for assistance.'
+                ], 200);                
+            }
+
             $OTP = generateOtp();
 
             $dlt = config('constants.SMS_LOGIN_DLT');
