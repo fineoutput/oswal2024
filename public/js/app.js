@@ -227,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize first carousel
   new Splide('#splide1', {
     type: 'loop',
+    loop:true,
     perPage: 1,
     autoplay: true,
     pagination: true,
@@ -369,6 +370,8 @@ document.addEventListener('DOMContentLoaded', function () {
     focus: 'center',
     pagination: false,
     arrows: true,
+    loop:true,
+    autoplay: true,
     breakpoints: {
       768: {
         perPage: 1,
@@ -423,36 +426,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Promo code selection setup
-document.addEventListener('DOMContentLoaded', function() {
-  // Promo code selection setup
-  const promoOptions = document.getElementById('promoOptions');
-  const toggleButtonpromo = document.getElementById('toggleButtonpromo');
+// document.addEventListener('DOMContentLoaded', function() {
+//   // Promo code selection setup
+//   const promoOptions = document.getElementById('promoOptions');
+//   const toggleButtonpromo = document.getElementById('toggleButtonpromo');
 
-  // Toggle promo code options visibility
-  toggleButtonpromo.addEventListener('click', function() {
-      promoOptions.style.display = promoOptions.style.display === 'block' ? 'none' : 'block';
-      toggleButtonpromo.innerText = promoOptions.style.display === 'block' ? 'Hide Promo Codes' : 'Show Promo Codes';
-  });
+//   // Toggle promo code options visibility
+//   toggleButtonpromo.addEventListener('click', function() {
+//       promoOptions.style.display = promoOptions.style.display === 'block' ? 'none' : 'block';
+//       toggleButtonpromo.innerText = promoOptions.style.display === 'block' ? 'Hide Promo Codes' : 'Show Promo Codes';
+//   });
 
-  // Handle promo code option selection
-  document.querySelectorAll('.promo-option').forEach(function(button) {
-      button.addEventListener('click', function() {
-          // Remove 'active' class from all buttons and add it to the clicked one
-          document.querySelectorAll('.promo-option').forEach(function(btn) {
-              btn.classList.remove('active');
-          });
-          this.classList.add('active');
+//   // Handle promo code option selection
+//   document.querySelectorAll('.promo-option').forEach(function(button) {
+//       button.addEventListener('click', function() {
+//           // Remove 'active' class from all buttons and add it to the clicked one
+//           document.querySelectorAll('.promo-option').forEach(function(btn) {
+//               btn.classList.remove('active');
+//           });
+//           this.classList.add('active');
 
-          // Get the selected promo code and apply it
-          const promoCode = this.getAttribute('data-code');
-          applyPromocode(promoCode);  // Call the applyPromocode function with the selected code
-      });
-  });
-});
+//           // Get the selected promo code and apply it
+//           const promoCode = this.getAttribute('data-code');
+//           applyPromocode(promoCode);  // Call the applyPromocode function with the selected code
+//       });
+//   });
+// });
 
 document.addEventListener('DOMContentLoaded', () => {
   setupSelectableSection('giftCardSection', 'giftCardList', 'gift-card-item');
-  setupPromoCodeSelection('promo-option', 'applyButton'); // This line might be redundant and could be removed
+  // setupPromoCodeSelection('promo-option', 'applyButton'); // This line might be redundant and could be removed
 });
 
 
