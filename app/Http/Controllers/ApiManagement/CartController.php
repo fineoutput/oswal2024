@@ -259,7 +259,7 @@ class CartController extends Controller
             
             if($roleType == 2){
 
-                Cart::where('device_id', $request->device_id)->where('user_id','=',null)->delete();
+                Cart::where('device_id', $request->device_id)->where('user_id','=', 0)->delete();
             }
 
         }else{
