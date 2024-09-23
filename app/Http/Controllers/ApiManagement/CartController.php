@@ -99,6 +99,11 @@ class CartController extends Controller
     
                 $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
                 $typeId = $filteredType ? $filteredType->id : $typeId;
+
+            }else{
+                
+                $typePrice = $type->selling_price ;
+                $typeId =  $type->id ;
             }
 
         } else {
