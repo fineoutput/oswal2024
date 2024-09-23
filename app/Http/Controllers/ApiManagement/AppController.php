@@ -614,7 +614,7 @@ class AppController extends Controller
                 'success' => false,
                 'status' => 401,
                 'message' => 'Unauthorized'
-            ], 401);
+            ]);
         }
 
         $user->fcm_token = $request->fcm_token;
