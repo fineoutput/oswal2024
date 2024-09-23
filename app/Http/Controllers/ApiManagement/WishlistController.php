@@ -178,7 +178,7 @@ class WishlistController extends Controller
             }
     
     
-           dd($typeData);
+           
     
             // Process each type data
             foreach ($typeData as $type) {
@@ -199,7 +199,6 @@ class WishlistController extends Controller
                 ];
             }
     
-            dd($typedata);
             // Fetch cart data
             $cartDataQuery = Cart::where('product_id', $product_id);
     
@@ -240,7 +239,7 @@ class WishlistController extends Controller
                 'cart_quantity' => $cartInfo['cart_quantity'],
                 'cart_total_price' => $cartInfo['cart_total_price'],
                 'cart_status' => $cartInfo['cart_status'],
-                'type' => $typedata[0]
+                'type' => ($typedata && $typedata[0] != null) ? $typedata[0] : '',
             ];
         }
     
