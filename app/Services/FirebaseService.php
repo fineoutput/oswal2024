@@ -16,7 +16,7 @@ class FirebaseService
     public function __construct()
     {
         
-        $serviceAccountPath = storage_path('app/serviceaccount.json');
+        $serviceAccountPath = public_path('admin/assets/serviceaccount.json');
 
         $firebase = (new Factory)->withServiceAccount($serviceAccountPath);
 
