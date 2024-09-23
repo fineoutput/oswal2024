@@ -74,7 +74,9 @@ class CartController extends Controller
             $type = vendorType::where('type_name',  $Rtype->type_name)->first();
 
             if($type) {
-                
+
+                $typeId =  $type->id;
+
                 if ($request->quantity < $type->min_qty) {
     
                     return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
