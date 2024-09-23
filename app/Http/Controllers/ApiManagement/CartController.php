@@ -63,6 +63,7 @@ class CartController extends Controller
 
         $user = User::where('id', $request->user_id)->first();
 
+        dd($user);
         $typePrice = $request->type_price;
 
         $typeId = $request->type_id;
@@ -112,8 +113,6 @@ class CartController extends Controller
 
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
-
-        $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
 
@@ -347,28 +346,27 @@ class CartController extends Controller
 
             $userAddress = Address::findOrFail($address_id);
 
-            if($roleType == 2){
+            $cartItems->load($roleType == 2 ? 'vendortype' : 'type');
 
-                $cartItems->load('vendortype');
+            $total_order_weight = $cartItems->sum(function ($cartItem) use ($roleType) {
+
+                $itemType = $roleType == 2 ? $cartItem->vendortype : $cartItem->type;
+            
+                if (is_null($itemType)) {
+                    return 0; 
+                }
+            
+                return (float)$itemType->weight * (int)$cartItem->quantity;
+            });
+            
+          
+            $missingType = $cartItems->where($roleType == 2 ? 'vendortype' : 'type', null)->isNotEmpty();
+
+            if ($missingType) {
                 
-                $total_order_weight = $cartItems->sum(function ($cartItem) {
-
-                    return (float)$cartItem->vendortype->weight * (int)$cartItem->quantity;
-                });
-    
-            }else{
-                
-                $cartItems->load('type');
-
-                $total_order_weight = $cartItems->sum(function ($cartItem) {
-
-                    return (float)$cartItem->type->weight * (int)$cartItem->quantity;
-                });
-                
-
+                return response()->json(['success' => false, 'message' => 'Please provide correct user details.']);
             }
 
-        
             $shipingCharges =  calculateShippingCharges($total_order_weight, $userAddress->city);
 
             if ($shipingCharges->original['success']) {
