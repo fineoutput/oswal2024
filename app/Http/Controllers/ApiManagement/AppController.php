@@ -594,7 +594,8 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'user_id'   => 'required|integer|exists:users,id',
+            'user_id'   => 'nullable|integer|exists:users,id',
+            'device_id' => 'required|string|exists:users,device_id',
             'fcm_token' => 'required|string',
         ]);
 
@@ -606,7 +607,7 @@ class AppController extends Controller
             ], 400);
         }
 
-        $user = User::find($request->user_id);
+        $user = User::where('device_id', $request->device_id)->orwhere('id', $request->user_id)->first();
 
         if (!$user) {
             return response()->json([
