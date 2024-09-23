@@ -222,7 +222,11 @@
                                         @if (count($cartItems) > 0)
                                         @php
                                             $address = Auth::User()->address->first();
-                                            session()->put('address_id', $address->id);
+
+                                            if($address->id != nuul){
+
+                                                session()->put('address_id', $address->id);
+                                            }
                                         @endphp
                                         
                                             <a href="{{ route('checkout.get-address') }}" id="proceedToPayLink">
