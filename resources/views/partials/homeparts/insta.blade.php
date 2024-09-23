@@ -1,3 +1,9 @@
+<style>
+    iframe {
+    height: revert-layer;
+
+}
+</style>
 <section class="insta-post_sect section-padding">
 
     <div class="container">
