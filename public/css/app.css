@@ -3615,7 +3615,7 @@ p.prev_rate {
 /* ////////////////////////Numbers that matters STARTS////////////////// */
 .numbs-main {
   width: 100%;
-  min-height: 380px;
+  min-height: 420px;
   text-align: center;
   position: relative;
   cursor: pointer;
@@ -3699,7 +3699,7 @@ p.prev_rate {
   left: 18%;
   z-index: -2;
 }
-
+@media (min-width: 768px){
 .numbs-main:hover .numbs-service {
   transform: translateY(-50px);
 }
@@ -3715,7 +3715,7 @@ p.prev_rate {
 .numbs-main:hover .numbs-service-logo img {
   transform: rotate(360deg);
 }
-
+}
 
 /* ////////////////////////////// */
 .cyan_editsless {
