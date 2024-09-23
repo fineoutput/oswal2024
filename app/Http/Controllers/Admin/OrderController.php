@@ -300,7 +300,7 @@ class OrderController extends Controller
 
     }
 
-    public function view_product($id, Request $request) {
+    public function view_product(Request $request, $id) {
 
         $routeName = Route::currentRouteName();
 
