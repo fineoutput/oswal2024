@@ -325,7 +325,7 @@ class OrderController extends Controller
         $reponse['cod_charge']    = formatPrice(getConstant()->cod_charge,false);
         $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
         
-        return response()->json($reponse ,$status);
+        return response()->json($reponse);
     }
 
     public function checkout(Request $request)
