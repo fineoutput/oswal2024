@@ -63,7 +63,6 @@ class CartController extends Controller
 
         $user = User::where('id', $request->user_id)->first();
 
-        dd($user);
         $typePrice = $request->type_price;
 
         $typeId = $request->type_id;
