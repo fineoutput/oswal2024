@@ -44,6 +44,9 @@
     height: 100%;
     object-fit: fill !important;
 }
+.vidhr_rabel {
+    height: 300px;
+}
 </style>
 <section class="product-sect py-5 hot-deals" style="background-image: url('{{ asset('images/rice1.png') }}');">
     <div class="container-fluid">
@@ -63,7 +66,7 @@
                     @if($productType)
                         <li class="splide__slide">
                             <div class="one_card">
-                                <div class="card_upper_img">
+                                <div class="card_upper_img vidhr_rabel">
                                     <a href="{{ route('product-detail' ,['slug' => $product['url']]) }}">
                                         <img src="{{ asset($product['img2']) }}" alt="Primary Image" class="primary-image img-responsive" />
                                         <img src="{{ asset($product['img1']) }}" alt="Secondary Image" class="secondary-image img-responsive" />
