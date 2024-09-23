@@ -1040,19 +1040,19 @@
                             <img src="{{ asset('images/12 (1).png') }}" alt="" /> <br />
 
 
-                            <p>Skin Protection</p>
+                            <p style="font-weight: bolder ">Skin Protection</p>
                         </div>
 
                         <div class="skin">
                             <img src="{{ asset('images/water (1).png') }}" alt="" /><br />
 
-                            <p>Water proof</p>
+                            <p style="font-weight: bolder ">Water proof</p>
                         </div>
 
                         <div class="skin">
                             <img src="{{ asset('images/vitamin (1).png') }}" alt="" /><br />
 
-                            <p>Antioxidant</p>
+                            <p style="font-weight: bolder ">Antioxidant</p>
                         </div>
                     </div>
 
