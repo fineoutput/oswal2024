@@ -1521,6 +1521,9 @@ section.bb-section .bb-container.bb-active .bb-signinBx .bb-imgBx {
   .wrapper .carousel {
     grid-auto-columns: calc((100% / 2) - 9px);
   }
+  .post_banner {
+    height: 40vh !important;
+  }
 }
 
 @media screen and (max-width: 600px) {
