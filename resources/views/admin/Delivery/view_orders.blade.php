@@ -136,7 +136,7 @@
                                                    $user = $order->orders->load('user')->user;
                                                    $orderDetails= $order->orders->load('orderDetails')->orderDetails;
                                                    $promocodes= $order->orders->load('promocodes')->promocodes;
-                                                   
+                                                //    dd($order->orders->delivery_status);
                                                  @endphp
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
@@ -184,18 +184,10 @@
                                                                 <span class="label label-warning"
                                                                     style="font-size:13px;">None</span>
                                                             @elseif ($order->orders->delivery_status == 1)
-                                                             @php
-                                                                $order->transferOrder->load('deliveryBoy');
-                                                                $deliveryBoy = $order->transferOrder->deliveryBoy;
-                                                             @endphp
-                                                              Transfered To ({{$deliveryBoy->name}})
+                                                              Transfered To ({{$dbname->name}}) 
                                                             @elseif ($order->orders->delivery_status == 2)
-                                                            @php
-                                                            $order->transferOrder->load('deliveryBoy');
-                                                            $deliveryBoy = $order->transferOrder->deliveryBoy;
-                                                            @endphp
                                                             <span class="label label-info" style="font-size:13px;">
-                                                                Accepted By ({{$deliveryBoy->name}})
+                                                                Accepted By ({{$dbname->name}})
                                                                 </span>
                                                             @elseif ($order->orders->delivery_status == 3)
                                                                 <span class="label label-success"
