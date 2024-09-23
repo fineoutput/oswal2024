@@ -69,9 +69,16 @@ class CartController extends Controller
 
         if ($user && $user->role_type == 2) {
 
-            $Rtype = Type::find($typeId);
+            if(isset($request->where) == 'cartdetails'){
 
-            $type = vendorType::where('product_id', $Rtype->product_id)->where('type_name',  $Rtype->type_name)->first();
+                $type = vendorType::find($typeId);
+            
+            }else{
+                
+                $Rtype = Type::find($typeId);
+
+                $type = vendorType::where('product_id', $Rtype->product_id)->where('type_name',  $Rtype->type_name)->first();
+            }
 
             if($type) {
 
