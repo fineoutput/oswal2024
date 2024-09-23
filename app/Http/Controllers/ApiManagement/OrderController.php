@@ -178,7 +178,7 @@ class OrderController extends Controller
 
             } else {
 
-                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,$applyPromocode->original['message']);
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,400,$applyPromocode->original['message']);
 
             }
         }
@@ -189,7 +189,7 @@ class OrderController extends Controller
 
             if (!$applyGiftCard->original['success']) {
 
-                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,$applyGiftCard->original['message']);
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,400,$applyGiftCard->original['message']);
 
             }else{
 
