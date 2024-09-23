@@ -7,6 +7,18 @@
     .free_offer_imag {
         position: relative;
     }
+    .roll_style{
+        color: red;
+    }
+    .rol_cent {
+    color: green;
+    font-weight: 800;
+}   
+.promos_det-option p {
+    border: 1px dashed red;
+    padding: 5px;
+    color: #000;
+}
 </style>
 @php
 $OrderDetails = $orderdetails->orderDetails;
@@ -29,7 +41,40 @@ $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active'
 $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
 
 @endphp
-
+ @if (count($applyGiftCardSec) > 0)
+                <div class="gift_animation" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease, visibility 1s ease;
+">
+    <div class="overlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+    "></div>
+    <div class="gift_ideo" style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    ">
+        <img src="http://127.0.0.1:8000/images/a7175d5f23.gif" alt="Gift Animation" style="
+            width: 50%;
+            text-align: center;
+        ">
+        <h2 style="text-align: center;">You Got a Free Gift</h2>
+    </div>
+</div>
+@endif
 <div class="shopping_cart_sect">
 
     <div> </div>
@@ -91,7 +136,8 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 @endforeach
 
                 @if (count($applyGiftCardSec) > 0)
-
+                
+  
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
 
                 <div class="clls">
@@ -235,7 +281,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </li>
 
             </ul>
-
+ 
             @if($giftCardStatus == 1)
 
             <div class="gift-card-section ribbon" id="giftCardSection">
@@ -268,7 +314,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
             @if($promoStatus == 1)
 
-            <div class="promo-section">
+            <!-- <div class="promo-section">
 
                 <div class="promo-title">Choose Your Promo Code</div>
                 <button class="toggle-options-button" id="toggleButtonpromo">Choose Promo Codes</button>
@@ -281,22 +327,49 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     <button class="promo-option" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">{{ $promocode->percent }}% OFF</button>
 
                     @endforeach
-
-                    {{-- <button class="promo-option" data-code="PROMO20">20% OFF</button>
-
-                            <button class="promo-option" data-code="PROMO30">30% OFF</button> --}}
-
+                    
                 </div>
 
-                <!-- <input type="text" id="promoCodeInput" class="promo-code-input"
-                            placeholder="Enter or select promo code" readonly />
-
-                        <button class="apply-button" id="applyButton">Apply Code</button> -->
-
+            </div> -->
+            <div class="choose_promo_code_sect_tin d-flex justify-content-between">
+            <p id="selectedPromoCode">Select Promo Code</p>
+    <!-- Button to trigger modal -->
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#promoModal">
+        Choose Promo Code
+    </button>
+</div>
+<!-- Modal Structure -->
+<div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promoModalLabel">Choose Your Promo Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
+            <div class="modal-body">
+                <div class="promo-options d-block">
+                    @foreach ($promocodes as $promocode)
+                    <div class="d-flex justify-content-between align-items-center promos_det-option">
+                    <p> {{ $promocode->promocode }} {{ $promocode->percent }}</p>
+                    <br>
+                    <button class="promo-option btn btn-outline-danger mb-2" style="width: 30%;"onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">Apply 
+                        </button>
+                    </div>
+                    
+                    <p>Applicable for minimum cart value of <span class="roll_style">{{$promocode->minimum_amount}}</span>with discound of <span class="rol_cent">{{ $promocode->percent }}</span>%</p>
+                    <hr>
+                    @endforeach
+                </div>
+                <br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
             @endif
-
+            
         </div>
 
         <div class="col-md-6 order-md-1">
@@ -459,6 +532,474 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
 @push('scripts')
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<!-- <script>
+    $(document).ready(function() {
+        updateAmount(1);
+    });
+
+    function applyWallet() {
+
+        const order_id = "{{ $orderdetails->id }}";
+
+        const totalorderAmount = $('#totalorderAmount');
+
+        const status = $('#wallet').is(':checked') ? 1 : 0;
+
+        const discountWalletAmount = $('#discountWalletAmount');
+
+        const totalwalletAmount = $('#totalwalletAmount');
+
+        $.ajax({
+            url: "{{ route('checkout.apply-wallet') }}",
+            type: 'POST',
+            data: {
+                order_id: order_id,
+                status: status,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+
+                discountWalletAmount.text(`-${response.discount}`);
+
+                totalwalletAmount.text(`Wallet(${response.wallet_amount})`);
+
+                if ($('input[name="payment_option"]:checked').val() == 1) {
+
+                    final_amount = response.cod_amount;
+
+                } else {
+
+                    final_amount = response.prepared_amount;
+
+                }
+
+                totalorderAmount.text(final_amount);
+
+                $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+
+                showNotification(response.message, 'success');
+
+            },
+            error: function(xhr) {
+                console.error('An error occurred while applying the wallet option.');
+            }
+
+        });
+    }
+
+    function applyPromocode(promoode) {
+        console.log('Promo Code:', promoode);
+    const order_id = "{{ $orderdetails->id }}"; // Assuming order_id is present in view
+    const total_amount = $('#total_amount').val(); // Fetch the current total amount
+    
+    $.ajax({
+        url: "{{ route('checkout.apply-promocode') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            promoode: promoode, // Corrected here
+            amount: total_amount,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            if (response.success) {
+                // Apply success logic (update total, etc.)
+            } else {
+                showNotification(response.message, 'error');
+            }
+        },
+        error: function(xhr) {
+            console.error('An error occurred while applying the promo code.');
+        }
+    });
+}
+
+
+    function removePromocode() {
+
+        const order_id = "{{ $orderdetails->id }}";
+
+        const totalorderAmount = $('#totalorderAmount');
+
+        const promoCodeName = $('#promoCodeName');
+
+        const promoCodeAmount = $('#promoCodeAmount');
+
+        const removpromo = $('#removpromo');
+
+        $.ajax({
+            url: "{{ route('checkout.remove-promocode') }}",
+            type: 'POST',
+            data: {
+                order_id: order_id,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+
+                if (response.success) {
+
+                    promoCodeAmount.text(`-${response.promo_discount}`);
+
+                    promoCodeName.text(response.promocode_name);
+
+                    if ($('input[name="payment_option"]:checked').val() == 1) {
+
+                        final_amount = response.cod_amount;
+
+                    } else {
+
+                        final_amount = response.prepared_amount;
+                    }
+
+                    totalorderAmount.text(final_amount);
+
+                    $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+
+                    removpromo.addClass('d-none')
+
+                    showNotification(response.message, 'success');
+
+                } else {
+
+                    showNotification(response.message, 'error');
+
+                }
+
+            },
+            error: function(xhr) {
+                console.error('An error occurred while applying the wallet option.');
+            }
+        });
+    }
+ 
+    function applyGiftCard(giftCardID) {
+
+        const order_id = "{{ $orderdetails->id }}";
+
+        const totalorderAmount = $('#totalorderAmount');
+
+        const giftCardName = $('#giftCardName');
+
+        const GiftCardAmount = $('#GiftCardAmount');
+
+        const total_amount = "{{ $orderdetails->sub_total }}";
+
+        const removegiftCard = $('#removegiftCard');
+
+        $.ajax({
+            url: "{{ route('checkout.apply-gift-card') }}",
+            type: 'POST',
+            data: {
+                order_id: order_id,
+                gift_card_id: giftCardID,
+                amount: total_amount,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+
+                if (response.success) {
+
+                    GiftCardAmount.text(`+${response.amount}`);
+
+                    giftCardName.text(response.name);
+
+                    if ($('input[name="payment_option"]:checked').val() == 1) {
+
+                        final_amount = response.cod_amount;
+
+                    } else {
+
+                        final_amount = response.prepared_amount;
+                    }
+
+                    totalorderAmount.text(final_amount);
+
+                    $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+
+                    removegiftCard.removeClass('d-none')
+
+                    showNotification(response.message, 'success');
+
+                } else {
+
+                    showNotification(response.message, 'error');
+
+                }
+            },
+            error: function(xhr) {
+                showNotification(response.message, 'error');
+                console.error('An error occurred while applying the wallet option.');
+            }
+        });
+    }
+
+    function setupSelectableSection(sectionId, listId, itemClass) {
+
+    const sectionElement = document.getElementById(sectionId);
+    const listElement = document.getElementById(listId);
+
+    // Toggle list visibility when the section is clicked
+    sectionElement.addEventListener('click', () => {
+    listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Handle gift card item selection
+    document.querySelectorAll(`.${itemClass}`).forEach(item => {
+    item.addEventListener('click', function () {
+        // Deselect all items and select the clicked one
+        document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+
+        // Update the selected gift card information in the section
+        const selectedText = this.querySelector('p').innerText;
+        const selectedImageSrc = this.querySelector('img').src;
+        sectionElement.innerHTML = `
+        <p>${selectedText}</p>
+        <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
+        <button class="btn btn-danger" id="removeSelected" style="margin-left: 10px;">Remove</button>
+        `;
+
+        // Hide the list after selection
+        listElement.style.display = 'none';
+
+        // Add event listener for the remove button
+        document.getElementById('removeSelected').addEventListener('click', function () {
+        const giftCardID = item.getAttribute('data-id'); // Assuming the gift card ID is stored in a data attribute
+
+        // AJAX request to remove the gift card
+        removeGiftCard(giftCardID);
+
+        // Clear selection and reset section content
+        document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+        sectionElement.innerHTML = '<p>Select a product</p>'; // Reset the section content
+
+        // Show the list again
+        listElement.style.display = 'block';
+        });
+    });
+    });
+    }
+
+    function removeGiftCard(giftCardID) {
+    const order_id = "{{ $orderdetails->id }}";
+
+    const totalorderAmount = $('#totalorderAmount');
+    const giftCardName = $('#giftCardName');
+    const GiftCardAmount = $('#GiftCardAmount');
+    const removegiftCard = $('#removegiftCard');
+    const cleargiftsecation = $('#cleargiftsecation');
+
+    $.ajax({
+    url: "{{ route('checkout.remove-gift-card') }}",
+    type: 'POST',
+    data: {
+        order_id: order_id,
+        gift_card_id: giftCardID, // Pass the gift card ID to the server
+        _token: "{{ csrf_token() }}"
+    },
+    success: function(response) {
+        if (response.success) {
+        GiftCardAmount.text(`+${response.amount}`);
+        giftCardName.text(response.name);
+
+        let final_amount;
+        if ($('input[name="payment_option"]:checked').val() == 1) {
+            final_amount = response.cod_amount;
+        } else {
+            final_amount = response.prepared_amount;
+        }
+
+        totalorderAmount.text(final_amount);
+        cleargiftsecation.text('Click here to select a gift card');
+        $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+        removegiftCard.addClass('d-none');
+
+        showNotification(response.message, 'success');
+        } else {
+        showNotification(response.message, 'error');
+        }
+    },
+    error: function(xhr) {
+        showNotification('An error occurred while removing the gift card.', 'error');
+        console.error('An error occurred while removing the gift card.');
+    }
+    });
+    }
+
+
+    function updateAmount(type) {
+
+        const codContainer = $('#CodCaharges');
+
+        const codChargeAmount = $('#codChargeAmount');
+
+        const totalorderAmount = $('#totalorderAmount');
+
+        const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
+
+        let total_amount;
+
+        if (type == 1) {
+
+            total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
+
+            totalorderAmount.text(`₹${total_amount}`);
+
+            $('#totalorderAmounti').val(total_amount);
+
+            codChargeAmount.text(`+₹${codCharge}`);
+
+            codContainer.removeClass('d-none').addClass('d-block');
+
+        } else {
+
+            total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
+
+            $('#totalorderAmounti').val(total_amount);
+
+            totalorderAmount.text(`₹${total_amount}`)
+
+            codChargeAmount.text(`+₹${codCharge}`);
+
+            codContainer.removeClass('d-block').addClass('d-none');
+
+        }
+    }
+
+    function convertCurrencyToFloat(value) {
+
+        const cleanedValue = value.replace(/[^\d.]/g, '');
+
+        return parseFloat(cleanedValue);
+    }
+
+    function placeOrder() {
+
+        $.ajax({
+            url: "{{ route('checkout.place-order') }}",
+            type: 'POST',
+            data: $('#placeOrder').serialize(),
+            success: function(response) {
+                // console.log();
+                if (response.data.form != 1) {
+
+                    var options = {
+                        "key": "{{ config('services.razorpay.key_id') }}",
+                        "amount": response.data.amount,
+                        "currency": "INR",
+                        "name": "OSwal",
+                        "description": "Test Transaction",
+                        "image": "{{ asset('images/oswal-logo.png') }}",
+                        "order_id": response.data.razor_order_id, // Razorpay Order ID
+                        "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+                        "prefill": {
+                            "name": response.data.name,
+                            "email": response.data.email,
+                            "phone": response.data.phone
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+
+                    // Initialize and open the Razorpay payment gateway
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } else {
+
+                    window.location.href = `{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+
+                }
+            },
+            error: function(xhr) {
+                console.error('An error occurred while processing the payment option.');
+            }
+        });
+    }
+
+    function convertCurrencyToFloat(value) {
+
+        const cleanedValue = value.replace(/[^\d.]/g, '');
+
+        return parseFloat(cleanedValue);
+    }
+
+    function placeOrder() {
+
+        $.ajax({
+            url: "{{ route('checkout.place-order') }}",
+            type: 'POST',
+            data: $('#placeOrder').serialize(),
+            success: function(response) {
+
+                if(!response.success){
+
+                    showNotification(response.message, 'error');  
+                    return;
+                }
+
+                if (response.data.form != 1) {
+
+                    var options = {
+                        "key": "{{ config('services.razorpay.key_id') }}",
+                        "amount": response.data.amount,
+                        "currency": "INR",
+                        "name": "OSwal",
+                        "description": "Test Transaction",
+                        "image": "{{ asset('images/oswal-logo.png') }}",
+                        "order_id": response.data.razor_order_id, // Razorpay Order ID
+                        "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+                        "prefill": {
+                            "name": response.data.name,
+                            "email": response.data.email,
+                            "phone": response.data.phone
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+
+                    // Initialize and open the Razorpay payment gateway
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                }else{
+                
+                    window.location.href=`{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+                    
+                }
+            },
+            error: function(xhr) {
+                console.error('An error occurred while processing the payment option.');
+            }
+        });
+    }
+
+
+    // Wait for the page to load completely
+    window.onload = function() {
+        // Select the gift animation element
+        const giftAnimation = document.querySelector('.gift_animation');
+
+        // Show the element with transition
+        giftAnimation.style.opacity = '1';
+        giftAnimation.style.visibility = 'visible';
+
+        // Hide the element after 5 seconds
+        setTimeout(function() {
+            giftAnimation.style.opacity = '0';
+            giftAnimation.style.visibility = 'hidden';
+        }, 5000);
+    };
+
+</script> -->
+
 
 <script>
     $(document).ready(function() {
@@ -692,98 +1233,99 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
         });
     }
 
-function setupSelectableSection(sectionId, listId, itemClass) {
+    function setupSelectableSection(sectionId, listId, itemClass) {
 
-const sectionElement = document.getElementById(sectionId);
-const listElement = document.getElementById(listId);
+        const sectionElement = document.getElementById(sectionId);
+        const listElement = document.getElementById(listId);
 
-// Toggle list visibility when the section is clicked
-sectionElement.addEventListener('click', () => {
-  listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
-});
+        // Toggle list visibility when the section is clicked
+        sectionElement.addEventListener('click', () => {
+        listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+        });
 
-// Handle gift card item selection
-document.querySelectorAll(`.${itemClass}`).forEach(item => {
-  item.addEventListener('click', function () {
-    // Deselect all items and select the clicked one
-    document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-    this.classList.add('selected');
+        // Handle gift card item selection
+        document.querySelectorAll(`.${itemClass}`).forEach(item => {
+        item.addEventListener('click', function () {
+            // Deselect all items and select the clicked one
+            document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
 
-    // Update the selected gift card information in the section
-    const selectedText = this.querySelector('p').innerText;
-    const selectedImageSrc = this.querySelector('img').src;
-    sectionElement.innerHTML = `
-      <p>${selectedText}</p>
-      <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
-      <button class="btn btn-danger" id="removeSelected" style="margin-left: 10px;">Remove</button>
-    `;
+            // Update the selected gift card information in the section
+            const selectedText = this.querySelector('p').innerText;
+            const selectedImageSrc = this.querySelector('img').src;
+            sectionElement.innerHTML = `
+            <p>${selectedText}</p>
+            <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
+            <button class="btn btn-danger" id="removeSelected" style="margin-left: 10px;">Remove</button>
+            `;
 
-    // Hide the list after selection
-    listElement.style.display = 'none';
+            // Hide the list after selection
+            listElement.style.display = 'none';
 
-    // Add event listener for the remove button
-    document.getElementById('removeSelected').addEventListener('click', function () {
-      const giftCardID = item.getAttribute('data-id'); // Assuming the gift card ID is stored in a data attribute
+            // Add event listener for the remove button
+            document.getElementById('removeSelected').addEventListener('click', function () {
+            const giftCardID = item.getAttribute('data-id'); // Assuming the gift card ID is stored in a data attribute
 
-      // AJAX request to remove the gift card
-      removeGiftCard(giftCardID);
+            // AJAX request to remove the gift card
+            removeGiftCard(giftCardID);
 
-      // Clear selection and reset section content
-      document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-      sectionElement.innerHTML = '<p>Select a product</p>'; // Reset the section content
+            // Clear selection and reset section content
+            document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+            sectionElement.innerHTML = '<p>Select a product</p>'; // Reset the section content
 
-      // Show the list again
-      listElement.style.display = 'block';
-    });
-  });
-});
-}
-
-function removeGiftCard(giftCardID) {
-const order_id = "{{ $orderdetails->id }}";
-
-const totalorderAmount = $('#totalorderAmount');
-const giftCardName = $('#giftCardName');
-const GiftCardAmount = $('#GiftCardAmount');
-const removegiftCard = $('#removegiftCard');
-const cleargiftsecation = $('#cleargiftsecation');
-
-$.ajax({
-  url: "{{ route('checkout.remove-gift-card') }}",
-  type: 'POST',
-  data: {
-    order_id: order_id,
-    gift_card_id: giftCardID, // Pass the gift card ID to the server
-    _token: "{{ csrf_token() }}"
-  },
-  success: function(response) {
-    if (response.success) {
-      GiftCardAmount.text(`+${response.amount}`);
-      giftCardName.text(response.name);
-
-      let final_amount;
-      if ($('input[name="payment_option"]:checked').val() == 1) {
-        final_amount = response.cod_amount;
-      } else {
-        final_amount = response.prepared_amount;
-      }
-
-      totalorderAmount.text(final_amount);
-      cleargiftsecation.text('Click here to select a gift card');
-      $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
-      removegiftCard.addClass('d-none');
-
-      showNotification(response.message, 'success');
-    } else {
-      showNotification(response.message, 'error');
+            // Show the list again
+            listElement.style.display = 'block';
+            });
+            
+        });
+        });
     }
-  },
-  error: function(xhr) {
-    showNotification('An error occurred while removing the gift card.', 'error');
-    console.error('An error occurred while removing the gift card.');
-  }
-});
-}
+
+    function removeGiftCard(giftCardID) {
+        const order_id = "{{ $orderdetails->id }}";
+
+        const totalorderAmount = $('#totalorderAmount');
+        const giftCardName = $('#giftCardName');
+        const GiftCardAmount = $('#GiftCardAmount');
+        const removegiftCard = $('#removegiftCard');
+        const cleargiftsecation = $('#cleargiftsecation');
+
+        $.ajax({
+        url: "{{ route('checkout.remove-gift-card') }}",
+        type: 'POST',
+        data: {
+            order_id: order_id,
+            gift_card_id: giftCardID, // Pass the gift card ID to the server
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            if (response.success) {
+            GiftCardAmount.text(`+${response.amount}`);
+            giftCardName.text(response.name);
+
+            let final_amount;
+            if ($('input[name="payment_option"]:checked').val() == 1) {
+                final_amount = response.cod_amount;
+            } else {
+                final_amount = response.prepared_amount;
+            }
+
+            totalorderAmount.text(final_amount);
+            cleargiftsecation.text('Click here to select a gift card');
+            $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+            removegiftCard.addClass('d-none');
+
+            showNotification(response.message, 'success');
+            } else {
+            showNotification(response.message, 'error');
+            }
+        },
+        error: function(xhr) {
+            showNotification('An error occurred while removing the gift card.', 'error');
+            console.error('An error occurred while removing the gift card.');
+        }
+        });
+    }
 
 
     function updateAmount(type) {
@@ -879,66 +1421,80 @@ $.ajax({
         });
     }
 
-function convertCurrencyToFloat(value) {
+    function convertCurrencyToFloat(value) {
 
-    const cleanedValue = value.replace(/[^\d.]/g, '');
+        const cleanedValue = value.replace(/[^\d.]/g, '');
 
-    return parseFloat(cleanedValue);
-}
+        return parseFloat(cleanedValue);
+    }
 
-function placeOrder() {
+    function placeOrder() {
 
-    $.ajax({
-        url: "{{ route('checkout.place-order') }}",
-        type: 'POST',
-        data: $('#placeOrder').serialize(),
-        success: function(response) {
+        $.ajax({
+            url: "{{ route('checkout.place-order') }}",
+            type: 'POST',
+            data: $('#placeOrder').serialize(),
+            success: function(response) {
 
-            if(!response.success){
+                if(!response.success){
 
-                showNotification(response.message, 'error');  
-                return;
-            }
+                    showNotification(response.message, 'error');  
+                    return;
+                }
 
-            if (response.data.form != 1) {
+                if (response.data.form != 1) {
 
-                var options = {
-                    "key": "{{ config('services.razorpay.key_id') }}",
-                    "amount": response.data.amount,
-                    "currency": "INR",
-                    "name": "OSwal",
-                    "description": "Test Transaction",
-                    "image": "{{ asset('images/oswal-logo.png') }}",
-                    "order_id": response.data.razor_order_id, // Razorpay Order ID
-                    "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
-                    "prefill": {
-                        "name": response.data.name,
-                        "email": response.data.email,
-                        "phone": response.data.phone
-                    },
-                    "notes": {
-                        "address": "Razorpay Corporate Office"
-                    },
-                    "theme": {
-                        "color": "#3399cc"
-                    }
-                };
+                    var options = {
+                        "key": "{{ config('services.razorpay.key_id') }}",
+                        "amount": response.data.amount,
+                        "currency": "INR",
+                        "name": "OSwal",
+                        "description": "Test Transaction",
+                        "image": "{{ asset('images/oswal-logo.png') }}",
+                        "order_id": response.data.razor_order_id, // Razorpay Order ID
+                        "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+                        "prefill": {
+                            "name": response.data.name,
+                            "email": response.data.email,
+                            "phone": response.data.phone
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
 
-                // Initialize and open the Razorpay payment gateway
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            }else{
-               
-                window.location.href=`{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+                    // Initialize and open the Razorpay payment gateway
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                }else{
                 
+                    window.location.href=`{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+                    
+                }
+            },
+            error: function(xhr) {
+                console.error('An error occurred while processing the payment option.');
             }
-        },
-        error: function(xhr) {
-            console.error('An error occurred while processing the payment option.');
-        }
-    });
-}
+        });
+    }
 
 </script>
 
+<script>
+//     function applyPromocode(promocode) {
+//     // Perform the necessary action with the selected promo code
+//     console.log("Applying promocode: " + promocode);
+
+//     // Close the modal
+//     var modal = new bootstrap.Modal(document.getElementById('promoModal'));
+//     modal.hide();
+
+//     // Optionally display the selected promo code elsewhere in the UI
+//     document.getElementById('selectedPromoCode').innerText = "Selected Promo: " + promocode;
+// }
+
+</script>
 @endpush

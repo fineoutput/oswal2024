@@ -8,7 +8,7 @@
     margin: 10px 0;
     border-radius: 5px;
     color: #fff;
-    z-index: 1000;
+    z-index: 20000;
     display: flex;
     justify-content: space-between;
     align-items: center;
