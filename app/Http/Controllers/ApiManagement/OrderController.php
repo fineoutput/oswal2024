@@ -178,7 +178,7 @@ class OrderController extends Controller
 
             } else {
 
-                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,$applyPromocode->original['message']);
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,400,$applyPromocode->original['message']);
 
             }
         }
@@ -189,7 +189,7 @@ class OrderController extends Controller
 
             if (!$applyGiftCard->original['success']) {
 
-                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,200,$applyGiftCard->original['message']);
+                return $this->generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,400,$applyGiftCard->original['message']);
 
             }else{
 
@@ -325,7 +325,7 @@ class OrderController extends Controller
         $reponse['cod_charge']    = formatPrice(getConstant()->cod_charge,false);
         $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
         
-        return response()->json($reponse ,$status);
+        return response()->json($reponse);
     }
 
     public function checkout(Request $request)

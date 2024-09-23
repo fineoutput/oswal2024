@@ -307,7 +307,7 @@ class OrderController extends Controller
         $id = base64_decode($id);
 
         $orders = OrderDetail::where('main_id' , $id)->get();
-
+ 
         $pageTitle ='Products Details';
 
         if($routeName == 'order.vendor.view-product'){

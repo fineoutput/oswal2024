@@ -280,11 +280,22 @@
                                                                         </li>
                                                                     @endif
                                                     
+                                                                    @if ($dbname->role_type == 2)
+
                                                                     <li>
-                                                                        <a href="{{ route('order.view-product', ['id' => base64_encode($order->id)]) }}">
+                                                                        <a href="{{ route('order.vendor.view-product', ['id' => base64_encode($order->orders->id)]) }}">
                                                                             View Products
                                                                         </a>
                                                                     </li>
+
+                                                                    @else
+
+                                                                    <li>
+                                                                        <a href="{{ route('order.view-product', ['id' => base64_encode($order->orders->id)]) }}">
+                                                                            View Products
+                                                                        </a>
+                                                                    </li>
+                                                                    @endif
                                                     
                                                                     <li>
                                                                         <a href="{{ route('order.view-bill', ['id' => base64_encode($order->id)]) }}">
