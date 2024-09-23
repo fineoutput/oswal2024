@@ -71,40 +71,34 @@ class CartController extends Controller
 
             if(isset($request->where) == 'cartdetails'){
 
-                $type = vendorType::find($typeId);
+                $type = VendorType::find($typeId);
             
             }else{
                 
                 $Rtype = Type::find($typeId);
 
-                $type = vendorType::where('product_id', $Rtype->product_id)->where('type_name',  $Rtype->type_name)->first();
+                $type = VendorType::where('product_id', $Rtype->product_id)
+                    ->where('type_name', $Rtype->type_name)
+                    ->first();
             }
 
-            if($type) {
+            if (!$type) {
+                return response()->json(['success' => false, 'message' => "Type not found."]);
+            }
 
-                $typeId =  $type->id;
+            if ($request->quantity < $type->min_qty) {
+                return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+            }
 
-                if ($request->quantity < $type->min_qty) {
+            if ($request->quantity > $type->end_range) {
+                $filteredType = VendorType::where('product_id', $request->product_id)
+                    ->where('type_name', $type->type_name)
+                    ->where('start_range', '<=', $request->quantity)
+                    ->where('end_range', '>=', $request->quantity)
+                    ->first();
     
-                    return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
-    
-                }
-    
-                if ($request->quantity > $type->end_range) {
-    
-                    $filteredType = VendorType::where('product_id', $request->product_id)
-                        ->where('type_name', $type->type_name)
-                        ->where('start_range', '<=', $request->quantity)
-                        ->where('end_range', '>=', $request->quantity)
-                        ->first();
-    
-                    $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
-                    $typeId = $filteredType ? $filteredType->id : $typeId;
-                }
-
-            }else{
-
-                return response()->json(['success' => false, 'message' => "type Not found."]);
+                $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
+                $typeId = $filteredType ? $filteredType->id : $typeId;
             }
 
         } else {
