@@ -223,7 +223,7 @@
                                         @php
                                             $address = Auth::User()->address->first();
 
-                                            if($address->id != nuul){
+                                            if($address->id != null){
 
                                                 session()->put('address_id', $address->id);
                                             }
