@@ -269,6 +269,10 @@ class UserAuthController extends Controller
 
         if ($user) {
 
+            if($user->role_type == 2) {
+                return response()->json([ 'success' => false, 'message' => ''],200);
+            }
+
             $OTP = generateOtp();
 
             $dlt = config('constants.SMS_LOGIN_DLT');
