@@ -142,7 +142,7 @@ class CartController extends Controller
                                     $backupCartItem->where('user_id', $request->user_id);
                                  } 
             
-                                $backupCartItem= $$backupCartItem->first();
+                                $backupCartItem= $backupCartItem->first();
             
 
         if (empty($backupCartItem)) {
