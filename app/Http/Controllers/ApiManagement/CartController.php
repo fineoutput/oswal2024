@@ -161,16 +161,15 @@ class CartController extends Controller
         }
 
         // Handle current cart in Cart
-        $cartItem = Cart::where('device_id', $data['device_id'])
+        $cartItem = Cart::where('product_id', $data['product_id'])
+                     ->where('device_id', $data['device_id']);
 
-            ->where('product_id', $data['product_id'])
+                    if (!empty($request->user_id)) {
+                        $cartItem->where('user_id', $request->user_id);
+                    }
 
-            ->when(!empty($data['user_id']), function ($query) use ($data) {
+                    $cartItem = $cartItem->first();
 
-                $query->orwhere('user_id', $data['user_id']);
-            })
-
-            ->first();
             
 
         if (empty($cartItem)) {
