@@ -18,7 +18,7 @@ class CategoryController extends Controller
         return view('admin.Ecommerce.Categorys.category-index', compact('categorys'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $category = null;

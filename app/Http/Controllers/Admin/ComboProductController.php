@@ -18,7 +18,7 @@ class ComboProductController extends Controller
         return view('admin.ComboProducts.view-comboproduct', compact('comboproducts'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $comboproduct = null;

@@ -17,7 +17,7 @@ class WebSliderSecoundController extends Controller
         return view('admin.Webslider2.view-slider', compact('sliders'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $slider = null;

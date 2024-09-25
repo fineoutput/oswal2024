@@ -18,7 +18,7 @@ class GiftCardController extends Controller
         return view('admin.GiftCard.view-giftcard', compact('giftcards'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $giftcard = null;

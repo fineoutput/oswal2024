@@ -19,7 +19,7 @@ class ThemeTrendingController extends Controller
         return view('admin.Trending.view-trending', compact('trendings' , 'tranding_url'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $trending = null;
