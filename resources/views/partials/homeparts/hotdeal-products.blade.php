@@ -39,11 +39,7 @@
      /* Adjust based on your design */
     flex-shrink: 0;
 }
-.splide__slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill !important;
-}
+
 .vidhr_rabel {
     height: 300px;
 }
@@ -68,8 +64,12 @@
                             <div class="one_card">
                                 <div class="card_upper_img vidhr_rabel">
                                     <a href="{{ route('product-detail' ,['slug' => $product['url']]) }}">
-                                        <img src="{{ asset($product['img2']) }}" alt="Primary Image" class="primary-image img-responsive" />
-                                        <img src="{{ asset($product['img1']) }}" alt="Secondary Image" class="secondary-image img-responsive" />
+                                        <img src="{{ asset($product['img2']) }}" alt="Primary Image" class="primary-image img-responsive" style="  width: 100%;
+    height: 100%;
+    object-fit: fill !important;"/>
+                                        <img src="{{ asset($product['img1']) }}" alt="Secondary Image" class="secondary-image img-responsive" style="  width: 100%;
+    height: 100%;
+    object-fit: fill !important;"/>
                                     </a>
                                 </div>
                                 <div class="lower_cntnt_prod" style="background-color: #fff;">
