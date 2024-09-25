@@ -1,6 +1,6 @@
 <div class="secttion_slider">
 
-    <h2 class="text-center">Offer Slider</h2>
+    <!-- <h2 class="text-center">Offer Slider</h2> -->
 {{-- sec --}}
 </div>
 
@@ -36,7 +36,7 @@
 
 <div class="secttion_another_slider">
 
-    <h2 class="text-center">Festival Slider</h2>
+    <!-- <h2 class="text-center">Festival Slider</h2> -->
 
 </div>
 
