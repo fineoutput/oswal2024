@@ -140,7 +140,7 @@ class CartController extends Controller
 
             ->when(!empty($data['user_id']), function ($query) use ($data) {
 
-                $query->where('user_id', $data['user_id']);
+                $query->orwhere('user_id', $data['user_id']);
             })
             ->first();
 
@@ -167,7 +167,7 @@ class CartController extends Controller
 
             ->when(!empty($data['user_id']), function ($query) use ($data) {
 
-                $query->where('user_id', $data['user_id']);
+                $query->orwhere('user_id', $data['user_id']);
             })
 
             ->first();
