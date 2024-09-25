@@ -52,7 +52,7 @@
                     
                     <li class="splide__slide">
 
-                        <img src="{{ asset($slider->image) }}" alt="Slide {{ ++$key }}" />
+                        <img src="{{ asset($slider->image) }}" alt="Slide {{ ++$key }}" height="100%"/>
 
                         <div class="slider_bg"></div>
 
