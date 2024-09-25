@@ -203,7 +203,7 @@
                                                 <input class="form-control" type="file" id="img3" name="img3"
                                                     placeholder="img2">
 
-                                                @if ($slider->vendor_image != null)
+                                                @if ($slider != null)
                                                     <img src="{{ asset($slider->vendor_image) }}" width="100px" height="100px">
                                                 @endif
 
