@@ -90,7 +90,8 @@ class CartController extends Controller
                 return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
             }
 
-            if ($request->quantity > $type->end_range) {
+            // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
+
                 $filteredType = VendorType::where('product_id', $request->product_id)
                     ->where('type_name', $type->type_name)
                     ->where('start_range', '<=', $request->quantity)
@@ -100,11 +101,11 @@ class CartController extends Controller
                 $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
                 $typeId = $filteredType ? $filteredType->id : $typeId;
 
-            }else{
-                
-                $typePrice = $type->selling_price ;
-                $typeId =  $type->id ;
-            }
+            // }else{
+
+            //     $typePrice = $type->selling_price ;
+            //     $typeId =  $type->id ;
+            // }
 
         } else {
         
@@ -258,7 +259,7 @@ class CartController extends Controller
             
             if($roleType == 2){
 
-                Cart::where('device_id', $request->device_id)->where('user_id','=',null)->delete();
+                Cart::where('device_id', $request->device_id)->where('user_id','=', 0)->delete();
             }
 
         }else{

@@ -32,14 +32,10 @@ class WishlistController extends Controller
             'user_id'    => 'nullable|exists:users,id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
+            'type_id'    => 'required|required|exists:types,id',
             'type_price' => 'required|string',
         ];
 
-        if(Auth::check() && Auth::user()->role_type == 2){
-            $rules['type_id'] = 'required|exists:vendor_types,id';
-        }else{
-            $rules['type_id'] = 'required|exists:types,id';
-        }
 
         $validator = Validator::make($request->all(),  $rules);
 
@@ -48,6 +44,21 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
         
+        if(Auth::check() && Auth::user()->role_type == 2){
+            
+            $Rtype = Type::find($request->type_id);
+
+            $type = VendorType::where('product_id', $Rtype->product_id)
+                ->where('type_name', $Rtype->type_name)
+                ->first();
+
+            $typeid = $type->id;
+
+        }else{
+            
+            $typeid = $request->type_id;
+        }
+
         if($request->user_id){
             
             $existingWishlist = Wishlist::where('user_id', $request->user_id)->where('product_id', $request->product_id)->first();
@@ -74,6 +85,8 @@ class WishlistController extends Controller
 
             $wishlist->fill($request->all());
 
+            $wishlist->type_id = $typeid;
+            
             $wishlist->date = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
             if($wishlist->save()){
@@ -144,24 +157,28 @@ class WishlistController extends Controller
           
             if(Auth::check() && Auth::user()->role_type == 2){
                 
-                $typeQuery =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                                ->where('is_active', 1);
+                $typeData =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
+                                ->where('is_active', 1)->get();
             }else{
              
-                $typeQuery = Type::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                                ->where('is_active', 1);
+                $typeData = Type::where('product_id', $product_id)
+                            ->where('id', $wishlistItem->type_id)
+                            ->where('is_active', 1);
+
+                            if (!empty($state_id)) {
+                                $typeData->where('state_id', $state_id);
+                            }
+
+                            if (!empty($city_id)) {
+                                $typeData->where('city_id', $city_id);
+                            }
+
+                            $typeData = $typeData->get();
+
             }
     
     
-            if (!empty($state_id)) {
-                $typeQuery->where('state_id', $state_id);
-            }
-    
-            if (!empty($city_id)) {
-                $typeQuery->where('city_id', $city_id);
-            }
-    
-            $typeData = $typeQuery->get();
+           
     
             // Process each type data
             foreach ($typeData as $type) {
@@ -222,7 +239,7 @@ class WishlistController extends Controller
                 'cart_quantity' => $cartInfo['cart_quantity'],
                 'cart_total_price' => $cartInfo['cart_total_price'],
                 'cart_status' => $cartInfo['cart_status'],
-                'type' => $typedata[0]
+                'type' => ($typedata && $typedata[0] != null) ? $typedata[0] : '',
             ];
         }
     
