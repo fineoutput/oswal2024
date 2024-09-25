@@ -1,100 +1,5 @@
 
-<!-- <div class="renwew_sect section-padding mb-5"
 
-    style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/about_bg.jpg); margin-top: -10px;">
-
-    <div class="container">
-
-        <div class="row">
-
-            <div class="col-lg-12 col-sm-12 col-md-12 renwer_upper">
-
-                <div class="renew_head">
-
-                    <h2 class="module-title text-center">Oswal</h2>
-
-                    <div class="renew_head_img">
-
-                        <img src="{{ asset('images/roya.') }}png" alt="" />
-
-                    </div>
-
-                    <div class="module-subtitle">
-
-                        <br />
-                        OSWAL SOAP GROUP With Over <span class="red">65 Years Of Experience</span> And More Than <span class="red">150 Million Satisfied Customers</span>,
-    Oswal Soap Group Became One Of The <span class="red">Largest Manufacturers</span> Of The Daily-Use Commodities. We
-    Provide <span class="red">Superior Quality Products</span> To The Consumers
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <img class="coach" src="{{ asset('images/small.png') }}" class="image-top" alt="Backgroung Image" />
-
-    <section class="module module_aboutus active"
-
-        style="background-color: #51d5b0; padding-top: 72px; margin-top: 250px;">
-
-        class removed hidden-xs
-
-        <img src="{{ asset('images/b.png') }}" class="floating balloon_left" alt="Balloon" />
-
-        <div class="row">
-
-            <div class="col-lg-12 col-sm-12 col-md-12">
-
-                <div class="abt_time d-flex justify-content-center">
-
-                    <div class="abt_time_img animate__animated animate__fadeInUp">
-
-                        <img class="celeb_img" src="{{ asset('images/68.png') }}" alt="" />
-
-                        <div class="insider_time">
-
-                            <div class="insider_time_cust">
-
-                                <h4>15cr+</h4>
-
-                                <p>Customers</p>
-
-                            </div>
-
-                            <div class="insider_time_city">
-
-                                <h4>200+</h4>
-
-                                <p>Cities</p>
-
-                            </div>
-
-                            <div class="insider_time_retail">
-
-                                <h4>2.5 Lac+</h4>
-
-                                <p>Retailers</p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-</div> -->
 <section class="module"
 
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/3.png); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">
@@ -231,16 +136,16 @@
 </div>
 
 <div class="laya-please layer-4"
- style="background-image: url('{{ asset('images/lay4.png') }}');
+ style="background-image: url('{{ asset('images/lay4-2.png') }}');
  ">
 </div>
             <div class="laya-please layer-5"
-            style="background-image: url('{{ asset('images/lay5.png') }}');
+            style="background-image: url('{{ asset('images/lay5-2.png') }}');
  "></div>
             <div class="laya-please layer-6"></div>
         </div>
         <div class="container2">
-            <div class="laya-please layer-7" style="background-image: url('{{ asset('images/lay7.png') }}');   "></div>
+            <div class="laya-please layer-7" style="background-image: url('{{ asset('images/lay7-2.png') }}');   "></div>
             <div class="laya-please layer-8"></div>
         </div>
     </div>
