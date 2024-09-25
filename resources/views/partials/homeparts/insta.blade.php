@@ -12,7 +12,7 @@
 
             <div class="col-lg-12 col-sm-12 col-md-12">
 
-                <h2 class="text-center">Instagram Section</h2>
+                <!-- <h2 class="text-center">Instagram Section</h2> -->
 
             </div>
 

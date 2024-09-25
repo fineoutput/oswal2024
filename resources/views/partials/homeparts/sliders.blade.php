@@ -1,6 +1,6 @@
 <div class="secttion_slider">
 
-    <h2 class="text-center">Offer Slider</h2>
+    <!-- <h2 class="text-center">Offer Slider</h2> -->
 {{-- sec --}}
 </div>
 
@@ -36,7 +36,7 @@
 
 <div class="secttion_another_slider">
 
-    <h2 class="text-center">Festival Slider</h2>
+    <!-- <h2 class="text-center">Festival Slider</h2> -->
 
 </div>
 
@@ -52,7 +52,7 @@
                     
                     <li class="splide__slide">
 
-                        <img src="{{ asset($slider->image) }}" alt="Slide {{ ++$key }}" />
+                        <img src="{{ asset($slider->image) }}" alt="Slide {{ ++$key }}" width="100%"/>
 
                         <div class="slider_bg"></div>
 
