@@ -17,7 +17,7 @@ class RecentController extends Controller
         return view('admin.Recent.view-recent', compact('recents'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $recent = null;

@@ -19,7 +19,7 @@ class BlogController extends Controller
         return view('admin.blogs.view-blog', compact('blogs'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $blog = null;

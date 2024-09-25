@@ -19,7 +19,7 @@ class DealerController extends Controller
         return view('admin.Dealer.view-dealer', compact('dealers'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $dealer = null;

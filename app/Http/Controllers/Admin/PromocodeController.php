@@ -18,7 +18,7 @@ class PromocodeController extends Controller
         return view('admin.Promocode.view-promocode', compact('promocodes'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $promocode = null;

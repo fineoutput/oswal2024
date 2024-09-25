@@ -18,7 +18,7 @@ class AchievementsController extends Controller
         return view('admin.Achievements.view-achievements', compact('achievements'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $achievements = null;

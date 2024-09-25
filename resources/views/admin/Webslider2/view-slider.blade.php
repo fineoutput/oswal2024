@@ -138,7 +138,7 @@
 
                                                    <td>
 
-                                                    @if ($slider->vendor_image != null)
+                                                    @if ($slider != null)
                                                         <img src="{{ asset($slider->vendor_image)}}" width="50px" height="50px" alt="">
                                                     @endif 
 

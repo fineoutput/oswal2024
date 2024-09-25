@@ -18,7 +18,7 @@ class RetailShopController extends Controller
         return view('admin.RetailShop.view-shop', compact('retailShops'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $retailShop = null;

@@ -18,7 +18,7 @@ class MajorCategoryController extends Controller
         return view('admin.majorCategory.view-category', compact('categorys'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $category = null;

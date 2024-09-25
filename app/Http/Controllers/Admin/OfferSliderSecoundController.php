@@ -19,7 +19,7 @@ class OfferSliderSecoundController extends Controller
         return view('admin.Offer2.view-slider', compact('sliders'));
     }
 
-    public function create($id = null, Request $request)
+    public function create(Request $request, $id = null)
 
     {
         $slider = null;
