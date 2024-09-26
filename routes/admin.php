@@ -607,7 +607,7 @@ Route::prefix('rewards')->name('reward.')->group(function () {
 
 /*=========Users Routes ========*/
 
-Route::prefix('user')->name('user.')->group(function () {
+Route::prefix('users')->name('user.')->group(function () {
 
     Route::get('index', [UsersController::class, 'index'])->name('index');
 
