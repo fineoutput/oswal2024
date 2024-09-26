@@ -139,6 +139,8 @@ Route::post('login-otp', [UserAuthController::class, 'verifyOtpProcess'])->name(
 
 Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
 
+Route::get('address/add/{redirect}/{id?}', [UserController::class, 'addAddress'])->name('add-address');
+
 Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
 
     Route::get('/', [UserController::class, 'index'])->name('index');
@@ -146,8 +148,6 @@ Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
     Route::get('get-order-details/{id}', [UserController::class, 'orderDetail'])->name('get-order-details');
 
     Route::get('cancle-order/{id}', [UserController::class, 'cancelOrder'])->name('cancle-order');
-
-    Route::get('address/add/{redirect}/{id?}', [UserController::class, 'addAddress'])->name('add-address');
 
     Route::post('stor-address', [UserController::class, 'storeAddress'])->name('stor-address');
 
