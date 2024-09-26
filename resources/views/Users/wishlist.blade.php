@@ -173,7 +173,7 @@
             data: $(`#movetocart${productId}`).serialize(),
             success: function(response) {
                 $(`#wishlist${productId}`).remove();
-                console.log(response);
+                showNotification(response.message, 'success');
             },
             error: function(xhr) {
                 console.error('An error occurred while loading the category details and products.');
