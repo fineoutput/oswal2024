@@ -447,17 +447,17 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         <div class="custome-radio">
 
                             <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(2)" type="radio"
-                                name="payment_option" id="exampleRadios4" value="2" />
+                                name="payment_option" id="exampleRadios4"  checked value="1"/>
 
                             <label class="form-check-label" for="exampleRadios4">Online Payment</label> <br />
 
-                            <span class="higlight"> Get <span style="color: #ff324d;">upto 2%</span> discount on
-                                prepaid order</span>
+                            <!-- <span class="higlight"> Get <span style="color: #ff324d;">upto 2%</span> discount on
+                                prepaid order</span> -->
 
                         </div>
 
                         <div class="custome-radio">
-                            <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3" checked value="1" />
+                            <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3"  value="2"/>
 
                             <label class="form-check-label" for="exampleRadios3">Cash On Delivery (COD)</label> <br />
 
