@@ -80,14 +80,11 @@ Route::group(['prefix' => '/'], function () {
     Route::get('achivements1', [HomeController::class, 'achivements1'])->name('achivements1');
 
     Route::post('contact-us', [HomeController::class, 'contact_us'])->name('contact_us');
-
     
-        Route::post('career_contact', [HomeController::class, 'career_contact'])->name('career_contact');
+    Route::post('career_contact', [HomeController::class, 'career_contact'])->name('career_contact');
 
-        Route::post('dealer_contact', [HomeController::class, 'dealer_contact'])->name('dealer_contact');
+    Route::post('dealer_contact', [HomeController::class, 'dealer_contact'])->name('dealer_contact');
     
-    
-
 });
 
 Route::prefix('cart')->name('cart.')->group(function () {
@@ -150,7 +147,7 @@ Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
 
     Route::get('cancle-order/{id}', [UserController::class, 'cancelOrder'])->name('cancle-order');
 
-    Route::get('add-address/{redirect}/{id?}', [UserController::class, 'addAddress'])->name('add-address');
+    Route::get('address/add/{redirect}/{id?}', [UserController::class, 'addAddress'])->name('add-address');
 
     Route::post('stor-address', [UserController::class, 'storeAddress'])->name('stor-address');
 
@@ -159,7 +156,6 @@ Route::prefix('user')->middleware(['auth'])->name('user.')->group(function () {
 });
 
 Route::get('getcity}', [UserController::class, 'getCity'])->name('getcity');
-
 
 Route::prefix('wishlist')->middleware(['auth'])->name('wishlist.')->group(function () {
 
