@@ -277,7 +277,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 <hr>
                     <span><b>Total (INR)</b></span>
 
-                    <strong id="totalorderAmount">{{formatPrice($orderdetails->total_amount)}}</strong>
+                    <strong id="totalorderAmount">{{formatPrice($orderdetails->total_amount + getConstant()->cod_charge)}}</strong>
 
                 </li>
 
