@@ -45,7 +45,14 @@ class CheckOutController extends Controller
 
     public function checkout(Request $request)
     {
+        
         $addressId = $request->input('address_id') ?? session('address_id');
+
+        if ($addressId == null) {
+
+            return redirect()->back()->with('error', 'Address Not Found');
+
+        }
 
         $totalWeight = 0;
 

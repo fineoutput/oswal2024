@@ -134,16 +134,16 @@ class CartController extends Controller
         $data['updated_at'] = $curDate;
 
         // Handle backup in CartOld
-        $backupCartItem = CartOld::where('device_id', $data['device_id'])
+        $backupCartItem = CartOld::where('product_id', $data['product_id'])
 
-            ->where('product_id', $data['product_id'])
+                                 ->where('device_id', $data['device_id']);
 
-            ->when(!empty($data['user_id']), function ($query) use ($data) {
-
-                $query->where('user_id', $data['user_id']);
-            })
-            ->first();
-
+                                 if (!empty($request->user_id)) {
+                                    $backupCartItem->where('user_id', $request->user_id);
+                                 } 
+            
+                                $backupCartItem= $backupCartItem->first();
+            
 
         if (empty($backupCartItem)) {
 
@@ -161,16 +161,16 @@ class CartController extends Controller
         }
 
         // Handle current cart in Cart
-        $cartItem = Cart::where('device_id', $data['device_id'])
+        $cartItem = Cart::where('product_id', $data['product_id'])
 
-            ->where('product_id', $data['product_id'])
+                    ->where('device_id', $data['device_id']);
 
-            ->when(!empty($data['user_id']), function ($query) use ($data) {
+                    if (!empty($request->user_id)) {
+                        $cartItem->where('user_id', $request->user_id);
+                    }
 
-                $query->where('user_id', $data['user_id']);
-            })
+                    $cartItem = $cartItem->first();
 
-            ->first();
             
 
         if (empty($cartItem)) {

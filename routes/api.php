@@ -109,7 +109,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
     
 });
 
-Route::post('user/update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
+Route::get('update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
 
 Route::post('delivery-boy/update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 
 
