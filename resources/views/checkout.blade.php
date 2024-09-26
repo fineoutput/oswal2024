@@ -201,6 +201,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         <small id="promoCodeName">
                             @if($promocode)
                             {{ $promocode->promocode }}
+                            
                             @else
                             No promo code applied
                             @endif
@@ -447,7 +448,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         <div class="custome-radio">
 
                             <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(2)" type="radio"
-                                name="payment_option" id="exampleRadios4"  checked value="1"/>
+                                name="payment_option" id="exampleRadios4"  checked value="2"/>
 
                             <label class="form-check-label" for="exampleRadios4">Online Payment</label> <br />
 
@@ -457,7 +458,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         </div>
 
                         <div class="custome-radio">
-                            <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3"  value="2"/>
+                            <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3"  value="1"/>
 
                             <label class="form-check-label" for="exampleRadios3">Cash On Delivery (COD)</label> <br />
 
@@ -1003,7 +1004,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
 <script>
     $(document).ready(function() {
-        updateAmount(1);
+        updateAmount(2);
     });
 
     function applyWallet() {
