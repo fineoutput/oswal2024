@@ -344,7 +344,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="promoModalLabel">Choose Your Promo Code</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
                 <div class="promo-options d-block">
@@ -352,7 +352,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     <div class="d-flex justify-content-between align-items-center promos_det-option">
                     <p> {{ $promocode->promocode }} {{ $promocode->percent }}</p>
                     <br>
-                    <button class="promo-option btn btn-outline-danger mb-2" style="width: 30%;"onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}">Apply 
+                    <button class="promo-option btn btn-outline-danger mb-2" style="width: 30%;"onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}" data-bs-dismiss="modal" aria-label="Close">Apply 
                         </button>
                     </div>
                     
@@ -374,12 +374,12 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
         <div class="col-md-6 order-md-1">
 
-            <div class="chek_rees d-flex gap-5">
+            <div class="chek_rees d-flex justify-content-between ">
 
                 <h4 class="mb-3">Billing address</h4>
 
                 <a href="{{ route('checkout.get-address',['place' => 'checkout']) }}">
-                    <button id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button"><span>Change Address</span> <span> </span></button>
+                    <button  class="btn btn-warning "><span>Change Address</span> <span> </span></button>
                 </a>
 
             </div>
@@ -494,7 +494,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 <hr class="mb-4" />
 
-                <button type="button" class="animated-button" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
+                <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button   " onclick="placeOrder()"><span>Place Order</span> <span></span></button>
 
                 {{-- <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none" style="bottom: 0 !important;">
 
