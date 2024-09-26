@@ -141,7 +141,7 @@ Route::get('/logout', [UserAuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->name('user.')->group(function () {
 
-    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('user', [UserController::class, 'index'])->name('index');
 
     Route::get('get-order-details/{id}', [UserController::class, 'orderDetail'])->name('get-order-details');
 
