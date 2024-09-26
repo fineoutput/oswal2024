@@ -367,7 +367,11 @@
                             </ul>
                         </div>
                     </div>
+                    @auth
+                    <p>{{ Auth::User()->first_name }}</p>
+                    @else
                     <p>User</p>
+                    @endauth
                 </div>
                 @auth
                 <a href="{{ route('wishlist.index') }}">
