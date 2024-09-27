@@ -12,7 +12,7 @@
 .hunn_icons {
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
+    justify-content: space-between;
 }
 .hunn_icons p {
     margin: 0;
@@ -129,7 +129,7 @@
 
                                     <div class="hunn_list_itms">
                                         <div class="hunn_icons">
-                                            <img src="{{(asset('images/coupon1.png'))}}" width="6%" alt="">
+                                            <img src="{{(asset('images/voucher.png'))}}" width="20%" alt="">
                                         <p>Promo Discount</p>
                                         </div>
                                         <p>{{$data['promo_discount'] }}</p>
