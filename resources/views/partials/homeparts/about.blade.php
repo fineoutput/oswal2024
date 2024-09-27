@@ -70,7 +70,7 @@
 <div class="container-fluid effect" style="margin:1.5rem 0rem;">
 <img src="{{asset('images/oswal-68 (1).png')}}" width="100%" alt="">
 </div>
-<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri.png') }}');">
+<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.png') }}');">
     
     <div class="splide" id="splide3">
         
