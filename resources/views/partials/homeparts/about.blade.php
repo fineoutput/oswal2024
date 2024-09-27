@@ -73,12 +73,12 @@
 <div class="container-fluid mt-2 mb-2" style="padding:3rem;">
     <div class="row">
         <div class="col-lg-3 p-0">
-        <iframe width="100%" height="415"  style="border-radius: 50px 0 0 50px;"  src="https://www.youtube.com/embed/JQ6TS7Y5cHg?si=8xbB9DprV9ByiXS2" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>  </div>
+        <iframe width="100%" height="500"  style="border-radius: 50px 0 0 50px;"  src="https://www.youtube.com/embed/JQ6TS7Y5cHg?si=8xbB9DprV9ByiXS2" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>  </div>
         <div class="col-lg-6 since_year p-0">
-    <img class="year-bg" src="{{asset('images/68_year.png')}}" width="100%" height="415"alt="">
+    <img class="year-bg" src="{{asset('images/68_year.png')}}" width="100%" height="500"alt="">
 </div>
         <div class="col-lg-3 p-0">
-        <iframe width="100%" height="415"  style="border-radius: 0 50px 50px 0;" src="https://www.youtube.com/embed/1EW6vlz9CM0?si=xmmVavqQaVoIPsjg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+        <iframe width="100%" height="500"  style="border-radius: 0 50px 50px 0;" src="https://www.youtube.com/embed/1EW6vlz9CM0?si=xmmVavqQaVoIPsjg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
     </div>
 </div>
 <div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.png') }}');">
