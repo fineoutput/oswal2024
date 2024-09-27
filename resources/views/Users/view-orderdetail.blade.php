@@ -12,7 +12,7 @@
 .hunn_icons {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 .hunn_icons p {
     margin: 0;
@@ -118,6 +118,7 @@
                                         <h4> Item Total</h4>
                                         <p>{{$data['subtotal'] }}</p>
                                     </div>
+                                    
                                     <div class="hunn_list_itms">
                                         <div class="hunn_icons">
                                             <img src="{{(asset('images/wallet (1).png'))}}" width="20%" alt="">
@@ -125,6 +126,15 @@
                                         </div>
                                         <p>{{$data['wallet_discount'] }}</p>
                                     </div>
+
+                                    <div class="hunn_list_itms">
+                                        <div class="hunn_icons">
+                                            <img src="{{(asset('images/coupon1.png'))}}" width="6%" alt="">
+                                        <p>Promo Discount</p>
+                                        </div>
+                                        <p>{{$data['promo_discount'] }}</p>
+                                    </div>
+
                                     <div class="hunn_list_itms">
                                     <div class="hunn_icons">
                                     <img src="{{(asset('images/gift-card.png'))}}" width="20%" alt="">
