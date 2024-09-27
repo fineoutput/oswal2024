@@ -78,7 +78,8 @@
     <img class="year-bg" src="{{asset('images/68_year.png')}}" width="100%" height="500"alt="">
 </div>
         <div class="col-lg-3 p-0">
-        <iframe width="100%" height="500"  style="border-radius: 0 50px 50px 0;" src="https://www.youtube.com/embed/1EW6vlz9CM0?si=xmmVavqQaVoIPsjg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+        
+            <iframe width="100%" height="500" style="border-radius: 0 50px 50px 0;" src="https://www.youtube.com/embed/g2ZRAzwYVwc?si=yAz6sMLLDKfFU7s4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
     </div>
 </div>
 <div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.png') }}');">
