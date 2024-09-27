@@ -129,7 +129,7 @@
 
                                     <div class="hunn_list_itms">
                                         <div class="hunn_icons">
-                                            <img src="{{(asset('images/voucher.png'))}}" width="20%" alt="">
+                                            <img src="{{(asset('images/coupons.png'))}}" width="20%" alt="">
                                         <p>Promo Discount</p>
                                         </div>
                                         <p>{{$data['promo_discount'] }}</p>
