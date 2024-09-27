@@ -1,34 +1,4 @@
-<style>
-    .since_year {
-        position: relative;
-        display: inline-block;
-        
-    }
-.year_bg{
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%); /* Transparent to black */
-}
-    .since_year_overlay {
-        position: absolute;
-        top: 27%;
-        left: 25%;
-        color: white; /* Text color */
-        opacity: 1; /* Start visible */
-    transition: transform 0.3s, opacity 0.3s; /* Transition for the overlay */
-}
 
-.since_year:hover .since_year_overlay {
-    transform: translateY(-20px); /* Move up 10px */
-    opacity: 1; /* Keep it visible */
-}
-.year_content{
-    position: absolute;
-        bottom: -11px;
-        left: 0;
-        color:white;
-        text-align:center;
-        font-size:14px;
-}
-</style>
 
 <section class="module"
 
