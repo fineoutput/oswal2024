@@ -755,7 +755,48 @@ section.about-us-sect {
 }
 
 /* /////////////About section ENDS////////// */
+/* ----------------------------------68 banner style---------------------------------------- */
+.year_section{
+  padding: 3rem !important;
+}
+.year_section_video{
+  width:100%;
+  height:500px; 
+  border-radius: 50px 0 0 50px;
+}
+.year_section_video2{
+  width:100%;
+  height:500px; 
+  border-radius:0 50px 50px 0 ;
+}
+.year-bg{
+  width: 100%;
+  height:500px;
+}
+@media only screen and (max-width: 767px) {
 
+.year_section_video,.year_section_video2,.year-bg{
+border-radius:0 0 0 0 ;
+width:100%;
+height:auto;
+}
+.year_section{
+  padding: 2rem !important;
+}
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+.year_section_video,.year_section_video2{
+border-radius:0 0 0 0 ;
+width:100%;
+height:315px;
+}
+.year_section{
+  padding:2rem;
+}
+
+}
+/* ----------------------------------68 banner style---------------------------------------- */
 /* /////////////product display section STARTS////////// */
 .prod-display-frst,
 .prod-display-scnd,
