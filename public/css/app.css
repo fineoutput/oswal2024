@@ -191,7 +191,8 @@ i.fas.fa-plus {
 
   .product_lien img {
     width: 40px !important;
-  }
+    margin-top: 10px;
+}
 
   .product_lien p {
     font-size: .8rem !important;
@@ -582,7 +583,11 @@ a {
   .product_lien {
     padding: 0px !important;
     gap: 10px !important;
-  }
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 5px;
+}
 
   .det_txt h4 {
     font-size: 13px;
@@ -2208,7 +2213,7 @@ p.mobile_prev {
   font-size: 20px;
   gap: 20px;
   font-size: 16px;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .left-section,
