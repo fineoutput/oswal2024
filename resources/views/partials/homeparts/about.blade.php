@@ -82,7 +82,7 @@
         </div>
     </div>
 </div>
-<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri.png') }}');">
+<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.png') }}');">
     
     <div class="splide" id="splide3">
         
@@ -134,11 +134,11 @@
     
 </div>
 
-<div class="video_about_sect" >
+<!-- <div class="video_about_sect" >
 <div class="container-fluid naminfs">
 <iframe width="100%" height="100%" src="https://www.youtube.com/embed/n1TFv3Gxi4E?si=pUaKpl4Jyr44s_A8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
-</div>
+</div> -->
 <div class="totalcontainer" data-aos="fade-up" data-aos-duration="1000"> 
         <div class="laya-please layer-1"></div>
         <div class="laya-please layer-2"></div>
