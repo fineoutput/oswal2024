@@ -9,13 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\DB;
 
 use App\Services\RazorpayService;
 
+use App\Services\FirebaseService;
+
 use App\Models\TransferOrder;
 
 use Illuminate\Http\Request;
+
+use App\Models\VendorReward;
 
 use App\Models\DeliveryBoy;
 
@@ -24,6 +30,8 @@ use App\Models\OrderDetail;
 use App\Models\Promocode;
 
 use App\Models\Address;
+
+use App\Models\Reward;
 
 use App\Models\Order;
 
@@ -37,10 +45,14 @@ class OrderController extends Controller
 {
     protected $cartController;
 
-    public function __construct(CartController $cartController ,RazorpayService $razorpayService)
+    protected $firebaseService;
+
+
+    public function __construct(CartController $cartController ,RazorpayService $razorpayService ,FirebaseService $firebaseService)
     {
         $this->cart = $cartController;
         $this->razorpayService = $razorpayService;
+        $this->firebaseService = $firebaseService;
     }
 
     public function calculate(Request $request)
@@ -717,6 +729,11 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
+            if(Auth::check() && Auth::user()->role_type == 2){
+
+                $this->checkEligibleAndNotify();
+            }
+
             return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
         }
 
@@ -865,6 +882,11 @@ class OrderController extends Controller
                 'amount' => formatPrice($order->total_amount,false),
                 'invoice_number' => $invoiceNumber
             ];
+
+            if(Auth::check() && Auth::user()->role_type == 2){
+
+                $this->checkEligibleAndNotify();
+            }
 
             return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
         } else {
@@ -1249,4 +1271,73 @@ class OrderController extends Controller
         return response()->json(['status' => 200, 'data' => $data]);
     }
     
+    private function checkEligibleAndNotify() {
+      
+        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+        $user = Auth::user();
+    
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        }
+
+        $totalWeight = $user->orders->sum('total_order_weight');
+        $eligibleRewards = [];
+        $notificationSent = false;
+    
+        foreach ($rewardlists as $reward) {
+          
+            $vendorStatus = VendorReward::where('reward_id', $reward->id)
+                ->where('vendor_id', $user->id)
+                ->first();
+    
+            if ($vendorStatus) {
+                if ($vendorStatus->status == 1) {
+                    $status = 'applied';
+                } elseif ($vendorStatus->status == 2) {
+                    $status = 'accepted';
+                } elseif ($totalWeight >= $reward->weight) {
+                    $status = 'eligible';
+                    $eligibleRewards[] = $reward; 
+                } else {
+                    $status = 'not eligible';
+                }
+            } elseif ($totalWeight >= $reward->weight) {
+                $status = 'eligible';
+                $eligibleRewards[] = $reward; 
+            } else {
+                $status = 'not eligible';
+            }
+    
+        }
+    
+        if (!empty($eligibleRewards) && !$notificationSent) {
+
+            $this->sendPushNotification($user->fcm_token);
+
+            $notificationSent = true; 
+        }
+    
+    }
+
+    private function sendPushNotification($fcm_token) {
+
+        $title = '🎉 Reward Alert! 🎉';
+        $message = 'Congratulations! You are now eligible for a special reward! Tap to claim it now.';
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
+        
+    }
+
 }

@@ -344,14 +344,16 @@ class OrderController extends Controller
         $orderItems = $order->orderDetails;
         $invoice = $order->invoices;
         $giftCard = $order->gift;
+        $giftCardSec = $order->gift1 ?? null;
         $promocode = $order->promocodes;
 
         if($routeName == 'order.vendor.view-bill'){
 
-            return view('admin.VendorOrders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+            return view('admin.VendorOrders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode' ,'giftCardSec'));
 
         }else{
-            return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+
+            return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode' ,'giftCardSec'));
         }
     }
 
@@ -389,11 +391,11 @@ class OrderController extends Controller
 
             if ($order->user->role_type == 2) {
                
-                $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->get();
+                $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
 
             }else{
 
-                $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->get();
+                $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
 
             }
 

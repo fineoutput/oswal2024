@@ -195,11 +195,11 @@
           </tr>
       @endif
 
-        <tr>
+        {{-- <tr>
           <th colspan="9"> Discount </th>
           <th class="product_table"> </th>
           <th class="product_table">-₹ {{ $order->extra_discount ?? 0  }}</th>
-        </tr>
+        </tr> --}}
         <tr>
           @php
           $sub_total = (float) ($order->sub_total ?? 0);
