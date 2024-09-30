@@ -106,6 +106,8 @@
 
                                                     <th data-priority="3">Address</th>
 
+                                                    <th data-priority="3">PinCode</th>
+
                                                     <th data-priority="3">Addhar Front image</th>
 
                                                     <th data-priority="3">Addhar Back image</th>
@@ -139,6 +141,8 @@
                                                         <td>{{ $vendor && $vendor->state ? $vendor->state->state_name : 'Not Found' }}</td>
                                                         <td>{{ $vendor && $vendor->city ? $vendor->city->city_name : 'Not Found' }}</td>
                                                         <td>{{ $vendor ? $vendor->address : 'Not Found' }}</td>
+
+                                                        <td>{{ $vendor ? $vendor->pincode : 'Not Found' }}</td>
 
                                                         <td>
                                                             @if ($vendor && $vendor->addhar_front_image)
