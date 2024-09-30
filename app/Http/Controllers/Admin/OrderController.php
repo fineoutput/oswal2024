@@ -391,11 +391,11 @@ class OrderController extends Controller
 
             if ($order->user->role_type == 2) {
                
-                $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->get();
+                $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
 
             }else{
 
-                $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->get();
+                $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
 
             }
 
