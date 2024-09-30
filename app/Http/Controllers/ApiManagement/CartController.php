@@ -135,15 +135,14 @@ class CartController extends Controller
 
         // Handle backup in CartOld
         $backupCartItem = CartOld::where('product_id', $data['product_id'])
+                         ->where(function($query) use ($data, $request) {
+                             $query->where('device_id', $data['device_id']);
 
-                                 ->where('device_id', $data['device_id']);
-
-                                 if (!empty($request->user_id)) {
-                                    $backupCartItem->where('user_id', $request->user_id);
-                                 } 
-            
-                                $backupCartItem= $backupCartItem->first();
-            
+                             if (!empty($request->user_id)) {
+                                 $query->orWhere('user_id', $request->user_id);
+                             }
+                         })
+                         ->first();
 
         if (empty($backupCartItem)) {
 
