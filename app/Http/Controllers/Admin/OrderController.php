@@ -344,14 +344,16 @@ class OrderController extends Controller
         $orderItems = $order->orderDetails;
         $invoice = $order->invoices;
         $giftCard = $order->gift;
+        $giftCardSec = $order->gift1 ?? null;
         $promocode = $order->promocodes;
 
         if($routeName == 'order.vendor.view-bill'){
 
-            return view('admin.VendorOrders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+            return view('admin.VendorOrders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode' ,'giftCardSec'));
 
         }else{
-            return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode'));
+
+            return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode' ,'giftCardSec'));
         }
     }
 

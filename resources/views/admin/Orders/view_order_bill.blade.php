@@ -119,7 +119,13 @@
               </td>
               <td>Rs. {{ $item->amount }}</td>
             </tr>
-
+            @if ($item->combo_product != null)
+              <tr class="product_table2">
+                <td  colspan="3">Free </td>
+                <td  colspan="6">{{ $item->combo_product ?? 'N/A' }}</td>
+                <td>{{ $item->combo_name ?? 'N/A' }}</td>
+              </tr>
+            @endif
           @endforeach
           @if($order->gift_id != 0)
             <tr class="product_table2">
@@ -136,6 +142,7 @@
               <td>Rs. {{ $order->gift_amt }}</td>
             </tr>
           @endif
+
           <th>Total</th>
           <th class="product_table" colspan="2"></th>
           {{-- <th class="product_table">{{ $order->total_order_weight }} kg/ltr</th> --}}
@@ -146,16 +153,16 @@
           <th class="product_table">₹ {{ $total_tax + (float)($order->gift_gst_amt ?? 0)}}</th>
           <th class="product_table">₹ {{( $order->gift_amt != null) ? $order->gift_amt + $order->sub_total: $order->sub_total }}</th>
         </tr>
-          {{-- <tr>
-            <th>Free Gift</th>
-            <th class="product_table" colspan="2"></th>
-            <th class="product_table">Oswal Chana Dal</th>
-            <th class="product_table" colspan="4"></th>
-            <!-- <th class="product_table">36.0%</th> -->
+
+        @if($giftCardSec != null)
+          <tr>
+            <th class="product_table" colspan="3">Free Gift</th>
+            <th class="product_table" colspan="4">{{ $giftCardSec->product->name }}</th>
+            <th class="product_table"  colspan="2">{{ $giftCardSec->type->type_name }}</th>
             <th class="product_table" colspan="1"></th>
-            <th class="product_table"></th>
-            <th class="product_table">+ ₹0</th>
-          </tr> --}}
+            <th class="product_table"> ₹{{ $giftCardSec->price }}</th>
+          </tr>
+        @endif
 
          <tr>
           <th colspan="9">Delivery Charge</th>
@@ -196,11 +203,12 @@
       @endif
 
         <tr>
-          <th colspan="9"> Discount </th>
+          <th colspan="9">Wallet Discount </th>
           <th class="product_table"> </th>
           <th class="product_table">-₹ {{ $order->extra_discount ?? 0  }}</th>
         </tr>
         <tr>
+
           @php
           $sub_total = (float) ($order->sub_total ?? 0);
           $gift_amt = (float) ($order->gift_amt ?? 0);
