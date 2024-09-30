@@ -91,6 +91,8 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 
     Route::post('related-product', [EcommerceController::class, 'products'])->name('related-product');
 
+    Route::post('category-product', [EcommerceController::class, 'products'])->name('category-product');
+
     Route::post('product-details', [EcommerceController::class, 'products'])->name('details-product');
 
     Route::get('type', [EcommerceController::class, 'type'])->name('type');

@@ -147,6 +147,10 @@ class EcommerceController extends Controller
             case 'ecomm.related-product':
                 $rules['category_id'] = 'required|integer';
                 break;
+
+            case 'ecomm.category-product':
+                $rules['category_id'] = 'required|integer';
+                break;
     
             case 'ecomm.details-product':
                 $rules['product_id'] = 'required|integer';
