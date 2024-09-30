@@ -729,7 +729,10 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            $this->checkEligibleAndNotify();
+            if(Auth::check() && Auth::user()->role_type == 2){
+
+                $this->checkEligibleAndNotify();
+            }
 
             return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
         }
@@ -880,7 +883,10 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            $this->checkEligibleAndNotify();
+            if(Auth::check() && Auth::user()->role_type == 2){
+
+                $this->checkEligibleAndNotify();
+            }
 
             return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
         } else {
