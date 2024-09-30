@@ -143,7 +143,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 <div class="clls">
                         <div class="free_offer_imag">
                             <img width="80px" src="{{ $applyGiftCardSec['image'] }}" alt="" />
-                            <img class="offer_badge" width="20px" src="http://127.0.0.1:8000/images/width_793.png" alt="" style="
+                            <img class="offer_badge" width="20px" src="{{ asset('images/free_gift.png') }}" alt="" style="
     position: absolute;
     top: -20px;
     left: 50px;

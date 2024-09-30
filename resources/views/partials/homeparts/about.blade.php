@@ -1,5 +1,4 @@
 
-
 <section class="module"
 
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/3.png); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">
@@ -67,10 +66,22 @@
 
 </section>
 
-<div class="container-fluid effect" style="margin:1.5rem 0rem;">
+<!-- <div class="container-fluid effect" style="margin:1.5rem 0rem;">
 <img src="{{asset('images/oswal-68 (1).png')}}" width="100%" alt="">
+</div> -->
+<div class="container-fluid mt-2 mb-2 year_section" >
+    <div class="row">
+        <div class="col-lg-3 p-0">
+        <iframe class="year_section_video"  src="https://www.youtube.com/embed/JQ6TS7Y5cHg?si=8xbB9DprV9ByiXS2" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>  </div>
+        <div class="col-lg-6 since_year p-0">
+    <img class="year-bg" src="{{asset('images/68_year.png')}}" class="year-bg" alt="">
 </div>
-<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri.png') }}');">
+        <div class="col-lg-3 p-0">
+            <iframe class="year_section_video2" src="https://www.youtube.com/embed/g2ZRAzwYVwc?si=yAz6sMLLDKfFU7s4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.png') }}');">
     
     <div class="splide" id="splide3">
         
@@ -122,11 +133,11 @@
     
 </div>
 
-<div class="video_about_sect" >
+<!-- <div class="video_about_sect" >
 <div class="container-fluid naminfs">
 <iframe width="100%" height="100%" src="https://www.youtube.com/embed/n1TFv3Gxi4E?si=pUaKpl4Jyr44s_A8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
-</div>
+</div> -->
 <div class="totalcontainer" data-aos="fade-up" data-aos-duration="1000"> 
         <div class="laya-please layer-1"></div>
         <div class="laya-please layer-2"></div>
