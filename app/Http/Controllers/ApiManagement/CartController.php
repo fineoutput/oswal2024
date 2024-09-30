@@ -139,7 +139,7 @@ class CartController extends Controller
                                  ->where('device_id', $data['device_id']);
 
                                  if (!empty($request->user_id)) {
-                                    $backupCartItem->where('user_id', $request->user_id);
+                                    $backupCartItem->orwhere('user_id', $request->user_id);
                                  } 
             
                                 $backupCartItem= $backupCartItem->first();
@@ -166,7 +166,7 @@ class CartController extends Controller
                     ->where('device_id', $data['device_id']);
 
                     if (!empty($request->user_id)) {
-                        $cartItem->where('user_id', $request->user_id);
+                        $cartItem->orwhere('user_id', $request->user_id);
                     }
 
                     $cartItem = $cartItem->first();
