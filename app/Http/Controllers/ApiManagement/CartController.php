@@ -139,7 +139,7 @@ class CartController extends Controller
                                  ->where('device_id', $data['device_id']);
 
                                  if (!empty($request->user_id)) {
-                                    $backupCartItem->orwhere('user_id', $request->user_id);
+                                    $backupCartItem->where('user_id', $request->user_id);
                                  } 
             
                                 $backupCartItem= $backupCartItem->first();
@@ -162,16 +162,15 @@ class CartController extends Controller
 
         // Handle current cart in Cart
         $cartItem = Cart::where('product_id', $data['product_id'])
-
-                    ->where('device_id', $data['device_id']);
-
+                ->where(function($query) use ($data, $request) {
+                
+                    $query->where('device_id', $data['device_id']);
+                
                     if (!empty($request->user_id)) {
-                        $cartItem->orwhere('user_id', $request->user_id);
+                        $query->orWhere('user_id', $request->user_id);
                     }
-
-                    $cartItem = $cartItem->first();
-
-            
+                })
+                ->first();
 
         if (empty($cartItem)) {
             
