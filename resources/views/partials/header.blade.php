@@ -302,7 +302,7 @@
     <div class="row align-items-center">
         <div class="col-3 col-md-3">
             <div class="text-center mb-3 mb-md-0">
-                <a href="{{ route('/') }}">
+                <a href="{{ route('/') }}" class="nav-link_color">
                     <img
                         src="{{ asset('images/oswal-logo.png') }}"
                         alt="logo"

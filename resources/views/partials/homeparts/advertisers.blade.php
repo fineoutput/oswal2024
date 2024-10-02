@@ -699,7 +699,7 @@
 
         <div class="col-xl-6 row row-cols-1 row-cols-md-2 g-3 counter-RANDOMID">
 
-            <div class="col d-none d-lg-block" data-aos="fade-right" data-aos-duration="1000">
+            <div class="col d-none d-lg-block">
 
                 <div class="card card-body shadow border-0 shadow border-0">
 
