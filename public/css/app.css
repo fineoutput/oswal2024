@@ -557,9 +557,9 @@ a {
   }
 
   .banner_section {
-    background-position: left !important;
+    /* background-position: left !important; */
+    height: 65vh !important;
   }
- 
   .nav-links li a {
     font-size: 15px !important;
   }
