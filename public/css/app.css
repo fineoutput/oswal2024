@@ -557,8 +557,12 @@ a {
   }
 
   .banner_section {
-    /* background-position: left !important; */
-    height: 70vh !important;
+    background-position: right !important;
+    /* height: 70vh !important; */
+  }
+  .banner_img{
+    margin-bottom: 170px;
+
   }
   .nav-links li a {
     font-size: 15px !important;
