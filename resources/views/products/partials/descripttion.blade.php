@@ -55,7 +55,7 @@ $wishlist = Auth::check()
 
     <div class="details-product-price">
 
-        <p class="details-last-price">Mrp: <span>{{ formatPrice($productType->first()->del_mrp) }}</span></p>
+        <p class="details-last-price">MRP: <span>{{ formatPrice($productType->first()->del_mrp) }}</span></p>
 
         <p class="details-new-price">Selling Price: <span>{{ formatPrice($productType->first()->selling_price) }}</span></p>
 
