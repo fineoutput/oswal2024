@@ -235,10 +235,10 @@ class CartController extends Controller
             
             if($this->updateOrderAfterCartChange()){
 
-                return response()->json(['success' => true, 'message' => 'Cart remove successfully' ,'totalAmount' =>formatPrice($totalAmount) ,'count' => $cartcount], 200);
+                return response()->json(['success' => true, 'message' => 'Product remove successfully' ,'totalAmount' =>formatPrice($totalAmount) ,'count' => $cartcount], 200);
             }
 
-            // return redirect()->back()->with('success' ,'Cart remove successfully');
+            // return redirect()->back()->with('success' ,'Product remove successfully');
 
         } else {
             // return redirect()->back()->with('error' ,'Cart not found');
