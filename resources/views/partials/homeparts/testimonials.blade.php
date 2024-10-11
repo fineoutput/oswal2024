@@ -43,7 +43,7 @@
 
                                 </div>
 
-                                <h2>Blanche Pearson</h2>
+                                <h2>{{$value->name}}</h2>
 
                                 <span class="text-center">{{ $value->description }}</span>
 
