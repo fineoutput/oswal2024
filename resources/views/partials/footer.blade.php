@@ -80,7 +80,7 @@
                         
                         <div class="footer-logo">
                             
-                            <a href="index.html"><img src="{{ asset('images/oswal-logo2.png') }}" class="img-fluid" alt="logo" /></a>
+                            <a href={{ route('/') }} class="nav-link_color"><img src="{{ asset('images/oswal-logo2.png') }}" class="img-fluid" alt="logo" /></a>
                             
                         </div>
                         
@@ -126,27 +126,27 @@
                         
                         <ul>
                             
-                            <li><a href="{{ route('/') }}">HOME</a></li>
+                            <li><a href="{{ route('/') }}" class="nav-link_color">HOME</a></li>
                             
-                            <li><a href="{{ route ('services')}}">Services</a></li>
+                            <li><a href="{{ route ('services')}}"class="nav-link_color">Services</a></li>
                             
-                            <li><a href="{{ route('find_shop') }}">Find Shop</a></li>
+                            <li><a href="{{ route('find_shop') }}"class="nav-link_color">Find Shop</a></li>
                             
-                            <li><a href="{{ route ('dealer_enq')}}">Dealer Enquiry</a></li>
+                            <li><a href="{{ route ('dealer_enq')}}"class="nav-link_color">Dealer Enquiry</a></li>
                             
-                            <li><a href="{{route('manufacture')}}">Manufacturing Units</a></li>
+                            <li><a href="{{route('manufacture')}}"class="nav-link_color">Manufacturing Units</a></li>
                             
-                            <li><a href="{{route('contact')}}">Contact US</a></li>
+                            <li><a href="{{route('contact')}}"class="nav-link_color">Contact US</a></li>
                             
-                            <li><a href="{{route('privacy_policy')}}">Privacy Policy</a></li>
+                            <li><a href="{{route('privacy_policy')}}"class="nav-link_color">Privacy Policy</a></li>
 
-                            <li><a href="{{route('terms_conditions')}}">Terms & Conditions</a></li>
+                            <li><a href="{{route('terms_conditions')}}"class="nav-link_color">Terms & Conditions</a></li>
                             
-                            <li><a href="{{route ('recipes')}}">Recipe</a></li>
+                            <li><a href="{{route ('recipes')}}"class="nav-link_color">Recipe</a></li>
 
-                            <li><a href="{{route ('about_us')}}">About us</a></li>
+                            <li><a href="{{route ('about_us')}}"class="nav-link_color">About us</a></li>
 
-                            <li><a href="{{route ('career')}}">Career</a></li>
+                            <li><a href="{{route ('career')}}"class="nav-link_color">Career</a></li>
                             
                         </ul>
                         

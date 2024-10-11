@@ -44,18 +44,18 @@ $wishlist = Auth::check()
 
     </div>
 
-    <a href="#" class="details-product-link">visit oswal store</a>
+    <!-- <a href="#" class="details-product-link">visit oswal store</a> -->
 
-    <div class="details-product-rating">
+    <!-- <div class="details-product-rating">
 
         {!! renderStarRating(2) !!}
 
-    </div>
+    </div> -->
 
 
     <div class="details-product-price">
 
-        <p class="details-last-price">Market Price: <span>{{ formatPrice($productType->first()->del_mrp) }}</span></p>
+        <p class="details-last-price">Mrp: <span>{{ formatPrice($productType->first()->del_mrp) }}</span></p>
 
         <p class="details-new-price">Selling Price: <span>{{ formatPrice($productType->first()->selling_price) }}</span></p>
 
@@ -105,7 +105,7 @@ $wishlist = Auth::check()
             </button>
 
             <input style="border: 1px solid #d8172863 !important;" id="form1" min="1" name="quantity"
-                value="{{ $cart->quantity ?? 1 }}" type="number" max="{{ getConstant()->quantity }}" class="form-control form-control-sm carts_puts" />
+                value="{{ $cart->quantity ?? 1 }}" type="number" max="{{ getConstant()->quantity }}" class="form-control form-control-sm carts_puts" readonly/>
 
             <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple_set"
                 onclick="this.parentNode.querySelector('input[type=number]').stepUp()">

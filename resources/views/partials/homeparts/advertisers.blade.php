@@ -1,6 +1,6 @@
 <div class="container pt-5 d-none d-lg-block">
 
-    <div class="row" data-aos="fade-up-left" data-aos-duration="1000">
+    <div class="row" >
 
         <div class="col-lg-4">
 
@@ -505,7 +505,7 @@
 
     <main class="card_grid_editsless">
 
-        <section class="card_editsless cyan_editsless" data-aos="fade-right" data-aos-duration="1000">
+        <section class="card_editsless cyan_editsless">
             <!-- <h2 class="card_title_editsless">1000+</h2> -->
 
             <p class="card_content_editsless">Our products comply with all the high standards followed by our global competitors, per se, quality, usage and effectiveness.</p>
@@ -514,7 +514,7 @@
 
         </section>
 
-        <section class="card_editsless red_editsless" data-aos="fade-left" data-aos-duration="1000">
+        <section class="card_editsless red_editsless">
             <!-- <h2 class="card_title_editsless">2.5 Lac +</h2> -->
 
             <p class="card_content_editsless">We are constantly innovating our products to meet the current trends of the market.</p>
@@ -523,7 +523,7 @@
 
         </section>
 
-        <section class="card_editsless orange_editsless" data-aos="fade-right" data-aos-duration="1000">
+        <section class="card_editsless orange_editsless">
 
             <p class="card_content_editsless">R&D is an essential part of Oswal Soap Group as it leads to product innovation and development.</p>
 
@@ -537,7 +537,7 @@
 
         </section>
 
-        <section class="card_editsless blue_editsless" data-aos="fade-left" data-aos-duration="1000">
+        <section class="card_editsless blue_editsless">
             <p class="card_content_editsless">We invest in technology to enhance our capability and transform them into new products.</p>
 
             <img
@@ -549,7 +549,7 @@
             />
         </section>
 
-        <section class="card_editsless green_editsless" data-aos="fade-up" data-aos-duration="1000">
+        <section class="card_editsless green_editsless">
             <!-- <h2 class="card_title_editsless">800 +</h2> -->
 
             <p class="card_content_editsless"><b>A team of highly trained professionals is constantly working towards the innovation of new products & the development of the existing product line.</b></p>
@@ -576,31 +576,31 @@
         <div class="splide__track">
             <ul class="splide__list">
                 <li class="splide__slide">
-                    <section class="card_editsless cyan_editsless" data-aos="fade-right" data-aos-duration="1000">
+                    <section class="card_editsless cyan_editsless">
                         <p class="card_content_editsless">Our products comply with all the high standards followed by our global competitors, per se, quality, usage, and effectiveness.</p>
                         <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="{{ asset('images/rd1.jpg') }}" alt="Supervisor" />
                     </section>
                 </li>
                 <li class="splide__slide">
-                    <section class="card_editsless red_editsless" data-aos="fade-left" data-aos-duration="1000">
+                    <section class="card_editsless red_editsless">
                         <p class="card_content_editsless">We are constantly innovating our products to meet the current trends of the market.</p>
                         <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="{{ asset('images/rd3.avif') }}" alt="page-home" />
                     </section>
                 </li>
                 <li class="splide__slide">
-                    <section class="card_editsless orange_editsless" data-aos="fade-right" data-aos-duration="1000">
+                    <section class="card_editsless orange_editsless">
                         <p class="card_content_editsless">R&D is an essential part of Oswal Soap Group as it leads to product innovation and development.</p>
                         <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="https://media.istockphoto.com/id/1295900106/photo/data-scientists-male-programmer-using-laptop-analyzing-and-developing-in-various-information.jpg?s=612x612&w=0&k=20&c=2z9VEOlF7mAgeZDEsnetqFMyQS6xqjmXDoryrQ_LeOc=" alt="Calculator" />
                     </section>
                 </li>
                 <li class="splide__slide">
-                    <section class="card_editsless blue_editsless" data-aos="fade-left" data-aos-duration="1000">
+                    <section class="card_editsless blue_editsless">
                         <p class="card_content_editsless">We invest in technology to enhance our capability and transform them into new products.</p>
                         <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="https://media.istockphoto.com/id/968289874/photo/team-of-computer-engineers-lean-on-the-desk-and-choose-printed-circuit-boards-to-work-with.jpg?s=612x612&w=0&k=20&c=23WG5p4NHJjiFmYeB44Vmi71rDqoIJB_SvwuQ_uasY4=" alt="Karma" />
                     </section>
                 </li>
                 <li class="splide__slide">
-                    <section class="card_editsless green_editsless" data-aos="fade-up" data-aos-duration="1000">
+                    <section class="card_editsless green_editsless">
                         <p class="card_content_editsless"><b>A team of highly trained professionals is constantly working towards the innovation of new products & the development of the existing product line.</b></p>
                         <img width="80%" style="border-radius: 20px;" class="card_img_editsless" src="{{ asset('images/rd2.jpeg') }}" alt="Analytics" />
                     </section>
@@ -661,7 +661,7 @@
 
             </div>
 
-            <div class="col d-none d-lg-block" data-aos="fade-up" data-aos-duration="1000" style="width: 100%;">
+            <div class="col d-none d-lg-block" style="width: 100%;">
 
                 <div class="card card-body shadow border-0">
 
@@ -699,7 +699,7 @@
 
         <div class="col-xl-6 row row-cols-1 row-cols-md-2 g-3 counter-RANDOMID">
 
-            <div class="col d-none d-lg-block" data-aos="fade-right" data-aos-duration="1000">
+            <div class="col d-none d-lg-block">
 
                 <div class="card card-body shadow border-0 shadow border-0">
 
@@ -734,7 +734,7 @@
             </div>
 
 
-            <div class="col d-none d-lg-block" data-aos="fade-left" data-aos-duration="1000">
+            <div class="col d-none d-lg-block">
 
                 <div class="card card-body shadow border-0">
 
@@ -765,7 +765,7 @@
 
             </div>
 
-            <div class="col d-none d-lg-block" data-aos="fade-right" data-aos-duration="1000">
+            <div class="col d-none d-lg-block">
                 <div class="card card-body shadow border-0">
                     <div class="d-inline-flex align-items-center" style="min-height: 196px;">
                         <div class="me-2">
@@ -783,7 +783,7 @@
                 </div>
             </div>
 
-            <div class="col d-none d-lg-block" data-aos="fade-left" data-aos-duration="1000">
+            <div class="col d-none d-lg-block">
                 <div class="card card-body shadow border-0">
                     <div class="d-inline-flex align-items-center" style="min-height: 196px;">
                         <div class="me-2">

@@ -357,7 +357,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         </button>
                     </div>
                     
-                    <p>Applicable for minimum cart value of <span class="roll_style">{{$promocode->minimum_amount}}</span>with discound of <span class="rol_cent">{{ $promocode->percent }}</span>%</p>
+                    <p>Applicable for minimum cart value of <span class="roll_style">{{$promocode->minimum_amount}}</span> with discount of <span class="rol_cent">{{ $promocode->percent }}</span>%</p>
                     <hr>
                     @endforeach
                 </div>
