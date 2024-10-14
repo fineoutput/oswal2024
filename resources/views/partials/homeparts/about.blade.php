@@ -74,7 +74,7 @@
         <div class="col-lg-3 p-0">
         <iframe class="year_section_video"  src="https://www.youtube.com/embed/JQ6TS7Y5cHg?si=8xbB9DprV9ByiXS2" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>  </div>
         <div class="col-lg-6 since_year p-0">
-    <img class="year-bg" src="{{asset('images/oswal_gropup.png')}}" class="year-bg" alt="">
+    <img class="year-bg" src="{{asset('images/oswal_gropup.webp')}}" class="year-bg" alt="">
 </div>
         <div class="col-lg-3 p-0">
             <iframe class="year_section_video2" src="https://www.youtube.com/embed/g2ZRAzwYVwc?si=yAz6sMLLDKfFU7s4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
