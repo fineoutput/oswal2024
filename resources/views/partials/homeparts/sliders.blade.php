@@ -4,7 +4,7 @@
 {{-- sec --}}
 </div>
 
-<div class="splide_secound mb-5" style="background-image: url('{{ asset('images/navratri.png') }}');">
+<div class="splide_secound mb-5" style="background-image: url('{{ asset('images/navratri.webp') }}');">
 
     <div class="splide" id="splide2">
 

@@ -78,7 +78,7 @@
 </head>
 
 <body>
-  <div class="site_namings" style="background-image: url('{{ asset('images/navratri.png') }}');">
+  <div class="site_namings" style="background-image: url('{{ asset('images/navratri.webp') }}');">
     <div id="tsparticles"></div>
     <!--header-->
     <div class="header-w3l">
