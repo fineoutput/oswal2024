@@ -4,7 +4,7 @@
     style="background-image: url(https://www.bikaji.com/pub/media/wysiwyg/3.png); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">
 
 
-    <img src="{{ asset('images/b.png') }}" class="floating balloon_right" alt="Balloon" />
+    <img src="{{ asset('images/b.webp') }}" class="floating balloon_right" alt="Balloon" />
 
 
     <div class="home-orangepatch">
