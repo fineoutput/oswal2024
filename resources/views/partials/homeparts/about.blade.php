@@ -28,7 +28,7 @@
 
 <section class="module active"
 
-    style="background-image: url('{{ asset('images/4-Recovered.jpg') }}'); margin-top: -100px; background-position: center bottom; background-size: cover;">
+    style="background-image: url('{{ asset('images/4-Recovered.webp') }}'); margin-top: -100px; background-position: center bottom; background-size: cover;">
 
     <div class="container">
 
