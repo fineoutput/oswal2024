@@ -81,7 +81,7 @@
         </div>
     </div>
 </div>
-<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.png') }}');">
+<div class="splide_secound_set mb-5" style="background-image: url('{{ asset('images/navratri1.webp') }}');">
     
     <div class="splide" id="splide3">
         
