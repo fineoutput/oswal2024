@@ -1015,7 +1015,7 @@
 <!-- /////////////BANNER section STARTS////////// -->
 
 
-<section class="banner_section" style="background-image: url('{{ asset('images/ddss.png') }}');">
+<section class="banner_section" style="background-image: url('{{ asset('images/ddss.webp') }}');">
 
     <div class="container">
 
