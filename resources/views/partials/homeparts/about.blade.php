@@ -4,7 +4,7 @@
     style="background-image: url('{{ asset('images/3.webp') }}'); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">
 
 
-    <img src="{{ asset('images/b.webp') }}" class="floating balloon_right" alt="Balloon" />
+    <img src="{{ asset('images/b.webp') }}" loading="lazy" class="floating balloon_right" alt="Balloon" />
 
 
     <div class="home-orangepatch">
@@ -156,7 +156,7 @@
             <div class="laya-please layer-6"></div>
         </div>
         <div class="container2">
-            <div class="laya-please layer-7" style="background-image: url('{{ asset('images/lay7-2.png') }}');   "></div>
+            <div class="laya-please layer-7" style="background-image: url('{{ asset('images/lay7-2.webp') }}');   "></div>
             <div class="laya-please layer-8"></div>
         </div>
     </div>
