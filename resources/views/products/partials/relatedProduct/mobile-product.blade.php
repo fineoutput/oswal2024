@@ -90,7 +90,7 @@
 
                         <p>{{ formatPrice(optional($productType->first())->selling_price) }}</p>
 
-                        <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+                        <input type="hidden" name="type_price" value="{{ optional($productType->first())->selling_price }}">
 
                     </div>
 
