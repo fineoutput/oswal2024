@@ -95,9 +95,9 @@
                     <div class="upper_common d-flex">
 
                         <div class="upper_txt_input">
-
+                        @if ($productType->isNotEmpty())
                             <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
-
+                            @endif
                             <select name="type_{{ $webproduct->id }}" onchange="renderProduct('{{ $webproduct->id }}', '{{ route('home.getproduct') }}', 'type_{{ $webproduct->id }}')">
 
                                 <option value="type">Type</option>
