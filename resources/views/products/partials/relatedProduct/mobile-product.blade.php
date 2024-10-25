@@ -84,11 +84,11 @@
 
                         <del>
 
-                            <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
+                            <p class="prev_rate">{{ formatPrice(optional($productType->first())->del_mrp) }}</p>
 
                         </del>
 
-                        <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                        <p>{{ formatPrice(optional($productType->first())->selling_price) }}</p>
 
                         <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
 
@@ -100,7 +100,7 @@
 
                     <div class="upper_txt_input">
 
-                        <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                        <input type="hidden" name="type_id" value="{{ optional($productType->first())->id }}">
 
                         <select name="mob_type_{{ $mobproduct->id }}" onchange="renderProduct('{{ $mobproduct->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{ $mobproduct->id }}')">
 

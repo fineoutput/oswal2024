@@ -78,11 +78,11 @@
 
                                 <del>
 
-                                    <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
+                                    <p class="prev_rate">{{ formatPrice(optional($productType->first())->del_mrp) }}</p>
 
                                 </del>
 
-                                <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                                <p>{{ formatPrice(optional($productType->first())->selling_price) }}</p>
 
                                 <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
 
@@ -96,7 +96,7 @@
 
                         <div class="upper_txt_input">
                         @if ($productType->isNotEmpty())
-                            <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                            <input type="hidden" name="type_id" value="{{ optional($productType->first())->id }}">
                             @endif
                             <select name="type_{{ $webproduct->id }}" onchange="renderProduct('{{ $webproduct->id }}', '{{ route('home.getproduct') }}', 'type_{{ $webproduct->id }}')">
 
