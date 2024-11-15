@@ -141,10 +141,8 @@ class AppController extends Controller
 
     public function addAddress(Request $request)
     {
+        dd('sfsdf');
         $validator = Validator::make($request->all(), [
-
-            'device_id'      => 'required|string|exists:users',
-            'user_id'        => 'nullable|integer',
             'doorflat'       => 'required|string',
             'landmark'       => 'required|string',
             'city_id'        => 'required|integer',
@@ -180,8 +178,7 @@ class AppController extends Controller
         $location = getLatLngFromAddress($custom_address);
 
         $addressData = [
-            'device_id'        => $request->device_id,
-            'user_id'          => $request->user_id ?? Auth::user()->id,
+            'user_id'          =>  auth()->id(),
             'name'             => Auth::user()->first_name,
             'doorflat'         => $request->doorflat,
             'landmark'         => $request->landmark,
@@ -208,28 +205,9 @@ class AppController extends Controller
 
     public function getAddress(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users',
-            'user_id'   => 'nullable|integer|exists:users,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        }
-
-        $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
+        $user_id   = auth()->id();
         $address_data = [];
-
-        if (empty($user_id)) {
-            // Without login
-            $addresses = Address::where('device_id', $device_id)->get();
-        } else {
-            // With login
-            $addresses = Address::where('user_id', $user_id)->get();
-        }
-
+        $addresses = Address::where('user_id', $user_id)->get();
         foreach ($addresses as $address) {
 
             $address->load('states', 'citys');
