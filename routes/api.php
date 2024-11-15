@@ -92,6 +92,21 @@ Route::prefix('wishlist')->name('wishlist.')->group(function () {
     Route::post('move-to-cart',[WishlistController::class, 'moveToCart'])->name('move-to-cart');
 });
 
+
+Route::prefix('order')->name('order.')->group(function () {
+    Route::post('cod-checkout', [OrderController::class, 'codCheckout'])->name('codCheckout');
+    Route::post('orders', [OrderController::class, 'orders'])->name('orders');
+    Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
+    Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
+    Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
+    Route::post('paid-checkout', [OrderController::class, 'paidCheckout'])->name('paidCheckout');
+    Route::post('verify-payment', [OrderController::class, 'verifyPayment'])->name('verifypayment');
+    Route::post('calculate', [OrderController::class, 'calculate'])->name('calculate');
+    Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
+    
+});
+});
+
 Route::prefix('ecomm')->name('ecomm.')->group(function () {
     Route::get('category/{id?}', [EcommerceController::class, 'category'])->name('category');
     Route::get('productcategory', [EcommerceController::class, 'productcategory'])->name('productcategory');
@@ -106,19 +121,6 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
     Route::get('type', [EcommerceController::class, 'type'])->name('type');
     // Route::get('shipping-charge', [EcommerceController::class, 'shipping_charges'])->name('shipping-charges');
 
-});
-Route::prefix('order')->name('order.')->group(function () {
-    Route::post('cod-checkout', [OrderController::class, 'codCheckout'])->name('codCheckout');
-    Route::post('orders', [OrderController::class, 'orders'])->name('orders');
-    Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
-    Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
-    Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
-    Route::post('paid-checkout', [OrderController::class, 'paidCheckout'])->name('paidCheckout');
-    Route::post('verify-payment', [OrderController::class, 'verifyPayment'])->name('verifypayment');
-    Route::post('calculate', [OrderController::class, 'calculate'])->name('calculate');
-    Route::post('checkout', [OrderController::class, 'checkout'])->name('checkout');
-    
-});
 });
 
 Route::get('unroute', [AppController::class, 'unauth'])->name('unauth.route');
