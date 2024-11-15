@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -38,4 +39,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    protected function unauthenticated($request, AuthenticationException $exception)
+{
+    // Check if the request expects a JSON response
+    if ($request->expectsJson()) {
+        // Return a JSON response if expecting JSON
+        return response()->json(['message' => 'You are not authorized to access this resource.'], 401);
+    }
+
+    // Redirect to a specific route if not expecting JSON
+    return redirect()->route('unauth.route'); // Change this to your desired route
+}
 }

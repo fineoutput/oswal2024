@@ -16,6 +16,13 @@
         white-space: nowrap;
     }
 </style>
+@php
+    $routeParameters = [
+        'pid'  => encrypt($p_id),
+        'cid'  => encrypt(0),
+        'pcid' => encrypt(0),
+    ];
+@endphp
 <div class="content">
 
     <div class="container-fluid">
@@ -94,6 +101,7 @@
 
                                 <div class="col-md-2">
                                     @php
+                                    $back_id = $id;
                                     $id = encrypt($id);
                                 @endphp
                                     <a class="btn btn-info" href="{{ route('vendor.type.subtype', $id) }}" role="button">Add Range</a>
@@ -102,7 +110,7 @@
 
                                 <div class="col-md-2">
 
-                                    <a class="btn btn-info" href="" role="button">Back</a>
+                                    <a class="btn btn-info" href="{{ route('vendor.type.index', $routeParameters) }}" role="button">Back</a>
 
                                 </div>
 

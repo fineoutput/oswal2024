@@ -86,8 +86,6 @@ class EcommerceController extends Controller
         $currentRouteName = Route::currentRouteName();
 
         $rules = [
-            'device_id' => 'required|string',
-            'user_id'   => 'nullable|integer|exists:users,id',
             'lang'      => 'required|string',
             'state_id'  => 'nullable|integer',
             'city_id'   => 'nullable|integer',
@@ -99,6 +97,8 @@ class EcommerceController extends Controller
         $is_trn = false;
         $is_fea = false;
         $search = false;
+        $device_id = auth()->user()->device_id;
+        $user_id = auth()->user()->id;
     
         switch ($currentRouteName) {
             case 'ecomm.products':
@@ -164,7 +164,7 @@ class EcommerceController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 201]);
         }
 
-        $user = User::where('id', $request->user_id)->first();
+        $user = User::where('id', $user_id)->first();
 
         if($user != null){
 
@@ -176,8 +176,8 @@ class EcommerceController extends Controller
         }
 
         $category_id = $request->input('category_id');
-        $device_id   = $request->input('device_id');
-        $user_id     = $request->input('user_id');
+        $device_id   = $device_id;
+        $user_id     = $user_id;
         $lang        = $request->input('lang');
         $state_id    = $request->input('state_id');
         $city_id     = $request->input('city_id');

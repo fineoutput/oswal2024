@@ -141,7 +141,7 @@ class AppController extends Controller
 
     public function addAddress(Request $request)
     {
-        dd('sfsdf');
+        // dd('sfsdf');
         $validator = Validator::make($request->all(), [
             'doorflat'       => 'required|string',
             'landmark'       => 'required|string',
@@ -504,8 +504,6 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'device_id'   => 'required|string|exists:users,device_id',
-            'user_id'     => 'required|integer|exists:users,id',
             'order_id'    => 'required|integer|exists:tbl_order1,id',
             'rating'      => 'required|integer|min:1|max:5',
             'description' => 'required|string|max:1000',
@@ -519,8 +517,8 @@ class AppController extends Controller
         }
 
         $data = [
-            'device_id'     => $request->input('device_id'),
-            'user_id'       => $request->input('user_id'),
+            'device_id'     =>  auth()->user()->device_id,
+            'user_id'       =>  auth()->user()->id,
             'order_id'      => $request->input('order_id'),
             'rating'        => (float) $request->input('rating'),
             'description'   => $request->input('description'),
@@ -548,20 +546,8 @@ class AppController extends Controller
     public function getWalletAmount(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'device_id'   => 'required|string|exists:users,device_id',
-            'user_id'     => 'required|integer|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first()
-            ], 400);
-        }
 
         $data = [
-            'user_id' => $request->user_id,
             'wallet_amount' => Auth::user()->wallet_amount,
         ];
 
@@ -572,8 +558,6 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'user_id'   => 'nullable|integer|exists:users,id',
-            'device_id' => 'required|string|exists:users,device_id',
             'fcm_token' => 'required|string',
         ]);
 
@@ -584,8 +568,10 @@ class AppController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
+        $device_id = auth()->user()->device_id;
+        $user_id = auth()->user()->id;
 
-        $user = User::where('device_id', $request->device_id)->orwhere('id', $request->user_id)->first();
+        $user = User::where('device_id', $device_id)->orwhere('id', $user_id)->first();
 
         if (!$user) {
             return response()->json([
@@ -719,4 +705,9 @@ class AppController extends Controller
         return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
     }
 
+
+    public function unauth()
+    {
+        return response()->json(['success' => false, 'message' => 'Reward successfully applied'], 201);
+    }
 }

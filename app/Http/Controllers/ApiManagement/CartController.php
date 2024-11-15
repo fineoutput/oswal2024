@@ -43,8 +43,6 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'   => 'required|string',
-            'user_id'     => 'nullable|string|exists:users,id',
             'category_id' => 'required|string|exists:ecom_categories,id',
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
@@ -53,7 +51,7 @@ class CartController extends Controller
             'quantity'    => 'required|integer|min:1'
         ];
 
-        $vendoruser = User::where('device_id', $request->device_id)->first();
+        $vendoruser = User::find(auth()->id());
 
         if ($request->user_id == null && ($vendoruser && $vendoruser->role_type == 2)) {
 
@@ -61,7 +59,7 @@ class CartController extends Controller
 
         }
 
-        $user = User::where('id', $request->user_id)->first();
+        $user = User::where('id', auth()->id())->first();
 
         $typePrice = $request->type_price;
 
@@ -198,8 +196,6 @@ class CartController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
-            'user_id'   => 'nullable|integer|exists:users,id',
             'cart_id'   => 'required|integer|exists:carts,id',
         ]);
 
@@ -207,8 +203,8 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
-        $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
+        $user_id   = auth()->user()->id;
+        $device_id = auth()->user()->device_id;
         $cart_id   = $request->input('cart_id');
 
         $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
@@ -230,8 +226,6 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'       => 'required|string',
-            'user_id'         => 'nullable|integer|exists:users,id',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
             'address_id'      => 'nullable|integer|exists:user_address,id',
@@ -249,7 +243,7 @@ class CartController extends Controller
             
         }
 
-        $user = User::find($request->user_id);
+        $user = User::find(auth()->id());
 
         if($user != null){
             
@@ -266,8 +260,8 @@ class CartController extends Controller
 
         }
 
-        $device_id       = $request->input('device_id');
-        $user_id         = $request->input('user_id');
+        $device_id       = $user->device_id;
+        $user_id         = $user->id;
         $lang            = $request->input('lang');
         $input_promocode = $request->input('input_promocode');
         $address_id      = $request->input('address_id');

@@ -18,6 +18,7 @@
 </style>
 
 @php
+$ppid  = encrypt($p_id);
     $routeParameters = [
         'pid'  => encrypt($p_id),
         'cid'  => encrypt($c_id),

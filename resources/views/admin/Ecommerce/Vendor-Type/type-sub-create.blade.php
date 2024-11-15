@@ -78,7 +78,7 @@
                                     <!-- MRP -->
                                     <div class="col-sm-4">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="mrp" name="mrp" placeholder="Enter MRP" required onkeyup="calculatePrices()" value="{{ $data->mrp ?? old('mrp') }}">
+                                            <input type="text" class="form-control" id="mrp" name="mrp" placeholder="Enter MRP" required  value="{{ $data->mrp ?? old('mrp') }}" >
                                             <label for="mrp">MRP &nbsp;<span style="color:red;">*</span></label>
                                         </div>
                                         @error('mrp')
@@ -91,7 +91,7 @@
                                     <!-- GST Percentage -->
                                     <div class="col-sm-4">
                                         <div class="form-floating">
-                                            <input type="number" class="form-control" id="gst_percentage" name="gst_percentage" placeholder="Enter GST %" required onkeyup="calculatePrices()" value="{{ $data->gst_percentage ?? old('gst_percentage') }}">
+                                            <input type="number" class="form-control" id="gst_percentage" name="gst_percentage" placeholder="Enter GST %" required  value="{{ $data->gst_percentage ?? old('gst_percentage') }}" >
                                             <label for="gst_percentage">GST % &nbsp;<span style="color:red;">*</span></label>
                                         </div>
                                         @error('gst_percentage')
@@ -134,7 +134,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Weight -->
+                                    {{-- <!-- Weight -->
                                     <div class="col-sm-4">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight" value="{{ $data->weight ?? old('weight') }}">
@@ -154,7 +154,7 @@
                                         @error('rate')
                                             <div style="color:red">{{ $message }}</div>
                                         @enderror
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <div class="form-group row">
@@ -174,4 +174,35 @@
         </div>
     </div> <!-- container-fluid -->
 </div> <!-- content -->
+<script>
+    window.onload = function() {
+        console.log('JavaScript Loaded');
+
+        function calculatePrices() {
+            console.log('Calculating Prices');
+
+            // Get Selling Price and GST Percentage values
+            var sellingPrice = parseFloat(document.getElementById('selling_price_gst').value) || 0; // Use selling_price_gst
+            var gstPercentage = parseFloat(document.getElementById('gst_percentage').value) || 0;
+
+            // Calculate GST Price
+            var gstPrice = (sellingPrice * gstPercentage) / 100;
+
+            // Calculate Selling Price (with GST)
+            var sellingPriceWithGST = sellingPrice + gstPrice;
+
+            // Fill in the fields
+            document.getElementById('gst_percentage_price').value = gstPrice.toFixed(2); // GST Price
+            document.getElementById('selling_price').value = sellingPriceWithGST.toFixed(2); // Selling Price (with GST)
+        }
+
+        // Attach event listeners
+        document.getElementById('selling_price_gst').addEventListener('keyup', calculatePrices); // Listen to Selling Price changes
+        document.getElementById('gst_percentage').addEventListener('keyup', calculatePrices); // Listen to GST changes
+    }
+</script>
+
+
+
+
 @endsection

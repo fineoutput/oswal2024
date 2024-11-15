@@ -206,11 +206,11 @@ Route::prefix('ecom/type')->name('type.')->group(function () {
 
 Route::prefix('ecom/vendor/type')->name('vendor.type.')->group(function () {
 
-    Route::get('index/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorIndex'])->name('index');
+    Route::get('index/{pid}/{cid?}/{pcid?}', [TypeController::class, 'vendorIndex'])->name('index');
 
     Route::get('create/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorCreate'])->name('create');
     Route::get('subtype/{id}', [TypeController::class, 'vendorsubCreate'])->name('subtype');
-    Route::get('subtype/view/{id}', [TypeController::class, 'vendorsubView'])->name('subtype.view');
+    Route::get('subtype/view/{id}/{optional?}', [TypeController::class, 'vendorsubView'])->name('subtype.view');
 
     Route::get('edit/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'vendorEdit'])->name('edit');
   

@@ -177,7 +177,7 @@ class CartController extends Controller
         $type = sendType(null, null, $typeId)[0] ?? null;
     
         if (!$type) {
-            return response()->json(['success' => false, 'message' => 'Type not found.'], 404);
+            return response()->json(['success' => false, 'message' => '.'], 404);
         }
     
         $cart->update([

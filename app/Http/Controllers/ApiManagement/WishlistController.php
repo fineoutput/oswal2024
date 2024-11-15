@@ -28,8 +28,6 @@ class WishlistController extends Controller
     public function store(Request $request) {
 
         $rules = [
-            'device_id'  => 'required|string|exists:users,device_id',
-            'user_id'    => 'nullable|exists:users,id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
             'type_id'    => 'required|required|exists:types,id',
@@ -59,13 +57,14 @@ class WishlistController extends Controller
             $typeid = $request->type_id;
         }
 
-        if($request->user_id){
+        $device_id = auth()->user()->device_id;
+        if($user_id = auth()->user()->id){
             
-            $existingWishlist = Wishlist::where('user_id', $request->user_id)->where('product_id', $request->product_id)->first();
+            $existingWishlist = Wishlist::where('user_id', $user_id)->where('product_id', $request->product_id)->first();
 
         }else{
 
-            $existingWishlist = Wishlist::where('device_id', $request->device_id)->where('product_id', $request->product_id)->first();
+            $existingWishlist = Wishlist::where('device_id', $device_id)->where('product_id', $request->product_id)->first();
 
         }
 
@@ -106,8 +105,6 @@ class WishlistController extends Controller
     public function Show(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id'   => 'nullable|string|exists:users,id',
             'lang'      => 'required|string',
             'state_id'  => 'nullable|string',
             'city_id'   => 'nullable|string',
@@ -118,8 +115,8 @@ class WishlistController extends Controller
         }
     
         // Retrieve request parameters
-        $device_id = $request->device_id;
-        $user_id   = $request->user_id ?? null;
+        $device_id = auth()->user()->device_id;
+        $user_id   = auth()->user()->id;
         $lang      = $request->lang;
         $state_id  = $request->state_id ?? null;
         $city_id   = $request->city_id ?? null;
@@ -250,8 +247,6 @@ class WishlistController extends Controller
     public function destroy(Request $request) {
    
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id' => 'nullable|integer|exists:users,id',
             'wishlist_id' => 'required|integer|exists:wishlists,id',
         ]);
 
@@ -275,8 +270,7 @@ class WishlistController extends Controller
     public function moveToCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id'   => 'nullable|integer|exists:users,id',
+            
             'wishlist_id' => 'required|integer',
             'type_id' => 'required|integer',
             'type_price' => 'required|numeric',
@@ -290,14 +284,16 @@ class WishlistController extends Controller
         }
 
         $data = $request->only([
-            'device_id', 'user_id', 'wishlist_id', 'type_id', 'type_price', 'cart_from', 'state_id', 'city_id'
+            'wishlist_id', 'type_id', 'type_price', 'cart_from', 'state_id', 'city_id'
         ]);
 
         $ip = $request->ip();
+        $device_id = auth()->user()->device_id;
+        $user_id = auth()->user()->id;
 
         $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
-        $wishlist = Wishlist::where('device_id', $data['device_id'])
+        $wishlist = Wishlist::where('device_id', $device_id)
                             ->where('id', $data['wishlist_id'])
                             ->first();
 
@@ -315,7 +311,7 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'message' => 'Product not found'], 404);
         }
 
-        $cartItem = Cart::where('device_id', $data['device_id'])
+        $cartItem = Cart::where('device_id', $device_id)
                         ->where('product_id', $wishlist->product_id)
                         ->first();
 
@@ -345,8 +341,8 @@ class WishlistController extends Controller
         $totalQtyPrice = $data['type_price'] * 1;
 
         $cartData = [
-            'device_id' => $data['device_id'],
-            'user_id' => $data['user_id'],
+            'device_id' => $device_id,
+            'user_id' => $user_id,
             'category_id' => $wishlist->category_id,
             'product_id' => $wishlist->product_id,
             'type_id' => $typeData->id,

@@ -280,7 +280,7 @@
                                                                 // use Illuminate\Support\Facades\Crypt;
                                                                 $encryptedId = Crypt::encrypt($value->id); // Encrypt the product ID
                                                                 @endphp
-                                                                <a href="{{ route('vendor.type.subtype.view', ['id' => $encryptedId]) }}" data-toggle="tooltip" data-placement="top" title="Range"><i class="fas fa-chart-line"></i></a>
+                                                                <a href="{{ route('vendor.type.subtype.view', ['id' => $encryptedId, 'optional' => $p_id]) }}" data-toggle="tooltip" data-placement="top" title="Range"><i class="fas fa-chart-line"></i></a>
                                                                 <a href="{{ route('vendor.type.edit', $routeParameters) }}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                                 <a href="javascript:;" class="dCnf" mydata="{{ $key }}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>

@@ -429,7 +429,7 @@ class TypeController extends Controller
 
     /*****************Vendor Type Function ********************/
 
-    public function vendorIndex($pid, $cid, $pcid) {
+    public function vendorIndex($pid, $cid=null, $pcid=null) {
         $p_id  = decrypt($pid);
 
         $c_id  = decrypt($cid);
@@ -438,7 +438,7 @@ class TypeController extends Controller
         
         $types = VendorType::with('state', 'city')
         ->where('product_id', $p_id)
-        ->where('category_id', $c_id)
+        // ->where('category_id', $c_id)
         ->orderBy('id', 'DESC')
         ->get();
 
@@ -465,13 +465,14 @@ class TypeController extends Controller
         return view('admin.Ecommerce.Vendor-Type.type-sub-create' ,compact('id'));
     }
 
-    public function vendorsubView($id)
+    public function vendorsubView($id,$p_id = null)
 {
-    $id = decrypt($id); 
+    $id = decrypt($id);
+    // dd($p_id); 
     $types = DB::table('type_subs')
                  ->where('type_id', $id)
                  ->get();
-    return view('admin.Ecommerce.Vendor-Type.type-sub-index', compact('id', 'types'));
+    return view('admin.Ecommerce.Vendor-Type.type-sub-index', compact('id', 'types', 'p_id'));
 }
 
 
@@ -560,12 +561,10 @@ class TypeController extends Controller
            'end_range' => 'required|numeric',
            'type_id' => 'required|numeric',
            'gst_percentage' => 'nullable|numeric',
-           'weight' => 'nullable|numeric',
            'gst_percentage_price' => 'nullable|numeric',
            'mrp' => 'nullable|numeric',
            'selling_price' => 'nullable|numeric',
            'selling_price_gst' => 'nullable|numeric',
-           'rate' => 'nullable|numeric',
           ]);
           
         Type_sub::create($validated);
@@ -676,8 +675,7 @@ class TypeController extends Controller
             'selling_price_gst' => 'required|numeric',
             'gst_percentage_price' => 'nullable|numeric',
             'selling_price' => 'required|numeric',
-            'weight' => 'required|numeric',
-            'rate' => 'required|numeric',
+            
         ]);
 
         // Find and update the type
@@ -700,8 +698,6 @@ class TypeController extends Controller
             'selling_price_gst' => $request->selling_price_gst,
             'gst_percentage_price' => $request->gst_percentage_price,
             'selling_price' => $request->selling_price,
-            'weight' => $request->weight,
-            'rate' => $request->rate,
         ]);
         $crid = Crypt::encrypt($request->type_id);
         return redirect()->route('vendor.type.subtype.view', ['id' => $crid])->with('success', 'Range updated successfully!');
