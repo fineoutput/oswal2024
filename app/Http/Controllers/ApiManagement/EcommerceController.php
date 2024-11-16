@@ -1,21 +1,33 @@
 <?php
 
 namespace App\Http\Controllers\ApiManagement;
+
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
 use App\Models\EcomProductCategory;
+
 use App\Models\ShippingCharge;
+
 use App\Models\MajorCategory;
+
 use App\Models\ProductRating;
+
 use App\Models\MajorProduct;
+
 use Illuminate\Http\Request;
+
 use App\Models\VendorType;
+
 use App\Models\Wishlist;
+
 use App\Models\Type;
+
 use App\Models\User;
+
 use App\Models\Cart;
 
 class EcommerceController extends Controller
@@ -72,6 +84,7 @@ class EcommerceController extends Controller
     public function products(Request $request)
 {
     $currentRouteName = Route::currentRouteName();
+
     $rules = [
         'lang'      => 'required|string',
         'state_id'  => 'nullable|integer',
@@ -80,7 +93,11 @@ class EcommerceController extends Controller
         'per_page'  => 'nullable|integer|min:1|max:100',
     ];
 
-    // Get the device and user info based on the Authorization header
+    $is_hot = false;
+    $is_trn = false;
+    $is_fea = false;
+    $search = false;
+
     $device_id = null;
     $user_id = null;
     if ($request->header('Authorization')) {
@@ -92,66 +109,74 @@ class EcommerceController extends Controller
         }
     }
 
-    $is_hot = false;
-    $is_trn = false;
-    $is_fea = false;
-    $search = false;
-
-    // Add type-specific rules based on the route and request
     switch ($currentRouteName) {
         case 'ecomm.products':
             $rules['type'] = 'nullable|string';
+
             switch ($request->type) {
                 case 'tranding':
                     $rules['category_id'] = 'required|integer';
                     $is_trn = true;
                     break;
+
                 case 'featured':
                     $rules['category_id'] = 'required|integer';
                     $is_fea = true;
                     break;
+
                 case 'hot-product':
                     $rules['category_id'] = 'required|integer';
                     $is_hot = true;
                     break;
+
                 case 'all':
                 default:
                     break;
             }
             break;
+
         case 'ecomm.hot-deals-product':
             $is_hot = true;
             break;
+
         case 'ecomm.tranding-product':
             $is_trn = true;
             break;
+
         case 'ecomm.search-product':
             $search = $request->string;
             break;
+
         case 'ecomm.featured-product':
             $is_fea = true;
             break;
+
         case 'ecomm.related-product':
+            $rules['category_id'] = 'required|integer';
+            break;
+
         case 'ecomm.category-product':
             $rules['category_id'] = 'required|integer';
             break;
+
         case 'ecomm.details-product':
             $rules['product_id'] = 'required|integer';
-            $rules['type_id'] = 'nullable|integer';
+            $rules['type_id']    = 'nullable|integer';
             break;
     }
 
-    // Validate the incoming request data
     $validator = Validator::make($request->all(), $rules);
+
     if ($validator->fails()) {
         return response()->json(['message' => $validator->errors()->first(), 'status' => 201]);
     }
 
-    // Get user role if logged in
-    $user = User::find($user_id);
-    $roleType = $user ? $user->role_type : false;
+    $user = $user_id ? User::find($user_id) : null;
+    // print_r($user);
+    // exit;
+    // Check user role type if logged in
+    $roleType = $user ? $user->role_type : null;
 
-    // Prepare query parameters
     $category_id = $request->input('category_id');
     $lang = $request->input('lang');
     $state_id = $request->input('state_id');
@@ -159,77 +184,59 @@ class EcommerceController extends Controller
     $page = $request->input('page', 1);
     $per_page = $request->input('per_page', 15);
 
-    // Fetch the products based on filters
+    // Fetch the products
     $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea, false, $roleType);
+
     $total = $products->count();
 
-    // Paginate the products
     $products = $products->slice(($page - 1) * $per_page, $per_page);
 
     $product_data = [];
-    foreach ($products as $product) {
-        // Fetch product types and related data
-        $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang);
 
-        // Check if the product is in the user's wishlist
-        $wishlist = Wishlist::where('product_id', $product->id)
-            ->when($user_id, function ($query) use ($user_id) {
-                return $query->where('user_id', $user_id);
-            })
-            ->first();
+    foreach ($products as $product) {
+        // If the user is logged in, we add extra data like wishlist, cart, ratings, etc.
+        $wishlist = $user_id ? Wishlist::where('product_id', $product->id)->where('user_id', $user_id)->first() : null;
         $wish_status = $wishlist ? 1 : 0;
         $wishlist_id = $wishlist ? $wishlist->id : null;
 
-        // Check if the product is in the user's cart
-        $cart = Cart::where('product_id', $product->id)
-            ->where('device_id', $device_id)
-            ->when($user_id, function ($query) use ($user_id) {
-                return $query->where('user_id', $user_id);
-            })
-            ->first();
+        $cart = $user_id ? Cart::where('product_id', $product->id)->where('user_id', $user_id)->where('device_id', $device_id)->first() : null;
+        $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+        $cart_type_price = $cart ? $cart->type_price : null;
+        $cart_quantity = $cart ? $cart->quantity : null;
+        $cart_total_price = $cart ? $cart->total_qty_price : null;
+        $cart_status = $cart ? 1 : 0;
 
-        $cart_type_name = '';
-        if ($cart) {
-            $cart_type = ($roleType && $roleType == 2)
-                ? VendorType::find($cart->type_id)
-                : Type::find($cart->type_id);
-
-            $cart_type_name = $cart_type ? ($lang !== "hi" ? $cart_type->type_name : $cart_type->type_name_hi) : '';
-        }
-
-        // Get product ratings
-        $rating_avg = ProductRating::where('product_id', $product->id)
-            ->where('category_id', $product->category_id)
-            ->avg('rating');
+        $rating_avg = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->avg('rating');
         $rating_avg = number_format((float)$rating_avg, 1, '.', '');
+        $total_reviews = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->count();
 
-        $total_reviews = ProductRating::where('product_id', $product->id)
-            ->where('category_id', $product->category_id)
-            ->count();
+        // Get product types
+        $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang);
 
-        // Determine the selected type and price
+        // Determine selected type
         if (isset($request->type_id)) {
             $getSelectedtype = sendType($product->category_id, $product->id, $request->type_id)[0];
             $vendorSelectedType = vendorType::where('type_name', $getSelectedtype->type_name)->first();
-            $percent_off = round((( $getSelectedtype->del_mrp - $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
-
+            $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
             $selected_type_id = $getSelectedtype->id;
             $selected_type_name = $getSelectedtype->type_name;
             $selected_type_selling_price = $getSelectedtype->selling_price;
             $selected_type_mrp = $getSelectedtype->del_mrp;
             $selected_type_percent_off = $percent_off;
             $selected_min_qty = $vendorSelectedType->min_qty ?? '';
-        }  else {
-            // If 'regular_types' does not exist or is empty, assign default values
-            $selected_type_id = '';
-            $selected_type_name = '';
-            $selected_type_selling_price = '';
-            $selected_type_mrp = '';
-            $selected_type_percent_off = '';
-            $selected_min_qty = '';
+        } else {
+            // print_r($typedata['types']['regular_types']);
+            // exit;
+            $vendorSelectedType = vendorType::where('type_name', $typedata['types']['regular_types'][0]['type_name'])->first();
+            $selected_type_id = $typedata['types']['regular_types'][0]['type_id'] ?? '';
+            $selected_type_name = $typedata['types']['regular_types'][0]['type_name'] ?? '';
+            $selected_type_selling_price = $typedata['types']['regular_types'][0]['selling_price'] ?? '';
+            $selected_type_mrp = $typedata['types']['regular_types'][0]['type_mrp'] ?? '';
+            $selected_type_percent_off = $typedata['types']['regular_types'][0]['percent_off'] ?? '';
+            $selected_min_qty = $vendorSelectedType->min_qty ?? '';
         }
 
-        // Prepare product data for response
+        // Add the product data
         $product_data[] = [
             'id' => $product->id,
             'category_id' => $product->category_id,
@@ -237,10 +244,10 @@ class EcommerceController extends Controller
             'long_desc' => $lang != "hi" ? $product->long_desc : $product->long_desc_hi,
             'cart_type_id' => $cart->type_id ?? "",
             'cart_type_name' => $cart_type_name,
-            'cart_type_price' => $cart->type_price ?? "",
-            'cart_quantity' => $cart->quantity ?? "",
-            'cart_total_price' => $cart->total_qty_price ?? "",
-            'cart_status' => $cart ? 1 : 0,
+            'cart_type_price' => $cart_type_price,
+            'cart_quantity' => $cart_quantity,
+            'cart_total_price' => $cart_total_price,
+            'cart_status' => $cart_status,
             'wish_status' => $wish_status,
             'wish_id' => $wishlist_id,
             'rating_status' => $rating_avg > 0 ? 1 : 0,
@@ -248,10 +255,10 @@ class EcommerceController extends Controller
             'total_reviews' => $total_reviews,
             'url' => $product->url,
             'images' => [
-                ['image' => asset($product->img_app1)],
-                ['image' => asset($product->img_app2)],
-                ['image' => asset($product->img_app3)],
-                ['image' => asset($product->img_app4)],
+                ['image' => asset($product->img_app1) ],
+                ['image' => asset($product->img_app2) ],
+                ['image' => asset($product->img_app3) ],
+                ['image' => asset($product->img_app4) ],
             ],
             'is_active' => $product->is_active,
             'type' => $typedata,
@@ -265,12 +272,17 @@ class EcommerceController extends Controller
     }
 
     return response()->json([
+        'message' => 'success',
         'status' => 200,
-        'data' => $product_data,
-        'total' => $total
+        'data' => (isset($request->product_id) && $request->product_id != null &&  $product_data != null) ? $product_data[0] : $product_data,
+        'pagination' => [
+            'current_page' => $page,
+            'per_page' => $per_page,
+            'total' => $total,
+            'last_page' => ceil($total / $per_page),
+        ]
     ]);
 }
-
     
     public function type(Request $request) {
         
@@ -354,6 +366,8 @@ class EcommerceController extends Controller
 
     private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang)
 {
+    // echo $roleType;
+    // exit;
     $vendorTypes = [];
     $regularTypes = [];
 
@@ -411,12 +425,14 @@ class EcommerceController extends Controller
         });
     };
 
+  
+
     // Return response based on roleType (vendor or regular user)
     if ($roleType && $roleType == 2) {
         // If the user is a vendor, return only vendor types
         return [
             'types' => [
-                'vendor_types' => $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
+                'regular_types' => $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
             ]
         ];
     } else {
