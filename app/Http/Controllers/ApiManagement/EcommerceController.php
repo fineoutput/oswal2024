@@ -1,35 +1,21 @@
 <?php
-
 namespace App\Http\Controllers\ApiManagement;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Validator;
-
 use Illuminate\Support\Facades\Route;
-
 use App\Models\EcomProductCategory;
-
 use App\Models\ShippingCharge;
-
 use App\Models\MajorCategory;
-
 use App\Models\ProductRating;
-
 use App\Models\MajorProduct;
-
 use Illuminate\Http\Request;
-
 use App\Models\VendorType;
-
 use App\Models\Wishlist;
-
 use App\Models\Type;
-
+use App\Models\Type_sub;
 use App\Models\User;
-
 use App\Models\Cart;
-
+use Illuminate\Support\Facades\DB;
 class EcommerceController extends Controller
 {
 
@@ -374,8 +360,11 @@ class EcommerceController extends Controller
     // If the user is a vendor (roleType == 2)
     if ($roleType && $roleType == 2) {
         // Query for vendor types
-        $typeQuery = VendorType::where('product_id', $product_id)
-            ->where('is_active', 1);
+        $typeQuery = DB::table('vendor_types')
+    ->leftJoin('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
+    ->where('vendor_types.product_id', $product_id)
+    ->where('vendor_types.is_active', 1)
+    ->select('vendor_types.*', 'type_subs.*');
 
         if ($state_id) {
             $typeQuery->where('state_id', $state_id);
