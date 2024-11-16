@@ -84,8 +84,8 @@ class EcommerceController extends Controller
     $device_id = null;
     $user_id = null;
     if ($request->header('Authorization')) {
-        $fcm_token = str_replace('Bearer ', '', $request->header('Authorization'));
-        $userDetails = User::where('fcm_token', $fcm_token)->first();
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
         if ($userDetails) {
             $device_id = $userDetails->device_id;
             $user_id = $userDetails->id;
