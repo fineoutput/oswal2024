@@ -211,16 +211,14 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
-        $user_id   = auth()->user()->id;
-        $device_id = auth()->user()->device_id;
+        // $user_id   = auth()->user()->id;
+        // $device_id = auth()->user()->device_id;
         $cart_id   = $request->input('cart_id');
 
-        $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
-            $query->Where('device_id', $device_id)
-            ->orwhere('user_id', $user_id);
-        });
+        $query = Cart::query()->where('cart_id', $cart_id);
 
-        $cart = $query->where('id', $cart_id)->first();
+// Execute the query
+$cart = $query->get();;
 
         if ($cart) {
             $cart->delete();
@@ -234,6 +232,7 @@ class CartController extends Controller
     {
 
         $rules = [
+            'device_id'            => 'required|string',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
             'address_id'      => 'nullable|integer|exists:user_address,id',
