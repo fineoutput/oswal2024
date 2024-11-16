@@ -80,11 +80,6 @@ Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')-
 Route::middleware(['auth:sanctum', 'auth:user'])->group(function () {
     Route::get('get-address',[AppController::class , 'getAddress'])->name('get-adress');
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
-Route::prefix('cart')->name('cart.')->group(function () {
-    Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
-    Route::post('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
-    Route::post('destroy',[CartController::class, 'destroy'])->name('destroy');
-});
 Route::prefix('wishlist')->name('wishlist.')->group(function () {
     Route::post('/', [WishlistController::class, 'Show'])->name('index');
     Route::post('store', [WishlistController::class, 'store'])->name('store');
@@ -121,5 +116,11 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
     Route::get('type', [EcommerceController::class, 'type'])->name('type');
     // Route::get('shipping-charge', [EcommerceController::class, 'shipping_charges'])->name('shipping-charges');
 
+});
+
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
+    Route::post('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
+    Route::post('destroy',[CartController::class, 'destroy'])->name('destroy');
 });
 Route::get('unroute', [AppController::class, 'unauth'])->name('unauth.route');
