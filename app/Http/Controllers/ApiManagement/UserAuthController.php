@@ -218,6 +218,8 @@ OSWAL SOAP";
             $request->session()->regenerate();
 
             $token = $user->createToken('auth_token')->plainTextToken;
+            $user->fcm_token = $token;
+            $user->save();
 
             session()->forget(['user_otp_id', 'user_id', 'user_contact']);
 

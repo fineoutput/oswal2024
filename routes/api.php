@@ -122,5 +122,4 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
     // Route::get('shipping-charge', [EcommerceController::class, 'shipping_charges'])->name('shipping-charges');
 
 });
-
 Route::get('unroute', [AppController::class, 'unauth'])->name('unauth.route');
