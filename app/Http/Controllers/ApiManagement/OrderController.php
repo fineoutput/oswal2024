@@ -406,6 +406,7 @@ class OrderController extends Controller
     
                 })->get();
         }else{
+            
 
             $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
 
