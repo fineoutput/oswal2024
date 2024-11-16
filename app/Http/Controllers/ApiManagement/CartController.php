@@ -43,6 +43,7 @@ class CartController extends Controller
     {
 
         $rules = [
+            'device_id'   => 'required|string',
             'category_id' => 'required|string|exists:ecom_categories,id',
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
@@ -50,16 +51,23 @@ class CartController extends Controller
             'cart_from'   => 'required|string',
             'quantity'    => 'required|integer|min:1'
         ];
+        $user_id = 0;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        if ($userDetails) {
+            $device_id = $userDetails->device_id;
+            $user_id = $userDetails->id;
+        }
+    }
 
-        $vendoruser = User::find(auth()->id());
-
-        if ($request->user_id == null && ($vendoruser && $vendoruser->role_type == 2)) {
+        if ($request->user_id == null && ($user_id && $userDetails->role_type == 2)) {
 
             return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
 
         }
 
-        $user = User::where('id', auth()->id())->first();
+        $user = $user_id;
 
         $typePrice = $request->type_price;
 
@@ -243,7 +251,7 @@ class CartController extends Controller
             
         }
 
-        $user = User::find(auth()->id());
+        $user = User::where('device_id', $request->device_id)->first();
 
         if($user != null){
             
