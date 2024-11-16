@@ -249,6 +249,15 @@ $cart = $query->get();;
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
             
         }
+        $user_id = 0;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        if ($userDetails) {
+            $device_id = $userDetails->device_id;
+            $user_id = $userDetails->id;
+        }
+    }
 
         $user = User::where('device_id', $request->device_id)->first();
 
@@ -267,8 +276,8 @@ $cart = $query->get();;
 
         }
 
-        $device_id       = $user->device_id;
-        $user_id         = $user->id;
+        $device_id       = $request->device_id;
+        $user_id         = $user_id;
         $lang            = $request->input('lang');
         $input_promocode = $request->input('input_promocode');
         $address_id      = $request->input('address_id');
