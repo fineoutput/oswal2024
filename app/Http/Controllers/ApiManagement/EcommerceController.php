@@ -453,7 +453,7 @@ class EcommerceController extends Controller
         // If the user is a regular customer (not a vendor), return only regular types
         return [
             'types' => [
-                'regular_types1' => $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
+                'regular_types' => $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
             ]
         ];
     }
