@@ -202,18 +202,36 @@ class CartController extends Controller
 
     public function destroy(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
-            'cart_id' => 'required|integer|exists:carts,id',
+            'device_id' => 'required|string',
+            'user_id'   => 'nullable|integer|exists:users,id',
+            'cart_id'   => 'required|integer|exists:carts,id',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
-        $cart_id = $request->input('cart_id');
-        
-        Cart::destroy($cart_id);
-        return response()->json(['success' => true, 'message' => 'Product removed successfully'], 200);
+
+        $device_id = $request->input('device_id');
+        $user_id   = $request->input('user_id');
+        $cart_id   = $request->input('cart_id');
+
+        $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
+            $query->Where('device_id', $device_id)
+            ->orwhere('user_id', $user_id);
+        });
+
+        $cart = $query->where('id', $cart_id)->first();
+
+        if ($cart) {
+            $cart->delete();
+            return response()->json(['success' => true, 'message' => 'Product remove successfully'], 200);
+        } else {
+            return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
+        }
     }
-    
+
     public function getCartDetails(Request $request)
     {
 
