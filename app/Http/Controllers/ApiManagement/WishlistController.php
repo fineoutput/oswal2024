@@ -58,7 +58,9 @@ class WishlistController extends Controller
             
             $typeid = $request->type_id;
         }
-
+        $user = auth()->user;
+        dd($user);
+    
         if($request->user_id){
             
             $existingWishlist = Wishlist::where('user_id', $request->user_id)->where('product_id', $request->product_id)->first();
