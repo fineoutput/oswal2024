@@ -58,9 +58,8 @@ class WishlistController extends Controller
             
             $typeid = $request->type_id;
         }
-        $user = auth()->user();
-        // dd($user);
-
+        $user = auth()->user;
+        
     
         if($user->id){
             
@@ -89,6 +88,7 @@ class WishlistController extends Controller
             $wishlist->fill($request->all());
 
             $wishlist->type_id = $typeid;
+            $wishlist->user_id = $user->id;
             
             $wishlist->date = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
