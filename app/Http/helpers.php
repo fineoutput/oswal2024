@@ -126,9 +126,7 @@ if(!function_exists('sendProduct')) {
         // echo $roleType;
         // // echo "hi";
         // exit;
-        if($roleType == 2){
-            $products = $products->where('product_view', $roleType);
-        }
+       
         if($paginate){
             return $products->paginate($paginate);
         }else{

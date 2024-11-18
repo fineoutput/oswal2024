@@ -171,7 +171,7 @@ class EcommerceController extends Controller
     $per_page = $request->input('per_page', 15);
 
     // Fetch the products
-    $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea, false, false, $roleType);
+    $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea, false, $roleType);
 
     $total = $products->count();
 
