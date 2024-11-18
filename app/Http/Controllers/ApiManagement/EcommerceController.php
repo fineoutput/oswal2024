@@ -236,12 +236,18 @@ class EcommerceController extends Controller
                 }
             } else {
                 // Handle case where 'regular_types' is empty or doesn't exist
-                $selected_type_id = '';
+                $selected_type_id = '0';
                 $selected_type_name = 'Def';  // Default Name if array is empty
                 $selected_type_selling_price = 00;
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
+                // return response()->json([
+                //     'message' => 'success',
+                //     'status' => 201,
+                //     'data' => "Data not found",
+                //     ]
+                // );
             }
             
            
