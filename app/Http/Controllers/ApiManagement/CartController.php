@@ -215,7 +215,7 @@ class CartController extends Controller
         // $device_id = auth()->user()->device_id;
         $cart_id   = $request->input('cart_id');
 
-        $query = Cart::query()->where('cart_id', $cart_id);
+        $query = Cart::query()->where('id', $cart_id);
 
 // Execute the query
 $cart = $query->get();;
