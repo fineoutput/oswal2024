@@ -58,6 +58,7 @@ class WishlistController extends Controller
         }
 
         $device_id = auth()->user()->device_id;
+        dd($device_id);
         if($user_id = auth()->user()->id){
             
             $existingWishlist = Wishlist::where('user_id', $user_id)->where('product_id', $request->product_id)->first();
