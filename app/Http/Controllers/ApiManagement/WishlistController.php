@@ -60,6 +60,7 @@ class WishlistController extends Controller
         }
         $user = auth()->user;
         dd($user);
+        
     
         if($request->user_id){
             
