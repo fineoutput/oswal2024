@@ -58,7 +58,7 @@ class WishlistController extends Controller
             
             $typeid = $request->type_id;
         }
-        $user = auth()->user;
+        $user = auth()->user();
         
     
         if($user->id){
