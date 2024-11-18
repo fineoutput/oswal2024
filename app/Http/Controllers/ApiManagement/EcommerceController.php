@@ -84,16 +84,29 @@ class EcommerceController extends Controller
     $is_fea = false;
     $search = false;
 
-    $device_id = null;
-    $user_id = null;
+   
     if ($request->header('Authorization')) {
+        // Extract token
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        
+        // Check if the token exists in the database
         $userDetails = User::where('auth', $auth_token)->first();
+        
         if ($userDetails) {
+            // If user is found, assign device_id and user_id
             $device_id = $userDetails->device_id;
             $user_id = $userDetails->id;
+        } else {
+            // If token is not valid (no user found), set both to null
+            $device_id = null;
+            $user_id = null;
         }
+    } else {
+        // If Authorization header is missing, set both to null
+        $device_id = null;
+        $user_id = null;
     }
+    
 
     switch ($currentRouteName) {
         case 'ecomm.products':
@@ -383,8 +396,7 @@ class EcommerceController extends Controller
 
     private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang)
 {
-    // echo $roleType;
-    // exit;
+    // Initialize variables
     $vendorTypes = [];
     $regularTypes = [];
 
@@ -392,28 +404,31 @@ class EcommerceController extends Controller
     if ($roleType && $roleType == 2) {
         // Query for vendor types
         $typeQuery = DB::table('vendor_types')
-        ->leftJoin('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
-        ->where('vendor_types.product_id', $product_id)
-        ->where('vendor_types.is_active', 1)
-        ->whereNotNull('type_subs.selling_price') // Ensure `selling_price` is not NULL
-        ->select(
-            'vendor_types.*',          // All columns from `vendor_types`
-            'type_subs.id as sub_id',  // Rename `id` from `type_subs` to `sub_id`
-            'type_subs.mrp as del_mrp', // Rename `mrp` to `del_mrp`
-            'type_subs.*'             // Include all other columns from `type_subs`
-        );
-    
+            ->leftJoin('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
+            ->where('vendor_types.product_id', $product_id)
+            ->where('vendor_types.is_active', 1)
+            ->select(
+                'vendor_types.*',          // All columns from `vendor_types`
+                'type_subs.id as sub_id',  // Rename `id` from `type_subs` to `sub_id`
+                'type_subs.mrp as del_mrp', // Rename `mrp` to `del_mrp`
+                'type_subs.selling_price'  // Explicitly include `selling_price`
+            );
 
+        // Apply state and city filters if provided
         if ($state_id) {
-            $typeQuery->where('state_id', $state_id);
+            $typeQuery->where('vendor_types.state_id', $state_id);
             if ($city_id) {
-                $typeQuery->where('city_id', $city_id);
+                $typeQuery->where('vendor_types.city_id', $city_id);
             }
         }
 
-        $typeQuery->groupBy('type_name');
+        // Fetch the result as a collection
+        $vendorTypes = $typeQuery->get();
 
-        $vendorTypes = $typeQuery->get();  // Get the result as a collection
+        // Filter out rows with `NULL` selling_price in the `type_subs` table
+        $vendorTypes = $vendorTypes->filter(function ($item) {
+            return !is_null($item->selling_price);
+        });
     }
 
     // Query for regular types (non-vendor users)
@@ -429,46 +444,46 @@ class EcommerceController extends Controller
         $typeQuery->groupBy('type_name');
     }
 
-    $regularTypes = $typeQuery->get();  // Get the result as a collection
+    $regularTypes = $typeQuery->get(); // Get the result as a collection
 
-    // dd($vendorTypes);
     // Format function for types
     $formatTypes = function ($types) use ($lang) {
         return $types->map(function ($type) use ($lang) {
-            $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
-            // echo $percent_off;
+            // Ensure values are not null and handle division by zero
+            $del_mrp = $type->del_mrp ?? 0;
+            $selling_price = $type->selling_price ?? 0;
+            $percent_off = ($del_mrp > 0) ? round((($del_mrp - $selling_price) * 100) / $del_mrp) : 0;
 
             return [
                 'type_id' => $type->id,
                 'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                'type_category_id' => $type->category_id,
+                'type_category_id' => $type->category_id ?? null,
                 'type_product_id' => $type->product_id,
-                'type_mrp' => $type->del_mrp,
-                'gst_percentage' => $type->gst_percentage,
-                'gst_percentage_price' => $type->gst_percentage_price,
-                'selling_price' => $type->selling_price,
-                'type_weight' => $type->weight,
-                'type_rate' => $type->rate,
+                'type_mrp' => $del_mrp,
+                'gst_percentage' => $type->gst_percentage ?? 0,
+                'gst_percentage_price' => $type->gst_percentage_price ?? 0,
+                'selling_price' => $selling_price,
+                'type_weight' => $type->weight ?? null,
+                'type_rate' => $type->rate ?? null,
                 'percent_off' => $percent_off,
                 'min_qty' => $type->min_qty ?? 0,
             ];
         });
     };
 
-  
-
     // Return response based on roleType (vendor or regular user)
     if ($roleType && $roleType == 2) {
         // If the user is a vendor, return only vendor types
         return [
-                'regular_types' => $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
+            'regular_types' => $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
         ];
     } else {
         // If the user is a regular customer (not a vendor), return only regular types
         return [
-                'regular_types' => $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
+            'regular_types' => $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
         ];
     }
 }
+
 
 }
