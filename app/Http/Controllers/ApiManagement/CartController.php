@@ -202,32 +202,22 @@ class CartController extends Controller
 
     public function destroy(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            'cart_id'   => 'required|integer|exists:carts,id',
+            'cart_id' => 'required|integer|exists:carts,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
-
-        // $user_id   = auth()->user()->id;
-        // $device_id = auth()->user()->device_id;
-        $cart_id   = $request->input('cart_id');
-
-        $query = Cart::query()->where('id', $cart_id);
-
-// Execute the query
-$cart = $query->get();;
-
-        if ($cart) {
-            $cart->delete();
-            return response()->json(['success' => true, 'message' => 'Product remove successfully'], 200);
-        } else {
-            return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
-        }
+    
+        $cart_id = $request->input('cart_id');
+    
+        // Use destroy method directly
+        Cart::destroy($cart_id);
+    
+        return response()->json(['success' => true, 'message' => 'Product removed successfully'], 200);
     }
-
+    
     public function getCartDetails(Request $request)
     {
 
