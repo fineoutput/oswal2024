@@ -252,6 +252,10 @@ $cart = $query->get();;
         }
 
         $user = User::find($request->user_id);
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $user = User::where('auth', $auth_token)->first();
+        }
 
         if($user != null){
             
