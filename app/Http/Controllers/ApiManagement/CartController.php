@@ -61,7 +61,7 @@ class CartController extends Controller
         }
     }
 
-        if ($request->user_id == null && ($user_id && $userDetails->role_type == 2)) {
+        if ($user_id == null && ($user_id && $userDetails->role_type == 2)) {
 
             return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
 
@@ -92,9 +92,10 @@ class CartController extends Controller
                 return response()->json(['success' => false, 'message' => "Type not found."]);
             }
 
+            if($userDetails->role_type == 1){
             if ($request->quantity < $type->min_qty) {
                 return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
-            }
+            }}
 
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
 
