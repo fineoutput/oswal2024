@@ -52,6 +52,7 @@ class CartController extends Controller
             'quantity'    => 'required|integer|min:1'
         ];
         $user_id = 0;
+        $role_type = null;
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
         $userDetails = User::where('auth', $auth_token)->first();
@@ -115,7 +116,7 @@ class CartController extends Controller
             // }
 
         } else {
-            if($userDetails->role_type == 1){
+            if($role_type == 1){
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
         }}
 
