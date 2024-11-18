@@ -94,7 +94,7 @@ class CartController extends Controller
 
             if($userDetails->role_type == 1){
             if ($request->quantity < $type->min_qty) {
-                return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+                return response()->json(['success' => false, 'message' => "The quantity must8 be at least {$type->min_qty}."]);
             }}
 
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
