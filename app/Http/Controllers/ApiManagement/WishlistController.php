@@ -28,6 +28,8 @@ class WishlistController extends Controller
     public function store(Request $request) {
 
         $rules = [
+            'device_id'  => 'required|string|exists:users,device_id',
+            'user_id'    => 'nullable|exists:users,id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
             'type_id'    => 'required|required|exists:types,id',
@@ -57,15 +59,13 @@ class WishlistController extends Controller
             $typeid = $request->type_id;
         }
 
-        $device_id = auth()->user()->device_id;
-        dd($device_id);
-        if($user_id = auth()->user()->id){
+        if($request->user_id){
             
-            $existingWishlist = Wishlist::where('user_id', $user_id)->where('product_id', $request->product_id)->first();
+            $existingWishlist = Wishlist::where('user_id', $request->user_id)->where('product_id', $request->product_id)->first();
 
         }else{
 
-            $existingWishlist = Wishlist::where('device_id', $device_id)->where('product_id', $request->product_id)->first();
+            $existingWishlist = Wishlist::where('device_id', $request->device_id)->where('product_id', $request->product_id)->first();
 
         }
 
