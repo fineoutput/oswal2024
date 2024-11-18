@@ -386,10 +386,17 @@ class EcommerceController extends Controller
     if ($roleType && $roleType == 2) {
         // Query for vendor types
         $typeQuery = DB::table('vendor_types')
-    ->leftJoin('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
-    ->where('vendor_types.product_id', $product_id)
-    ->where('vendor_types.is_active', 1)
-    ->select('vendor_types.*', 'type_subs.*');
+        ->leftJoin('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
+        ->where('vendor_types.product_id', $product_id)
+        ->where('vendor_types.is_active', 1)
+        ->whereNotNull('type_subs.selling_price') // Ensure `selling_price` is not NULL
+        ->select(
+            'vendor_types.*',          // All columns from `vendor_types`
+            'type_subs.id as sub_id',  // Rename `id` from `type_subs` to `sub_id`
+            'type_subs.mrp as del_mrp', // Rename `mrp` to `del_mrp`
+            'type_subs.*'             // Include all other columns from `type_subs`
+        );
+    
 
         if ($state_id) {
             $typeQuery->where('state_id', $state_id);
@@ -418,12 +425,13 @@ class EcommerceController extends Controller
 
     $regularTypes = $typeQuery->get();  // Get the result as a collection
 
+    // dd($vendorTypes);
     // Format function for types
     $formatTypes = function ($types) use ($lang) {
         return $types->map(function ($type) use ($lang) {
             $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
             echo $percent_off;
-            
+
             return [
                 'type_id' => $type->id,
                 'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
