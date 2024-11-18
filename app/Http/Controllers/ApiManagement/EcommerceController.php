@@ -430,7 +430,7 @@ class EcommerceController extends Controller
     $formatTypes = function ($types) use ($lang) {
         return $types->map(function ($type) use ($lang) {
             $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
-            echo $percent_off;
+            // echo $percent_off;
 
             return [
                 'type_id' => $type->id,
