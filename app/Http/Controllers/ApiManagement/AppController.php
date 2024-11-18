@@ -708,6 +708,6 @@ class AppController extends Controller
 
     public function unauth()
     {
-        return response()->json(['success' => false, 'message' => 'Reward successfully applied'], 201);
+        return response()->json(['success' => false, 'message' => 'Please login unauth route'], 201);
     }
 }
