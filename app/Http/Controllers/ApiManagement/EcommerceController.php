@@ -84,29 +84,16 @@ class EcommerceController extends Controller
     $is_fea = false;
     $search = false;
 
-   
+    $device_id = null;
+    $user_id = null;
     if ($request->header('Authorization')) {
-        // Extract token
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
-        
-        // Check if the token exists in the database
         $userDetails = User::where('auth', $auth_token)->first();
-        
         if ($userDetails) {
-            // If user is found, assign device_id and user_id
             $device_id = $userDetails->device_id;
             $user_id = $userDetails->id;
-        } else {
-            // If token is not valid (no user found), set both to null
-            $device_id = null;
-            $user_id = null;
         }
-    } else {
-        // If Authorization header is missing, set both to null
-        $device_id = null;
-        $user_id = null;
     }
-    
 
     switch ($currentRouteName) {
         case 'ecomm.products':
