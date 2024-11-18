@@ -205,16 +205,12 @@ class CartController extends Controller
         $validator = Validator::make($request->all(), [
             'cart_id' => 'required|integer|exists:carts,id',
         ]);
-    
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
-    
         $cart_id = $request->input('cart_id');
-    
-        // Use destroy method directly
+        
         Cart::destroy($cart_id);
-    
         return response()->json(['success' => true, 'message' => 'Product removed successfully'], 200);
     }
     
