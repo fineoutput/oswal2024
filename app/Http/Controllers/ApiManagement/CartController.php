@@ -105,11 +105,13 @@ class CartController extends Controller
 
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
 
-                $filteredType = VendorType::where('product_id', $request->product_id)
-                    ->where('type_name', $type->type_name)
-                    ->where('start_range', '<=', $request->quantity)
-                    ->where('end_range', '>=', $request->quantity)
-                    ->first();
+            $filteredType = VendorType::join('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
+            ->where('vendor_types.product_id', $request->product_id)
+            ->where('vendor_types.type_name', $type->type_name)
+            ->where('type_subs.start_range', '<=', $request->quantity)
+            ->where('type_subs.end_range', '>=', $request->quantity)
+            ->select('vendor_types.*', 'type_subs.start_range', 'type_subs.end_range') // Select relevant columns
+            ->first();
     
                 $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
                 $typeId = $filteredType ? $filteredType->id : $typeId;
@@ -138,7 +140,7 @@ class CartController extends Controller
 
         $data['type_price'] = $typePrice;
 
-        $data['total_qty_price'] = $user && $user->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
+        $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
 
         $data['ip'] = $request->ip();
 
