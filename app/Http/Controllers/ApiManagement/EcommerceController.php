@@ -221,9 +221,9 @@ class EcommerceController extends Controller
                     // Assign the values from typedata
                     $selected_type_id = $typedata['regular_types'][0]['type_id'] ?? '';
                     $selected_type_name = $typedata['regular_types'][0]['type_name'] ?? '';
-                    $selected_type_selling_price = $typedata['regular_types'][0]['selling_price'] ?? '';
-                    $selected_type_mrp = $typedata['regular_types'][0]['type_mrp'] ?? '';
-                    $selected_type_percent_off = $typedata['regular_types'][0]['percent_off'] ?? '';
+                    $selected_type_selling_price = $typedata['regular_types'][0]['range'][0]['selling_price'] ?? '';
+                    $selected_type_mrp = $typedata['regular_types'][0]['range'][0]['type_mrp'] ?? '';
+                    $selected_type_percent_off = $typedata['regular_types'][0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $vendorSelectedType->min_qty ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
@@ -433,17 +433,18 @@ class EcommerceController extends Controller
                         ->get();
     
                     foreach ($subTypes as $subType) {
+                        $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
                         $range[] = [
-                            'type_mrp' => $del_mrp,
+                            'type_mrp' => $subType->mrp,
                             'gst_percentage' => $subType->gst_percentage ?? 0,
                             'gst_percentage_price' => $subType->gst_percentage_price ?? 0,
-                            'selling_price' => $selling_price,
+                            'selling_price' => $subType->selling_price,
                             'type_weight' => $subType->weight ?? null,
                             'type_rate' => $subType->rate ?? null,
-                            'percent_off' => $percent_off,
+                            'percent_off' => $sub_percent_off,
                             'start_range' => $subType->start_range ?? 1,
                             'end_range' => $subType->end_range ?? 1000,
-                            'min_qty' => $subType->min_qty ?? 0,
+                            'min_qty' => $subType->min_qty ?? 5,
                         ];
                     }
                 } else {
