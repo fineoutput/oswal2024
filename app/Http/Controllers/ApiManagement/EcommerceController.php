@@ -228,7 +228,7 @@ class EcommerceController extends Controller
                 } else {
                     // No matching vendor type found, handle accordingly
                     $selected_type_id = '';
-                    $selected_type_name = 'Def';  // Default Name if no match found
+                    $selected_type_name = 'Def1';  // Default Name if no match found
                     $selected_type_selling_price = 00;
                     $selected_type_mrp = 00;
                     $selected_type_percent_off = 00;
