@@ -429,10 +429,7 @@ class EcommerceController extends Controller
     
                 // Fetch Type_sub data for vendors
                 if ($roleType && $roleType == 2) {
-                    $subTypes = Type_sub::whereNull('deleted_at')
-                        ->where('type_id', $type->id)
-                        ->orWhere('order_status', 2)
-                        ->orderBy("id", "DESC")
+                    $subTypes = Type_sub::where('type_id', $type->id)
                         ->get();
     
                     foreach ($subTypes as $subType) {
