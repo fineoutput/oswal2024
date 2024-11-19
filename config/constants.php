@@ -24,9 +24,13 @@ return [
     // Google Map API Key
     'GOOGLE_MAP_KEY' => 'AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U',
 
-    // Razorpay API Keys
-    'RAZORPAY_KEY_ID' => 'rzp_test_nyyE7NA4CoCIbN',
-    'RAZORPAY_KEY_SECRET' => 'U0iJVwdeskvEw7qVstJ7mh1c',
+        // Razorpay API Keys TEST KEYS
+        'RAZORPAY_KEY_ID' => 'rzp_test_nyyE7NA4CoCIbN',
+        'RAZORPAY_KEY_SECRET' => 'U0iJVwdeskvEw7qVstJ7mh1c',
+    
+          // Razorpay API Keys LIVE KEYS
+        // 'RAZORPAY_KEY_ID' => 'rzp_live_SQvxbFtAo7Hn5A',
+        // 'RAZORPAY_KEY_SECRET' => 'f1hSaQG0VaMa1HrvZ99r9at2',
 
     //ShipRocket api
     'SHIPROCKET_EMAIL' => 'acc.fineoutput@gmail.com',
