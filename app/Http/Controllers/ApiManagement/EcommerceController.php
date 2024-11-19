@@ -216,7 +216,7 @@ class EcommerceController extends Controller
             if (!empty($typedata['regular_types']) && isset($typedata['regular_types'][0]['type_name'])) {
                 // Data is available
                 $vendorSelectedType = vendorType::where('type_name', $typedata['regular_types'][0]['type_name'])->first();
-                
+
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata['regular_types'][0]['type_id'] ?? '';
@@ -249,8 +249,8 @@ class EcommerceController extends Controller
                 //     ]
                 // );
             }
-            
-           
+
+
         }
 
         // Add the product data
@@ -300,9 +300,9 @@ class EcommerceController extends Controller
         ]
     ]);
 }
-    
+
     public function type(Request $request) {
-        
+
         $validator = Validator::make($request->all(), [
             'user_id'  => 'nullable|numeric|exists:users,id',
             'pid'      => 'required|numeric',
@@ -310,11 +310,11 @@ class EcommerceController extends Controller
             'tid'      => 'required|numeric',
             'lang'     => 'required|string',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
-    
+
         $user = User::find($request->user_id);
 
         if($user) {
@@ -327,13 +327,13 @@ class EcommerceController extends Controller
         }
 
         $types = sendType($request->cid, $request->pid, $request->tid , $roleType);
-    
+
         if ($types->isEmpty()) {
             return response()->json(['success' => false, 'message' => 'No types found']);
         }
-    
+
         $type = $types->first();
-    
+
         $percent_off = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
 
         $typedata = [
@@ -343,7 +343,7 @@ class EcommerceController extends Controller
             'selected_type_mrp'             => $type->del_mrp,
             'selected_type_percent_off'     => $percent_off,
         ];
-    
+
         return response()->json(['success' => true, 'type' => $typedata], 200);
     }
 
@@ -357,9 +357,9 @@ class EcommerceController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
-        
+
         $shippingCharge = ShippingCharge::with('state', 'city')->where('is_active', 1);
- 
+
         if ($request->state_id) {
             $shippingCharge->where('state_id', $request->state_id);
         }
@@ -367,17 +367,17 @@ class EcommerceController extends Controller
         if ($request->city_id) {
             $shippingCharge->where('city_id', $request->city_id);
         }
-        
+
         $shippingCharge = $shippingCharge->first();
 
         if ($shippingCharge) {
-            
+
             return response()->json(['success' => true,'shipping_charge' => $shippingCharge], 200);
-            
+
         } else {
-            
+
             return response()->json(['success' => false,'message' => 'Shipping charge not found.'], 404);
-            
+
         }
     }
 
@@ -386,26 +386,26 @@ class EcommerceController extends Controller
         // Initialize variables
         $vendorTypes = [];
         $regularTypes = [];
-    
+
         // If the user is a vendor (roleType == 2)
         if ($roleType && $roleType == 2) {
             $typeQuery = VendorType::where('product_id', $product_id)->where('is_active', 1);
-    
+
             if ($state_id) {
                 $typeQuery->where('state_id', $state_id);
                 if ($city_id) {
                     $typeQuery->where('city_id', $city_id);
                 }
             }
-    
+
             $typeQuery->groupBy('type_name');
             $vendorTypes = $typeQuery->get();
         }
-    
+
         // Query for regular types (non-vendor users)
         $typeQuery = Type::where('product_id', $product_id)
             ->where('is_active', 1);
-    
+
         if ($state_id) {
             $typeQuery->where('state_id', $state_id);
             if ($city_id) {
@@ -414,9 +414,9 @@ class EcommerceController extends Controller
         } else {
             $typeQuery->groupBy('type_name');
         }
-    
+
         $regularTypes = $typeQuery->get(); // Get the result as a collection
-    
+
         // Format function for types
         $formatTypes = function ($types) use ($lang, $roleType) {
             return $types->map(function ($type) use ($lang, $roleType) {
@@ -424,14 +424,14 @@ class EcommerceController extends Controller
                 $del_mrp = $type->del_mrp ?? 0;
                 $selling_price = $type->selling_price ?? 0;
                 $percent_off = ($del_mrp > 0) ? round((($del_mrp - $selling_price) * 100) / $del_mrp) : 0;
-    
+
                 $range = [];
-    
+
                 // Fetch Type_sub data for vendors
                 if ($roleType && $roleType == 2) {
                     $subTypes = Type_sub::where('type_id', $type->id)
                         ->get();
-    
+
                     foreach ($subTypes as $subType) {
                         $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
                         $range[] = [
@@ -444,7 +444,7 @@ class EcommerceController extends Controller
                             'percent_off' => $sub_percent_off,
                             'start_range' => $subType->start_range ?? 1,
                             'end_range' => $subType->end_range ?? 1000,
-                            
+
                         ];
                     }
                 } else {
@@ -459,10 +459,10 @@ class EcommerceController extends Controller
                         'percent_off' => $percent_off,
                         'start_range' => 1,
                         'end_range' => 1000,
-                        
+
                     ];
                 }
-    
+
                 return [
                     'type_id' => $type->id,
                     'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
@@ -473,20 +473,20 @@ class EcommerceController extends Controller
                 ];
             });
         };
-    
+
         // Return response based on roleType (vendor or regular user)
         if ($roleType && $roleType == 2) {
             // If the user is a vendor, return only vendor types
             return [
-                'regular_types' => $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
+                 $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
             ];
         } else {
             // If the user is a regular customer (not a vendor), return only regular types
             return [
-                'regular_types' => $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
+                 $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
             ];
         }
     }
-    
+
 
 }
