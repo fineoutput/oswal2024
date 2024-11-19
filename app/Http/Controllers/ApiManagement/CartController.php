@@ -33,6 +33,7 @@ use App\Models\Reward;
 use App\Models\Cart;
 
 use App\Models\Type;
+use App\Models\Type_sub;
 
 use App\Models\User;
 
@@ -136,6 +137,7 @@ class CartController extends Controller
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
 
+        $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
 
         $data['type_price'] = $typePrice;
@@ -268,6 +270,7 @@ class CartController extends Controller
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $user = User::where('auth', $auth_token)->first();
+            $user_id =  $user->id;
         }
 
         if($user != null){
@@ -275,7 +278,6 @@ class CartController extends Controller
             $roleType =  $user->role_type;
             
             if($roleType == 2){
-
                 Cart::where('device_id', $request->device_id)->where('user_id','=', 0)->delete();
             }
 
@@ -286,7 +288,7 @@ class CartController extends Controller
         }
 
         $device_id       = $request->input('device_id');
-        $user_id         = $request->input('user_id');
+      
         $lang            = $request->input('lang');
         $input_promocode = $request->input('input_promocode');
         $address_id      = $request->input('address_id');
@@ -301,7 +303,11 @@ class CartController extends Controller
             $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
         });
 
+                //   $CartData = Cart::where('user_id',$user_id)->orderBY("id","DESC")->get();
+        
 
+// print_r($cartQuery);
+// exit;
         if($roleType == 2){
 
 
@@ -311,6 +317,14 @@ class CartController extends Controller
                         ->where('city_id', 29);
                 });
             }])->get();
+            // $cartItems = $cartQuery->with(['vendortype.Type_sub' => function ($query) use ($state_id, $city_id) {
+            //     $query->when($state_id, function ($query) use ($state_id, $city_id) {
+            //         $query->where('vendortype.state_id', 629)
+            //               ->where('vendortype.city_id', 29);
+            //     });
+            // }])->get();
+            
+            
 
         }else{
 
@@ -339,7 +353,7 @@ class CartController extends Controller
                     $cartItem->save();
                 }
             });
-            dd($cartItems);
+            // dd($cartItems);
 
         }else{
             
@@ -785,7 +799,7 @@ class CartController extends Controller
                     $selectedType = [];
                 }
                 
-                $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
+                $totalWeight += $cartItem->quantity * 1;
 
             }else{
 
