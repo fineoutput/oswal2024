@@ -211,7 +211,7 @@ class EcommerceController extends Controller
             $selected_type_percent_off = $percent_off;
             $selected_min_qty = $vendorSelectedType->min_qty ?? '';
         } else {
-            print_r($typedata['regular_types'][0]['range'][0]['type_mrp']);
+            print_r($typedata['regular_types'][0]['range']['type_mrp']);
             exit;
             if (!empty($typedata['regular_types']) && isset($typedata['regular_types'][0]['type_name'])) {
                 // Data is available
