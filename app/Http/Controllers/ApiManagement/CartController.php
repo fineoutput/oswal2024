@@ -74,19 +74,24 @@ class CartController extends Controller
 
         $typeId = $request->type_id;
 
-        if ($user && $user->role_type == 2) {
+        // dd($user);
+        if ($user && $userDetails->role_type == 2) {
 
             if(isset($request->where) == 'cartdetails'){
 
                 $type = VendorType::find($typeId);
+                
             
             }else{
                 
                 $Rtype = Type::find($typeId);
 
+                
                 $type = VendorType::where('product_id', $Rtype->product_id)
                     ->where('type_name', $Rtype->type_name)
                     ->first();
+
+
             }
 
             if (!$type) {
@@ -332,6 +337,7 @@ class CartController extends Controller
                     $cartItem->save();
                 }
             });
+            dd($cartItems);
 
         }else{
             
@@ -777,7 +783,7 @@ class CartController extends Controller
                     $selectedType = [];
                 }
                 
-                $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight ?? 0;
+                $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
 
             }else{
 
