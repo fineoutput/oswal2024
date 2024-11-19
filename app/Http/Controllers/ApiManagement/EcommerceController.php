@@ -477,14 +477,11 @@ class EcommerceController extends Controller
         // Return response based on roleType (vendor or regular user)
         if ($roleType && $roleType == 2) {
             // If the user is a vendor, return only vendor types
-            return [
-                 $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [],
-            ];
+            return $vendorTypes->isNotEmpty() ? $formatTypes($vendorTypes) : [];
         } else {
             // If the user is a regular customer (not a vendor), return only regular types
-            return [
-                 $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [],
-            ];
+            return
+                 $regularTypes->isNotEmpty() ? $formatTypes($regularTypes) : [];
         }
     }
 
