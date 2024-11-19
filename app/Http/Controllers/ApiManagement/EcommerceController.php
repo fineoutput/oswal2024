@@ -211,19 +211,19 @@ class EcommerceController extends Controller
             $selected_type_percent_off = $percent_off;
             $selected_min_qty = $vendorSelectedType->min_qty ?? '';
         } else {
-            // print_r($typedata['regular_types'][0]['range']['type_mrp']);
+            // print_r($typedata);
             // exit;
-            if (!empty($typedata['regular_types']) && isset($typedata['regular_types'][0]['type_name'])) {
+            if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
-                $vendorSelectedType = vendorType::where('type_name', $typedata['regular_types'][0]['type_name'])->first();
+                $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
 
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
-                    $selected_type_id = $typedata['regular_types'][0]['type_id'] ?? '';
-                    $selected_type_name = $typedata['regular_types'][0]['type_name'] ?? '';
-                    $selected_type_selling_price = $typedata['regular_types'][0]['range'][0]['selling_price'] ?? '';
-                    $selected_type_mrp = $typedata['regular_types'][0]['range'][0]['type_mrp'] ?? '';
-                    $selected_type_percent_off = $typedata['regular_types'][0]['range'][0]['percent_off'] ?? '';
+                    $selected_type_id = $typedata[0]['type_id'] ?? '';
+                    $selected_type_name = $typedata[0]['type_name'] ?? '';
+                    $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+                    $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+                    $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $vendorSelectedType->min_qty ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
