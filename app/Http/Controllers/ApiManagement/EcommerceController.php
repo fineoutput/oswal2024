@@ -444,7 +444,7 @@ class EcommerceController extends Controller
                             'percent_off' => $sub_percent_off,
                             'start_range' => $subType->start_range ?? 1,
                             'end_range' => $subType->end_range ?? 1000,
-                            'min_qty' => $subType->min_qty ?? 5,
+                            
                         ];
                     }
                 } else {
@@ -469,6 +469,7 @@ class EcommerceController extends Controller
                     'type_category_id' => $type->category_id ?? null,
                     'type_product_id' => $type->product_id,
                     'range' => $range,
+                    'min_qty' => $type->min_qty ?? 1,
                 ];
             });
         };
