@@ -459,7 +459,7 @@ class EcommerceController extends Controller
                         'percent_off' => $percent_off,
                         'start_range' => 1,
                         'end_range' => 1000,
-                        'min_qty' => $type->min_qty ?? 0,
+                        
                     ];
                 }
     
