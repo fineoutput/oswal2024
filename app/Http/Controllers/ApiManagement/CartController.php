@@ -772,7 +772,7 @@ $cartItems = $cartQuery->get();
                     })
                     ->when(is_null($stateId) || is_null($cityId), function ($query) {
                         return $query->groupBy('type_name');
-                    });
+                    })->with(['type_sub']);
             }])
     
             ->where(function ($query) use ($userId, $deviceId) {
@@ -780,6 +780,7 @@ $cartItems = $cartQuery->get();
             })
     
             ->get();
+            // dd($cartData);
 
         }else{
             
@@ -825,18 +826,30 @@ $cartItems = $cartQuery->get();
                 $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang) {
     
                     $totalTypeQuantityPrice = $type->selling_price;
-    
+                    $subTypes = Type_sub::where('type_id', $type->id)
+                    ->get();
+                    $range = [];
+                    foreach ($subTypes as $subType) {
+                        $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
+                        $range[] = [
+                            'type_mrp' => $subType->mrp,
+                            'gst_percentage' => $subType->gst_percentage ?? 0,
+                            'gst_percentage_price' => $subType->gst_percentage_price ?? 0,
+                            'selling_price' => $subType->selling_price,
+                            'type_weight' => $subType->weight ?? null,
+                            'type_rate' => $subType->rate ?? null,
+                            'percent_off' => $sub_percent_off,
+                            'start_range' => $subType->start_range ?? 1,
+                            'end_range' => $subType->end_range ?? 1000,
+
+                        ];
+                    }
                     return [
                         'type_id' => $type->id,
                         'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
                         'type_category_id' => $type->category_id,
                         'type_product_id' => $type->product_id,
-                        'type_mrp' => $type->del_mrp,
-                        'gst_percentage' => $type->gst_percentage,
-                        'gst_percentage_price' => $type->gst_percentage_price,
-                        'selling_price' => $type->selling_price,
-                        'type_weight' => $type->weight,
-                        'type_rate' => $type->rate,
+                        'range' => $range,
                         'total_typ_qty_price' => $totalTypeQuantityPrice,
                         'min_qty' => $type->min_qty ?? 1,
                     ];
@@ -866,17 +879,20 @@ $cartItems = $cartQuery->get();
     
                     $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
     
-                    return [
-                        'type_id' => $type->id,
-                        'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                        'type_category_id' => $type->category_id,
-                        'type_product_id' => $type->product_id,
+                    $range = [
                         'type_mrp' => $type->del_mrp,
                         'gst_percentage' => $type->gst_percentage,
                         'gst_percentage_price' => $type->gst_percentage_price,
                         'selling_price' => $type->selling_price,
                         'type_weight' => $type->weight,
                         'type_rate' => $type->rate,
+                    ];
+                    return [
+                        'type_id' => $type->id,
+                        'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                        'type_category_id' => $type->category_id,
+                        'type_product_id' => $type->product_id,
+                        'range' => $range,
                         'total_typ_qty_price' => $totalTypeQuantityPrice,
                         'min_qty' => $type->min_qty ?? 1,
                     ];
