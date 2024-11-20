@@ -18,6 +18,8 @@ use App\Models\VendorType;
 use App\Models\Wishlist;
 
 use App\Models\Type;
+use App\Models\Type_sub;
+
 
 use App\Models\Cart;
 
@@ -159,7 +161,7 @@ class WishlistController extends Controller
             if(Auth::check() && Auth::user()->role_type == 2){
                 
                 $typeData =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                                ->where('is_active', 1)->get();
+                ->where('is_active', 1)->get();
             }else{
              
                 $typeData = Type::where('product_id', $product_id)
@@ -185,17 +187,44 @@ class WishlistController extends Controller
             foreach ($typeData as $type) {
                 $percentOff = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
     
-                $typedata[] = [
-                    'type_id' => $type->id,
-                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                    'type_category_id' => $type->category_id,
-                    'type_product_id' => $type->product_id,
-                    'type_mrp' => $type->del_mrp,
+                if(Auth::check() && Auth::user()->role_type == 2){
+                    $subTypes = Type_sub::where('type_id', $type->id)
+                    ->get();
+                    $range = [];
+                    foreach ($subTypes as $subType) {
+                        $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
+                        $range[] = [
+                            'type_mrp' => $subType->mrp,
+                            'gst_percentage' => $subType->gst_percentage ?? 0,
+                            'gst_percentage_price' => $subType->gst_percentage_price ?? 0,
+                            'selling_price' => $subType->selling_price,
+                            'type_weight' => $subType->weight ?? null,
+                            'type_rate' => $subType->rate ?? null,
+                            'percent_off' => $sub_percent_off,
+                            'start_range' => $subType->start_range ?? 1,
+                            'end_range' => $subType->end_range ?? 1000,
+
+                        ];
+                    }
+                
+                }
+                else{
+
+                    $range = [
+                        'type_mrp' => $type->del_mrp,
                     'gst_percentage' => $type->gst_percentage,
                     'gst_percentage_price' => $type->gst_percentage_price,
                     'selling_price' => $type->selling_price,
                     'type_weight' => $type->weight,
                     'type_rate' => $type->rate,
+                    ];
+                }
+                $typedata[] = [
+                    'type_id' => $type->id,
+                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                    'type_category_id' => $type->category_id,
+                    'type_product_id' => $type->product_id,
+                    'range' => $range,
                     'percent_off' => $percentOff
                 ];
             }
