@@ -20,4 +20,10 @@ class Type_sub extends Model
         'rate',
         'type_id',
     ];
+    // If required, define reverse relation
+    public function vendortype()
+    {
+    return $this->belongsTo(VendorType::class, 'type_id', 'id');
+    }
+
 }

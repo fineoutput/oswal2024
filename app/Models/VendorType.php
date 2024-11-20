@@ -119,4 +119,10 @@ class VendorType extends Model
     {
         return $this->hasMany(Wishlist::class ,'type_id' , 'id');
     }
+
+    public function type_sub()
+    {
+    return $this->hasMany(Type_sub::class, 'type_id', 'id');
+    }
+
 }

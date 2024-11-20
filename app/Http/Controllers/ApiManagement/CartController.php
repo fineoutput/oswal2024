@@ -312,19 +312,54 @@ class CartController extends Controller
         if($roleType == 2){
 
 
-            $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
-                $query->when($state_id, function ($query) use ($state_id, $city_id) {
-                    $query->where('state_id', 629)
-                        ->where('city_id', 29);
-                });
-            }])->get();
+            // $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
+            //     $query->when($state_id, function ($query) use ($state_id, $city_id) {
+            //         $query->where('state_id', 629)
+            //             ->where('city_id', 29);
+            //     });
+            // }])->get();
             // $cartItems = $cartQuery->with(['vendortype.Type_sub' => function ($query) use ($state_id, $city_id) {
             //     $query->when($state_id, function ($query) use ($state_id, $city_id) {
             //         $query->where('vendortype.state_id', 629)
             //               ->where('vendortype.city_id', 29);
             //     });
             // }])->get();
-            
+//             $cartItems = $cartQuery->get();
+
+$cartItems = $cartQuery->with([
+    'vendortype' => function ($query) use ($state_id, $city_id) {
+        $query->when($state_id, function ($query) use ($state_id, $city_id) {
+            $query->where('state_id', $state_id)
+                  ->where('city_id', $city_id);
+        })
+        ->with(['type_sub']); // Load the relation with type_sub
+    }
+])->get();
+$cartItems = $cartQuery->get();
+
+// foreach ($cartItems as $cartItem) {
+//     // Vendortype table se data fetch karna
+//     $vendorType = DB::table('vendor_types')
+//         ->where('id', $cartItem->vendortype_id) // Match vendortype_id from cart
+//         ->first();
+
+//     if ($vendorType) {
+//         // Type_sub table se vendortype ke liye data fetch karna
+//         $typeSubs = DB::table('type_subs')
+//             ->where('type_id', $vendorType->id) // Match vendortype id with type_sub type_id
+//             ->get();
+
+//         foreach ($typeSubs as $typeSub) {
+//             // Process type_sub data
+//             echo $typeSub->column_name; // Replace column_name with actual column name
+//         }
+//     }
+// }
+
+
+// print_r($cartItems);
+
+//             exit;
             
 
         }else{
@@ -347,13 +382,36 @@ class CartController extends Controller
 
         if($roleType == 2){
 
+            // $cartItems->each(function ($cartItem) {
+            //     if ($cartItem->vendortype) {
+            //          print_r($cartItem->vendortype->type_sub);
+            //         $cartItem->type_price = $cartItem->vendortype->selling_price;
+            //         $cartItem->total_qty_price = $cartItem->vendortype->selling_price;
+            //         $cartItem->save();
+            //     }
+            // });
+
             $cartItems->each(function ($cartItem) {
                 if ($cartItem->vendortype) {
-                    $cartItem->type_price = $cartItem->vendortype->selling_price;
-                    $cartItem->total_qty_price = $cartItem->vendortype->selling_price;
-                    $cartItem->save();
+                    // Vendortype ke associated type_sub ko fetch karo
+                    $typeSubs = $cartItem->vendortype->type_sub;
+            
+                    if ($typeSubs->isNotEmpty()) {
+                        // Quantity check kar ke range find karo
+                        $matchedTypeSub = $typeSubs->first(function ($typeSub) use ($cartItem) {
+                            return $cartItem->quantity >= $typeSub->start_range && $cartItem->quantity <= $typeSub->end_range;
+                        });
+            
+                        if ($matchedTypeSub) {
+                            // Matched subtype ke price se cart item update karo
+                            $cartItem->type_price = $matchedTypeSub->selling_price;
+                            $cartItem->total_qty_price = $cartItem->quantity * $matchedTypeSub->selling_price;
+                            $cartItem->save(); // Save the updated cart item
+                        }
+                    }
                 }
             });
+            
             // dd($cartItems);
 
         }else{
