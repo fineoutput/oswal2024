@@ -54,6 +54,7 @@ class CartController extends Controller
         ];
         $user_id = 0;
         $role_type = null;
+        $userDetails = null;
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
         $userDetails = User::where('auth', $auth_token)->first();
@@ -266,14 +267,14 @@ class CartController extends Controller
             
         }
 
-        $user = User::find($request->user_id);
+        $user_id = null;
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $user = User::where('auth', $auth_token)->first();
             $user_id =  $user->id;
         }
 
-        if($user != null){
+        if($user_id != null){
             
             $roleType =  $user->role_type;
             
