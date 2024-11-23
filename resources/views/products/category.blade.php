@@ -18,7 +18,8 @@
 
         <input type="hidden" value="{{ route('getproducts', ['slug' => $categorys[0]->url , 'type' => 'category']) }}" id="category-url-route">
 
-        <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
+        <section class="category_banner_img d-none d-lg-block" id="category_id_banner_image" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
+        {{-- <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section> --}}
         {{-- <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset($categorys[0]->image) }}');"></section> --}}
 
         <section class="category_home">
