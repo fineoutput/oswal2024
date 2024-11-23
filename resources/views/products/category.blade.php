@@ -28,7 +28,7 @@
 
                 <div class="row">
 
-                    <div class="col-lg-12 d-flex justify-content-center py-5">
+                    <div class="col-lg-12 d-flex justify-content-center pt-5">
 
                         <div class="product_category_content">
 
