@@ -418,10 +418,20 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                             <h4 style="font-size: 17px; font-family: Muli, sans-serif !important;">Apply Wallet</h4>
 
                         </div>
+                        @if($orderdetails->extra_discount != 0) 
+                        @php
+                        // $walletBalanceAfterDiscount = Auth::user()->wallet_amount - $orderdetails->extra_discount;
+                        $walletBalanceAfterDiscount = number_format(Auth::user()->wallet_amount - $orderdetails->extra_discount, 2, '.', '');
+                        @endphp
+                        @else
+                        @php
+                        $walletBalanceAfterDiscount = Auth::user()->wallet_amount;
+                        @endphp
+                        @endif
 
                         <input type="checkbox" onchange="applyWallet()" @if($orderdetails->extra_discount != 0) checked @endif name="wallet" id="wallet" class="wallet" value="1" />
 
-                        <label class="wallet-size mb-0" for="wallet" id="totalwalletAmount"> Wallet (₹{{ Auth::user()->wallet_amount ?? 0 }})</label>
+                        <label class="wallet-size mb-0" for="wallet" id="totalwalletAmount"> Wallet (₹{{  $walletBalanceAfterDiscount ?? 0 }})</label>
 
                     </div>
 
@@ -520,6 +530,11 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     </div>  --}}
 
             </form>
+            <div class="d-none" id="user-info" 
+     data-name="{{ Auth::user()->first_name }}" 
+     data-email="{{ Auth::user()->email }}" 
+     data-phone="{{ Auth::user()->contact ?? '0000000000' }}">
+</div>
 
         </div>
 
@@ -908,13 +923,19 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
     }
 
     function placeOrder() {
-
+        const userInfo = document.getElementById('user-info');
+const name = userInfo.getAttribute('data-name');
+const email = userInfo.getAttribute('data-email');
+const phone = userInfo.getAttribute('data-phone');
+// console.log(phone);
+        
         $.ajax({
             url: "{{ route('checkout.place-order') }}",
             type: 'POST',
             data: $('#placeOrder').serialize(),
             success: function(response) {
                 // console.log();
+                
                 if (response.data.form != 1) {
 
                     var options = {
@@ -927,9 +948,9 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         "order_id": response.data.razor_order_id, // Razorpay Order ID
                         "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
                         "prefill": {
-                            "name": response.data.name,
-                            "email": response.data.email,
-                            "phone": response.data.phone
+                            "name": name,
+                            "email": email,
+                            "phone": phone
                         },
                         "notes": {
                             "address": "Razorpay Corporate Office"
@@ -942,11 +963,33 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     // Initialize and open the Razorpay payment gateway
                     var rzp1 = new Razorpay(options);
                     rzp1.open();
-                } else {
+                } 
+                else {
+    // Get the current URL
+    const currentUrl = window.location.href;
 
-                    window.location.href = `{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+    // Parse the query string for address_id
+    const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
+    let addressId = urlParams.get('address_id'); // Use let to allow reassignment
+    console.log('Extracted addressId:', addressId);
 
-                }
+    // Fallback to 0 if addressId is missing
+    if (!addressId) {
+        addressId = 0;
+    }
+
+    // Construct the route dynamically
+    const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
+    const orderId = response.data.order_id; // Use the order_id from the response
+    const redirectUrl = `${baseUrl}/${orderId}/${addressId}`;
+
+    console.log('Redirecting to:', redirectUrl);
+
+    // Perform the redirect
+    window.location.href = redirectUrl;
+}
+
+
             },
             error: function(xhr) {
                 console.error('An error occurred while processing the payment option.');
@@ -961,7 +1004,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
         return parseFloat(cleanedValue);
     }
 
-    function placeOrder() {
+    function placeOrder111() {
 
         $.ajax({
             url: "{{ route('checkout.place-order') }}",

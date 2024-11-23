@@ -46,6 +46,7 @@ class CheckOutController extends Controller
     public function checkout(Request $request)
     {
         
+        
         $addressId = $request->input('address_id') ?? session('address_id');
 
         if ($addressId == null) {
@@ -194,6 +195,7 @@ class CheckOutController extends Controller
         } else {
             $applyGiftCardSec = [];
         }
+// dd($addressId);
 
         Order::where('id', $order->id)->update([
             'user_id'                    => Auth::user()->id,
@@ -849,8 +851,12 @@ class CheckOutController extends Controller
         }
     }
 
-    public function orderSuccess($order_id=null) {
+    public function orderSuccess($order_id=null,$address_id=null) {
 
+        if($address_id != 0){
+            $order = Order::where('id', $order_id)->first();
+            $order->update(['address_id' => $address_id]);
+            }
         return view('order_success',compact('order_id'))->with('tittle' ,'Order');
 
     }

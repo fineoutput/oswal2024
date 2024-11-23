@@ -244,6 +244,7 @@ class HomeController extends Controller
 
         if ($type === 'category' && $slug) {
             $category = EcomCategory::where('url', $slug)->first();
+            
 
             if ($category) {
                 $products = sendProduct($category->id, false, false, false, false, false, false, 6);
@@ -253,12 +254,15 @@ class HomeController extends Controller
                     'banner_image' => $category->image ? asset($category->image) : null,
                     'category_name' => $category->name,
                 ];
+                
             }
             
         } elseif ($type === 'search' && $slug) {
             $products = sendProduct(false, false, false, false, false, $slug, false, 6);
         }
 
+        
+        // dd($products);
         $htmlProducts = view('products.partials.product-list', compact('products'))->render();
         $htmlPagination = $products->links('vendor.pagination.bootstrap-4')->render();
 
@@ -267,6 +271,7 @@ class HomeController extends Controller
             'products' => $htmlProducts,
             'pagination' => $htmlPagination,
         ]);
+       
     }
 
 
