@@ -299,7 +299,7 @@
             
     @endforeach
 
-    <div class="pagination-links" style="display: flex;justify-content: center;">
+    <div class="pagination-links mt-5" style="display: flex;justify-content: center;">
         {{ $products->links('vendor.pagination.bootstrap-4') }}
     </div>
 

@@ -14,7 +14,7 @@
     align-items: center;
     background-color: #4CAF50;
     opacity: 0;
-    animation: slideInOut 8s forwards;
+    animation: slideInOut 20s forwards ;
 }
 
 .notification.success {
@@ -36,7 +36,7 @@
 
 @keyframes slideInOut {
     0% {
-        top: -1000px; /* Start above the viewport */
+        top: -100px; /* Start above the viewport */
         opacity: 0;
     }
     10% {
@@ -87,7 +87,7 @@
                 // Remove notification after a delay
                 setTimeout(() => {
                     notification.remove();
-                }, 100000); // Time in milliseconds (e.g., 5000ms = 5s)
+                }, 10000); // Time in milliseconds (e.g., 5000ms = 5s)
             });
         });
     </script>
