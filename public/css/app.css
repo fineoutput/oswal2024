@@ -2159,9 +2159,10 @@ canvas {
 }
 
 .category_product_sect {
-  height: 500px;
+  height: 860px;
   /* Set the fixed height */
   overflow-y: auto;
+  border-bottom: 3px solid red;
   /* Enable vertical scrolling */
 }
 

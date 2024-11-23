@@ -435,9 +435,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                     <div class="heading_s1 pt-2">
 
-                        <p style="color: red; padding-bottom: 0px; margin-bottom: 0px;" class="payment-par">Delivery
-
-                            Free Above ₹2499</p>
+                        
 
                         <h4 class="payment" style="font-family: Muli, sans-serif !important;">Payment Mode</h4>
 
