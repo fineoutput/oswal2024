@@ -510,7 +510,9 @@ function renderproductview(url) {
 function updateUI(response) {
 
   const category = response.categoryDetails;
+  console.log(category.banner_image);
 
+  $('#category_id_banner_image').css('background-image', 'url(' + category.banner_image + ')');
   // Update category details
 
   $('#category-description').text(category.description);
