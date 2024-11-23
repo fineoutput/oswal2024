@@ -1,5 +1,5 @@
 <style>
- .notification {
+.notification {
     position: fixed;
     top: -1000px;
     right: 10px;
@@ -14,7 +14,7 @@
     align-items: center;
     background-color: #4CAF50;
     opacity: 0;
-    animation: slideInOut 20s forwards ;
+    animation: slideInOut 21s backwards;
 }
 
 .notification.success {
@@ -39,15 +39,12 @@
         top: -100px; /* Start above the viewport */
         opacity: 0;
     }
-    10% {
+    5% {
         top: 20px; /* Final position */
         opacity: 1;
     }
-    15% {
-        top: 20px; /* Final position */
-        opacity: 1;
-    }
-    90% {
+    95% {
+        top: 20px; /* Stay in place */
         opacity: 1;
     }
     100% {
@@ -87,7 +84,7 @@
                 // Remove notification after a delay
                 setTimeout(() => {
                     notification.remove();
-                }, 10000); // Time in milliseconds (e.g., 5000ms = 5s)
+                }, 50000); // Time in milliseconds (e.g., 5000ms = 5s)
             });
         });
     </script>
