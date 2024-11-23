@@ -24,7 +24,7 @@
         'pcid' => encrypt($pc_id),
     ];
 @endphp
-
+{{-- @dd('kjbsdfui') --}}
 <div class="content">
 
     <div class="container-fluid">
@@ -160,21 +160,21 @@
 
                                                     <th data-priority="3">Min. Quantity</th>
 
-                                                    <th data-priority="3">Quantity</th>
+                                                    {{-- <th data-priority="3">Quantity</th> --}}
                                                     
                                                     {{-- <th data-priority="1">State</th> --}}
                                                     
                                                     {{-- <th data-priority="3">City</th> --}}
                                                     
-                                                    <th data-priority="3">Mrp</th>
+                                                    {{-- <th data-priority="3">Mrp</th> --}}
                                                     
-                                                    <th data-priority="3">Gst %</th>
+                                                    {{-- <th data-priority="3">Gst %</th> --}}
                                                     
-                                                    <th data-priority="6">Selling Price (without Gst)</th>
+                                                    {{-- <th data-priority="6">Selling Price (without Gst)</th> --}}
                                                     
-                                                    <th data-priority="6">GST % Price</th>
+                                                    {{-- <th data-priority="6">GST % Price</th> --}}
                                                     
-                                                    <th data-priority="6">Selling Price</th>
+                                                    {{-- <th data-priority="6">Selling Price</th> --}}
                                                     
                                                     <th data-priority="6">Status</th>
                                                     
@@ -200,7 +200,7 @@
 
                                                         <td>{{ $value->min_qty }}</td>
 
-                                                        <td>{{ $value->start_range }}-{{ $value->end_range }}</td>
+                                                        {{-- <td>{{ $value->start_range }}-{{ $value->end_range }}</td> --}}
 
                                                         {{-- <td> 
                                                             @if($value->state_id != null && $value->state != null) 
@@ -217,31 +217,31 @@
                                                             @endif
                                                         </td> --}}
 
-                                                        <td>
-                                                            {{-- <input type="text" id="delmrp{{$value->id}}" class="form-control" value="{{ $value->del_mrp }}" name="del_mrp{{$value->id}}"> --}}
+                                                        {{-- <td>
+                                                            <input type="text" id="delmrp{{$value->id}}" class="form-control" value="{{ $value->del_mrp }}" name="del_mrp{{$value->id}}">
 
                                                             {{ $value->del_mrp }}
                                                         </td>
 
                                                         <td>
-                                                            {{-- <input type="text" id="gst_percentage{{$value->id}}" onkeyup="calculatePrices('mrp{{$value->id}}' ,'gst_percentage{{$value->id}}','gst_percentage_price{{$value->id}}' ,'selling_price{{$value->id}}')" class="form-control" value="{{ $value->gst_percentage }}" name="gst_percentage{{$value->id}}"> --}}
+                                                            <input type="text" id="gst_percentage{{$value->id}}" onkeyup="calculatePrices('mrp{{$value->id}}' ,'gst_percentage{{$value->id}}','gst_percentage_price{{$value->id}}' ,'selling_price{{$value->id}}')" class="form-control" value="{{ $value->gst_percentage }}" name="gst_percentage{{$value->id}}">
                                                             {{ $value->gst_percentage }}
                                                         </td>
 
                                                         <td>
-                                                            {{-- <input type="text" id="mrp{{$value->id}}" onkeyup="calculatePrices('mrp{{$value->id}}' ,'gst_percentage{{$value->id}}','gst_percentage_price{{$value->id}}' ,'selling_price{{$value->id}}')" class="form-control" value="{{ $value->mrp }}" name="mrp{{$value->id}}"> --}}
+                                                            <input type="text" id="mrp{{$value->id}}" onkeyup="calculatePrices('mrp{{$value->id}}' ,'gst_percentage{{$value->id}}','gst_percentage_price{{$value->id}}' ,'selling_price{{$value->id}}')" class="form-control" value="{{ $value->mrp }}" name="mrp{{$value->id}}">
                                                             {{ $value->mrp }}
                                                         </td>
 
                                                         <td>
-                                                            {{-- <input type="text" id="gst_percentage_price{{$value->id}}" class="form-control" value="{{ $value->gst_percentage_price }}" name="gst_percentage_price{{$value->id}}"> --}}
+                                                            <input type="text" id="gst_percentage_price{{$value->id}}" class="form-control" value="{{ $value->gst_percentage_price }}" name="gst_percentage_price{{$value->id}}">
                                                             {{ $value->gst_percentage_price }}
                                                         </td>
 
                                                         <td>
-                                                            {{-- <input type="text" id="selling_price{{$value->id}}" class="form-control" value="{{ $value->selling_price }}" name="selling_price{{$value->id}}"> --}}
+                                                            <input type="text" id="selling_price{{$value->id}}" class="form-control" value="{{ $value->selling_price }}" name="selling_price{{$value->id}}">
                                                             {{ $value->selling_price }}
-                                                        </td>
+                                                        </td> --}}
 
                                                         <td>
 
@@ -276,7 +276,11 @@
                                                                     <a href="{{ route('vendor.type.update-status', $routeParameters) }}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
 
                                                                 @endif
-                                                               
+                                                                @php
+                                                                // use Illuminate\Support\Facades\Crypt;
+                                                                $encryptedId = Crypt::encrypt($value->id); // Encrypt the product ID
+                                                                @endphp
+                                                                <a href="{{ route('vendor.type.subtype.view', ['id' => $encryptedId, 'optional' => $p_id]) }}" data-toggle="tooltip" data-placement="top" title="Range"><i class="fas fa-chart-line"></i></a>
                                                                 <a href="{{ route('vendor.type.edit', $routeParameters) }}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                                 <a href="javascript:;" class="dCnf" mydata="{{ $key }}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>

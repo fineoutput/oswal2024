@@ -151,7 +151,6 @@
             },
             success: function (response) {
                 if(response.success){
-
                     $(`#wishlist${productId}`).remove();
                     $('#wishlist_count').text(response.count);
                     showNotification(response.message, 'success');
@@ -166,13 +165,30 @@
     }
 
     function MoveTOCart(productId) {
-        event.preventDefault();
+        // event.preventDefault();
         $.ajax({
             url: "{{ route('wishlist.move-to-cart') }}",
             type: 'POST',
             data: $(`#movetocart${productId}`).serialize(),
             success: function(response) {
-                $(`#wishlist${productId}`).remove();
+                console.log(response);
+            var wishlistCount = parseInt($('#wishlist_count').text(), 10); 
+            var cartCount = parseInt($('#cart_count').text(), 10);
+            if (isNaN(wishlistCount)) {
+                wishlistCount = 0;
+            }
+            if (isNaN(cartCount)) {
+                cartCount = 0; 
+            }
+            console.log('Wishlist Count:', wishlistCount);
+            wishlistCount -= 1; 
+            cartCount += 1; 
+
+            $('.wishlist_count').text(''); 
+            $('.cart_count').text('');      
+            $('.wishlist_count').text(wishlistCount); 
+            $('.cart_count').text(cartCount); 
+            $(`#wishlist${productId}`).remove();
                 showNotification(response.message, 'success');
             },
             error: function(xhr) {

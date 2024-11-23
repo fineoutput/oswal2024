@@ -18,6 +18,8 @@ use App\Models\VendorType;
 use App\Models\Wishlist;
 
 use App\Models\Type;
+use App\Models\Type_sub;
+
 
 use App\Models\Cart;
 
@@ -58,10 +60,12 @@ class WishlistController extends Controller
             
             $typeid = $request->type_id;
         }
-
-        if($request->user_id){
+        $user = auth()->user();
+        
+    
+        if($user->id){
             
-            $existingWishlist = Wishlist::where('user_id', $request->user_id)->where('product_id', $request->product_id)->first();
+            $existingWishlist = Wishlist::where('user_id', $user->id)->where('product_id', $request->product_id)->first();
 
         }else{
 
@@ -86,6 +90,7 @@ class WishlistController extends Controller
             $wishlist->fill($request->all());
 
             $wishlist->type_id = $typeid;
+            $wishlist->user_id = $user->id;
             
             $wishlist->date = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
@@ -106,8 +111,6 @@ class WishlistController extends Controller
     public function Show(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id'   => 'nullable|string|exists:users,id',
             'lang'      => 'required|string',
             'state_id'  => 'nullable|string',
             'city_id'   => 'nullable|string',
@@ -118,8 +121,8 @@ class WishlistController extends Controller
         }
     
         // Retrieve request parameters
-        $device_id = $request->device_id;
-        $user_id   = $request->user_id ?? null;
+        $device_id = auth()->user()->device_id;
+        $user_id   = auth()->user()->id;
         $lang      = $request->lang;
         $state_id  = $request->state_id ?? null;
         $city_id   = $request->city_id ?? null;
@@ -158,7 +161,7 @@ class WishlistController extends Controller
             if(Auth::check() && Auth::user()->role_type == 2){
                 
                 $typeData =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
-                                ->where('is_active', 1)->get();
+                ->where('is_active', 1)->get();
             }else{
              
                 $typeData = Type::where('product_id', $product_id)
@@ -184,17 +187,44 @@ class WishlistController extends Controller
             foreach ($typeData as $type) {
                 $percentOff = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
     
-                $typedata[] = [
-                    'type_id' => $type->id,
-                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                    'type_category_id' => $type->category_id,
-                    'type_product_id' => $type->product_id,
-                    'type_mrp' => $type->del_mrp,
+                if(Auth::check() && Auth::user()->role_type == 2){
+                    $subTypes = Type_sub::where('type_id', $type->id)
+                    ->get();
+                    $range = [];
+                    foreach ($subTypes as $subType) {
+                        $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
+                        $range[] = [
+                            'type_mrp' => $subType->mrp,
+                            'gst_percentage' => $subType->gst_percentage ?? 0,
+                            'gst_percentage_price' => $subType->gst_percentage_price ?? 0,
+                            'selling_price' => $subType->selling_price,
+                            'type_weight' => $subType->weight ?? null,
+                            'type_rate' => $subType->rate ?? null,
+                            'percent_off' => $sub_percent_off,
+                            'start_range' => $subType->start_range ?? 1,
+                            'end_range' => $subType->end_range ?? 1000,
+
+                        ];
+                    }
+                
+                }
+                else{
+
+                    $range = [
+                        'type_mrp' => $type->del_mrp,
                     'gst_percentage' => $type->gst_percentage,
                     'gst_percentage_price' => $type->gst_percentage_price,
                     'selling_price' => $type->selling_price,
                     'type_weight' => $type->weight,
                     'type_rate' => $type->rate,
+                    ];
+                }
+                $typedata[] = [
+                    'type_id' => $type->id,
+                    'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                    'type_category_id' => $type->category_id,
+                    'type_product_id' => $type->product_id,
+                    'range' => $range,
                     'percent_off' => $percentOff
                 ];
             }
@@ -250,8 +280,6 @@ class WishlistController extends Controller
     public function destroy(Request $request) {
    
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id' => 'nullable|integer|exists:users,id',
             'wishlist_id' => 'required|integer|exists:wishlists,id',
         ]);
 
@@ -275,8 +303,7 @@ class WishlistController extends Controller
     public function moveToCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users,device_id',
-            'user_id'   => 'nullable|integer|exists:users,id',
+            
             'wishlist_id' => 'required|integer',
             'type_id' => 'required|integer',
             'type_price' => 'required|numeric',
@@ -290,14 +317,16 @@ class WishlistController extends Controller
         }
 
         $data = $request->only([
-            'device_id', 'user_id', 'wishlist_id', 'type_id', 'type_price', 'cart_from', 'state_id', 'city_id'
+            'wishlist_id', 'type_id', 'type_price', 'cart_from', 'state_id', 'city_id'
         ]);
 
         $ip = $request->ip();
+        $device_id = auth()->user()->device_id;
+        $user_id = auth()->user()->id;
 
         $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
-        $wishlist = Wishlist::where('device_id', $data['device_id'])
+        $wishlist = Wishlist::where('device_id', $device_id)
                             ->where('id', $data['wishlist_id'])
                             ->first();
 
@@ -315,7 +344,7 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'message' => 'Product not found'], 404);
         }
 
-        $cartItem = Cart::where('device_id', $data['device_id'])
+        $cartItem = Cart::where('device_id', $device_id)
                         ->where('product_id', $wishlist->product_id)
                         ->first();
 
@@ -345,8 +374,8 @@ class WishlistController extends Controller
         $totalQtyPrice = $data['type_price'] * 1;
 
         $cartData = [
-            'device_id' => $data['device_id'],
-            'user_id' => $data['user_id'],
+            'device_id' => $device_id,
+            'user_id' => $user_id,
             'category_id' => $wishlist->category_id,
             'product_id' => $wishlist->product_id,
             'type_id' => $typeData->id,

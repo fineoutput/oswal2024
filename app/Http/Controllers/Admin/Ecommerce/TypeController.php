@@ -7,13 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\State;
 use App\Models\Type;
+use App\Models\Type_sub;
 use App\Models\VendorType;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class TypeController extends Controller
 {
 
     public function index($pid,$cid,$pcid) {
+        
 
         $p_id  = decrypt($pid);
 
@@ -426,8 +429,7 @@ class TypeController extends Controller
 
     /*****************Vendor Type Function ********************/
 
-    public function vendorIndex($pid, $cid, $pcid) {
-
+    public function vendorIndex($pid, $cid=null, $pcid=null) {
         $p_id  = decrypt($pid);
 
         $c_id  = decrypt($cid);
@@ -436,7 +438,7 @@ class TypeController extends Controller
         
         $types = VendorType::with('state', 'city')
         ->where('product_id', $p_id)
-        ->where('category_id', $c_id)
+        // ->where('category_id', $c_id)
         ->orderBy('id', 'DESC')
         ->get();
 
@@ -458,6 +460,22 @@ class TypeController extends Controller
         return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
     }
 
+    public function vendorsubCreate($id) {
+        $id  = decrypt($id);
+        return view('admin.Ecommerce.Vendor-Type.type-sub-create' ,compact('id'));
+    }
+
+    public function vendorsubView($id,$p_id = null)
+{
+    $id = decrypt($id);
+    // dd($p_id); 
+    $types = DB::table('type_subs')
+                 ->where('type_id', $id)
+                 ->get();
+    return view('admin.Ecommerce.Vendor-Type.type-sub-index', compact('id', 'types', 'p_id'));
+}
+
+
     public function vendorEdit($pid, $cid , $pcid , $tid) {
 
         $p_id  = decrypt($pid);
@@ -473,21 +491,26 @@ class TypeController extends Controller
         return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
     }
 
-    public function vendorStore(Request $request) {
-
+    public function vendorStore(Request $request) 
+    {
+    //  dd('hehh');
         $rules = [
             'name'                 => 'required|string|max:255',
-            'del_mrp'              => 'required|numeric',
             'min_qty'              => 'required|numeric',
-            'start_range'          => 'required|numeric',
-            'end_range'            => 'required|numeric',
-            'gst_percentage'       => 'required|numeric',
-            'mrp'                  => 'required|numeric',
-            'gst_percentage_price' => 'required|numeric',
-            'selling_price'        => 'required|numeric',
-            'weight'               =>'required|string|max:255',
-            'rate'                 => 'required|string|max:255',
         ];
+        // $rules = [
+        //     'name'                 => 'required|string|max:255',
+        //     'del_mrp'              => 'required|numeric',
+        //     'min_qty'              => 'required|numeric',
+        //     'start_range'          => 'required|numeric',
+        //     'end_range'            => 'required|numeric',
+        //     'gst_percentage'       => 'required|numeric',
+        //     'mrp'                  => 'required|numeric',
+        //     'gst_percentage_price' => 'required|numeric',
+        //     'selling_price'        => 'required|numeric',
+        //     'weight'               =>'required|string|max:255',
+        //     'rate'                 => 'required|string|max:255',
+        // ];
 
         $request->validate($rules);
 
@@ -496,40 +519,7 @@ class TypeController extends Controller
         $type->fill([
 
             'type_name'     => $request->name,
-
-            'type_name_hi'  => lang_change($request->name),
-
-            'del_mrp'       => $request->del_mrp,
-
             'min_qty'       => $request->min_qty,
-
-            'start_range'   => $request->start_range,
-
-            'end_range'     => $request->end_range,
-
-            'mrp'           => $request->mrp,
-
-            'gst_percentage'=> $request->gst_percentage,
-
-            'gst_percentage_price' => $request->gst_percentage_price,
-
-            'selling_price' => $request->selling_price,
-
-            'weight'        => $request->weight,
-
-            'rate'          => $request->rate,
-
-            'ip'            => $request->ip(),
-
-            'date'          => now(),
-
-            'added_by'      => Auth::user()->id,
-
-            'is_active'     => 1,
-
-            'state_id'      => 29,
-
-            'city_id'       => 629,
 
         ]);
 
@@ -562,6 +552,40 @@ class TypeController extends Controller
         
     }
     
+
+    public function VendorSubStore(Request $request)
+    {
+        // dd($request);
+        $validated = $request->validate([
+           'start_range' => 'required|numeric',
+           'end_range' => 'required|numeric',
+           'type_id' => 'required|numeric',
+           'gst_percentage' => 'nullable|numeric',
+           'gst_percentage_price' => 'nullable|numeric',
+           'mrp' => 'nullable|numeric',
+           'selling_price' => 'nullable|numeric',
+           'selling_price_gst' => 'nullable|numeric',
+          ]);
+          
+        Type_sub::create($validated);
+        // $encryptedId = Crypt::encryptString($request->id);
+        $crid = Crypt::encrypt($request->type_id);
+        return redirect()->route('vendor.type.subtype.view', ['id' => $crid])->with('success', 'Range added successfully!');
+    }
+
+    public function subedit($id)
+    {
+        // dd('$id = Crypt::decrypt($id)');
+        // $data = Type_sub::find($id); // Find the type by ID
+        $decryptedId = Crypt::decrypt($id);
+        $data = Type_sub::find($decryptedId);
+        if (!$data) {
+            return redirect()->route('vendor.type.index')->with('error', 'Type not found');
+        }
+
+        return view('admin.Ecommerce.Vendor-Type.type-sub-create', compact('data'));
+    }
+
     public function vendor_update_status($pid, $cid , $pcid ,$tid ,$status, Request $request) {
 
         $id = decrypt($tid);
@@ -630,4 +654,52 @@ class TypeController extends Controller
 
     }
 
+    public function Subdestroy($id){
+    $decryptedId = Crypt::decrypt($id);
+    $typeSub = Type_sub::find($decryptedId);
+    if ($typeSub) {
+        $typeSub->delete();
+        return redirect()->back()->with('success', 'Record deleted successfully!');
+    }
+    return redirect()->back()->with('error', 'Record not found!');
+    }
+    public function subupdate(Request $request)
+    {
+        // Validation
+        // DD($request);
+        $validated = $request->validate([
+            'start_range' => 'required|numeric',
+            'end_range' => 'required|numeric',
+            'mrp' => 'required|numeric',
+            'gst_percentage' => 'required|numeric',
+            'selling_price_gst' => 'required|numeric',
+            'gst_percentage_price' => 'nullable|numeric',
+            'selling_price' => 'required|numeric',
+            
+        ]);
+
+        // Find and update the type
+        if (!$request->has('sub_type_id')) {
+            return back()->withErrors('Sub Type ID is missing.');
+        }
+        
+        // Find the type by the sub_type_id
+        $type = Type_sub::find($request->sub_type_id);
+        
+        if (!$type) {
+            return redirect()->back()->with('error', 'Type not found');
+        }
+
+        $type->update([
+            'start_range' => $request->start_range,
+            'end_range' => $request->end_range,
+            'mrp' => $request->mrp,
+            'gst_percentage' => $request->gst_percentage,
+            'selling_price_gst' => $request->selling_price_gst,
+            'gst_percentage_price' => $request->gst_percentage_price,
+            'selling_price' => $request->selling_price,
+        ]);
+        $crid = Crypt::encrypt($request->type_id);
+        return redirect()->route('vendor.type.subtype.view', ['id' => $crid])->with('success', 'Range updated successfully!');
+    }
 }

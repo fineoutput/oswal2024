@@ -33,6 +33,7 @@ use App\Models\Reward;
 use App\Models\Cart;
 
 use App\Models\Type;
+use App\Models\Type_sub;
 
 use App\Models\User;
 
@@ -44,7 +45,6 @@ class CartController extends Controller
 
         $rules = [
             'device_id'   => 'required|string',
-            'user_id'     => 'nullable|string|exists:users,id',
             'category_id' => 'required|string|exists:ecom_categories,id',
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
@@ -52,51 +52,68 @@ class CartController extends Controller
             'cart_from'   => 'required|string',
             'quantity'    => 'required|integer|min:1'
         ];
+        $user_id = 0;
+        $role_type = null;
+        $userDetails = null;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        if ($userDetails) {
+            $device_id = $userDetails->device_id;
+            $user_id = $userDetails->id;
+        }
+    }
 
-        $vendoruser = User::where('device_id', $request->device_id)->first();
-
-        if ($request->user_id == null && ($vendoruser && $vendoruser->role_type == 2)) {
+        if ($user_id == null && ($user_id && $userDetails->role_type == 2)) {
 
             return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
 
         }
 
-        $user = User::where('id', $request->user_id)->first();
+        $user = $user_id;
 
         $typePrice = $request->type_price;
 
         $typeId = $request->type_id;
 
-        if ($user && $user->role_type == 2) {
+        // dd($user);
+        if ($user && $userDetails->role_type == 2) {
 
             if(isset($request->where) == 'cartdetails'){
 
                 $type = VendorType::find($typeId);
+                
             
             }else{
                 
                 $Rtype = Type::find($typeId);
 
+                
                 $type = VendorType::where('product_id', $Rtype->product_id)
                     ->where('type_name', $Rtype->type_name)
                     ->first();
+
+
             }
 
             if (!$type) {
                 return response()->json(['success' => false, 'message' => "Type not found."]);
             }
 
+            if($userDetails->role_type == 1){
             if ($request->quantity < $type->min_qty) {
                 return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
-            }
+            }}
 
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
 
-                $filteredType = VendorType::where('product_id', $request->product_id)
-                    ->where('type_name', $type->type_name)
-                    ->where('start_range', '<=', $request->quantity)
-                    ->where('end_range', '>=', $request->quantity)
-                    ->first();
+            $filteredType = VendorType::join('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
+            ->where('vendor_types.product_id', $request->product_id)
+            ->where('vendor_types.type_name', $type->type_name)
+            ->where('type_subs.start_range', '<=', $request->quantity)
+            ->where('type_subs.end_range', '>=', $request->quantity)
+            ->select('vendor_types.*', 'type_subs.start_range', 'type_subs.end_range') // Select relevant columns
+            ->first();
     
                 $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
                 $typeId = $filteredType ? $filteredType->id : $typeId;
@@ -108,9 +125,9 @@ class CartController extends Controller
             // }
 
         } else {
-        
+            if($role_type == 1){
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
-        }
+        }}
 
         $validator = Validator::make($request->all(),  $rules);
 
@@ -121,11 +138,12 @@ class CartController extends Controller
 
         $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
 
+        $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
 
         $data['type_price'] = $typePrice;
 
-        $data['total_qty_price'] = $user && $user->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
+        $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
 
         $data['ip'] = $request->ip();
 
@@ -249,14 +267,18 @@ class CartController extends Controller
             
         }
 
-        $user = User::find($request->user_id);
+        $user_id = null;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $user = User::where('auth', $auth_token)->first();
+            $user_id =  $user->id;
+        }
 
-        if($user != null){
+        if($user_id != null){
             
             $roleType =  $user->role_type;
             
             if($roleType == 2){
-
                 Cart::where('device_id', $request->device_id)->where('user_id','=', 0)->delete();
             }
 
@@ -267,7 +289,7 @@ class CartController extends Controller
         }
 
         $device_id       = $request->input('device_id');
-        $user_id         = $request->input('user_id');
+      
         $lang            = $request->input('lang');
         $input_promocode = $request->input('input_promocode');
         $address_id      = $request->input('address_id');
@@ -282,16 +304,63 @@ class CartController extends Controller
             $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
         });
 
+                //   $CartData = Cart::where('user_id',$user_id)->orderBY("id","DESC")->get();
+        
 
+// print_r($cartQuery);
+// exit;
         if($roleType == 2){
 
 
-            $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
-                $query->when($state_id, function ($query) use ($state_id, $city_id) {
-                    $query->where('state_id', 629)
-                        ->where('city_id', 29);
-                });
-            }])->get();
+            // $cartItems = $cartQuery->with(['vendortype' => function ($query) use ($state_id, $city_id) {
+            //     $query->when($state_id, function ($query) use ($state_id, $city_id) {
+            //         $query->where('state_id', 629)
+            //             ->where('city_id', 29);
+            //     });
+            // }])->get();
+            // $cartItems = $cartQuery->with(['vendortype.Type_sub' => function ($query) use ($state_id, $city_id) {
+            //     $query->when($state_id, function ($query) use ($state_id, $city_id) {
+            //         $query->where('vendortype.state_id', 629)
+            //               ->where('vendortype.city_id', 29);
+            //     });
+            // }])->get();
+//             $cartItems = $cartQuery->get();
+
+$cartItems = $cartQuery->with([
+    'vendortype' => function ($query) use ($state_id, $city_id) {
+        $query->when($state_id, function ($query) use ($state_id, $city_id) {
+            $query->where('state_id', $state_id)
+                  ->where('city_id', $city_id);
+        })
+        ->with(['type_sub']); // Load the relation with type_sub
+    }
+])->get();
+$cartItems = $cartQuery->get();
+
+// foreach ($cartItems as $cartItem) {
+//     // Vendortype table se data fetch karna
+//     $vendorType = DB::table('vendor_types')
+//         ->where('id', $cartItem->vendortype_id) // Match vendortype_id from cart
+//         ->first();
+
+//     if ($vendorType) {
+//         // Type_sub table se vendortype ke liye data fetch karna
+//         $typeSubs = DB::table('type_subs')
+//             ->where('type_id', $vendorType->id) // Match vendortype id with type_sub type_id
+//             ->get();
+
+//         foreach ($typeSubs as $typeSub) {
+//             // Process type_sub data
+//             echo $typeSub->column_name; // Replace column_name with actual column name
+//         }
+//     }
+// }
+
+
+// print_r($cartItems);
+
+//             exit;
+            
 
         }else{
 
@@ -313,13 +382,37 @@ class CartController extends Controller
 
         if($roleType == 2){
 
+            // $cartItems->each(function ($cartItem) {
+            //     if ($cartItem->vendortype) {
+            //          print_r($cartItem->vendortype->type_sub);
+            //         $cartItem->type_price = $cartItem->vendortype->selling_price;
+            //         $cartItem->total_qty_price = $cartItem->vendortype->selling_price;
+            //         $cartItem->save();
+            //     }
+            // });
+
             $cartItems->each(function ($cartItem) {
                 if ($cartItem->vendortype) {
-                    $cartItem->type_price = $cartItem->vendortype->selling_price;
-                    $cartItem->total_qty_price = $cartItem->vendortype->selling_price;
-                    $cartItem->save();
+                    // Vendortype ke associated type_sub ko fetch karo
+                    $typeSubs = $cartItem->vendortype->type_sub;
+            
+                    if ($typeSubs->isNotEmpty()) {
+                        // Quantity check kar ke range find karo
+                        $matchedTypeSub = $typeSubs->first(function ($typeSub) use ($cartItem) {
+                            return $cartItem->quantity >= $typeSub->start_range && $cartItem->quantity <= $typeSub->end_range;
+                        });
+            
+                        if ($matchedTypeSub) {
+                            // Matched subtype ke price se cart item update karo
+                            $cartItem->type_price = $matchedTypeSub->selling_price;
+                            $cartItem->total_qty_price = $cartItem->quantity * $matchedTypeSub->selling_price;
+                            $cartItem->save(); // Save the updated cart item
+                        }
+                    }
                 }
             });
+            
+            // dd($cartItems);
 
         }else{
             
@@ -679,7 +772,7 @@ class CartController extends Controller
                     })
                     ->when(is_null($stateId) || is_null($cityId), function ($query) {
                         return $query->groupBy('type_name');
-                    });
+                    })->with(['type_sub']);
             }])
     
             ->where(function ($query) use ($userId, $deviceId) {
@@ -687,6 +780,7 @@ class CartController extends Controller
             })
     
             ->get();
+            // dd($cartData);
 
         }else{
             
@@ -732,18 +826,30 @@ class CartController extends Controller
                 $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang) {
     
                     $totalTypeQuantityPrice = $type->selling_price;
-    
+                    $subTypes = Type_sub::where('type_id', $type->id)
+                    ->get();
+                    $range = [];
+                    foreach ($subTypes as $subType) {
+                        $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
+                        $range[] = [
+                            'type_mrp' => $subType->mrp,
+                            'gst_percentage' => $subType->gst_percentage ?? 0,
+                            'gst_percentage_price' => $subType->gst_percentage_price ?? 0,
+                            'selling_price' => $subType->selling_price,
+                            'type_weight' => $subType->weight ?? null,
+                            'type_rate' => $subType->rate ?? null,
+                            'percent_off' => $sub_percent_off,
+                            'start_range' => $subType->start_range ?? 1,
+                            'end_range' => $subType->end_range ?? 1000,
+
+                        ];
+                    }
                     return [
                         'type_id' => $type->id,
                         'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
                         'type_category_id' => $type->category_id,
                         'type_product_id' => $type->product_id,
-                        'type_mrp' => $type->del_mrp,
-                        'gst_percentage' => $type->gst_percentage,
-                        'gst_percentage_price' => $type->gst_percentage_price,
-                        'selling_price' => $type->selling_price,
-                        'type_weight' => $type->weight,
-                        'type_rate' => $type->rate,
+                        'range' => $range,
                         'total_typ_qty_price' => $totalTypeQuantityPrice,
                         'min_qty' => $type->min_qty ?? 1,
                     ];
@@ -765,7 +871,7 @@ class CartController extends Controller
                     $selectedType = [];
                 }
                 
-                $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
+                $totalWeight += $cartItem->quantity * 1;
 
             }else{
 
@@ -773,17 +879,20 @@ class CartController extends Controller
     
                     $totalTypeQuantityPrice = $cartItem->quantity * $type->selling_price;
     
-                    return [
-                        'type_id' => $type->id,
-                        'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
-                        'type_category_id' => $type->category_id,
-                        'type_product_id' => $type->product_id,
+                    $range = [
                         'type_mrp' => $type->del_mrp,
                         'gst_percentage' => $type->gst_percentage,
                         'gst_percentage_price' => $type->gst_percentage_price,
                         'selling_price' => $type->selling_price,
                         'type_weight' => $type->weight,
                         'type_rate' => $type->rate,
+                    ];
+                    return [
+                        'type_id' => $type->id,
+                        'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
+                        'type_category_id' => $type->category_id,
+                        'type_product_id' => $type->product_id,
+                        'range' => $range,
                         'total_typ_qty_price' => $totalTypeQuantityPrice,
                         'min_qty' => $type->min_qty ?? 1,
                     ];

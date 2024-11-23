@@ -57,7 +57,7 @@ class PushNotification extends Notification implements ShouldQueue
 
     public function toFcm($notifiable)
     {
-        $url = 'https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send';
+        $url = 'https://fcm.googleapis.com/v1/projects/oswalecommerce-458c6/messages:send';
 
         $payload = [
             'message' => [

@@ -18,17 +18,17 @@ class VendorType extends Model
         'type_name',
         'type_name_hi',
         'min_qty',
-        'start_range',
-        'end_range',
-        'del_mrp',
-        'mrp',
+        // 'start_range',
+        // 'end_range',
+        // 'del_mrp',
+        // 'mrp',
         'state_id',
         'city_id',
-        'gst_percentage',
-        'gst_percentage_price',
-        'selling_price',
-        'weight',
-        'rate',
+        // 'gst_percentage',
+        // 'gst_percentage_price',
+        // 'selling_price',
+        // 'weight',
+        // 'rate',
         'ip',
         'date',
         'added_by',
@@ -119,4 +119,10 @@ class VendorType extends Model
     {
         return $this->hasMany(Wishlist::class ,'type_id' , 'id');
     }
+
+    public function type_sub()
+    {
+    return $this->hasMany(Type_sub::class, 'type_id', 'id');
+    }
+
 }

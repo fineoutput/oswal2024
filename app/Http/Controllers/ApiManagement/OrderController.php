@@ -59,8 +59,6 @@ class OrderController extends Controller
     {
         
         $rules = [
-            'user_id'         => 'required|exists:users,id',
-            'device_id'       => 'required|exists:users,device_id',
             'address_id'      => 'required|exists:user_address,id',
             'promocode'       => 'nullable|string',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
@@ -75,9 +73,11 @@ class OrderController extends Controller
 
         }
 
-        $deviceId       = $request->input('device_id');
+        $deviceId       = auth()->user()->device_id;
 
-        $userId         = $request->input('user_id');
+
+        $userId         = auth()->user()->id;
+
 
         $promocode      = $request->input('promocode');
 
@@ -344,8 +344,6 @@ class OrderController extends Controller
     {
         // Validation rules
         $rules = [
-            'user_id'       => 'required|exists:users,id',
-            'device_id'     => 'required',
             'address_id'    => 'required|exists:user_address,id',
             'promocode_id'  => 'nullable|exists:promocodes,id',
             'gift_card_id'  => 'nullable|exists:gift_cards,id',
@@ -364,9 +362,10 @@ class OrderController extends Controller
         }
        
         // Retrieve request inputs
-        $userId       = $request->input('user_id') ?? Auth::user()->id;
+        $userId       =  auth()->user()->id;
 
-        $deviceId     = $request->input('device_id');
+        $deviceId     =  auth()->user()->device_id;
+
 
         $addressId    = $request->input('address_id');
 
@@ -407,6 +406,7 @@ class OrderController extends Controller
     
                 })->get();
         }else{
+            
 
             $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
 
@@ -897,8 +897,6 @@ class OrderController extends Controller
     public function orders(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id'      => 'required|exists:users,id',
-            'device_id'    => 'required',
             'lang'         => 'required|string'
         ]);
 
@@ -907,7 +905,8 @@ class OrderController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
 
-        $user_id = $request->input('user_id');
+        $user_id = auth()->user()->id;
+
 
         $lang    = $request->input('lang');
 
@@ -919,7 +918,7 @@ class OrderController extends Controller
 
         if ($user) {
 
-            $orders = Order::with('orderDetails.product')->where('user_id', $user->id)->where('order_status', '!=', 0)->orderBy('id', 'DESC')->get();
+            $orders = Order::with('orderDetails.product')->where('user_id', $user_id)->where('order_status', '!=', 0)->orderBy('id', 'DESC')->get();
             
             if ($orders->isNotEmpty()) {
 
@@ -1005,7 +1004,6 @@ class OrderController extends Controller
     public function orderDetail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id'   => 'required',
             'order_id'  => 'required',
             'lang'      => 'required',
         ]);
@@ -1014,7 +1012,7 @@ class OrderController extends Controller
             return response()->json([ 'message' => $validator->errors()->first(), 'status' => 422],422);
         }
 
-        $user_id = $request->input('user_id');
+        $user_id = auth()->user()->id;
         $order_id = $request->input('order_id');
         $lang = $request->input('lang');
         $deleveryBoy = [];
@@ -1150,7 +1148,6 @@ class OrderController extends Controller
 
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
             'order_id' => 'required',
         ]);
 
@@ -1161,7 +1158,7 @@ class OrderController extends Controller
             ]);
         }
 
-        $user_id = $request->input('user_id');
+        $user_id = auth()->user()->id;
         $order_id = $request->input('order_id');
 
         $user = User::find($user_id);
@@ -1188,7 +1185,7 @@ class OrderController extends Controller
             $user->save();
 
             WalletTransactionHistory::createTransaction([
-                'user_id' => $user->id,
+                'user_id' => $user_id,
                 'transaction_type' => 'debit',
                 'amount' => $order->extra_discount,
                 'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
@@ -1213,8 +1210,7 @@ class OrderController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'device_id'=>'required|exists:users,device_id',
-            'user_id'  => 'required|exists:users,id',
+
             'order_id' => 'required',
         ]);
     
@@ -1222,7 +1218,7 @@ class OrderController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 422], 422);
         }
     
-        $userId = $request->input('user_id');
+        $userId = auth()->user()->id;
         $orderId = $request->input('order_id');
 
         $order = Order::with('address')->find($orderId);

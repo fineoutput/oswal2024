@@ -6,6 +6,7 @@
             $productType = $product->type->filter(function ($type) use ($globalState, $globalCity) {
                 return $type->state_id == $globalState && $type->city_id == $globalCity;
             });
+            // dd($productType);
 
             $product->load('cart', 'wishlist');
 
@@ -16,6 +17,7 @@
             $wishlist = Auth::check() 
                     ? $product->wishlist->firstWhere('user_id', Auth::user()->id) 
                     : null;
+                    $productType_id = optional($productType->first())->id ?? '';
         @endphp
 
         <div class="col-lg-4 this_sectio d-none d-lg-block">
@@ -92,7 +94,7 @@
 
                             <div class="upper_txt_input">
 
-                                <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                <input type="hidden" name="type_id" value="{{ $productType_id }}">
 
                                 <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'type_{{ $product->id }}')">
 
@@ -163,6 +165,8 @@
             $wishlist = Auth::check() 
                 ? $product->wishlist->firstWhere('user_id', Auth::user()->id) 
                 : null;
+                $productType_id = optional($productType->first())->id ?? '';
+
         @endphp
 
         <div class="col-lg-6 col-6 this_sectio d-lg-none" style="padding: 0.2rem;">
@@ -241,7 +245,7 @@
 
                             <div class="upper_txt_input mobile_input">
 
-                                <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                <input type="hidden" name="type_id" value="{{ $productType_id }}">
 
                                 <select name="mob_type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'mob_type_{{ $product->id }}')">
 

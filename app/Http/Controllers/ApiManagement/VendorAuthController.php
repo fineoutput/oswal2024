@@ -252,7 +252,10 @@ class VendorAuthController extends Controller
 
             $request->session()->regenerate();
 
+            $request->session()->regenerate();
             $token = $user->createToken('auth_token')->plainTextToken;
+            $user->auth = $token;
+            $user->save();
 
             session()->forget(['user_otp_id', 'user_id', 'user_contact']);
 

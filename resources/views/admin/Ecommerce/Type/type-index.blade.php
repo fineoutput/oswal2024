@@ -18,12 +18,15 @@
 </style>
 
 @php
+$ppid  = encrypt($p_id);
     $routeParameters = [
         'pid'  => encrypt($p_id),
         'cid'  => encrypt($c_id),
         'pcid' => encrypt($pc_id),
     ];
 @endphp
+
+
 
 <div class="content">
 

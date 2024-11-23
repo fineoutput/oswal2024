@@ -97,7 +97,7 @@ if(!function_exists('uploadImage')){
 
 if(!function_exists('sendProduct')) {
 
-    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false , $paginate =false , $forproduct=false) {
+    function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false , $paginate =false , $forproduct=false, $roleType=false )  {
         
         $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1);
 
@@ -123,7 +123,10 @@ if(!function_exists('sendProduct')) {
         if($forproduct == 2){
             $products = $products->whereIn('product_view', [3, 2]);
         }
-
+        // echo $roleType;
+        // // echo "hi";
+        // exit;
+       
         if($paginate){
             return $products->paginate($paginate);
         }else{

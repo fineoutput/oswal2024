@@ -109,7 +109,7 @@
 
                                                 <input type="text" class="form-control" value="{{ $type ? $type->min_qty : old('min_qty') }}" name="min_qty" placeholder="Enter quentity" required>
 
-                                                <label for="name">Minimum Quantity &nbsp;<span style="color:red;">*</span></label>
+                                                <label for="name">Minimum Quantityf &nbsp;<span style="color:red;">*</span></label>
 
                                             </div>
 
@@ -121,7 +121,7 @@
 
                                         </div>
 
-                                        <div class="col-sm-4">
+                                        {{-- <div class="col-sm-4">
 
                                             <div class="form-floating">
 
@@ -324,7 +324,7 @@
 
                                             @enderror
 
-                                        </div>
+                                        </div> --}}
 
                                     </div>
 

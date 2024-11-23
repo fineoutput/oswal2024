@@ -206,17 +206,26 @@ Route::prefix('ecom/type')->name('type.')->group(function () {
 
 Route::prefix('ecom/vendor/type')->name('vendor.type.')->group(function () {
 
-    Route::get('index/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorIndex'])->name('index');
+    Route::get('index/{pid}/{cid?}/{pcid?}', [TypeController::class, 'vendorIndex'])->name('index');
 
     Route::get('create/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorCreate'])->name('create');
+    Route::get('subtype/{id}', [TypeController::class, 'vendorsubCreate'])->name('subtype');
+    Route::get('subtype/view/{id}/{optional?}', [TypeController::class, 'vendorsubView'])->name('subtype.view');
 
     Route::get('edit/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'vendorEdit'])->name('edit');
   
     Route::post('store', [TypeController::class, 'VendorStore'])->name('store');
+    Route::post('sub/store', [TypeController::class, 'VendorSubStore'])->name('sub.store');
+
+    Route::get('subtype/edit/{id}', [TypeController::class, 'subedit'])->name('subtype.edit');
+    Route::post('subtype/update', [TypeController::class, 'subupdate'])->name('subtype.update');
+
 
     Route::get('update-status/{pid}/{cid}/{pcid}/{tid}/{status}', [TypeController::class, 'vendor_update_status'])->name('update-status');
 
     Route::get('destroy/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'vendor_destroy'])->name('destroy');
+    Route::get('sub/delete/{id}', [TypeController::class, 'Subdestroy'])->name('sub.delete');
+
 
     Route::post('update-city-type' , [TypeController::class , 'updateCityType'])->name('update_city_type');
 

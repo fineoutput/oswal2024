@@ -141,10 +141,8 @@ class AppController extends Controller
 
     public function addAddress(Request $request)
     {
+        // dd('sfsdf');
         $validator = Validator::make($request->all(), [
-
-            'device_id'      => 'required|string|exists:users',
-            'user_id'        => 'nullable|integer',
             'doorflat'       => 'required|string',
             'landmark'       => 'required|string',
             'city_id'        => 'required|integer',
@@ -180,8 +178,7 @@ class AppController extends Controller
         $location = getLatLngFromAddress($custom_address);
 
         $addressData = [
-            'device_id'        => $request->device_id,
-            'user_id'          => $request->user_id ?? Auth::user()->id,
+            'user_id'          =>  auth()->id(),
             'name'             => Auth::user()->first_name,
             'doorflat'         => $request->doorflat,
             'landmark'         => $request->landmark,
@@ -208,28 +205,9 @@ class AppController extends Controller
 
     public function getAddress(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string|exists:users',
-            'user_id'   => 'nullable|integer|exists:users,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        }
-
-        $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
+        $user_id   = auth()->id();
         $address_data = [];
-
-        if (empty($user_id)) {
-            // Without login
-            $addresses = Address::where('device_id', $device_id)->get();
-        } else {
-            // With login
-            $addresses = Address::where('user_id', $user_id)->get();
-        }
-
+        $addresses = Address::where('user_id', $user_id)->get();
         foreach ($addresses as $address) {
 
             $address->load('states', 'citys');
@@ -526,8 +504,6 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'device_id'   => 'required|string|exists:users,device_id',
-            'user_id'     => 'required|integer|exists:users,id',
             'order_id'    => 'required|integer|exists:tbl_order1,id',
             'rating'      => 'required|integer|min:1|max:5',
             'description' => 'required|string|max:1000',
@@ -541,8 +517,8 @@ class AppController extends Controller
         }
 
         $data = [
-            'device_id'     => $request->input('device_id'),
-            'user_id'       => $request->input('user_id'),
+            'device_id'     =>  auth()->user()->device_id,
+            'user_id'       =>  auth()->user()->id,
             'order_id'      => $request->input('order_id'),
             'rating'        => (float) $request->input('rating'),
             'description'   => $request->input('description'),
@@ -570,20 +546,8 @@ class AppController extends Controller
     public function getWalletAmount(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'device_id'   => 'required|string|exists:users,device_id',
-            'user_id'     => 'required|integer|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first()
-            ], 400);
-        }
 
         $data = [
-            'user_id' => $request->user_id,
             'wallet_amount' => Auth::user()->wallet_amount,
         ];
 
@@ -594,8 +558,6 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'user_id'   => 'nullable|integer|exists:users,id',
-            'device_id' => 'required|string|exists:users,device_id',
             'fcm_token' => 'required|string',
         ]);
 
@@ -606,8 +568,10 @@ class AppController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
+        $device_id = auth()->user()->device_id;
+        $user_id = auth()->user()->id;
 
-        $user = User::where('device_id', $request->device_id)->orwhere('id', $request->user_id)->first();
+        $user = User::where('device_id', $device_id)->orwhere('id', $user_id)->first();
 
         if (!$user) {
             return response()->json([
@@ -741,4 +705,9 @@ class AppController extends Controller
         return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
     }
 
+
+    public function unauth()
+    {
+        return response()->json(['success' => false, 'message' => 'Please login unauth route'], 201);
+    }
 }
