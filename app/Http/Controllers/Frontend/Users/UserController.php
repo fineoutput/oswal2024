@@ -37,8 +37,9 @@ class UserController extends Controller
         $address_data = $this->getAddress();
 
         $walletTransactions = $this->walletTransaction();
+        $ratings = DB::table('order_ratings')->get();
 
-        return view('Users.dashboard', compact('orderlists' ,'address_data' ,'walletTransactions'))->with('tittle' , 'Dashboard');
+        return view('Users.dashboard', compact('orderlists' ,'address_data' ,'walletTransactions', 'ratings'))->with('tittle' , 'Dashboard');
 
     }
 
@@ -502,5 +503,27 @@ class UserController extends Controller
         }
     }
 
+    public function rating(Request $request){
+        // dd($request);
+        $validatedData = $request->validate([
+            'order_id' => 'required|integer',
+            'rating' => 'required|integer',
+            'description' => 'nullable|string',
+        ]);
+    
+        $ratingData = [
+            'order_id' => $validatedData['order_id'],
+        ];
+    
+        $updateData = [
+            'rating' => $validatedData['rating'],
+            'description' => $validatedData['description'] ?? null,
+        ];
+    
+        // Check if a record exists; update if found, insert otherwise
+        $rating = DB::table('order_ratings')->updateOrInsert($ratingData, $updateData);
+    
+        return response()->json(['success' => true, 'message' => 'Rating submitted successfully.']);
+    }
 }
        
