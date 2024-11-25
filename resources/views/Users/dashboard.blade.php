@@ -5,14 +5,14 @@
 @section('content')
 <style>
 .star-rating {
-  border: solid 1px #ccc;
-  display: flex;
-  flex-direction: row-reverse;
-  font-size: 1.5em;
-  justify-content: space-around;
-  padding: 0 .2em;
-  text-align: center;
-  width: 5em;
+    border: solid 1px #ccc;
+    display: flex;
+    flex-direction: row-reverse;
+    font-size: 2.5em;
+    justify-content: space-around;
+    padding: 0 .2em;
+    text-align: center;
+    width: 5em;
 }
 
 .star-rating input {
@@ -31,6 +31,17 @@
 .star-rating label:hover,
 .star-rating label:hover ~ label {
   color: #fc0;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    justify-content: center;
+    display: flex
+;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 </style>
 <div class="container-fluid">
@@ -115,25 +126,48 @@
         </a>
     @endif
 </td>
+<!-- Button to trigger modal -->
 <td>
-    <div class="star-rating">
-        <!-- Dynamically create unique IDs for each rating -->
-        <input type="radio" id="5-stars-order{{ $order['order_id'] }}" name="rating-order{{ $order['order_id'] }}" value="5" />
-        <label for="5-stars-order{{ $order['order_id'] }}" class="star">&#9733;</label>
-
-        <input type="radio" id="4-stars-order{{ $order['order_id'] }}" name="rating-order{{ $order['order_id'] }}" value="4" />
-        <label for="4-stars-order{{ $order['order_id'] }}" class="star">&#9733;</label>
-
-        <input type="radio" id="3-stars-order{{ $order['order_id'] }}" name="rating-order{{ $order['order_id'] }}" value="3" />
-        <label for="3-stars-order{{ $order['order_id'] }}" class="star">&#9733;</label>
-
-        <input type="radio" id="2-stars-order{{ $order['order_id'] }}" name="rating-order{{ $order['order_id'] }}" value="2" />
-        <label for="2-stars-order{{ $order['order_id'] }}" class="star">&#9733;</label>
-
-        <input type="radio" id="1-star-order{{ $order['order_id'] }}" name="rating-order{{ $order['order_id'] }}" value="1" />
-        <label for="1-star-order{{ $order['order_id'] }}" class="star">&#9733;</label>
-    </div>
+    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#ratingModal{{ $order['order_id'] }}">
+        Rate Order
+    </button>
 </td>
+<!-- Modal for Rating -->
+<div class="modal fade" id="ratingModal{{ $order['order_id'] }}" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ratingModalLabel">Rate Your Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="star-rating">
+                    <input type="radio" id="5-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="5" />
+                    <label for="5-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+                    <input type="radio" id="4-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="4" />
+                    <label for="4-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+                    <input type="radio" id="3-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="3" />
+                    <label for="3-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+                    <input type="radio" id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" />
+                    <label for="2-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+                    <input type="radio" id="1-star{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="1" />
+                    <label for="1-star{{ $order['order_id'] }}" class="star">&#9733;</label>
+                </div>
+                <div class="form-group mt-2" style="
+    width: 100%;
+    text-align: center;
+">
+                    <label for="description{{ $order['order_id'] }}">Description</label>
+                    <textarea id="description{{ $order['order_id'] }}" class="form-control" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="submitRating({{ $order['order_id'] }})">Submit Rating</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                             </tr>
                             @empty
