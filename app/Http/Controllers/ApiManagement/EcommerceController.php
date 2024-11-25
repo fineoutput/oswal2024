@@ -218,8 +218,9 @@ class EcommerceController extends Controller
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
-
-                if ($vendorSelectedType != null) {
+// dd($typedata[0]['range']);
+// exit;
+                if ($vendorSelectedType != null && $typedata[0]['range'] != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata[0]['type_id'] ?? '';
                     $selected_type_name = $typedata[0]['type_name'] ?? '';
