@@ -244,12 +244,12 @@ class EcommerceController extends Controller
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
-                // return response()->json([
-                //     'message' => 'success',
-                //     'status' => 201,
-                //     'data' => "Data not found",
-                //     ]
-                // );
+                return response()->json([
+                    'message' => 'success',
+                    'status' => 201,
+                    'data' => "type  not found",
+                    ]
+                );
             }
 
 
