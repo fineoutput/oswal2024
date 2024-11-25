@@ -202,17 +202,17 @@ class EcommerceController extends Controller
         $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang, $type_id);
 
         // Determine selected type
-        if (isset($request->type_id)) {
-            $getSelectedtype = sendType($product->category_id, $product->id, $request->type_id)[0];
-            $vendorSelectedType = vendorType::where('type_name', $getSelectedtype->type_name)->first();
-            $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
-            $selected_type_id = $getSelectedtype->id;
-            $selected_type_name = $getSelectedtype->type_name;
-            $selected_type_selling_price = $getSelectedtype->selling_price;
-            $selected_type_mrp = $getSelectedtype->del_mrp;
-            $selected_type_percent_off = $percent_off;
-            $selected_min_qty = $vendorSelectedType->min_qty ?? '';
-        } else {
+        // if (isset($request->type_id)) {
+        //     $getSelectedtype = sendType($product->category_id, $product->id, $request->type_id)[0];
+        //     $vendorSelectedType = vendorType::where('type_name', $getSelectedtype->type_name)->first();
+        //     $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
+        //     $selected_type_id = $getSelectedtype->id;
+        //     $selected_type_name = $getSelectedtype->type_name;
+        //     $selected_type_selling_price = $getSelectedtype->selling_price;
+        //     $selected_type_mrp = $getSelectedtype->del_mrp;
+        //     $selected_type_percent_off = $percent_off;
+        //     $selected_min_qty = $vendorSelectedType->min_qty ?? '';
+        // } else {
             // print_r($typedata);
             // exit;
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
@@ -256,7 +256,7 @@ class EcommerceController extends Controller
                     'data' => "type  not found",
                     ]
                 );
-            }
+            // }
 
 
         }
@@ -406,7 +406,11 @@ class EcommerceController extends Controller
                     $typeQuery->where('city_id', $city_id);
                 }
             }
-            $typeQuery->groupBy('type_name');
+            if ($type_id) {
+                $typeQuery->where('id', $type_id);
+            } else {
+                $typeQuery->groupBy('type_name');
+            }
             $vendorTypes = $typeQuery->get();
         }
 
@@ -432,8 +436,8 @@ class EcommerceController extends Controller
         $regularTypes = $typeQuery->get(); // Get the result as a collection
 
         // Format function for types
-        $formatTypes = function ($types) use ($lang, $roleType, $type_id) {
-            return $types->map(function ($type) use ($lang, $roleType, $type_id) {
+        $formatTypes = function ($types) use ($lang, $roleType) {
+            return $types->map(function ($type) use ($lang, $roleType) {
                 // Ensure values are not null and handle division by zero
                 $del_mrp = $type->del_mrp ?? 0;
                 $selling_price = $type->selling_price ?? 0;
@@ -445,10 +449,6 @@ class EcommerceController extends Controller
                 if ($roleType && $roleType == 2) {
                     $subTypes = Type_sub::where('type_id', $type->id)
                         ->get();
-                if($type_id){
-                    $subTypes = Type_sub::where('type_id', $type_id)
-                    ->get();
-                }
 
                     foreach ($subTypes as $subType) {
                         $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
