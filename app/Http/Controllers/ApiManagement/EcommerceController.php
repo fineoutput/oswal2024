@@ -407,7 +407,7 @@ class EcommerceController extends Controller
                 }
             }
             if($type_id){
-                $typeQuery->where('id', $type_id);
+                $typeQuery->where('type_id', $type_id);
             }
             $typeQuery->groupBy('type_name');
             $vendorTypes = $typeQuery->get();
