@@ -137,6 +137,8 @@ class WishlistController extends Controller
         } else {
        
             $wishlistData = Wishlist::where('user_id', $user_id)->get();
+           
+
         }
     
         foreach ($wishlistData as $wishlistItem) {
@@ -162,6 +164,7 @@ class WishlistController extends Controller
                 
                 $typeData =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
                 ->where('is_active', 1)->get();
+                // dd($wishlistItem->product_id);
             }else{
              
                 $typeData = Type::where('product_id', $product_id)
@@ -185,13 +188,13 @@ class WishlistController extends Controller
     
             // Process each type data
             foreach ($typeData as $type) {
-                $percentOff = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
     
                 if(Auth::check() && Auth::user()->role_type == 2){
                     $subTypes = Type_sub::where('type_id', $type->id)
                     ->get();
                     $range = [];
                     foreach ($subTypes as $subType) {
+                        $percentOff = round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp);
                         $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
                         $range[] = [
                             'type_mrp' => $subType->mrp,
@@ -203,12 +206,14 @@ class WishlistController extends Controller
                             'percent_off' => $sub_percent_off,
                             'start_range' => $subType->start_range ?? 1,
                             'end_range' => $subType->end_range ?? 1000,
+                            'percent_off' => $percentOff,
 
                         ];
                     }
                 
                 }
                 else{
+                    $percentOff = round((($type->del_mrp - $type->selling_price) * 100) / $type->del_mrp);
 
                     $range = [
                         'type_mrp' => $type->del_mrp,
@@ -217,6 +222,7 @@ class WishlistController extends Controller
                     'selling_price' => $type->selling_price,
                     'type_weight' => $type->weight,
                     'type_rate' => $type->rate,
+                    'percent_off' => $percentOff,
                     ];
                 }
                 $typedata[] = [
@@ -225,7 +231,7 @@ class WishlistController extends Controller
                     'type_category_id' => $type->category_id,
                     'type_product_id' => $type->product_id,
                     'range' => $range,
-                    'percent_off' => $percentOff
+                    
                 ];
             }
     
