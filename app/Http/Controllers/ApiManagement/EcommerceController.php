@@ -220,7 +220,7 @@ class EcommerceController extends Controller
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
 // dd($typedata[0]['range']);
 // exit;
-                if ($vendorSelectedType != null && $typedata[0]['range'] != null) {
+                if ($vendorSelectedType != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata[0]['type_id'] ?? '';
                     $selected_type_name = $typedata[0]['type_name'] ?? '';
@@ -408,7 +408,7 @@ class EcommerceController extends Controller
                 }
             }
             if ($type_id) {
-                $typeQuery->where('id', $type_id);
+                $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
             } else {
                 $typeQuery->groupBy('type_name');
             }
@@ -431,7 +431,7 @@ class EcommerceController extends Controller
             $typeQuery->groupBy('type_name');
         }
         if($type_id){
-            $typeQuery->where('id', $type_id);
+            $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
         }
 
         $regularTypes = $typeQuery->get(); // Get the result as a collection
