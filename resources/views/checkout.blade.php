@@ -158,7 +158,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         <p>({{ formatPrice($applyGiftCardSec['price']) }} <b> X 1 )</b></p>
                     </div>
 
-                    <span class="text-muted"> {{formatPrice($applyGiftCardSec['price']) }}</span>
+                    <span class="text-muted"> {{formatPrice(0) }}</span>
 
                 </li>
 
