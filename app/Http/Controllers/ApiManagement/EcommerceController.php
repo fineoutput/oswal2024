@@ -406,9 +406,6 @@ class EcommerceController extends Controller
                     $typeQuery->where('city_id', $city_id);
                 }
             }
-            if($type_id){
-                $typeQuery->where('type_id', $type_id);
-            }
             $typeQuery->groupBy('type_name');
             $vendorTypes = $typeQuery->get();
         }
@@ -435,8 +432,8 @@ class EcommerceController extends Controller
         $regularTypes = $typeQuery->get(); // Get the result as a collection
 
         // Format function for types
-        $formatTypes = function ($types) use ($lang, $roleType) {
-            return $types->map(function ($type) use ($lang, $roleType) {
+        $formatTypes = function ($types) use ($lang, $roleType, $type_id) {
+            return $types->map(function ($type) use ($lang, $roleType, $type_id) {
                 // Ensure values are not null and handle division by zero
                 $del_mrp = $type->del_mrp ?? 0;
                 $selling_price = $type->selling_price ?? 0;
@@ -448,6 +445,10 @@ class EcommerceController extends Controller
                 if ($roleType && $roleType == 2) {
                     $subTypes = Type_sub::where('type_id', $type->id)
                         ->get();
+                if($type_id){
+                    $subTypes = Type_sub::where('type_id', $type_id)
+                    ->get();
+                }
 
                     foreach ($subTypes as $subType) {
                         $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
