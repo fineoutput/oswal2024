@@ -75,6 +75,7 @@ class EcommerceController extends Controller
         'lang'      => 'required|string',
         'state_id'  => 'nullable|integer',
         'city_id'   => 'nullable|integer',
+        'type_id'   => 'nullable|integer',
         'page'      => 'nullable|integer|min:1',
         'per_page'  => 'nullable|integer|min:1|max:100',
     ];
@@ -166,6 +167,7 @@ class EcommerceController extends Controller
     $category_id = $request->input('category_id');
     $lang = $request->input('lang');
     $state_id = $request->input('state_id');
+    $type_id = $request->input('type_id');
     $city_id = $request->input('city_id');
     $page = $request->input('page', 1);
     $per_page = $request->input('per_page', 15);
@@ -197,7 +199,7 @@ class EcommerceController extends Controller
         $total_reviews = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->count();
 
         // Get product types
-        $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang);
+        $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang, $type_id);
 
         // Determine selected type
         if (isset($request->type_id)) {
@@ -381,8 +383,9 @@ class EcommerceController extends Controller
         }
     }
 
-    private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang)
+    private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang, $type_id)
     {
+        // dd($type_id);
         // Initialize variables
         $vendorTypes = [];
         $regularTypes = [];
@@ -397,7 +400,9 @@ class EcommerceController extends Controller
                     $typeQuery->where('city_id', $city_id);
                 }
             }
-
+            if($type_id){
+                $typeQuery->where('id', $type_id);
+            }
             $typeQuery->groupBy('type_name');
             $vendorTypes = $typeQuery->get();
         }
@@ -411,8 +416,14 @@ class EcommerceController extends Controller
             if ($city_id) {
                 $typeQuery->where('city_id', $city_id);
             }
-        } else {
+            
+        } 
+        
+        else {
             $typeQuery->groupBy('type_name');
+        }
+        if($type_id){
+            $typeQuery->where('id', $type_id);
         }
 
         $regularTypes = $typeQuery->get(); // Get the result as a collection
