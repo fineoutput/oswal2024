@@ -47,10 +47,10 @@ class WishlistController extends Controller
         
         if(Auth::check() && Auth::user()->role_type == 2){
             
-            $Rtype = Type::find($request->type_id);
+            // $Rtype = Type::find($request->type_id);
 
-            $type = VendorType::where('product_id', $Rtype->product_id)
-                ->where('type_name', $Rtype->type_name)
+            $type = VendorType::where('product_id', $request->product_id)
+                ->where('id', $request->type_id)
                 ->first();
 
             $typeid = $type->id;
@@ -94,13 +94,9 @@ class WishlistController extends Controller
             $wishlist->date = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
             if($wishlist->save()){
-
                 return response()->json(['success' => true, 'message' => 'Product added to Wishlist successfully.', 'data' => $wishlist], 201);
-
             }else{
-
                 return response()->json(['success' => false, 'message' => 'Something went wrong, please try again later.'], 500);
-
             }
 
         }

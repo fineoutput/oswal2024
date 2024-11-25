@@ -230,33 +230,33 @@ class EcommerceController extends Controller
                     $selected_min_qty = $vendorSelectedType->min_qty ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
-                    // $selected_type_id = '';
-                    // $selected_type_name = 'Def1';  // Default Name if no match found
-                    // $selected_type_selling_price = 00;
-                    // $selected_type_mrp = 00;
-                    // $selected_type_percent_off = 00;
-                    // $selected_min_qty = 00;
-                    return response()->json([
-                        'message' => '"type  not found"',
-                        'status' => 201,
-                        'data' => [],
-                        ]
-                    );
+                    $selected_type_id = '';
+                    $selected_type_name = 'Def1';  // Default Name if no match found
+                    $selected_type_selling_price = 00;
+                    $selected_type_mrp = 00;
+                    $selected_type_percent_off = 00;
+                    $selected_min_qty = 00;
+                    // return response()->json([
+                    //     'message' => '"type  not found"',
+                    //     'status' => 201,
+                    //     'data' => [],
+                    //     ]
+                    // );
                 }
             } else {
                 // Handle case where 'regular_types' is empty or doesn't exist
-                // $selected_type_id = '0';
-                // $selected_type_name = 'Def';  // Default Name if array is empty
-                // $selected_type_selling_price = 00;
-                // $selected_type_mrp = 00;
-                // $selected_type_percent_off = 00;
-                // $selected_min_qty = 00;
-                return response()->json([
-                    'message' => '"type  not found"',
-                    'status' => 201,
-                    'data' => [],
-                    ]
-                );
+                $selected_type_id = '0';
+                $selected_type_name = 'Def';  // Default Name if array is empty
+                $selected_type_selling_price = 00;
+                $selected_type_mrp = 00;
+                $selected_type_percent_off = 00;
+                $selected_min_qty = 00;
+                // return response()->json([
+                //     'message' => '"type  not found"',
+                //     'status' => 201,
+                //     'data' => [],
+                //     ]
+                // );
             // }
 
 
