@@ -621,7 +621,10 @@ class CheckOutController extends Controller
 
     public function placeOrder(Request $request)
     {
-
+        if($request->address_id != 0){
+        $order = Order::where('id', $request->order_id)->first();
+         $order->update(['address_id' => $request->address_id]);
+        }
         if ($request->payment_option == 1) {
 
             return $this->codCheckout(intval($request->order_id), $request->payment_option);
@@ -851,13 +854,7 @@ class CheckOutController extends Controller
         }
     }
 
-    public function orderSuccess($order_id=null,$address_id=null) {
-
-        if($address_id != 0){
-            $order = Order::where('id', $order_id)->first();
-            $order->update(['address_id' => $address_id]);
-            }
+    public function orderSuccess($order_id=null) {
         return view('order_success',compact('order_id'))->with('tittle' ,'Order');
-
     }
 }
