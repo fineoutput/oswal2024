@@ -463,7 +463,7 @@ p.botmname_top:hover {
     background: #ee1f71d6;
     color: #fff;
     font-weight: 800;
-">Late Shri Uttam Chand desraj</p>
+">Late Shri Uttam Chand Desraj</p>
 	</div>
     <div class="inside_bttns d-flex justify-content-center">
         <button class="tab-button" onclick="showContent('content1')">Our Directors</button>
@@ -474,22 +474,22 @@ p.botmname_top:hover {
         <div class="row mt-5 good_e">
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Devendra Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Devendra Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Surendra Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Surendra Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Yatendra Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Yatendra Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Virendra Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Virendra Jain Director</p>
                 </div>
             </div>
         </div>
@@ -500,43 +500,43 @@ p.botmname_top:hover {
 
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Harsh Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Harsh Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Ajay Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Ajay Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12   m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Sanjay Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Sanjay Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Achal Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Achal Jain Director</p>
                 </div>
             </div>
     
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Gaurav Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Gaurav Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Saurabh Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Saurabh Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Shrenik Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Shrenik Jain Director</p>
                 </div>
             </div>
             <div class="col-md-3 col-12 m-auto">
                 <div class="round_name">
-                    <p class="botmname_top" style="background-image: url('{{ asset('images/pngtree-happy-raksha-bandhan-orange-background-vector-illustration-image_364910.jpg') }}');">Hemank Jain Director</p>
+                    <p class="botmname_top" style="background-image: url('{{ asset('images/dir.jpg') }}');">Hemank Jain Director</p>
                 </div>
             </div>
         </div>
