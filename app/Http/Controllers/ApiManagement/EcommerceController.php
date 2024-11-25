@@ -237,9 +237,9 @@ class EcommerceController extends Controller
                     // $selected_type_percent_off = 00;
                     // $selected_min_qty = 00;
                     return response()->json([
-                        'message' => 'success',
+                        'message' => '"type  not found"',
                         'status' => 201,
-                        'data' => "type  not found",
+                        'data' => [],
                         ]
                     );
                 }
@@ -252,9 +252,9 @@ class EcommerceController extends Controller
                 // $selected_type_percent_off = 00;
                 // $selected_min_qty = 00;
                 return response()->json([
-                    'message' => 'success',
+                    'message' => '"type  not found"',
                     'status' => 201,
-                    'data' => "type  not found",
+                    'data' => [],
                     ]
                 );
             // }

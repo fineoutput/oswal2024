@@ -30,8 +30,7 @@ class WishlistController extends Controller
     public function store(Request $request) {
 
         $rules = [
-            'device_id'  => 'required|string|exists:users,device_id',
-            'user_id'    => 'nullable|exists:users,id',
+            'device_id'  => 'nullable|string|exists:users,device_id',
             'product_id' => 'required|exists:ecom_products,id',
             'category_id'=> 'required|exists:ecom_categories,id',
             'type_id'    => 'required|required|exists:types,id',
