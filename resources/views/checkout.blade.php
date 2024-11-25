@@ -928,11 +928,23 @@ const name = userInfo.getAttribute('data-name');
 const email = userInfo.getAttribute('data-email');
 const phone = userInfo.getAttribute('data-phone');
 // console.log(phone);
+// Get the current URL
+const currentUrl = window.location.href;
+
+// Parse the query string for address_id
+const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
+let addressId = urlParams.get('address_id'); // Use let to allow reassignment
+console.log('Extracted addressId:', addressId);
+
+// Fallback to 0 if addressId is missing
+if (!addressId) {
+    addressId = 0;
+}
         
         $.ajax({
             url: "{{ route('checkout.place-order') }}",
             type: 'POST',
-            data: $('#placeOrder').serialize(),
+            data: $('#placeOrder').serialize()+ '&address_id=' + addressId,
             success: function(response) {
                 // console.log();
                 
@@ -965,23 +977,12 @@ const phone = userInfo.getAttribute('data-phone');
                     rzp1.open();
                 } 
                 else {
-    // Get the current URL
-    const currentUrl = window.location.href;
-
-    // Parse the query string for address_id
-    const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
-    let addressId = urlParams.get('address_id'); // Use let to allow reassignment
-    console.log('Extracted addressId:', addressId);
-
-    // Fallback to 0 if addressId is missing
-    if (!addressId) {
-        addressId = 0;
-    }
+    
 
     // Construct the route dynamically
     const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
     const orderId = response.data.order_id; // Use the order_id from the response
-    const redirectUrl = `${baseUrl}/${orderId}/${addressId}`;
+    const redirectUrl = `${baseUrl}/${orderId}`;
 
     console.log('Redirecting to:', redirectUrl);
 
