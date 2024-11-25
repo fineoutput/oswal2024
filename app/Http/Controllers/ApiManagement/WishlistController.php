@@ -327,7 +327,7 @@ class WishlistController extends Controller
 
         $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
-        $wishlist = Wishlist::where('device_id', $device_id)
+        $wishlist = Wishlist::where('user_id', $user_id)
                             ->where('id', $data['wishlist_id'])
                             ->first();
 
@@ -345,7 +345,7 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'message' => 'Product not found'], 404);
         }
 
-        $cartItem = Cart::where('device_id', $device_id)
+        $cartItem = Cart::where('user_id', $user_id)
                         ->where('product_id', $wishlist->product_id)
                         ->first();
 
