@@ -82,7 +82,7 @@ class CartController extends Controller
         if ($user && $userDetails->role_type == 2) {
 
             if($userDetails->role_type == 2){
-
+             
                 $type = VendorType::find($typeId);
                 
             
@@ -91,14 +91,14 @@ class CartController extends Controller
                 $Rtype = Type::find($typeId);
 
                 
-                $type = VendorType::where('product_id', $Rtype->product_id)
+                $type =Type::where('product_id', $Rtype->product_id)
                     ->where('type_name', $Rtype->type_name)
                     ->first();
 
 
             }
-
-
+       
+              
             if (!$type) {
                 return response()->json(['success' => false, 'message' => "Type not found."]);
             }
@@ -151,12 +151,13 @@ class CartController extends Controller
             // }
 
         } else {
-            if($role_type == 1){
+            if($userDetails->role_type == 1){
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
         
         }}
 
-        if(empty($role_type)){
+        if(empty($userDetails->role_type)){
+         
        
             $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
             // dd($ty1);
@@ -320,7 +321,9 @@ class CartController extends Controller
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $user = User::where('auth', $auth_token)->first();
-            $user_id =  $user->id;
+            if(!empty($user)){
+                $user_id =  $user->id;
+            }
         }
 
         if($user_id != null){
