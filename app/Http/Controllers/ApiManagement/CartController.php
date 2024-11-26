@@ -78,6 +78,7 @@ class CartController extends Controller
         $typeId = $request->type_id;
 
         // dd($user);
+      
         if ($user && $userDetails->role_type == 2) {
 
             if($userDetails->role_type == 2){
@@ -110,6 +111,7 @@ class CartController extends Controller
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
                 // echo $request->quantity;
                 // exit;
+                if($userDetails->role_type == 2){
             $filteredType = VendorType::join('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
             ->where('vendor_types.product_id', $request->product_id)
             ->where('vendor_types.type_name', $type->type_name)
@@ -119,16 +121,27 @@ class CartController extends Controller
             ->first();
     // dd($filteredType);
   
-
+   
                 // $typePrice = $filteredType ? $filteredType->selling_price : "";
                 if ($filteredType) {
+                 
                     $typePrice = $filteredType->selling_price;
                 } else {
+                    $typePrice = "";
                     return response()->json([
                         'success' => false,
                         'message' => 'Price not found for the selected type.',
-                    ], 404); // 404 Not Found
+                    ], 200); // 404 Not Found
+                    exit;
                 }
+            }
+            else{
+        $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
+        $typePrice = $ty1->selling_price;
+        // print_r($typePrice);
+        // exit;
+                
+            }
                 // $typeId = $filteredType ? $filteredType->id : $typeId;
 
             // }else{
@@ -140,7 +153,29 @@ class CartController extends Controller
         } else {
             if($role_type == 1){
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
+        
         }}
+
+        if(empty($role_type)){
+       
+            $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
+            // dd($ty1);
+            if(!empty($ty1)){
+                $typePrice = $ty1->selling_price;
+              
+            }
+            else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Type not found.',
+                ], 200);
+            }
+            // print_r($typeId);
+            // exit;
+
+        }
+
+     
 
         $validator = Validator::make($request->all(),  $rules);
 
@@ -149,7 +184,8 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
-        $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+        $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+
 
         $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
