@@ -887,8 +887,6 @@ $cartItems = $cartQuery->get();
     $vendortyp = VendorType::where('id',$cartItem->type_id)->first();
     
     // dd($type_dd );
-                    
-
                     $totalSaveAmount += $cartItem->quantity * $type_dd->mrp;
                     $selectedType = [
                         'type_id' => $type_dd->type_id ??'',
