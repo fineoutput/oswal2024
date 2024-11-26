@@ -36,6 +36,7 @@ use App\Models\Type;
 use App\Models\Type_sub;
 
 use App\Models\User;
+use App\Models\Vendor;
 
 class CartController extends Controller
 {
@@ -96,6 +97,7 @@ class CartController extends Controller
 
             }
 
+
             if (!$type) {
                 return response()->json(['success' => false, 'message' => "Type not found."]);
             }
@@ -119,7 +121,7 @@ class CartController extends Controller
   
 
                 $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
-                $typeId = $filteredType ? $filteredType->id : $typeId;
+                // $typeId = $filteredType ? $filteredType->id : $typeId;
 
             // }else{
 
@@ -143,6 +145,7 @@ class CartController extends Controller
 
         $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
+   
 
         $data['type_price'] = $typePrice;
 
@@ -764,7 +767,7 @@ $cartItems = $cartQuery->get();
     {
 
         if($role_type == 2){
-
+     
             $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
                 $query->where('is_active', 1)
                     ->when($stateId, function ($query, $stateId) {
@@ -814,6 +817,7 @@ $cartItems = $cartQuery->get();
         $walletDescount = 0;
         $totalwalletAmount  = 0;
 
+       
         foreach ($cartData as $cartItem) {
 
             $product = $cartItem->product;
@@ -826,6 +830,8 @@ $cartItems = $cartQuery->get();
 
             if($role_type == 2){
                 $allRanges = [];  
+                // print_r(count($product->vendortype));
+                // exit;
                 $cart_qntry = $cartItem->quantity;
                 $typeData = $product->vendortype->map(function ($type) use ($cartItem,  $cart_qntry, $lang, &$allRanges) {
                     // dd( $type->id);
@@ -863,22 +869,32 @@ $cartItems = $cartQuery->get();
                     ];
     
                 })->toArray();
+    // dd($cartItem->vendortype);
+                // if ($cartItem->vendortype) {
+                    $selectedType = [];
+
+    $type_dd = Type_sub::where('type_id', $cartItem->type_id)
+    ->where('start_range', '<=',$cartItem->quantity) 
+    ->where('end_range', '>=', $cartItem->quantity)
+    ->first();
+    $vendortyp = VendorType::where('id',$cartItem->type_id)->first();
     
-                if ($cartItem->vendortype) {
-    
-                    $totalSaveAmount += $cartItem->quantity * $cartItem->vendortype->del_mrp;
-                    // dd($allRanges[0][0]['type_mrp']);
+    // dd($type_dd );
+                    
+
+                    $totalSaveAmount += $cartItem->quantity * $type_dd->mrp;
                     $selectedType = [
-                        'type_id' => $cartItem->vendortype->id ??'',
-                        'type_name' => $lang !== "hi" ? $cartItem->vendortype->type_name ?? '' : $cartItem->vendortype->type_name_hi ?? '',
-                        'type_mrp' => $allRanges[0][0]['type_mrp'] ?? '',
-                        'selling_price' => $allRanges[0][0]['selling_price'] ??'',
-                        'min_qty' => $cartItem->vendortype->min_qty ?? 1,
+                        'type_id' => $type_dd->type_id ??'',
+                        'type_name' => $lang !== "hi" ? $vendortyp->type_name  ?? '' : $vendortyp->type_name_hi ?? '',
+                        'type_mrp' => $type_dd->mrp ?? '',
+                        'selling_price' => $type_dd->selling_price  ??'',
+                        'min_qty' => $vendortyp->min_qty  ?? 1,
                     ];
                     
-                } else {
-                    $selectedType = [];
-                }
+                // } else {
+                
+                //     $selectedType = [];
+                // }
                 
                 $totalWeight += $cartItem->quantity * 1;
 
@@ -909,7 +925,7 @@ $cartItems = $cartQuery->get();
                 })->toArray();
     
                 if ($cartItem->type) {
-    
+                  
                     $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
                     
                     $selectedType = [
