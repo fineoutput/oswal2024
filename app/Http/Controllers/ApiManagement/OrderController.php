@@ -147,7 +147,7 @@ class OrderController extends Controller
 
                 $cartItem->type_price = $type->selling_price;
 
-                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $type->selling_price :$cartItem->quantity * $cartItem->type_price;
+                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $cartItem->quantity * $type->selling_price :$cartItem->quantity * $cartItem->type_price;
 
                 $cartItem->save();
 
