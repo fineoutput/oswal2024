@@ -837,8 +837,7 @@ $cartItems = $cartQuery->get();
                     // dd( $type->id);
                     $totalTypeQuantityPrice = $type->selling_price;
                     $subTypes = Type_sub::where('type_id', $type->id)
-                    ->where('start_range', '<=', $cart_qntry) 
-                    ->where('end_range', '>=', $cart_qntry)
+                    
                     ->get();
                     $range = [];
                     foreach ($subTypes as $subType) {
