@@ -124,7 +124,7 @@
 
                                                     <td> {!!  $contactus->reply_message  !!}</td>
                                                     
-                                                    <td> {{ $contactus->cur_date }}</td>
+                                                    <td>{{ date('j F, Y, g:i a', strtotime($contactus->created_at))}}</td>
 
                                                     <td>
                                                         
