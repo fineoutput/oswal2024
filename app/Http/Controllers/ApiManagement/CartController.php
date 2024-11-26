@@ -45,11 +45,11 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'   => 'required|string',
+            'device_id'   => 'string',
             'category_id' => 'required|string|exists:ecom_categories,id',
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
-            'type_price'  => 'required|numeric',
+            'type_price'  => 'numeric',
             'cart_from'   => 'required|string',
             'quantity'    => 'required|integer|min:1'
         ];
@@ -73,14 +73,14 @@ class CartController extends Controller
 
         $user = $user_id;
 
-        $typePrice = $request->type_price;
+        // $typePrice = $request->type_price;
 
         $typeId = $request->type_id;
 
         // dd($user);
         if ($user && $userDetails->role_type == 2) {
 
-            if(isset($request->where) == 'cartdetails'){
+            if($userDetails->role_type == 2){
 
                 $type = VendorType::find($typeId);
                 
@@ -120,7 +120,7 @@ class CartController extends Controller
     // dd($filteredType);
   
 
-                $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
+                $typePrice = $filteredType ? $filteredType->selling_price : 50000000;
                 // $typeId = $filteredType ? $filteredType->id : $typeId;
 
             // }else{
