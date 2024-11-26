@@ -152,6 +152,12 @@ class CartController extends Controller
 
         } else {
             if($userDetails->role_type == 1){
+                $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
+                // dd($ty1);
+                if(!empty($ty1)){
+                    $typePrice = $ty1->selling_price;
+                  
+                }
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
         
         }}
