@@ -249,14 +249,11 @@ class CartController extends Controller
 
         $rules = [
             'device_id'       => 'string',
-            'user_id'         => 'nullable|integer|exists:users,id',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
             'address_id'      => 'nullable|integer|exists:user_address,id',
             'state_id'        => 'nullable|integer',
             'city_id'         => 'nullable|integer',
-            'type_id'         => 'nullable',
-            'qunty'         => 'nullable',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
         ];
@@ -291,7 +288,6 @@ class CartController extends Controller
         }
 
         $device_id       = $request->input('device_id');
-      
         $lang            = $request->input('lang');
         $input_promocode = $request->input('input_promocode');
         $address_id      = $request->input('address_id');
@@ -299,13 +295,10 @@ class CartController extends Controller
         $city_id         = $request->input('city_id');
         $gift_card_id    = $request->input('gift_card_id');
         $wallet_status   = $request->input('wallet_status');
-        $type_id   = $request->input('type_id');
-        $qunty   = $request->input('qunty');
-
-
+        // $type_id         = $request->input('type_id');
+        // $qunty           = $request->input('qunty');
 
         $cartQuery = Cart::query()
-
         ->where(function ($query) use ($user_id, $device_id) {
             $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
         });
@@ -333,19 +326,16 @@ class CartController extends Controller
 //             $cartItems = $cartQuery->get();
 // $typeId = 45;
 $cartItems = $cartQuery->with([
-    'vendortype' => function ($query) use ($state_id, $city_id, $type_id) {
+    'vendortype' => function ($query) use ($state_id, $city_id) {
         $query->when($state_id, function ($query) use ($state_id, $city_id) {
             $query->where('state_id', $state_id)
                   ->where('city_id', $city_id);    
         });
-
-        if ($type_id) {          
-            $query->where('id', $type_id);
-        }
          $query->with(['type_sub']); // Load the relation with type_sub
     }
 ])->get();
 $cartItems = $cartQuery->get();
+// dd($cartItems);
 
 // foreach ($cartItems as $cartItem) {
 //     // Vendortype table se data fetch karna
@@ -530,7 +520,7 @@ $cartItems = $cartQuery->get();
         }
         
 // dd( $qunty);
-        return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status, $qunty);
+        return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
     }
 
     public function applyPromocode($deviceId, $userId, $userInputPromoCode, $totalAmount)
@@ -767,7 +757,7 @@ $cartItems = $cartQuery->get();
             }
     }
     
-    private function generateCartResponse($userId,$role_type, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null, $applyGiftCardSec =null ,$wallet_status=false, $cart_qntry=false)
+    private function generateCartResponse($userId,$role_type, $deviceId, $stateId, $cityId, $lang, $deliveryCharge, $promo_discount, $promo_id,$promocode_name, $extraDiscount, $message, $status, $applyGiftCard = null, $applyGiftCardSec =null ,$wallet_status=false)
     {
 
         if($role_type == 2){
@@ -832,13 +822,8 @@ $cartItems = $cartQuery->get();
             $comboProduct = $this->comboProduct($cartItem->type_id , $product , $lang ,$role_type);
 
             if($role_type == 2){
-                $allRanges = [];
-                if($cart_qntry){
-                    $cart_qntry = $cart_qntry;
-                }
-                else{
+                $allRanges = [];  
                 $cart_qntry = $cartItem->quantity;
-                }
                 $typeData = $product->vendortype->map(function ($type) use ($cartItem,  $cart_qntry, $lang, &$allRanges) {
                     // dd( $type->id);
                     $totalTypeQuantityPrice = $type->selling_price;
