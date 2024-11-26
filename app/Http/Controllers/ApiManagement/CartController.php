@@ -106,15 +106,18 @@ class CartController extends Controller
             }}
 
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
-
+                // echo $request->quantity;
+                // exit;
             $filteredType = VendorType::join('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
             ->where('vendor_types.product_id', $request->product_id)
             ->where('vendor_types.type_name', $type->type_name)
             ->where('type_subs.start_range', '<=', $request->quantity)
             ->where('type_subs.end_range', '>=', $request->quantity)
-            ->select('vendor_types.*', 'type_subs.start_range', 'type_subs.end_range') // Select relevant columns
+            ->select('vendor_types.*', 'type_subs.*') // Select relevant columns
             ->first();
-    
+    // dd($filteredType);
+  
+
                 $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
                 $typeId = $filteredType ? $filteredType->id : $typeId;
 
