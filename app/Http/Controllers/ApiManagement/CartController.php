@@ -347,16 +347,21 @@ class CartController extends Controller
         $wallet_status   = $request->input('wallet_status');
         // $type_id         = $request->input('type_id');
         // $qunty           = $request->input('qunty');
-
-        $cartQuery = Cart::query()
-        ->where(function ($query) use ($user_id, $device_id) {
-            $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
-        });
+        $cartQuery = Cart::query();
+        if ($request->header('Authorization')) {
+            
+            $cartQuery->where('user_id', $user_id);
+        } else {
+            // echo"hii";
+            // exit;
+            $cartQuery->where('device_id', $device_id);
+        }
+        
 
                 //   $CartData = Cart::where('user_id',$user_id)->orderBY("id","DESC")->get();
         
 
-// print_r($cartQuery);
+// dd($cartQuery->get());
 // exit;
         if($roleType == 2){
 
@@ -413,6 +418,7 @@ $cartItems = $cartQuery->get();
             
 
         }else{
+   
 
             $cartItems = $cartQuery->with(['type' => function ($query) use ($state_id, $city_id) {
                 $query->when($state_id, function ($query) use ($state_id, $city_id) {
