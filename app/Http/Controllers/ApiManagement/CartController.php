@@ -248,7 +248,7 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'       => 'required|string',
+            'device_id'       => 'string',
             'user_id'         => 'nullable|integer|exists:users,id',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
@@ -822,9 +822,8 @@ $cartItems = $cartQuery->get();
             $comboProduct = $this->comboProduct($cartItem->type_id , $product , $lang ,$role_type);
 
             if($role_type == 2){
-
-                $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang) {
-    
+                $allRanges = [];
+                $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang, &$allRanges) {
                     $totalTypeQuantityPrice = $type->selling_price;
                     $subTypes = Type_sub::where('type_id', $type->id)
                     ->get();
@@ -844,6 +843,8 @@ $cartItems = $cartQuery->get();
 
                         ];
                     }
+                    $allRanges[] = $range;
+                    // dd($allRanges);
                     return [
                         'type_id' => $type->id,
                         'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
@@ -859,14 +860,15 @@ $cartItems = $cartQuery->get();
                 if ($cartItem->vendortype) {
     
                     $totalSaveAmount += $cartItem->quantity * $cartItem->vendortype->del_mrp;
-                    
+                    // dd($allRanges[0][0]['type_mrp']);
                     $selectedType = [
                         'type_id' => $cartItem->vendortype->id ??'',
                         'type_name' => $lang !== "hi" ? $cartItem->vendortype->type_name ?? '' : $cartItem->vendortype->type_name_hi ?? '',
-                        'type_mrp' => $cartItem->vendortype->del_mrp,
-                        'selling_price' => $cartItem->vendortype->selling_price ??'',
+                        'type_mrp' => $allRanges[0][0]['type_mrp'],
+                        'selling_price' => $allRanges[0][0]['selling_price'] ??'',
                         'min_qty' => $cartItem->vendortype->min_qty ?? 1,
                     ];
+                    
                 } else {
                     $selectedType = [];
                 }
