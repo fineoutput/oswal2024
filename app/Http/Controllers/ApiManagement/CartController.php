@@ -120,7 +120,15 @@ class CartController extends Controller
     // dd($filteredType);
   
 
-                $typePrice = $filteredType ? $filteredType->selling_price : 50000000;
+                // $typePrice = $filteredType ? $filteredType->selling_price : "";
+                if ($filteredType) {
+                    $typePrice = $filteredType->selling_price;
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Price not found for the selected type.',
+                    ], 404); // 404 Not Found
+                }
                 // $typeId = $filteredType ? $filteredType->id : $typeId;
 
             // }else{
