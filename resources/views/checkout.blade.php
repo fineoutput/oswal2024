@@ -7,18 +7,45 @@
     .free_offer_imag {
         position: relative;
     }
-    .roll_style{
+
+    .roll_style {
         color: red;
     }
+
     .rol_cent {
-    color: green;
-    font-weight: 800;
-}   
-.promos_det-option p {
-    border: 1px dashed red;
-    padding: 5px;
-    color: #000;
+        color: green;
+        font-weight: 800;
+    }
+
+    .promos_det-option p {
+        border: 1px dashed red;
+        padding: 5px;
+        color: #000;
+    }
+    .gift-card-content {
+    background-color: #fb000052 !important;
+    color: #333;
+    /* font-size: 24px; */
+    font-weight: bold;
+    /* padding: 20px 40px; */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(5);
+    animation: popup-effect 1s ease-in-out forwards;
 }
+
+    /* Keyframes for the popup effect */
+    @keyframes popup-effect {
+      0% {
+        transform: scale(1); /* Original size */
+      }
+      50% {
+        transform: scale(1.2); /* Enlarged size */
+      }
+      100% {
+        transform: scale(1); /* Back to original size */
+      }
+    }
 </style>
 @php
 $OrderDetails = $orderdetails->orderDetails;
@@ -41,8 +68,8 @@ $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active'
 $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
 
 @endphp
- @if (count($applyGiftCardSec) > 0)
-                <div class="gift_animation" style="
+@if (count($applyGiftCardSec) > 0)
+<div class="gift_animation" style="
     position: absolute;
     top: 50%;
     left: 50%;
@@ -136,11 +163,11 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 @endforeach
 
                 @if (count($applyGiftCardSec) > 0)
-                
-  
-                <li class="list-group-item d-flex justify-content-between lh-condensed">
 
-                <div class="clls">
+
+                <li class="list-group-item d-flex justify-content-between lh-condensed gift-card-content">
+
+                    <div class="clls">
                         <div class="free_offer_imag">
                             <img width="80px" src="{{ $applyGiftCardSec['image'] }}" alt="" />
                             <img class="offer_badge" width="20px" src="{{ asset('images/free_gift.png') }}" alt="" style="
@@ -163,7 +190,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </li>
 
                 @endif
-                
+
 
                 <li class="list-group-item d-flex justify-content-between bg-light">
 
@@ -201,7 +228,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         <small id="promoCodeName">
                             @if($promocode)
                             {{ $promocode->promocode }}
-                            
+
                             @else
                             No promo code applied
                             @endif
@@ -272,9 +299,9 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     <span class="text-danger" id='codChargeAmount'> </span>
 
                 </li>
-    
+
                 <li class="list-group-item d-flex justify-content-between">
-<hr>
+                    <hr>
                     <span><b>Total (INR)</b></span>
 
                     <strong id="totalorderAmount">{{formatPrice($orderdetails->total_amount + getConstant()->cod_charge)}}</strong>
@@ -282,7 +309,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </li>
 
             </ul>
- 
+
             @if($giftCardStatus == 1)
 
             <div class="gift-card-section ribbon" id="giftCardSection">
@@ -292,7 +319,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
 
                 </div>
-
+                
             </div>
 
             <div class="gift-card-list" id="giftCardList">
@@ -333,44 +360,44 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
             </div> -->
             <div class="choose_promo_code_sect_tin d-flex justify-content-between">
-            <p id="selectedPromoCode">Select Promo Code</p>
-    <!-- Button to trigger modal -->
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#promoModal">
-        Choose Promo Code
-    </button>
-</div>
-<!-- Modal Structure -->
-<div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="promoModalLabel">Choose Your Promo Code</h5>
-                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                <p id="selectedPromoCode">Select Promo Code</p>
+                <!-- Button to trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#promoModal">
+                    Choose Promo Code
+                </button>
             </div>
-            <div class="modal-body">
-                <div class="promo-options d-block">
-                    @foreach ($promocodes as $promocode)
-                    <div class="d-flex justify-content-between align-items-center promos_det-option">
-                    <p> {{ $promocode->promocode }} {{ $promocode->percent }}</p>
-                    <br>
-                    <button class="promo-option btn btn-outline-danger mb-2" style="width: 30%;"onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}" data-bs-dismiss="modal" aria-label="Close">Apply 
-                        </button>
+            <!-- Modal Structure -->
+            <div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="promoModalLabel">Choose Your Promo Code</h5>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                        </div>
+                        <div class="modal-body">
+                            <div class="promo-options d-block">
+                                @foreach ($promocodes as $promocode)
+                                <div class="d-flex justify-content-between align-items-center promos_det-option">
+                                    <p> {{ $promocode->promocode }} {{ $promocode->percent }}</p>
+                                    <br>
+                                    <button class="promo-option btn btn-outline-danger mb-2" style="width: 30%;" onclick="applyPromocode('{{ $promocode->promocode }}')" data-code="{{ $promocode->promocode }}" data-bs-dismiss="modal" aria-label="Close">Apply
+                                    </button>
+                                </div>
+
+                                <p>Applicable for minimum cart value of <span class="roll_style">{{$promocode->minimum_amount}}</span> with discount of <span class="rol_cent">{{ $promocode->percent }}</span>%</p>
+                                <hr>
+                                @endforeach
+                            </div>
+                            <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                    
-                    <p>Applicable for minimum cart value of <span class="roll_style">{{$promocode->minimum_amount}}</span> with discount of <span class="rol_cent">{{ $promocode->percent }}</span>%</p>
-                    <hr>
-                    @endforeach
                 </div>
-                <br>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
             @endif
-            
+
         </div>
 
         <div class="col-md-6 order-md-1">
@@ -380,7 +407,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 <h4 class="mb-3">Billing address</h4>
 
                 <a href="{{ route('checkout.get-address',['place' => 'checkout']) }}">
-                    <button  class="btn btn-warning "><span>Change Address</span> <span> </span></button>
+                    <button class="btn btn-warning "><span>Change Address</span> <span> </span></button>
                 </a>
 
             </div>
@@ -418,7 +445,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                             <h4 style="font-size: 17px; font-family: Muli, sans-serif !important;">Apply Wallet</h4>
 
                         </div>
-                        @if($orderdetails->extra_discount != 0) 
+                        @if($orderdetails->extra_discount != 0)
                         @php
                         // $walletBalanceAfterDiscount = Auth::user()->wallet_amount - $orderdetails->extra_discount;
                         $walletBalanceAfterDiscount = number_format(Auth::user()->wallet_amount - $orderdetails->extra_discount, 2, '.', '');
@@ -431,7 +458,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                         <input type="checkbox" onchange="applyWallet()" @if($orderdetails->extra_discount != 0) checked @endif name="wallet" id="wallet" class="wallet" value="1" />
 
-                        <label class="wallet-size mb-0" for="wallet" id="totalwalletAmount"> Wallet (₹{{  $walletBalanceAfterDiscount ?? 0 }})</label>
+                        <label class="wallet-size mb-0" for="wallet" id="totalwalletAmount"> Wallet (₹{{ $walletBalanceAfterDiscount ?? 0 }})</label>
 
                     </div>
 
@@ -445,7 +472,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                     <div class="heading_s1 pt-2">
 
-                        
+
 
                         <h4 class="payment" style="font-family: Muli, sans-serif !important;">Payment Mode</h4>
 
@@ -456,7 +483,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         <div class="custome-radio">
 
                             <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(2)" type="radio"
-                                name="payment_option" id="exampleRadios4"  checked value="2"/>
+                                name="payment_option" id="exampleRadios4" checked value="2" />
 
                             <label class="form-check-label" for="exampleRadios4">Online Payment</label> <br />
 
@@ -466,7 +493,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                         </div>
 
                         <div class="custome-radio">
-                            <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3"  value="1"/>
+                            <input class="form-check-input payment_option payment_emthod" onchange="updateAmount(1)" type="radio" name="payment_option" id="exampleRadios3" value="1" />
 
                             <label class="form-check-label" for="exampleRadios3">Cash On Delivery (COD)</label> <br />
 
@@ -530,11 +557,11 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     </div>  --}}
 
             </form>
-            <div class="d-none" id="user-info" 
-     data-name="{{ Auth::user()->first_name }}" 
-     data-email="{{ Auth::user()->email }}" 
-     data-phone="{{ Auth::user()->contact ?? '0000000000' }}">
-</div>
+            <div class="d-none" id="user-info"
+                data-name="{{ Auth::user()->first_name }}"
+                data-email="{{ Auth::user()->email }}"
+                data-phone="{{ Auth::user()->contact ?? '0000000000' }}">
+            </div>
 
         </div>
 
@@ -788,44 +815,44 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
         // Toggle list visibility when the section is clicked
         sectionElement.addEventListener('click', () => {
-        listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
+            listElement.style.display = listElement.style.display === 'block' ? 'none' : 'block';
         });
 
         // Handle gift card item selection
         document.querySelectorAll(`.${itemClass}`).forEach(item => {
-        item.addEventListener('click', function () {
-            // Deselect all items and select the clicked one
-            document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-            this.classList.add('selected');
+            item.addEventListener('click', function() {
+                // Deselect all items and select the clicked one
+                document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
 
-            // Update the selected gift card information in the section
-            const selectedText = this.querySelector('p').innerText;
-            const selectedImageSrc = this.querySelector('img').src;
-            sectionElement.innerHTML = `
+                // Update the selected gift card information in the section
+                const selectedText = this.querySelector('p').innerText;
+                const selectedImageSrc = this.querySelector('img').src;
+                sectionElement.innerHTML = `
             <p>${selectedText}</p>
             <img src="${selectedImageSrc}" alt="Selected" style="width: 40px; margin-left: 10px;">
             <button class="btn btn-danger" id="removeSelected" style="margin-left: 10px;">Remove</button>
             `;
 
-            // Hide the list after selection
-            listElement.style.display = 'none';
+                // Hide the list after selection
+                listElement.style.display = 'none';
 
-            // Add event listener for the remove button
-            document.getElementById('removeSelected').addEventListener('click', function () {
-            const giftCardID = item.getAttribute('data-id'); // Assuming the gift card ID is stored in a data attribute
+                // Add event listener for the remove button
+                document.getElementById('removeSelected').addEventListener('click', function() {
+                    const giftCardID = item.getAttribute('data-id'); // Assuming the gift card ID is stored in a data attribute
 
-            // AJAX request to remove the gift card
-            removeGiftCard(giftCardID);
+                    // AJAX request to remove the gift card
+                    removeGiftCard(giftCardID);
 
-            // Clear selection and reset section content
-            document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
-            sectionElement.innerHTML = '<p>Select a product</p>'; // Reset the section content
+                    // Clear selection and reset section content
+                    document.querySelectorAll(`.${itemClass}`).forEach(i => i.classList.remove('selected'));
+                    sectionElement.innerHTML = '<p>Select a product</p>'; // Reset the section content
 
-            // Show the list again
-            listElement.style.display = 'block';
+                    // Show the list again
+                    listElement.style.display = 'block';
+                });
+
             });
-            
-        });
         });
     }
 
@@ -839,39 +866,39 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
         const cleargiftsecation = $('#cleargiftsecation');
 
         $.ajax({
-        url: "{{ route('checkout.remove-gift-card') }}",
-        type: 'POST',
-        data: {
-            order_id: order_id,
-            gift_card_id: giftCardID, // Pass the gift card ID to the server
-            _token: "{{ csrf_token() }}"
-        },
-        success: function(response) {
-            if (response.success) {
-            GiftCardAmount.text(`+${response.amount}`);
-            giftCardName.text(response.name);
+            url: "{{ route('checkout.remove-gift-card') }}",
+            type: 'POST',
+            data: {
+                order_id: order_id,
+                gift_card_id: giftCardID, // Pass the gift card ID to the server
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.success) {
+                    GiftCardAmount.text(`+${response.amount}`);
+                    giftCardName.text(response.name);
 
-            let final_amount;
-            if ($('input[name="payment_option"]:checked').val() == 1) {
-                final_amount = response.cod_amount;
-            } else {
-                final_amount = response.prepared_amount;
+                    let final_amount;
+                    if ($('input[name="payment_option"]:checked').val() == 1) {
+                        final_amount = response.cod_amount;
+                    } else {
+                        final_amount = response.prepared_amount;
+                    }
+
+                    totalorderAmount.text(final_amount);
+                    cleargiftsecation.text('Click here to select a gift card');
+                    $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
+                    removegiftCard.addClass('d-none');
+
+                    showNotification(response.message, 'success');
+                } else {
+                    showNotification(response.message, 'error');
+                }
+            },
+            error: function(xhr) {
+                showNotification('An error occurred while removing the gift card.', 'error');
+                console.error('An error occurred while removing the gift card.');
             }
-
-            totalorderAmount.text(final_amount);
-            cleargiftsecation.text('Click here to select a gift card');
-            $('#totalorderAmounti').val(convertCurrencyToFloat(final_amount));
-            removegiftCard.addClass('d-none');
-
-            showNotification(response.message, 'success');
-            } else {
-            showNotification(response.message, 'error');
-            }
-        },
-        error: function(xhr) {
-            showNotification('An error occurred while removing the gift card.', 'error');
-            console.error('An error occurred while removing the gift card.');
-        }
         });
     }
 
@@ -924,30 +951,30 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
     function placeOrder() {
         const userInfo = document.getElementById('user-info');
-const name = userInfo.getAttribute('data-name');
-const email = userInfo.getAttribute('data-email');
-const phone = userInfo.getAttribute('data-phone');
-// console.log(phone);
-// Get the current URL
-const currentUrl = window.location.href;
+        const name = userInfo.getAttribute('data-name');
+        const email = userInfo.getAttribute('data-email');
+        const phone = userInfo.getAttribute('data-phone');
+        // console.log(phone);
+        // Get the current URL
+        const currentUrl = window.location.href;
 
-// Parse the query string for address_id
-const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
-let addressId = urlParams.get('address_id'); // Use let to allow reassignment
-console.log('Extracted addressId:', addressId);
+        // Parse the query string for address_id
+        const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
+        let addressId = urlParams.get('address_id'); // Use let to allow reassignment
+        console.log('Extracted addressId:', addressId);
 
-// Fallback to 0 if addressId is missing
-if (!addressId) {
-    addressId = 0;
-}
-        
+        // Fallback to 0 if addressId is missing
+        if (!addressId) {
+            addressId = 0;
+        }
+
         $.ajax({
             url: "{{ route('checkout.place-order') }}",
             type: 'POST',
-            data: $('#placeOrder').serialize()+ '&address_id=' + addressId,
+            data: $('#placeOrder').serialize() + '&address_id=' + addressId,
             success: function(response) {
                 // console.log();
-                
+
                 if (response.data.form != 1) {
 
                     var options = {
@@ -975,20 +1002,19 @@ if (!addressId) {
                     // Initialize and open the Razorpay payment gateway
                     var rzp1 = new Razorpay(options);
                     rzp1.open();
-                } 
-                else {
-    
+                } else {
 
-    // Construct the route dynamically
-    const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
-    const orderId = response.data.order_id; // Use the order_id from the response
-    const redirectUrl = `${baseUrl}/${orderId}`;
 
-    console.log('Redirecting to:', redirectUrl);
+                    // Construct the route dynamically
+                    const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
+                    const orderId = response.data.order_id; // Use the order_id from the response
+                    const redirectUrl = `${baseUrl}/${orderId}`;
 
-    // Perform the redirect
-    window.location.href = redirectUrl;
-}
+                    console.log('Redirecting to:', redirectUrl);
+
+                    // Perform the redirect
+                    window.location.href = redirectUrl;
+                }
 
 
             },
@@ -1013,9 +1039,9 @@ if (!addressId) {
             data: $('#placeOrder').serialize(),
             success: function(response) {
 
-                if(!response.success){
+                if (!response.success) {
 
-                    showNotification(response.message, 'error');  
+                    showNotification(response.message, 'error');
                     return;
                 }
 
@@ -1046,10 +1072,10 @@ if (!addressId) {
                     // Initialize and open the Razorpay payment gateway
                     var rzp1 = new Razorpay(options);
                     rzp1.open();
-                }else{
-                
-                    window.location.href=`{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
-                    
+                } else {
+
+                    window.location.href = `{{ route('checkout.order-success', ['order_id' => '__ORDER_ID__']) }}`.replace('__ORDER_ID__', response.data.order_id);;
+
                 }
             },
             error: function(xhr) {
@@ -1057,21 +1083,19 @@ if (!addressId) {
             }
         });
     }
-
 </script>
 
 <script>
-//     function applyPromocode(promocode) {
-//     // Perform the necessary action with the selected promo code
-//     console.log("Applying promocode: " + promocode);
+    //     function applyPromocode(promocode) {
+    //     // Perform the necessary action with the selected promo code
+    //     console.log("Applying promocode: " + promocode);
 
-//     // Close the modal
-//     var modal = new bootstrap.Modal(document.getElementById('promoModal'));
-//     modal.hide();
+    //     // Close the modal
+    //     var modal = new bootstrap.Modal(document.getElementById('promoModal'));
+    //     modal.hide();
 
-//     // Optionally display the selected promo code elsewhere in the UI
-//     document.getElementById('selectedPromoCode').innerText = "Selected Promo: " + promocode;
-// }
-
+    //     // Optionally display the selected promo code elsewhere in the UI
+    //     document.getElementById('selectedPromoCode').innerText = "Selected Promo: " + promocode;
+    // }
 </script>
 @endpush
