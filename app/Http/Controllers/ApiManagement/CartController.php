@@ -62,7 +62,7 @@ class CartController extends Controller
         if ($userDetails) {
             $device_id = $userDetails->device_id;
             $user_id = $userDetails->id;
-            $role_type = $user_id = $userDetails->role_type;
+            $role_type = $userDetails->role_type;
         }
     }
    
