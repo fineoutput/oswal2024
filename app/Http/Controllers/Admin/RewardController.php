@@ -160,8 +160,11 @@ class RewardController extends Controller
 
     public function applied(Request $request) {
 
-      $rewards = VendorReward::with('vendor' ,'vendor.orders')->get();
-  
+        $rewards = VendorReward::select('vendor_rewards.*', 'users.*', 'tbl_order1.*')
+        ->leftJoin('users', 'vendor_rewards.vendor_id', '=', 'users.id')
+        ->leftJoin('tbl_order1', 'users.id', '=', 'tbl_order1.user_id')
+        ->get();
+
       return view('admin.Rewards.applied-reward' , compact('rewards'));
 
     }
