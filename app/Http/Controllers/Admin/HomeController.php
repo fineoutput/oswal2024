@@ -19,6 +19,7 @@ class HomeController extends Controller
         return view('admin.career', compact('careers'));
     }
 
+
     public function carrerDestroy($id, Request $request)
 
     {
@@ -31,11 +32,11 @@ class HomeController extends Controller
 
             if (DB::table('careers')->where('id', $id)->delete()) {
 
-                return  redirect()->route('home.index')->with('success', 'Message Deleted Successfully.');
+                return  redirect()->route('home.career')->with('success', 'Data Deleted Successfully.');
 
             } else {
 
-                return redirect()->route('home.index')->with('error', 'Some Error Occurred.');
+                return redirect()->route('home.career')->with('error', 'Some Error Occurred.');
 
             }
 

@@ -1,7 +1,6 @@
 @extends('admin.base_template')
 
 @section('main')
-
     <div class="content">
 
         <div class="container-fluid">
