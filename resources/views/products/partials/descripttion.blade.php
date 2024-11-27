@@ -13,6 +13,7 @@ $cart = Auth::check()
 $wishlist = Auth::check() 
     ? $product->wishlist->firstWhere('user_id', Auth::user()->id) 
     : null;
+$isInCart = !is_null($cart);
 
 @endphp
 
@@ -113,7 +114,12 @@ $wishlist = Auth::check()
             </button>
         </div>
 
-        <button type="button" class="details-btn" onclick="manageCart({{ $product->id }})">Add to Cart <i class="fas fa-shopping-cart"></i></button>
+        @if ($isInCart)
+        <!-- If product is in the cart -->
+        <button type="button" class="details-btn" onclick="window.location.href='{{ route('cart.get-cart-details') }}'">View Cart <i class="fas fa-shopping-cart"></i></button>
+        @else
+        <button type="button" class="details-btn" data-url="{{ route('cart.get-cart-details') }}" onclick="manageCart({{ $product->id }}), '{{ route('cart.get-cart-details') }}'">Add to Cart <i class="fas fa-shopping-cart"></i></button>
+        @endif
         <!-- <button type="button" class="details-btn"><i class="fa-solid fa-heart colored_icon"
                         style="color: #f20232; display:none;"></i>Add to Wishlist </button> -->
     </div>
