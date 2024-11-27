@@ -152,6 +152,7 @@ Route::middleware(['auth'])->name('user.')->group(function () {
     Route::post('stor-address', [UserController::class, 'storeAddress'])->name('stor-address');
 
     Route::get('delete-address/{id}', [UserController::class, 'deleteAddress'])->name('delete-address');
+    Route::post('rating', [UserController::class, 'rating'])->name('rating');
 
 });
 

@@ -176,6 +176,7 @@ function decrement(productId) {
 // Manage Cart (Show the quantity section and hide "Add to Cart")
 function manageCart(productId) {
 
+  // console.log('hello');
   document.getElementById(`add-to-cart-section${productId}`).style.display = 'none';
 
   document.getElementById(`mob_add-to-cart-section${productId}`).style.display = 'none';
@@ -184,6 +185,13 @@ function manageCart(productId) {
 
   document.getElementById(`mob_quantity-section${productId}`).style.display = 'flex';
 
+  // Update the button to "View Cart"
+  const button = document.querySelector(`#addtocart${productId} .details-btn`);
+    button.innerHTML = 'View Cart <i class="fas fa-shopping-cart"></i>';
+    const cartUrl = button.getAttribute('data-url');
+    button.onclick = () => {
+        window.location.href = cartUrl; // Use the passed route
+    };
   // Increment by default when "Add to Cart" is clicked
   increment(productId);
 }

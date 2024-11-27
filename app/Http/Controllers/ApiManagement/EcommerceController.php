@@ -75,6 +75,7 @@ class EcommerceController extends Controller
         'lang'      => 'required|string',
         'state_id'  => 'nullable|integer',
         'city_id'   => 'nullable|integer',
+        'type_id'   => 'nullable|integer',
         'page'      => 'nullable|integer|min:1',
         'per_page'  => 'nullable|integer|min:1|max:100',
     ];
@@ -166,6 +167,7 @@ class EcommerceController extends Controller
     $category_id = $request->input('category_id');
     $lang = $request->input('lang');
     $state_id = $request->input('state_id');
+    $type_id = $request->input('type_id');
     $city_id = $request->input('city_id');
     $page = $request->input('page', 1);
     $per_page = $request->input('per_page', 15);
@@ -185,38 +187,73 @@ class EcommerceController extends Controller
         $wish_status = $wishlist ? 1 : 0;
         $wishlist_id = $wishlist ? $wishlist->id : null;
 
+        if($roleType==2){
+            // echo $product->id;
+            // exit;
+            // $cart = Cart::where('product_id', $product->id)->where('user_id', $user_id)->first();
+            $cart = DB::table('carts')->where('product_id', $product->id)->where('user_id', $user_id)->first();
+            // dd($cart);
+            // exit;
+
+            if ($cart) {
+                $VendorTypecart = DB::table('vendor_types')
+                    ->whereNull('deleted_at')
+                    ->where('id', $cart->type_id)
+                    ->first();
+            
+                if ($VendorTypecart) {
+                    $subTypes = DB::table('type_subs')
+                        ->where('type_id', $VendorTypecart->id)
+                        ->where('start_range', '<=', $cart->quantity)
+                        ->where('end_range', '>=', $cart->quantity)
+                        ->get();
+                        
+                }
+            }
+            // dd($subTypes[0]->selling_price);
+            //             exit;
+            $cart_type_name = $cart ? ($lang !== "hi" ? $VendorTypecart->type_name : $cart->type->type_name_hi) : '';
+            $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
+            $cart_quantity = $cart ? $cart->quantity : null;
+            $cart_total_price = $cart ? $cart->total_qty_price : null;
+            $cart_status = $cart ? 1 : 0;
+            
+        }
+        else{
         $cart = $user_id ? Cart::where('product_id', $product->id)->where('user_id', $user_id)->where('device_id', $device_id)->first() : null;
         $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
         $cart_type_price = $cart ? $cart->type_price : null;
         $cart_quantity = $cart ? $cart->quantity : null;
         $cart_total_price = $cart ? $cart->total_qty_price : null;
         $cart_status = $cart ? 1 : 0;
+        }
 
         $rating_avg = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->avg('rating');
         $rating_avg = number_format((float)$rating_avg, 1, '.', '');
         $total_reviews = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->count();
 
         // Get product types
-        $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang);
+        $typedata = $this->fetchProductTypes($product->id, $roleType, $state_id, $city_id, $lang, $type_id);
 
         // Determine selected type
-        if (isset($request->type_id)) {
-            $getSelectedtype = sendType($product->category_id, $product->id, $request->type_id)[0];
-            $vendorSelectedType = vendorType::where('type_name', $getSelectedtype->type_name)->first();
-            $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
-            $selected_type_id = $getSelectedtype->id;
-            $selected_type_name = $getSelectedtype->type_name;
-            $selected_type_selling_price = $getSelectedtype->selling_price;
-            $selected_type_mrp = $getSelectedtype->del_mrp;
-            $selected_type_percent_off = $percent_off;
-            $selected_min_qty = $vendorSelectedType->min_qty ?? '';
-        } else {
+        // if (isset($request->type_id)) {
+        //     $getSelectedtype = sendType($product->category_id, $product->id, $request->type_id)[0];
+        //     $vendorSelectedType = vendorType::where('type_name', $getSelectedtype->type_name)->first();
+        //     $percent_off = round((( $getSelectedtype->del_mrp -  $getSelectedtype->selling_price) * 100) /  $getSelectedtype->del_mrp);
+        //     $selected_type_id = $getSelectedtype->id;
+        //     $selected_type_name = $getSelectedtype->type_name;
+        //     $selected_type_selling_price = $getSelectedtype->selling_price;
+        //     $selected_type_mrp = $getSelectedtype->del_mrp;
+        //     $selected_type_percent_off = $percent_off;
+        //     $selected_min_qty = $vendorSelectedType->min_qty ?? '';
+        // } else {
             // print_r($typedata);
             // exit;
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
-
+// dd($typedata[0]['range']);
+// exit;
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata[0]['type_id'] ?? '';
@@ -233,6 +270,12 @@ class EcommerceController extends Controller
                     $selected_type_mrp = 00;
                     $selected_type_percent_off = 00;
                     $selected_min_qty = 00;
+                    // return response()->json([
+                    //     'message' => '"type  not found"',
+                    //     'status' => 201,
+                    //     'data' => [],
+                    //     ]
+                    // );
                 }
             } else {
                 // Handle case where 'regular_types' is empty or doesn't exist
@@ -243,12 +286,12 @@ class EcommerceController extends Controller
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
                 // return response()->json([
-                //     'message' => 'success',
+                //     'message' => '"type  not found"',
                 //     'status' => 201,
-                //     'data' => "Data not found",
+                //     'data' => [],
                 //     ]
                 // );
-            }
+            // }
 
 
         }
@@ -381,8 +424,9 @@ class EcommerceController extends Controller
         }
     }
 
-    private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang)
+    private function fetchProductTypes($product_id, $roleType, $state_id, $city_id, $lang, $type_id)
     {
+        // dd($type_id);
         // Initialize variables
         $vendorTypes = [];
         $regularTypes = [];
@@ -397,8 +441,11 @@ class EcommerceController extends Controller
                     $typeQuery->where('city_id', $city_id);
                 }
             }
-
-            $typeQuery->groupBy('type_name');
+            if ($type_id) {
+                $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
+            } else {
+                $typeQuery->groupBy('type_name');
+            }
             $vendorTypes = $typeQuery->get();
         }
 
@@ -411,8 +458,14 @@ class EcommerceController extends Controller
             if ($city_id) {
                 $typeQuery->where('city_id', $city_id);
             }
-        } else {
+            
+        } 
+        
+        else {
             $typeQuery->groupBy('type_name');
+        }
+        if($type_id){
+            $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
         }
 
         $regularTypes = $typeQuery->get(); // Get the result as a collection

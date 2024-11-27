@@ -40,6 +40,7 @@ use App\Models\Cart;
 use App\Models\User;
 
 use App\Models\Type;
+use App\Models\Type_sub;
 
 class OrderController extends Controller
 {
@@ -133,13 +134,20 @@ class OrderController extends Controller
 
         $cartItems->each(function ($cartItem) {
 
-            $type = Auth::user()->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
+            if(Auth::user()->role_type == 2){
+                $type_sub_data = Type_sub::where('type_id', $cartItem->type_id)->first();
+                // dd($type_sub_data);
+                $type = $type_sub_data;
+            }
+            else{
+                $type = $cartItem->type;
+            }
 
             if ($type) {
 
                 $cartItem->type_price = $type->selling_price;
 
-                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $type->selling_price :$cartItem->quantity * $cartItem->type_price;
+                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $cartItem->quantity * $type->selling_price :$cartItem->quantity * $cartItem->type_price;
 
                 $cartItem->save();
 
@@ -260,6 +268,7 @@ class OrderController extends Controller
         $totalwalletAmount  = 0;
 
         foreach ($cartData as $cartItem) {
+           
 
             $product = $cartItem->product;
 
@@ -272,6 +281,8 @@ class OrderController extends Controller
                 $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
 
             } 
+            // print_r($cartItem->total_qty_price);
+            // exit;
             
             $totalAmount += $cartItem->total_qty_price;
 

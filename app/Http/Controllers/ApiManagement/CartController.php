@@ -36,6 +36,7 @@ use App\Models\Type;
 use App\Models\Type_sub;
 
 use App\Models\User;
+use App\Models\Vendor;
 
 class CartController extends Controller
 {
@@ -44,11 +45,11 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'   => 'required|string',
+            'device_id'   => 'string',
             'category_id' => 'required|string|exists:ecom_categories,id',
             'product_id'  => 'required|string|exists:ecom_products,id',
             'type_id'     => 'required|string',
-            'type_price'  => 'required|numeric',
+            'type_price'  => 'numeric',
             'cart_from'   => 'required|string',
             'quantity'    => 'required|integer|min:1'
         ];
@@ -61,8 +62,10 @@ class CartController extends Controller
         if ($userDetails) {
             $device_id = $userDetails->device_id;
             $user_id = $userDetails->id;
+            $role_type = $userDetails->role_type;
         }
     }
+   
 
         if ($user_id == null && ($user_id && $userDetails->role_type == 2)) {
 
@@ -72,15 +75,16 @@ class CartController extends Controller
 
         $user = $user_id;
 
-        $typePrice = $request->type_price;
+        // $typePrice = $request->type_price;
 
         $typeId = $request->type_id;
 
         // dd($user);
+      
         if ($user && $userDetails->role_type == 2) {
 
-            if(isset($request->where) == 'cartdetails'){
-
+            if($userDetails->role_type == 2){
+             
                 $type = VendorType::find($typeId);
                 
             
@@ -89,13 +93,14 @@ class CartController extends Controller
                 $Rtype = Type::find($typeId);
 
                 
-                $type = VendorType::where('product_id', $Rtype->product_id)
+                $type =Type::where('product_id', $Rtype->product_id)
                     ->where('type_name', $Rtype->type_name)
                     ->first();
 
 
             }
-
+       
+              
             if (!$type) {
                 return response()->json(['success' => false, 'message' => "Type not found."]);
             }
@@ -106,17 +111,40 @@ class CartController extends Controller
             }}
 
             // if ($request->quantity > $type->start_range && $request->quantity < $type->end_range ) {
-
+                // echo $request->quantity;
+                // exit;
+                if($userDetails->role_type == 2){
             $filteredType = VendorType::join('type_subs', 'vendor_types.id', '=', 'type_subs.type_id')
             ->where('vendor_types.product_id', $request->product_id)
             ->where('vendor_types.type_name', $type->type_name)
             ->where('type_subs.start_range', '<=', $request->quantity)
             ->where('type_subs.end_range', '>=', $request->quantity)
-            ->select('vendor_types.*', 'type_subs.start_range', 'type_subs.end_range') // Select relevant columns
+            ->select('vendor_types.*', 'type_subs.*') // Select relevant columns
             ->first();
-    
-                $typePrice = $filteredType ? $filteredType->selling_price : $typePrice;
-                $typeId = $filteredType ? $filteredType->id : $typeId;
+    // dd($filteredType);
+  
+   
+                // $typePrice = $filteredType ? $filteredType->selling_price : "";
+                if ($filteredType) {
+                 
+                    $typePrice = $filteredType->selling_price;
+                } else {
+                    $typePrice = "";
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Price not found for the selected type.',
+                    ], 200); // 404 Not Found
+                    exit;
+                }
+            }
+            else{
+        $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
+        $typePrice = $ty1->selling_price;
+        // print_r($typePrice);
+        // exit;
+                
+            }
+                // $typeId = $filteredType ? $filteredType->id : $typeId;
 
             // }else{
 
@@ -126,8 +154,37 @@ class CartController extends Controller
 
         } else {
             if($role_type == 1){
+                $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
+                // dd($ty1);
+                if(!empty($ty1)){
+                    $typePrice = $ty1->selling_price;
+                  
+                }
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
+        
         }}
+
+        if(empty($userDetails->role_type)){
+         
+       
+            $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
+            // dd($ty1);
+            if(!empty($ty1)){
+                $typePrice = $ty1->selling_price;
+              
+            }
+            else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Type not found.',
+                ], 200);
+            }
+            // print_r($typeId);
+            // exit;
+
+        }
+
+     
 
         $validator = Validator::make($request->all(),  $rules);
 
@@ -136,10 +193,12 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
-        $data = $request->only(['device_id', 'user_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+        $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+
 
         $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
+   
 
         $data['type_price'] = $typePrice;
 
@@ -154,10 +213,10 @@ class CartController extends Controller
         // Handle backup in CartOld
         $backupCartItem = CartOld::where('product_id', $data['product_id'])
                          ->where(function($query) use ($data, $request) {
-                             $query->where('device_id', $data['device_id']);
-
-                             if (!empty($request->user_id)) {
-                                 $query->orWhere('user_id', $request->user_id);
+                             $query->orWhere('user_id', $request->user_id);
+                             
+                             if (!empty($request->device_id)) {
+                                 $query->where('device_id', $data['device_id']);
                              }
                          })
                          ->first();
@@ -248,8 +307,7 @@ class CartController extends Controller
     {
 
         $rules = [
-            'device_id'       => 'required|string',
-            'user_id'         => 'nullable|integer|exists:users,id',
+            'device_id'       => 'string',
             'lang'            => 'required|string',
             'input_promocode' => 'nullable|string|exists:promocodes,promocode',
             'address_id'      => 'nullable|integer|exists:user_address,id',
@@ -271,7 +329,12 @@ class CartController extends Controller
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $user = User::where('auth', $auth_token)->first();
-            $user_id =  $user->id;
+            if(!empty($user)){
+                $user_id =  $user->id;
+                $user_device_id =  $user->device_id;
+                $updatedRows = Cart::where('device_id', $user_device_id)
+                ->update(['user_id' => $user_id]);
+            }
         }
 
         if($user_id != null){
@@ -289,7 +352,6 @@ class CartController extends Controller
         }
 
         $device_id       = $request->input('device_id');
-      
         $lang            = $request->input('lang');
         $input_promocode = $request->input('input_promocode');
         $address_id      = $request->input('address_id');
@@ -297,17 +359,23 @@ class CartController extends Controller
         $city_id         = $request->input('city_id');
         $gift_card_id    = $request->input('gift_card_id');
         $wallet_status   = $request->input('wallet_status');
-
-        $cartQuery = Cart::query()
-
-        ->where(function ($query) use ($user_id, $device_id) {
-            $query->Where('device_id', $device_id)->orwhere('user_id', $user_id);
-        });
+        // $type_id         = $request->input('type_id');
+        // $qunty           = $request->input('qunty');
+        $cartQuery = Cart::query();
+        if ($request->header('Authorization')) {
+            
+            $cartQuery->where('user_id', $user_id);
+        } else {
+            // echo"hii";
+            // exit;
+            $cartQuery->where('device_id', $device_id);
+        }
+        
 
                 //   $CartData = Cart::where('user_id',$user_id)->orderBY("id","DESC")->get();
         
 
-// print_r($cartQuery);
+// dd($cartQuery->get());
 // exit;
         if($roleType == 2){
 
@@ -325,17 +393,18 @@ class CartController extends Controller
             //     });
             // }])->get();
 //             $cartItems = $cartQuery->get();
-
+// $typeId = 45;
 $cartItems = $cartQuery->with([
     'vendortype' => function ($query) use ($state_id, $city_id) {
         $query->when($state_id, function ($query) use ($state_id, $city_id) {
             $query->where('state_id', $state_id)
-                  ->where('city_id', $city_id);
-        })
-        ->with(['type_sub']); // Load the relation with type_sub
+                  ->where('city_id', $city_id);    
+        });
+         $query->with(['type_sub']); // Load the relation with type_sub
     }
 ])->get();
 $cartItems = $cartQuery->get();
+// dd($cartItems);
 
 // foreach ($cartItems as $cartItem) {
 //     // Vendortype table se data fetch karna
@@ -363,6 +432,7 @@ $cartItems = $cartQuery->get();
             
 
         }else{
+   
 
             $cartItems = $cartQuery->with(['type' => function ($query) use ($state_id, $city_id) {
                 $query->when($state_id, function ($query) use ($state_id, $city_id) {
@@ -486,7 +556,6 @@ $cartItems = $cartQuery->get();
 
                 $promocode_name       = $input_promocode;
             } else {
-
                 return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id, $promocode_name, $extra_discount, $applyPromocode->original['message'], 200);
             }
         }
@@ -520,6 +589,7 @@ $cartItems = $cartQuery->get();
 
         }
         
+// dd( $qunty);
         return $this->generateCartResponse($user_id, $roleType, $device_id, $state_id, $city_id, $lang, $deliveryCharge, $promo_discount, $promocode_id,$promocode_name, $extra_discount, 'Cart details fetched successfully.', 200, $applyGiftCard, $applyGiftCardSec, $wallet_status);
     }
 
@@ -761,7 +831,7 @@ $cartItems = $cartQuery->get();
     {
 
         if($role_type == 2){
-
+     
             $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
                 $query->where('is_active', 1)
                     ->when($stateId, function ($query, $stateId) {
@@ -811,6 +881,7 @@ $cartItems = $cartQuery->get();
         $walletDescount = 0;
         $totalwalletAmount  = 0;
 
+       
         foreach ($cartData as $cartItem) {
 
             $product = $cartItem->product;
@@ -822,11 +893,15 @@ $cartItems = $cartQuery->get();
             $comboProduct = $this->comboProduct($cartItem->type_id , $product , $lang ,$role_type);
 
             if($role_type == 2){
-
-                $typeData = $product->vendortype->map(function ($type) use ($cartItem, $lang) {
-    
+                $allRanges = [];  
+                // print_r(count($product->vendortype));
+                // exit;
+                $cart_qntry = $cartItem->quantity;
+                $typeData = $product->vendortype->map(function ($type) use ($cartItem,  $cart_qntry, $lang, &$allRanges) {
+                    // dd( $type->id);
                     $totalTypeQuantityPrice = $type->selling_price;
                     $subTypes = Type_sub::where('type_id', $type->id)
+                    
                     ->get();
                     $range = [];
                     foreach ($subTypes as $subType) {
@@ -844,6 +919,8 @@ $cartItems = $cartQuery->get();
 
                         ];
                     }
+                    $allRanges[] = $range;
+                    // dd($allRanges);
                     return [
                         'type_id' => $type->id,
                         'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
@@ -855,21 +932,30 @@ $cartItems = $cartQuery->get();
                     ];
     
                 })->toArray();
-    
-                if ($cartItem->vendortype) {
-    
-                    $totalSaveAmount += $cartItem->quantity * $cartItem->vendortype->del_mrp;
-                    
-                    $selectedType = [
-                        'type_id' => $cartItem->vendortype->id ??'',
-                        'type_name' => $lang !== "hi" ? $cartItem->vendortype->type_name ?? '' : $cartItem->vendortype->type_name_hi ?? '',
-                        'type_mrp' => $cartItem->vendortype->del_mrp,
-                        'selling_price' => $cartItem->vendortype->selling_price ??'',
-                        'min_qty' => $cartItem->vendortype->min_qty ?? 1,
-                    ];
-                } else {
+    // dd($cartItem->vendortype);
+                // if ($cartItem->vendortype) {
                     $selectedType = [];
-                }
+
+    $type_dd = Type_sub::where('type_id', $cartItem->type_id)
+    ->where('start_range', '<=',$cartItem->quantity) 
+    ->where('end_range', '>=', $cartItem->quantity)
+    ->first();
+    $vendortyp = VendorType::where('id',$cartItem->type_id)->first();
+    
+    // dd($type_dd );
+                    $totalSaveAmount += $cartItem->quantity * $type_dd->mrp;
+                    $selectedType = [
+                        'type_id' => $type_dd->type_id ??'',
+                        'type_name' => $lang !== "hi" ? $vendortyp->type_name  ?? '' : $vendortyp->type_name_hi ?? '',
+                        'type_mrp' => $type_dd->mrp ?? '',
+                        'selling_price' => $type_dd->selling_price  ??'',
+                        'min_qty' => $vendortyp->min_qty  ?? 1,
+                    ];
+                    
+                // } else {
+                
+                //     $selectedType = [];
+                // }
                 
                 $totalWeight += $cartItem->quantity * 1;
 
@@ -900,7 +986,7 @@ $cartItems = $cartQuery->get();
                 })->toArray();
     
                 if ($cartItem->type) {
-    
+                  
                     $totalSaveAmount += $cartItem->quantity * $cartItem->type->del_mrp;
                     
                     $selectedType = [

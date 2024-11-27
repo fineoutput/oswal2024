@@ -160,7 +160,7 @@
 
                                                     <td>{{ $dealer->file }}</td>
 
-                                                    <td>{{ date('j F, Y, g:i a', strtotime($dealer->date))}}</td>
+                                                    <td>{{ date('j F, Y, g:i a', strtotime($dealer->created_at))}}</td>
 
                                                 </tr>
                                                 @endforeach
