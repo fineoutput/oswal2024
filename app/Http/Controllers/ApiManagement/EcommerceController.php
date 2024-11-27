@@ -187,12 +187,46 @@ class EcommerceController extends Controller
         $wish_status = $wishlist ? 1 : 0;
         $wishlist_id = $wishlist ? $wishlist->id : null;
 
+        if($roleType==2){
+            // echo $product->id;
+            // exit;
+            // $cart = Cart::where('product_id', $product->id)->where('user_id', $user_id)->first();
+            $cart = DB::table('carts')->where('product_id', $product->id)->where('user_id', $user_id)->first();
+            // dd($cart);
+            // exit;
+
+            if ($cart) {
+                $VendorTypecart = DB::table('vendor_types')
+                    ->whereNull('deleted_at')
+                    ->where('id', $cart->type_id)
+                    ->first();
+            
+                if ($VendorTypecart) {
+                    $subTypes = DB::table('type_subs')
+                        ->where('type_id', $VendorTypecart->id)
+                        ->where('start_range', '<=', $cart->quantity)
+                        ->where('end_range', '>=', $cart->quantity)
+                        ->get();
+                        
+                }
+            }
+            // dd($subTypes[0]->selling_price);
+            //             exit;
+            $cart_type_name = $cart ? ($lang !== "hi" ? $VendorTypecart->type_name : $cart->type->type_name_hi) : '';
+            $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
+            $cart_quantity = $cart ? $cart->quantity : null;
+            $cart_total_price = $cart ? $cart->total_qty_price : null;
+            $cart_status = $cart ? 1 : 0;
+            
+        }
+        else{
         $cart = $user_id ? Cart::where('product_id', $product->id)->where('user_id', $user_id)->where('device_id', $device_id)->first() : null;
         $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
         $cart_type_price = $cart ? $cart->type_price : null;
         $cart_quantity = $cart ? $cart->quantity : null;
         $cart_total_price = $cart ? $cart->total_qty_price : null;
         $cart_status = $cart ? 1 : 0;
+        }
 
         $rating_avg = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->avg('rating');
         $rating_avg = number_format((float)$rating_avg, 1, '.', '');
