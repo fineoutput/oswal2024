@@ -333,7 +333,7 @@ class CartController extends Controller
                 $user_id =  $user->id;
                 $user_device_id =  $user->device_id;
                 $updatedRows = Cart::where('device_id', $user_device_id)
-                ->update(['device_id' => $user_device_id]);
+                ->update(['user_id' => $user_id]);
             }
         }
 
