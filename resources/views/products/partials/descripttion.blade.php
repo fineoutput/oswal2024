@@ -101,7 +101,7 @@ $isInCart = !is_null($cart);
         <div class="set_insider">
 
             <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple"
-                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                onclick="this.parentNode.querySelector('input[type=number]').stepDown();  manageCart({{ $product->id }});">
                 <i class="fas fa-minus"></i>
             </button>
 
@@ -109,7 +109,7 @@ $isInCart = !is_null($cart);
                 value="{{ $cart->quantity ?? 1 }}" type="number" max="{{ getConstant()->quantity }}" class="form-control form-control-sm carts_puts" readonly/>
 
             <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2 ripple_set"
-                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                onclick="this.parentNode.querySelector('input[type=number]').stepUp();  manageCart({{ $product->id }});">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -118,7 +118,7 @@ $isInCart = !is_null($cart);
         <!-- If product is in the cart -->
         <button type="button" class="details-btn" onclick="window.location.href='{{ route('cart.get-cart-details') }}'">View Cart <i class="fas fa-shopping-cart"></i></button>
         @else
-        <button type="button" class="details-btn" data-url="{{ route('cart.get-cart-details') }}" onclick="manageCart({{ $product->id }}), '{{ route('cart.get-cart-details') }}'">Add to Cart <i class="fas fa-shopping-cart"></i></button>
+        <button type="button" class="details-btn" data-url="{{ route('cart.get-cart-details') }}" onclick="manageCart({{ $product->id }})">Add to Cart <i class="fas fa-shopping-cart"></i></button>
         @endif
         <!-- <button type="button" class="details-btn"><i class="fa-solid fa-heart colored_icon"
                         style="color: #f20232; display:none;"></i>Add to Wishlist </button> -->
