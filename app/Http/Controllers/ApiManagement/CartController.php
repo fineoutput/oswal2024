@@ -331,6 +331,9 @@ class CartController extends Controller
             $user = User::where('auth', $auth_token)->first();
             if(!empty($user)){
                 $user_id =  $user->id;
+                $user_device_id =  $user->device_id;
+                $updatedRows = Cart::where('device_id', $user_device_id)
+                ->update(['device_id' => $user_device_id]);
             }
         }
 
