@@ -144,9 +144,9 @@
 
                                                             @if ($reward->status != 2 && $reward->status != 3)
 
-                                                            <a href="{{route('reward.status',['accepted',base64_encode($reward->id)])}}" data-toggle="tooltip" data-placement="top" title="Accepted">Accepted</a>
+                                                            <a href="{{route('reward.status',['accepted',base64_encode($reward->reward_id)])}}" data-toggle="tooltip" data-placement="top" title="Accepted">Accepted</a>
 
-                                                            <a href="{{route('reward.status',['rejected',base64_encode($reward->id)])}}" data-toggle="tooltip" data-placement="top" title="Rejected">Rejected </a>
+                                                            <a href="{{route('reward.status',['rejected',base64_encode($reward->reward_id)])}}" data-toggle="tooltip" data-placement="top" title="Rejected">Rejected </a>
                                                          
                                                             @endif
 

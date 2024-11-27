@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reward;
 use App\Models\VendorReward;
+use Illuminate\Support\Facades\DB;
 
 class RewardController extends Controller
 {
@@ -170,35 +171,18 @@ class RewardController extends Controller
     }
 
     public function accepted($status, $id, Request $request)
-
     {
-
         $id = base64_decode($id);
-
-        $admin_position = $request->session()->get('position');
-
-        $sticker =  VendorReward::find($id);
-
-        // if ($admin_position == "Super Admin") {
-
-        if ($status == "accepted") {
-
-            $sticker->status = VendorReward::STATUS_ACCEPTED;
-
+        $sticker = DB::table('vendor_rewards')->where('reward_id', $id)->first();
+        if ($sticker) {
+            $newStatus = ($status == "accepted") ? VendorReward::STATUS_ACCEPTED : VendorReward::STATUS_REJECTED;
+            DB::table('vendor_rewards')
+                ->where('reward_id', $id)
+                ->update(['status' => $newStatus]);
+            return redirect()->route('reward.applied')->with('success', 'Status Updated Successfully.');
         } else {
-
-             $sticker->status = VendorReward::STATUS_REJECTED;
+            return redirect()->route('reward.applied')->with('error', 'Reward not found.');
         }
-
-        $sticker->save();
-
-        return  redirect()->route('reward.applied')->with('success', 'Status Updated Successfully.');
-
-        // } else {
-
-        // 	return  redirect()->route('sticker.index')->with('error', "Sorry you dont have Permission to change admin, Only Super admin can change status.");
-
-        // }
 
     }
 }
