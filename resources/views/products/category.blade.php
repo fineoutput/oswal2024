@@ -19,8 +19,6 @@
         <input type="hidden" value="{{ route('getproducts', ['slug' => $categorys[0]->url , 'type' => 'category']) }}" id="category-url-route">
 
         <section class="category_banner_img d-none d-lg-block" id="category_id_banner_image" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
-        {{-- <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section> --}}
-        {{-- <section class="category_banner_img d-none d-lg-block" style="background-image: url('{{ asset($categorys[0]->image) }}');"></section> --}}
 
         <section class="category_home">
 
@@ -33,10 +31,6 @@
                         <div class="product_category_content">
 
                             <div class="category_upper_title text-center">
-
-                                <h1>All Products</h1>
-
-                                <p id="category-description">{{ $categorys[0]->long_desc }}</p>
 
                             </div>
 
@@ -56,25 +50,18 @@
 
                 <div class="row" style="--bs-gutter-x: 0;">
 
-                    <div class="col-lg-12 col-sm-12 col-md-12 product_category_title">
-
-                        <h2>Products</h2>
-
-                        {{-- @include('products.partials.filterprice') --}}
-
-                    </div>
-
                     <div class="row" style="--bs-gutter-x: 0;">
 
                         <div class="col-lg-3 col-3">
-
+                        <h4>Products</h2>
                             <hr />
-
+                            
                             @include('products.partials.category')
-
+                            
                         </div>
-
+                        
                         <div class="col-lg-9 col-9">
+                            <h4 id="category_name">{{ $categorys[0]->name }}</h2>
 
                             <hr />
 
@@ -82,7 +69,6 @@
 
                                 <div class="col-lg-12 col-sm-12 col-md-12 product_category_title">
 
-                                    <h2 id="category_name">{{ $categorys[0]->name }}</h2>
 
                                     <div class="price_select">
 

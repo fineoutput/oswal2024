@@ -359,8 +359,8 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </div>
 
             </div> -->
-            <div class="choose_promo_code_sect_tin d-flex justify-content-between">
-                <p id="selectedPromoCode">Select Promo Code</p>
+            <div class="choose_promo_code_sect_tin d-flex justify-content-center">
+                <!-- <p id="selectedPromoCode">Select Promo Code</p> -->
                 <!-- Button to trigger modal -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#promoModal">
                     Choose Promo Code

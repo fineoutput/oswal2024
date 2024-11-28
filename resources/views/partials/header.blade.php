@@ -351,7 +351,7 @@
                                 <!-- <li><a class="dropdown-item" href="#">Login</a></li> -->
                                 @auth
 
-                                <li><a class="dropdown-item" href="{{ url('/user') }}">dashBoard</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/user') }}">Profile</a></li>
 
                                 {{--
                                 <li><a class="dropdown-item" href="{{ url('/user') }}">Account</a></li>
