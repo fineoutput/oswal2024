@@ -943,7 +943,8 @@ $cartItems = $cartQuery->get();
     $vendortyp = VendorType::where('id',$cartItem->type_id)->first();
     
     // dd($type_dd );
-                    $totalSaveAmount += $cartItem->quantity * $type_dd->mrp;
+                    // $totalSaveAmount += $cartItem->quantity * $type_dd->mrp;
+                    $totalSaveAmount += ($cartItem->quantity ?? 0) * ($type_dd->mrp ?? 0);
                     $selectedType = [
                         'type_id' => $type_dd->type_id ??'',
                         'type_name' => $lang !== "hi" ? $vendortyp->type_name  ?? '' : $vendortyp->type_name_hi ?? '',
