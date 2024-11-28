@@ -101,6 +101,7 @@
                                                     <th data-priority="3">Referral Code</th>
 
                                                     <th data-priority="3">Wallet Amount</th>
+                                                    <th data-priority="5">Date</th>
 
                                                     <th data-priority="6">Status</th>
 
@@ -123,6 +124,13 @@
                                                     <td>{{ $user->referral_code }}</td>
 
                                                     <td>{{ $user->wallet_amount }}</td>
+
+                                                    <td>
+                                                    @php
+                                                    $newDate = \Carbon\Carbon::parse($user->created_at);
+                                                @endphp
+                                                {{ $newDate->format('j F, Y, g:i a') }}
+                                            </td>
 
                                                     <td> 
                                                         @if($user->is_active == 1)  
