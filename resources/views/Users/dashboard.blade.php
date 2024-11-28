@@ -149,7 +149,7 @@
         <label for="4-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
         <input type="radio" {{ $selectedRating == 3 ? 'checked' : '' }} id="3-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="3"  />
         <label for="3-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-        <input type="radio" {{ $selectedRating == 2 ? 'checked' : '' }} id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" checked />
+        <input type="radio" {{ $selectedRating == 2 ? 'checked' : '' }} id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" />
         <label for="2-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
         <input type="radio" {{ $selectedRating == 1 ? 'checked' : '' }} id="1-star{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}"  value="1" />
         <label for="1-star{{ $order['order_id'] }}" class="star">&#9733;</label>
