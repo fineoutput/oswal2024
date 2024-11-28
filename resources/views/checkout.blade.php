@@ -436,7 +436,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 <input type="hidden" name="order_id" value="{{$orderdetails->id}}">
 
-                <div class="mt-2 order_review mb-2 p-3" style="margin-bottom: 10px; padding: 10px 30px; padding-bottom: 0px !important;" id="wallet_div">
+                <div class="mt-2 order_review mb-2 p-3" style="margin-bottom: 10px; padding: 10px 30px; padding-bottom: 0px !important; border:2px dashed #d71828" id="wallet_div">
 
                     <div class="form-group-1" style="margin-bottom: 15px;">
 
