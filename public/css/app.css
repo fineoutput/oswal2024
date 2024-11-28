@@ -2137,6 +2137,7 @@ canvas {
   background-size: cover;
   background-repeat: no-repeat;
   height: 50vh;
+  box-shadow: -2px 2px 20px 0px #0000004d;
 }
 
 .product_category_title {
