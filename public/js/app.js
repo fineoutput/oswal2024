@@ -357,9 +357,8 @@ document.addEventListener("DOMContentLoaded", function () {
         button.classList.add("sticky-button");
         button.classList.remove("hidden-button");
       } else {
-        // Scrolling up
-        button.classList.remove("sticky-button");
-        button.classList.add("hidden-button");
+        // Scrolling up - Don't hide the button
+        // No action here, so button remains sticky
       }
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     } else {
@@ -375,6 +374,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
 
 
 ///////////////////Instagram Slide///////////
