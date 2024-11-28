@@ -22,29 +22,35 @@
         padding: 5px;
         color: #000;
     }
+
     .gift-card-content {
-    background-color: #fb000052 !important;
-    color: #333;
-    /* font-size: 24px; */
-    font-weight: bold;
-    /* padding: 20px 40px; */
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: scale(5);
-    animation: popup-effect 1s ease-in-out forwards;
-}
+        background-color: #fb000052 !important;
+        color: #333;
+        /* font-size: 24px; */
+        font-weight: bold;
+        /* padding: 20px 40px; */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transform: scale(5);
+        animation: popup-effect 1s ease-in-out forwards;
+    }
 
     /* Keyframes for the popup effect */
     @keyframes popup-effect {
-      0% {
-        transform: scale(1); /* Original size */
-      }
-      50% {
-        transform: scale(1.2); /* Enlarged size */
-      }
-      100% {
-        transform: scale(1); /* Back to original size */
-      }
+        0% {
+            transform: scale(1);
+            /* Original size */
+        }
+
+        50% {
+            transform: scale(1.2);
+            /* Enlarged size */
+        }
+
+        100% {
+            transform: scale(1);
+            /* Back to original size */
+        }
     }
 </style>
 @php
@@ -130,7 +136,14 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
             </h4>
 
-            <ul class="list-group mb-3">
+            <ul class="list-group mb-3" style="
+    height: 500px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-color: red !important;
+    scrollbar-width: thin;
+    scrollbar-color: red #fff;
+">
 
                 @foreach ($OrderDetails as $orderItem)
                 @php
@@ -192,121 +205,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 @endif
 
 
-                <li class="list-group-item d-flex justify-content-between bg-light">
 
-                    <div class="text-success">
-
-                        <h6 class="my-0"><b>Cart Total</b></h6>
-
-                    </div>
-
-                    <span class="text-success">{{ formatPrice($orderdetails->sub_total)}}</span>
-
-                </li>
-
-                <li class="list-group-item d-flex justify-content-between bg-light">
-
-                    <div class="text-danger">
-
-                        <h6 class="my-0">Shiping Charge</h6>
-
-                    </div>
-
-                    <span class="text-danger">+₹{{ $orderdetails->delivery_charge }}</span>
-
-                </li>
-
-                @if($promoStatus == 1)
-                <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                        <h6 class="my-0">Promo code</h6>
-
-                        @php
-                        $promocode = $orderdetails->promocode ? App\Models\Promocode::find($orderdetails->promocode) : null;
-                        @endphp
-
-                        <small id="promoCodeName">
-                            @if($promocode)
-                            {{ $promocode->promocode }}
-
-                            @else
-                            No promo code applied
-                            @endif
-                        </small>
-                    </div>
-
-                    <span class="text-success" id="promoCodeAmount">
-
-                        -{{ formatPrice($orderdetails->promo_deduction_amount) }}
-
-                    </span>
-
-                    <button class="btn btn-danger @unless($orderdetails->promocode) d-none @endunless" id="removpromo" onclick="removePromocode()">Remove</button>
-                </li>
-                @endif
-
-                <li class="list-group-item d-flex justify-content-between bg-light">
-
-                    <div class="text-success">
-
-                        <h6 class="my-0">Wallet Amount</h6>
-
-                    </div>
-
-                    <span class="text-success" id="discountWalletAmount"> -{{formatPrice($orderdetails->extra_discount) }} </span>
-
-                </li>
-
-                @if($giftCardStatus == 1)
-
-                <li class="list-group-item d-flex justify-content-between bg-light">
-
-                    <div class="text-success">
-
-                        <h6 class="my-0">Gift Card</h6>
-
-                        @php
-                        $giftCard = $orderdetails->gift_id ? App\Models\GiftCard::find($orderdetails->gift_id) : null;
-                        @endphp
-
-                        <small id="giftCardName">
-                            @if($giftCard)
-                            {{ $giftCard->name }}
-                            @else
-                            No Gift Card applied
-                            @endif
-                        </small>
-                    </div>
-
-                    <span class="text-success" id="GiftCardAmount">
-
-                        +{{ formatPrice($orderdetails->gift_amt) }}
-
-                    </span>
-
-                    <!-- <button class="btn btn-danger @unless($orderdetails->gift_id) d-none @endunless" id="removegiftCard" onclick="removeGiftCard()">Remove</button> -->
-                </li>
-                @endif
-
-                <li class="list-group-item d-flex justify-content-between bg-light d-none" id="CodCaharges">
-
-                    <div class="text-danger">
-
-                        <h6 class="my-0">COD Charges</h6>
-
-                    </div>
-
-                    <span class="text-danger" id='codChargeAmount'> </span>
-
-                </li>
-
-                <li class="list-group-item d-flex justify-content-between">
-                    <hr>
-                    <span><b>Total (INR)</b></span>
-
-                    <strong id="totalorderAmount">{{formatPrice($orderdetails->total_amount + getConstant()->cod_charge)}}</strong>
-
-                </li>
 
             </ul>
 
@@ -319,7 +218,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                     <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
 
                 </div>
-                
+
             </div>
 
             <div class="gift-card-list" id="giftCardList">
@@ -465,7 +364,123 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </div>
 
                 <hr class="mb-4" />
+                <ul>
+                    <li class="list-group-item d-flex justify-content-between bg-light">
 
+                        <div class="text-success">
+
+                            <h6 class="my-0"><b>Cart Total</b></h6>
+
+                        </div>
+
+                        <span class="text-success">{{ formatPrice($orderdetails->sub_total)}}</span>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+
+                        <div class="text-danger">
+
+                            <h6 class="my-0">Shiping Charge</h6>
+
+                        </div>
+
+                        <span class="text-danger">+₹{{ $orderdetails->delivery_charge }}</span>
+
+                    </li>
+
+                    @if($promoStatus == 1)
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0">Promo code</h6>
+
+                            @php
+                            $promocode = $orderdetails->promocode ? App\Models\Promocode::find($orderdetails->promocode) : null;
+                            @endphp
+
+                            <small id="promoCodeName">
+                                @if($promocode)
+                                {{ $promocode->promocode }}
+
+                                @else
+                                No promo code applied
+                                @endif
+                            </small>
+                        </div>
+
+                        <span class="text-success" id="promoCodeAmount">
+
+                            -{{ formatPrice($orderdetails->promo_deduction_amount) }}
+
+                        </span>
+
+                        <button class="btn btn-danger @unless($orderdetails->promocode) d-none @endunless" id="removpromo" onclick="removePromocode()">Remove</button>
+                    </li>
+                    @endif
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+
+                        <div class="text-success">
+
+                            <h6 class="my-0">Wallet Amount</h6>
+
+                        </div>
+
+                        <span class="text-success" id="discountWalletAmount"> -{{formatPrice($orderdetails->extra_discount) }} </span>
+
+                    </li>
+
+                    @if($giftCardStatus == 1)
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+
+                        <div class="text-success">
+
+                            <h6 class="my-0">Gift Card</h6>
+
+                            @php
+                            $giftCard = $orderdetails->gift_id ? App\Models\GiftCard::find($orderdetails->gift_id) : null;
+                            @endphp
+
+                            <small id="giftCardName">
+                                @if($giftCard)
+                                {{ $giftCard->name }}
+                                @else
+                                No Gift Card applied
+                                @endif
+                            </small>
+                        </div>
+
+                        <span class="text-success" id="GiftCardAmount">
+
+                            +{{ formatPrice($orderdetails->gift_amt) }}
+
+                        </span>
+
+                        <!-- <button class="btn btn-danger @unless($orderdetails->gift_id) d-none @endunless" id="removegiftCard" onclick="removeGiftCard()">Remove</button> -->
+                    </li>
+                    @endif
+
+                    <li class="list-group-item d-flex justify-content-between bg-light d-none" id="CodCaharges">
+
+                        <div class="text-danger">
+
+                            <h6 class="my-0">COD Charges</h6>
+
+                        </div>
+
+                        <span class="text-danger" id='codChargeAmount'> </span>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        <hr>
+                        <span><b>Total (INR)</b></span>
+
+                        <strong id="totalorderAmount">{{formatPrice($orderdetails->total_amount + getConstant()->cod_charge)}}</strong>
+
+                    </li>
+                </ul>
                 <h4 class="mb-3">Payment</h4>
 
                 <div class="payment_method" style="padding: 0px 13px; margin-bottom: 0px;">
@@ -530,7 +545,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 <hr class="mb-4" />
 
-                <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button   " onclick="placeOrder()"><span>Place Order</span> <span></span></button>
+                <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
 
                 {{-- <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none" style="bottom: 0 !important;">
 
