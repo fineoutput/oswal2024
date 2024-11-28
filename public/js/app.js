@@ -186,14 +186,22 @@ function manageCart(productId) {
   document.getElementById(`mob_quantity-section${productId}`).style.display = 'flex';
 
   // Update the button to "View Cart"
-  const button = document.querySelector(`#addtocart${productId} .details-btn`);
-    button.innerHTML = 'View Cart <i class="fas fa-shopping-cart"></i>';
-    const cartUrl = button.getAttribute('data-url');
-    button.onclick = () => {
-        window.location.href = cartUrl; // Use the passed route
-    };
+  // const button = document.querySelector(`#addtocartforview${productId}`);
+  //   button.innerHTML = 'View Cart <i class="fas fa-shopping-cart"></i>';
+  //   const cartUrl = button.getAttribute('data-url');
+  //   button.onclick = () => {
+  //       window.location.href = cartUrl; // Use the passed route
+  //   };
   // Increment by default when "Add to Cart" is clicked
   increment(productId);
+}
+function anotherFunction(productId) {
+  const button = document.querySelector(`#addtocartforview${productId}`);
+  button.innerHTML = 'View Cart <i class="fas fa-shopping-cart"></i>'; // Update button text
+  const cartUrl = button.getAttribute('data-url'); // Get URL from data attribute
+  button.onclick = () => {
+      window.location.href = cartUrl; // Redirect to the cart URL
+  };
 }
 
 // Function to handle updating the cart (like making API calls to update cart)
