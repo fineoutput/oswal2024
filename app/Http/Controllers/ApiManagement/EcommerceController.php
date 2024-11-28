@@ -207,16 +207,28 @@ class EcommerceController extends Controller
                         ->where('start_range', '<=', $cart->quantity)
                         ->where('end_range', '>=', $cart->quantity)
                         ->get();
-                        
+                        $cart_type_name = $VendorTypecart ? ($lang !== "hi" ? $VendorTypecart->type_name : $VendorTypecart->type_name_hi) : '';
+                        $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
+                        $cart_quantity = $cart ? $cart->quantity : null;
+                        $cart_total_price = $cart ? $cart->total_qty_price : null;
+                        $cart_status = $cart ? 1 : 0;   
                 }
+                else{
+                    $cart_type_name =  null;
+            $cart_type_price =  null;
+            $cart_quantity =  null;
+            $cart_total_price = null;
+            $cart_status = $cart ? 1 : 0;
+                }
+        
             }
             // dd($subTypes[0]->selling_price);
             //             exit;
-            $cart_type_name = $cart ? ($lang !== "hi" ? $VendorTypecart->type_name : $cart->type->type_name_hi) : '';
-            $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
-            $cart_quantity = $cart ? $cart->quantity : null;
-            $cart_total_price = $cart ? $cart->total_qty_price : null;
-            $cart_status = $cart ? 1 : 0;
+            // $cart_type_name = $VendorTypecart ? ($lang !== "hi" ? $VendorTypecart->type_name : $VendorTypecart->type_name_hi) : '';
+            // $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
+            // $cart_quantity = $cart ? $cart->quantity : null;
+            // $cart_total_price = $cart ? $cart->total_qty_price : null;
+            // $cart_status = $cart ? 1 : 0;
             
         }
         else{
