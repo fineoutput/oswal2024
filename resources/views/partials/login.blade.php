@@ -31,7 +31,7 @@
 
                                 <h2>Sign In</h2>
 
-                                <input type="number" id="phone_no" name="phone_no" placeholder="Phone" />
+                                <input type="number" id="phone_no" name="phone_no" placeholder="Phone"  maxlength="10" oninput="if(this.value.length > 10) this.value = this.value.slice(0, 10);"  />
                         
                                 <p class="error" id="lphone_no" style="color: red; margin-left: 8px;"></p>
                              
@@ -419,5 +419,6 @@
             sotpError.textContent = 'Please enter your OTP.';
         }
     }
+
 
 </script>

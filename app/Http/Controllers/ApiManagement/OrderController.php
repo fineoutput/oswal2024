@@ -337,6 +337,10 @@ class OrderController extends Controller
 
         $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
 
+        $wallet_constants = DB::table('constants')->first();
+        
+
+        $reponse['wallet_per']  = $wallet_constants->wallet_use_amount;
         $reponse['wallet_discount']  = $walletDescount;
         $reponse['promoStatus']  = $promoStatus == 1 ? 'Active' : 'Inactive';
         $reponse['giftCardStatus']  = $giftCardStatus ==1 ? 'Active' : 'Inactive';
