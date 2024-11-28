@@ -252,7 +252,7 @@ class EcommerceController extends Controller
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
-// dd($typedata[0]['min_qty']);
+// dd($typedata[0]['range']);
 // exit;
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
@@ -261,7 +261,7 @@ class EcommerceController extends Controller
                     $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
-                    $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    $selected_min_qty = $vendorSelectedType->min_qty ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     $selected_type_id = '';
