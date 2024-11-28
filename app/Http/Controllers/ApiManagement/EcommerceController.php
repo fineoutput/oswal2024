@@ -207,16 +207,28 @@ class EcommerceController extends Controller
                         ->where('start_range', '<=', $cart->quantity)
                         ->where('end_range', '>=', $cart->quantity)
                         ->get();
-                        
+                        $cart_type_name = $VendorTypecart ? ($lang !== "hi" ? $VendorTypecart->type_name : $VendorTypecart->type_name_hi) : '';
+                        $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
+                        $cart_quantity = $cart ? $cart->quantity : null;
+                        $cart_total_price = $cart ? $cart->total_qty_price : null;
+                        $cart_status = $cart ? 1 : 0;   
                 }
+                
+            }
+            else{
+                $cart_type_name =  '';
+        $cart_type_price =  null;
+        $cart_quantity =  null;
+        $cart_total_price = null;
+        $cart_status = $cart ? 1 : 0;
             }
             // dd($subTypes[0]->selling_price);
             //             exit;
-            $cart_type_name = $cart ? ($lang !== "hi" ? $VendorTypecart->type_name : $cart->type->type_name_hi) : '';
-            $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
-            $cart_quantity = $cart ? $cart->quantity : null;
-            $cart_total_price = $cart ? $cart->total_qty_price : null;
-            $cart_status = $cart ? 1 : 0;
+            // $cart_type_name = $VendorTypecart ? ($lang !== "hi" ? $VendorTypecart->type_name : $VendorTypecart->type_name_hi) : '';
+            // $cart_type_price = $cart ? $subTypes[0]->selling_price : null;
+            // $cart_quantity = $cart ? $cart->quantity : null;
+            // $cart_total_price = $cart ? $cart->total_qty_price : null;
+            // $cart_status = $cart ? 1 : 0;
             
         }
         else{
@@ -252,7 +264,7 @@ class EcommerceController extends Controller
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
-// dd($typedata[0]['range']);
+// dd($typedata[0]['min_qty']);
 // exit;
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
@@ -261,7 +273,7 @@ class EcommerceController extends Controller
                     $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
-                    $selected_min_qty = $vendorSelectedType->min_qty ?? '';
+                    $selected_min_qty = $typedata[0]['min_qty'] ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     $selected_type_id = '';
