@@ -46,6 +46,14 @@
 .star-rating1 label:hover{
     cursor: pointer !important;
 }
+.star-rating.read-only label:hover,
+.star-rating.read-only label:hover ~ label {
+  cursor: default; /* Disable pointer */
+  color: inherit; /* Keep the current color */
+}
+.star-rating.read-only label {
+  pointer-events: none; /* Disable hover effect */
+}
 </style>
 <div class="container-fluid">
 
@@ -141,19 +149,19 @@
 @if($order['order_status']=='Delivered')
     
     @if($selectedRating !== null)
-    <div class="star-rating"  style="font-size: 1.5em;">
-        <input type="hidden" name="order_id" value="{{ $order['order_id'] }}">
-        <input type="radio" id="5-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" {{ $selectedRating == 5 ? 'checked' : '' }} value="5" />
-        <label for="5-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-        <input type="radio" {{ $selectedRating == 4 ? 'checked' : '' }} id="4-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="4" />
-        <label for="4-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-        <input type="radio" {{ $selectedRating == 3 ? 'checked' : '' }} id="3-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="3"  />
-        <label for="3-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-        <input type="radio" {{ $selectedRating == 2 ? 'checked' : '' }} id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" />
-        <label for="2-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-        <input type="radio" {{ $selectedRating == 1 ? 'checked' : '' }} id="1-star{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}"  value="1" />
-        <label for="1-star{{ $order['order_id'] }}" class="star">&#9733;</label>
-    </div>
+    <div class="star-rating {{ $selectedRating !== null ? 'read-only' : '' }}" style="font-size: 1.5em;">
+    <input type="hidden" name="order_id" value="{{ $order['order_id'] }}">
+    <input type="radio" id="5-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" {{ $selectedRating == 5 ? 'checked' : '' }} value="5" />
+    <label for="5-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 4 ? 'checked' : '' }} id="4-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="4" />
+    <label for="4-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 3 ? 'checked' : '' }} id="3-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="3" />
+    <label for="3-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 2 ? 'checked' : '' }} id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" />
+    <label for="2-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 1 ? 'checked' : '' }} id="1-star{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="1" />
+    <label for="1-star{{ $order['order_id'] }}" class="star">&#9733;</label>
+</div>  
     @else
     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#ratingModal{{ $order['order_id'] }}">
         Rating
@@ -173,19 +181,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="star-rating">
-                    <input type="hidden" name="order_id" value="{{ $order['order_id'] }}">
-                    <input type="radio" id="5-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" {{ $selectedRating == 5 ? 'checked' : '' }} value="5" />
-                    <label for="5-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-                    <input type="radio" {{ $selectedRating == 4 ? 'checked' : '' }} id="4-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="4" />
-                    <label for="4-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-                    <input type="radio" {{ $selectedRating == 3 ? 'checked' : '' }} id="3-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="3"  />
-                    <label for="3-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-                    <input type="radio" {{ $selectedRating == 2 ? 'checked' : '' }} id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" />
-                    <label for="2-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
-                    <input type="radio" {{ $selectedRating == 1 ? 'checked' : '' }} id="1-star{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}"  value="1" />
-                    <label for="1-star{{ $order['order_id'] }}" class="star">&#9733;</label>
-                </div>
+            <div class="star-rating {{ $selectedRating !== null ? 'read-only' : '' }}" style="font-size: 1.5em;">
+    <input type="hidden" name="order_id" value="{{ $order['order_id'] }}">
+    <input type="radio" id="5-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" {{ $selectedRating == 5 ? 'checked' : '' }} value="5" />
+    <label for="5-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 4 ? 'checked' : '' }} id="4-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="4" />
+    <label for="4-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 3 ? 'checked' : '' }} id="3-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="3" />
+    <label for="3-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 2 ? 'checked' : '' }} id="2-stars{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="2" />
+    <label for="2-stars{{ $order['order_id'] }}" class="star">&#9733;</label>
+    <input type="radio" {{ $selectedRating == 1 ? 'checked' : '' }} id="1-star{{ $order['order_id'] }}" name="rating{{ $order['order_id'] }}" value="1" />
+    <label for="1-star{{ $order['order_id'] }}" class="star">&#9733;</label>
+</div>
                 <div class="form-group mt-2" style="
     width: 100%;
     text-align: center;
