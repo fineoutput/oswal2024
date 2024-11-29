@@ -2134,7 +2134,7 @@ canvas {
 .category_banner_img {
   background-image: url(images/category_banner.jpg);
   background-position: center;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   height: 50vh;
   box-shadow: -2px 2px 20px 0px #0000004d;

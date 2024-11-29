@@ -13,13 +13,21 @@
 
         $products = sendProduct($categorys[0]->id, false, false, $hot , false, false, false, 6);
     @endphp
-
+<style>
+    .aadddd{
+        background-position: center;
+        background-size: cover;
+        background-repeat:no-repeat;
+    }
+</style>
     <section class="category_main">
 
         <input type="hidden" value="{{ route('getproducts', ['slug' => $categorys[0]->url , 'type' => 'category']) }}" id="category-url-route">
 
-        <section class="category_banner_img d-none d-lg-block sticky-top" id="category_id_banner_image" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
+        <section class="aadddd sticky-top" style="background-image: url('{{ asset('images/dir.jpg') }}');">
+        <section class="category_banner_img d-none d-lg-block" id="category_id_banner_image" style="background-image: url('{{ asset('images/category_banner.jpg') }}');"></section>
 
+        </section>
         <section class="category_home">
 
             <div class="container">
