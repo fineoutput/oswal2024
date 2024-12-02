@@ -853,45 +853,93 @@ $cartItems = $cartQuery->get();
 
         }else{
             
-            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
-                $query->where('is_active', 1)
-                    ->when($stateId, function ($query, $stateId) {
-                        return $query->where('state_id', $stateId);
-                    })
-                    ->when($cityId, function ($query, $cityId) {
-                        return $query->where('city_id', $cityId);
-                    })
-                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                        return $query->groupBy('type_name');
-                    });
-            }])
+            // $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
+            //     $query->where('is_active', 1)
+            //         ->when($stateId, function ($query, $stateId) {
+            //             return $query->where('state_id', $stateId);
+            //         })
+            //         ->when($cityId, function ($query, $cityId) {
+            //             return $query->where('city_id', $cityId);
+            //         })
+            //         ->when(is_null($stateId) || is_null($cityId), function ($query) {
+            //             return $query->groupBy('type_name');
+            //         });
+            // }])
     
-            ->where(function ($query) use ($userId, $deviceId) {
-                $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
-            })
+            // ->where(function ($query) use ($userId, $deviceId) {
+            //     $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
+            // })
     
-            ->get();
-    //         $cartData = DB::table('carts')
-    // ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id')
-    // ->join('types', 'carts.type_id', '=', 'types.id')
-    // ->where(function ($query) use ($userId, $deviceId) {
-    //     $query->where('carts.device_id', $deviceId)
-    //           ->orWhere('carts.user_id', $userId);
-    // })
-    // ->where('types.is_active', 1)
-    // ->when($stateId, function ($query) use ($stateId) {
-    //     return $query->where('types.state_id', $stateId);
-    // })
-    // ->when($cityId, function ($query) use ($cityId) {
-    //     return $query->where('types.city_id', $cityId);
-    // })
-    // ->when(is_null($stateId) || is_null($cityId), function ($query) {
-    //     return $query->groupBy('types.type_name');
-    // })
-    // ->select('carts.*', 'ecom_products.*', 'types.*')  // Adjust based on the columns you want
-    // ->get();
+            // ->get();
+
+
+
+            $CartData2 = Cart::whereNull('deleted_at');
+
+            if ($userId) {
+                $CartData2 = $CartData2->where(function($query) use ($userId, $deviceId) {
+                    $query->where('user_id', $userId)
+                          ->orWhere('device_id', $deviceId);
+                });
+            }
+            
+            $CartData2 = $CartData2->get(); // Fetch the cart data
+            // Initialize array
+        $CartNew = [];
+        foreach($CartData2 as $cd_data){
+             // Create a custom object for each cart item
+            $cartItem = new \stdClass();
+
+             // Add cart data to the object
+                // Add all cart data to the cartItem object
+                foreach ($cd_data->getAttributes() as $key => $value) {
+                    $cartItem->$key = $value; // Dynamically add all attributes of $cd_data to $cartItem
+                }
+
+            $productData = EcomProduct::where('id', $cd_data->product_id)->first();
+
+            if ($productData) {
+                // Fetch type data using type_id from product
+               
+                $typeData = Type::where('product_id', $productData->id);
+                                if ($stateId) {
+                                    $typeData->where('state_id', $stateId); // Check state_id
+                                }
+                                if ($cityId) {
+                                    $typeData->where('city_id', $cityId); // Check state_id
+                                }
+                                $typeData->groupBy('type_name');
+                              // Fetch the results
+                    $typeData = $typeData->get();
+        
+                // Add type data inside product array
+                 // Add product data to the object
+                $cartItem->product = $productData;
+                $cartItem->product->type = $typeData;
+
+                $typeDataSelected = Type::whereNull('deleted_at')->where('id', $cd_data->type_id)->first();
+                              // Fetch the results
+                $cartItem->type = $typeDataSelected;
+                        
+                // dd($cartItem->type);
+                // $productArray = $productData->toArray();
+                // $productArray['type'] = $typeData ? $typeData->toArray() : null;
+            } else {
+                $cartItem->product = null;
+            }
+
+              // Add product data directly inside the cart entry
+                // $cartEntry = $cd_data->toArray();
+                // $cartEntry['product'] = $productArray;
+
+            // Add updated cart entry to the CartNew array
+             $cartData[] = $cartItem;
+           
+        }
 
         }
+
+        
         
         $totalWeight = 0;
         $totalAmount = 0;
