@@ -860,10 +860,10 @@ $cartItems = $cartQuery->get();
                     })
                     ->when($cityId, function ($query, $cityId) {
                         return $query->where('city_id', $cityId);
-                    })
-                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                        return $query->groupBy('type_name');
                     });
+                    // ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                    //     return $query->groupBy('type_name');
+                    // });
             }])
     
             ->where(function ($query) use ($userId, $deviceId) {
@@ -871,6 +871,26 @@ $cartItems = $cartQuery->get();
             })
     
             ->get();
+    //         $cartData = DB::table('carts')
+    // ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id')
+    // ->join('types', 'carts.type_id', '=', 'types.id')
+    // ->where(function ($query) use ($userId, $deviceId) {
+    //     $query->where('carts.device_id', $deviceId)
+    //           ->orWhere('carts.user_id', $userId);
+    // })
+    // ->where('types.is_active', 1)
+    // ->when($stateId, function ($query) use ($stateId) {
+    //     return $query->where('types.state_id', $stateId);
+    // })
+    // ->when($cityId, function ($query) use ($cityId) {
+    //     return $query->where('types.city_id', $cityId);
+    // })
+    // ->when(is_null($stateId) || is_null($cityId), function ($query) {
+    //     return $query->groupBy('types.type_name');
+    // })
+    // ->select('carts.*', 'ecom_products.*', 'types.*')  // Adjust based on the columns you want
+    // ->get();
+
         }
         
         $totalWeight = 0;
