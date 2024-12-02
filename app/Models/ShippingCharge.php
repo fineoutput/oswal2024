@@ -29,6 +29,7 @@ class ShippingCharge extends Model
         'date',
         'added_by',
         'is_active',
+        'deleted_at',
     ];
 
     public function state()
