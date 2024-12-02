@@ -649,7 +649,7 @@ if(! function_exists('getLatLngFromAddress')){
             return ['latitude' => $latitude, 'longitude' => $longitude];
 
         } else {
-
+        Log::info("Google Location Response: " . $response);
             return false; 
             
         }
