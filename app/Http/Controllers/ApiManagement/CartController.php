@@ -860,10 +860,10 @@ $cartItems = $cartQuery->get();
                     })
                     ->when($cityId, function ($query, $cityId) {
                         return $query->where('city_id', $cityId);
-                    })
-                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                        return $query->groupBy('type_name');
                     });
+                    // ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                    //     return $query->groupBy('type_name');
+                    // });
             }])
     
             ->where(function ($query) use ($userId, $deviceId) {
