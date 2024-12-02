@@ -171,11 +171,16 @@ class AppController extends Controller
 
         $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name . " " . $city->state->state_name . " " . $request->zipcode . " " . 'India';
 
-        if (!getLatLngFromAddress($custom_address)) {
-            return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
-        }
+        // $location = getLatLngFromAddress($custom_address);
 
-        $location = getLatLngFromAddress($custom_address);
+        // if (!getLatLngFromAddress($custom_address)) {
+        //     $live_location = "not able to get from google";
+        //     // return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
+        // }
+        // else{
+        //     $live_location =
+        // }
+
 
         $addressData = [
             'user_id'          =>  auth()->id(),
@@ -186,8 +191,8 @@ class AppController extends Controller
             'state'            => strval($state_id),
             'zipcode'          => $request->zipcode,
             'address'          => $request->address,
-            'latitude'         => $location['latitude'],
-            'longitude'        => $location['longitude'],
+            'latitude'         => $request->latitude,
+            'longitude'        => $request->longitude,
             'location_address' => $request->location_address,
             'date'             => now()->setTimezone('Asia/Calcutta')->toDateTimeString(),
         ];
