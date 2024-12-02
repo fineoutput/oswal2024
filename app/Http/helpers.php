@@ -244,7 +244,7 @@ if (!function_exists('sendOtpSms')) {
             Log::error("cURL Error #:" . $err);
         } else {
             // Process the response if needed
-            Log::info("cURL Response: " . $response);
+            // Log::info("cURL Response: " . $response);
         }
     }
 }
