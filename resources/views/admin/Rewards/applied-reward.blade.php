@@ -110,14 +110,15 @@
                                             </thead>
 
                                             <tbody>
+                                               
 
                                                 @foreach ($rewards as $key => $reward)
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
 
-                                                    <td>{{ $reward->vendor->first_name }}</td>
+                                                    <td>{{ $reward->vendor ? $reward->vendor->first_name : '' }}</td>
 
-                                                    <td>{{ $reward->reward_name }}</td>
+                                                    <td>{{ $reward->reward_name ?? '' }}</td>
 
                                                     <td>
 
@@ -126,7 +127,8 @@
                                                         @endif 
 
                                                    </td>
-                                                   <td>{{ formatWeight($reward->vendor->orders->sum('total_order_weight')) }} </td>
+                                                   {{-- <td>{{ formatWeight($reward->vendor->orders->sum('total_order_weight')) ?? 0 }} </td> --}}
+                                                   <td>{{ formatWeight($reward->vendor && $reward->vendor->orders ? $reward->vendor->orders->sum('total_order_weight') : 0) ?? 0 }}</td>
 
                                                     <td> 
                                                         @if($reward->status == 1) 
