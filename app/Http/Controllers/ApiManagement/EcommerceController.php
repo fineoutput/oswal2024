@@ -162,7 +162,7 @@ class EcommerceController extends Controller
     // print_r($user);
     // exit;
     // Check user role type if logged in
-    $roleType = $user ? $user->role_type : null;
+    $roleType = $user ? $user->role_type : 1;
 
     $category_id = $request->input('category_id');
     $lang = $request->input('lang');
@@ -276,12 +276,22 @@ class EcommerceController extends Controller
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
-                    $selected_type_id = '';
-                    $selected_type_name = 'Def1';  // Default Name if no match found
-                    $selected_type_selling_price = 00;
-                    $selected_type_mrp = 00;
-                    $selected_type_percent_off = 00;
-                    $selected_min_qty = 00;
+                    if($roleType == 1){
+                    $selected_type_id = $typedata[0]['type_id'] ?? '';
+                    $selected_type_name = $typedata[0]['type_name'] ?? '';  // Default Name if no match found
+                    $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+                    $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+                    $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
+                    $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    }
+                    else{
+                        $selected_type_id = '0';
+                        $selected_type_name = 'Def1';  // Default Name if array is empty
+                        $selected_type_selling_price = 00;
+                        $selected_type_mrp = 00;
+                        $selected_type_percent_off = 00;
+                        $selected_min_qty = 00;
+                    }
                     // return response()->json([
                     //     'message' => '"type  not found"',
                     //     'status' => 201,
