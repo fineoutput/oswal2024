@@ -649,8 +649,8 @@ class AppController extends Controller
                 'name'   => $reward->name,
                 'image'  => asset($reward->image),
                 'price' => $reward->price,
-                'weight' => formatWeight($reward->weight),
-                'order_weight' => formatWeight($totalWeight),
+                'weight' => $reward->weight.'KG',
+                'order_weight' => $totalWeight.'KG',
                 'status' => $status,
             ];
         }

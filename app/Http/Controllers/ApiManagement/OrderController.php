@@ -672,7 +672,7 @@ class OrderController extends Controller
                     ->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+            return response()->json(['message' => 'invalid status', 'status' => 404], 404);
         }
 
         if ($paymentType != 1) {
@@ -686,7 +686,7 @@ class OrderController extends Controller
             if ($order->sub_total > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
-                    'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
+                    'message' => "Payment type invalid for large amount ".formatPrice($maxCodAmount)
                 ]);
             }
 
