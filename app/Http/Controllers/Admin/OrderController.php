@@ -161,7 +161,7 @@ class OrderController extends Controller
                 // dd($vendortotalWeight);
                 // exit;
                 if($vendortotalWeight > 0){
-                $reward = Reward::where('weight', '<=', $vendortotalWeight)
+                $reward = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
                 ->orderBy('weight', 'desc')
                 ->first(); 
                 if ($reward) {
