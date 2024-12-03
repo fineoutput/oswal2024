@@ -637,9 +637,9 @@ class OrderController extends Controller
 
             if(Auth::check() && Auth::user()->role_type == 2)
             {
-                $orderId = 2025;
+                $orderId = $order->id ?? 20202020;
                 $vendor_user_id = auth()->user()->id;
-                $vendortotalWeight = DB::table('tbl_order1')->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
+                $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
                 // dd($vendortotalWeight);
                 // exit;
                 if($vendortotalWeight > 0){
