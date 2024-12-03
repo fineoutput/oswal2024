@@ -882,6 +882,13 @@ $cartItems = $cartQuery->get();
                           ->orWhere('device_id', $deviceId);
                 });
             }
+            else{
+
+                $CartData2 = $CartData2->where(function($query) use ($userId, $deviceId) {
+                    $query->Where('device_id', $deviceId);
+                });
+
+            }
             
             $CartData2 = $CartData2->get(); // Fetch the cart data
             // Initialize array
