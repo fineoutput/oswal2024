@@ -49,7 +49,7 @@ class RewardController extends Controller
         $rules = [
             'name'              => 'required|string',
             'quantity'          => 'required|integer',
-            'type'              => 'required|integer',
+            'price'              => 'required|integer',
             'weight'            => 'required|integer',
         ];
 
