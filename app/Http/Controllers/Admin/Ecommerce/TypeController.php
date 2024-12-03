@@ -497,6 +497,7 @@ class TypeController extends Controller
         $rules = [
             'name'                 => 'required|string|max:255',
             'min_qty'              => 'required|numeric',
+            'weight'              => 'required',
         ];
         // $rules = [
         //     'name'                 => 'required|string|max:255',
@@ -520,6 +521,7 @@ class TypeController extends Controller
 
             'type_name'     => $request->name,
             'min_qty'       => $request->min_qty,
+            'weight'       => $request->weight,
 
         ]);
 

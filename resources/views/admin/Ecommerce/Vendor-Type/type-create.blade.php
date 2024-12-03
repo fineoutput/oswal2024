@@ -120,6 +120,23 @@
                                             @enderror
 
                                         </div>
+                                        <div class="col-sm-4">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control" value="{{ $type ? $type->weight : old('weight') }}" name="weight"  required>
+
+                                                <label for="weight">Weight &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('min_qty')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
 
                                         {{-- <div class="col-sm-4">
 
