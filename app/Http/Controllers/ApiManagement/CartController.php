@@ -1119,20 +1119,20 @@ $cartItems = $cartQuery->get();
             // 'final_amount'     => $finalAmount
         ];
 
-        // if($role_type == 2){
+        if($role_type == 2){
 
-        //     $reward = $this->applyReward($totalWeight, $userId, 'cart');
+            $reward = $this->applyReward($totalWeight, $userId, 'cart');
 
-        //     if (!$reward->original['success']) {
+            if (!$reward->original['success']) {
     
-        //         $reponse['reward'] = [];
+                $reponse['reward'] = [];
     
-        //     }else{
+            }else{
     
-        //         $reponse['reward'] = $reward->original['reward_detail'];
+                $reponse['reward'] = $reward->original['reward_detail'];
     
-        //     }
-        // }
+            }
+        }
 
         $reponse['promocode'] = [
             'promo_id'       => $promo_id,
