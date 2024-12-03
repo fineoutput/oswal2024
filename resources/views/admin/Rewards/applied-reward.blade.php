@@ -128,7 +128,7 @@
 
                                                    </td>
                                                    {{-- <td>{{ formatWeight($reward->vendor->orders->sum('total_order_weight')) ?? 0 }} </td> --}}
-                                                   <td>{{ formatWeight($reward->vendor && $reward->vendor->orders ? $reward->vendor->orders->sum('total_order_weight') : 0) ?? 0 }}</td>
+                                                   <td>{{ ($reward->vendor && $reward->vendor->orders ? $reward->vendor->orders->sum('total_order_weight') : 0) ?? 0 }}</td>
 
                                                     <td> 
                                                         @if($reward->status == 1) 
