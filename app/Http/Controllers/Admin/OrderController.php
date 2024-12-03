@@ -31,6 +31,9 @@ use App\Models\DeliveryBoy;
 use App\Models\OrderDetail;
 
 use App\Models\Order;
+use App\Models\Reward;
+use Illuminate\Support\Facades\DB;
+
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
@@ -148,6 +151,30 @@ class OrderController extends Controller
         
                 $this->sendEmailNotification($user, $order, $order_status);
 
+            }
+
+            if($order_status == 4)
+            {
+                $orderId = $id ?? 0;
+                $vendor_user_id = auth()->user()->id;
+                $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
+                // dd($vendortotalWeight);
+                // exit;
+                if($vendortotalWeight > 0){
+                $reward = Reward::where('weight', '<=', $vendortotalWeight)
+                ->orderBy('weight', 'desc')
+                ->first(); 
+                if ($reward) {
+                    DB::table('vendor_rewards')->insert([
+                    'vendor_id'     => $vendor_user_id,
+                    'order_id'      => $orderId,
+                    'reward_name'   => $reward->name,
+                    'reward_image'  => $reward->image,
+                    'reward_id'     => $reward->id,
+                    'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+                     ]);
+                    }
+                }
             }
 
         }
