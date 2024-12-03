@@ -156,7 +156,7 @@ class OrderController extends Controller
             if($order_status == 4)
             {
                 $orderId = $id ?? 0;
-                $vendor_user_id = auth()->user()->id;
+                $vendor_user_id = 132;
                 $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
                 // dd($vendortotalWeight);
                 // exit;
