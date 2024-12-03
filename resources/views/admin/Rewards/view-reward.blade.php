@@ -102,7 +102,7 @@
 
                                                     <th data-priority="3">price</th>
 
-                                                    <th data-priority="3">Weight</th>
+                                                    <th data-priority="3">Weight(KG)</th>
 
                                                     <th data-priority="3">Status</th>
 
