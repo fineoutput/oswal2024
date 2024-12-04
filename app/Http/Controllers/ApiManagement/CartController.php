@@ -134,6 +134,9 @@ class CartController extends Controller
                     $typePrice = $filteredType->selling_price;
                 } else {
                     $typePrice = "";
+                    if ($request->quantity < $type->min_qty) {
+                        return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+                    }
                     return response()->json([
                         'success' => false,
                         'message' => 'Price not found for the selected type.',
