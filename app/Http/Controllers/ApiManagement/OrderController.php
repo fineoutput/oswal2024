@@ -346,8 +346,17 @@ class OrderController extends Controller
             $cod_char = formatPrice(getConstant()->cod_charge,false);
 
         }
+        $constant = DB::table('constants')->first();
+        if($constant){
+            $gift_min_amt = $constant->gift_min_amt;
+            if($finalAmount > $gift_min_amt){
+                $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+            }
+            else{
+                $giftCardStatus = 0;
+            }
 
-        $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+        }
 
         $wallet_constants = DB::table('constants')->first();
         
