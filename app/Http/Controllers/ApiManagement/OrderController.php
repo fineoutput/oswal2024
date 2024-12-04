@@ -323,7 +323,9 @@ class OrderController extends Controller
 
         // First Gift Card Detail
         if (!empty($applyGiftCard)) {
-  
+
+             Log::info("Gift Card 1: " . $finalAmount);
+             Log::info("Gift Card 2: " . $applyGiftCard['amount']);
             $reponse['gift_card_1']      = [
                   'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
                   'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
