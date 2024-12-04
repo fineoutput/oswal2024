@@ -167,10 +167,16 @@ class RewardController extends Controller
         // $rewards = User::select('users')->where('id',$rewards->user_id)->get();
         // $rewards = Order::select('tbl_order1') ->get();
         
-        $rewards = VendorReward::select('vendor_rewards.*', 'users.first_name', 'tbl_order1.id')
-        ->join('users', 'vendor_rewards.vendor_id', '=', 'users.id') 
+        // $rewards = VendorReward::select('vendor_rewards.*', 'users.first_name', 'tbl_order1.id')
+        // ->join('users', 'vendor_rewards.vendor_id', '=', 'users.id') 
+        // ->join('tbl_order1', 'vendor_rewards.order_id', '=', 'tbl_order1.id')
+        // ->get();
+
+        $rewards = VendorReward::select('vendor_rewards.*', 'users.first_name', 'tbl_order1.id', 'tbl_order1.total_order_weight')
+        ->join('users', 'vendor_rewards.vendor_id', '=', 'users.id')
         ->join('tbl_order1', 'vendor_rewards.order_id', '=', 'tbl_order1.id')
         ->get();
+
       return view('admin.Rewards.applied-reward' , compact('rewards'));
 
     }
