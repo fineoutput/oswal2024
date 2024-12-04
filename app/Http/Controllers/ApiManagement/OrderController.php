@@ -326,6 +326,7 @@ class OrderController extends Controller
             
              Log::info("Gift Card 1: " . $finalAmount);
              Log::info("Gift Card 2: " . json_encode($applyGiftCard));
+             Log::info("Gift Card 3: " . $applyGiftCard);
             $reponse['gift_card_1']      = [
                   'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
                   'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
