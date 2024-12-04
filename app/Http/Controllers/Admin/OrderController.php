@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 // use App\Services\GoogleAccessTokenService;
 
+use App\Models\VendorReward;
 use Illuminate\Support\Facades\Session;
 
 use App\Http\Controllers\Controller;
@@ -157,24 +158,38 @@ class OrderController extends Controller
             {
                 $orderId = $id ?? 0;
                 $vendor_user_id = $user->id;
+                $role_type = $user->role_type;
+
+                if($role_type == 2){
                 $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
-                // dd($vendortotalWeight);
-                // exit;
+                Log::info("Total Weight: " . $vendortotalWeight);
                 if($vendortotalWeight > 0){
                 $reward = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
                 ->orderBy('weight', 'desc')
                 ->first(); 
                 if ($reward) {
+                    Log::info("Reward Name: " . $reward->name);
+
+                    $AlreadyReward = VendorReward::wherenull('deleted_at')->where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->first();
+
+                    if(!$AlreadyReward){   
+                        Log::info("Reward Given: " . $reward->name);           
                     DB::table('vendor_rewards')->insert([
                     'vendor_id'     => $vendor_user_id,
                     'order_id'      => $orderId,
                     'reward_name'   => $reward->name,
                     'reward_image'  => $reward->image,
                     'reward_id'     => $reward->id,
+                    'status'     => 1,
                     'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
                      ]);
+
+                    }
+
                     }
                 }
+
+                } //role type end
             }
 
         }
