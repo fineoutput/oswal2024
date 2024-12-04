@@ -4,6 +4,8 @@ namespace App\Http\Controllers\ApiManagement;
 
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
@@ -357,6 +359,8 @@ class CartController extends Controller
             if(!empty($user)){
                 $user_id =  $user->id;
                 $user_device_id =  $user->device_id;
+                Log::info("Cart user_id: " . $user_id);
+                Log::info("Cart device_id: " . $user_device_id);
                 $updatedRows = Cart::where('device_id', $user_device_id)
                 ->update(['user_id' => $user_id]);
             }
