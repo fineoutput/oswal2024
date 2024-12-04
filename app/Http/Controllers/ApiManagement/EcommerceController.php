@@ -239,7 +239,7 @@ class EcommerceController extends Controller
             
         }
         else{
-        $cart = $user_id ? Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->where('device_id', $device_id)->first() : null;
+        $cart = $user_id ? Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->orWhere('device_id', $device_id)->first() : null;
         $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
         $cart_type_price = $cart ? $cart->type_price : null;
         $cart_quantity = $cart ? $cart->quantity : null;
