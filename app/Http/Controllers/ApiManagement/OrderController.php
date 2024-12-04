@@ -702,7 +702,13 @@ class OrderController extends Controller
 
         }
         // Handle COD payment type
-        $codCharge = getConstant()->cod_charge;
+        if(Auth::user()->role_type == 2){
+            $codCharge = 0;
+
+        }
+        else{
+            $codCharge = getConstant()->cod_charge;
+        }
 
         $order->update([
             'order_status'   => 1,
