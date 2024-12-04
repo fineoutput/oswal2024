@@ -382,8 +382,13 @@ class CartController extends Controller
                 $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->orWhere('user_id', $user_id)->count();
                 $wishlist = Wishlist::where('user_id', $user_id)->count();
 
-                // Get address of users and show default address
+                $Order = Order::wherenull('deleted_at')->where('user_id', $user_id)->orderBy('id', 'desc')->first();
+             if(!empty($Order)){
+                $Address = Address::wherenull('deleted_at')->where('id', $Order->address_id)->first();
+             }
+             else{
                 $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
+             }
                 if(!empty($Address)){
                     $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
 
