@@ -170,7 +170,7 @@ class OrderController extends Controller
                 if ($reward) {
                     Log::info("Reward Name: " . $reward->name);
 
-                    $AlreadyReward = VendorReward::wherenull('deleted_at')->where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->first();
+                    $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2])->first();
 
                     if(!$AlreadyReward){   
                         Log::info("Reward Given: " . $reward->name);           
