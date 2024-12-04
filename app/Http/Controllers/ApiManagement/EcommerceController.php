@@ -191,7 +191,7 @@ class EcommerceController extends Controller
             // echo $product->id;
             // exit;
             // $cart = Cart::where('product_id', $product->id)->where('user_id', $user_id)->first();
-            $cart = DB::table('carts')->where('product_id', $product->id)->where('user_id', $user_id)->first();
+            $cart = DB::table('carts')->whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->first();
             // dd($cart);
             // exit;
 
