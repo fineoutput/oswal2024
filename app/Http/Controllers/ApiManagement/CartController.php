@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiManagement;
 
+use App\Models\Wishlist;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\Log;
@@ -365,6 +366,7 @@ class CartController extends Controller
             }
             else{
                 $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->orWhere('user_id', $user_id)->count();
+                $wishlist = Wishlist::where('user_id', $user_id)->count();
             }
         }
 
