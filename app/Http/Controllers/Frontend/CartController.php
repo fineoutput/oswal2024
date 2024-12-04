@@ -148,7 +148,13 @@ class CartController extends Controller
                 $cartItem->type_price = $cartItem->type->selling_price;
                 $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
                 $cartItem->save();
+
+                if($cartItem->type->is_active == 0){
+                    $cartItem->delete();
+                }
+
             }
+
         });
 
        return view('cart', compact('cartItems'));
