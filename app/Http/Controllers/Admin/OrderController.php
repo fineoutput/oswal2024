@@ -164,26 +164,29 @@ class OrderController extends Controller
                 $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
                 Log::info("Total Weight: " . $vendortotalWeight);
                 if($vendortotalWeight > 0){
-                $reward = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
+                $rewards = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
                 ->orderBy('weight', 'desc')
-                ->first(); 
-                if ($reward) {
-                    Log::info("Reward Name: " . $reward->name);
+                ->get(); 
+                if ($rewards) {
 
-                    $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2])->first();
+                    foreach ($rewards as $reward) {
+                        Log::info("Reward Name: " . $reward->name);
 
-                    if(!$AlreadyReward){   
-                        Log::info("Reward Given: " . $reward->name);           
-                    DB::table('vendor_rewards')->insert([
-                    'vendor_id'     => $vendor_user_id,
-                    'order_id'      => $orderId,
-                    'reward_name'   => $reward->name,
-                    'reward_image'  => $reward->image,
-                    'reward_id'     => $reward->id,
-                    'status'     => 1,
-                    'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
-                     ]);
-
+                        $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
+    
+                        if(!$AlreadyReward){   
+                            Log::info("Reward Given: " . $reward->name);           
+                        DB::table('vendor_rewards')->insert([
+                        'vendor_id'     => $vendor_user_id,
+                        'order_id'      => $orderId,
+                        'reward_name'   => $reward->name,
+                        'reward_image'  => $reward->image,
+                        'reward_id'     => $reward->id,
+                        'status'     => 1,
+                        'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+                         ]);
+    
+                        }
                     }
 
                     }
