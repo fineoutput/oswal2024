@@ -348,6 +348,7 @@ class CartController extends Controller
         $role_type = 1;
         $cart_count = 0;
         $wishlist = 0;
+        $addres = "";
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $user = User::where('auth', $auth_token)->first();
@@ -359,6 +360,12 @@ class CartController extends Controller
 
         if($role_type == 2){
             $cart_count = Cart::whereNull('deleted_at')->where('user_id', $user_id)->count();
+             // Get address of users and show default address
+             $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
+             if(!empty($Address)){
+                 $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
+
+             }
         }
         else{
             if($user_id == null){
@@ -367,10 +374,17 @@ class CartController extends Controller
             else{
                 $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->orWhere('user_id', $user_id)->count();
                 $wishlist = Wishlist::where('user_id', $user_id)->count();
+
+                // Get address of users and show default address
+                $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
+                if(!empty($Address)){
+                    $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
+
+                }
             }
         }
 
-        $data = array('cart_count' =>$cart_count, 'wishlist_count'=>$wishlist);
+        $data = array('cart_count' =>$cart_count, 'wishlist_count'=>$wishlist, 'address'=>$addres);
 
         return response()->json([
             'message' => 'Success',
