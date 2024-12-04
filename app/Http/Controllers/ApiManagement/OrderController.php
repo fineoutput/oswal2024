@@ -346,6 +346,16 @@ class OrderController extends Controller
             }
            
         }
+        if($constant){
+            $gift_min_amt = $constant->gift_min_amount;
+            if($finalAmount > $gift_min_amt){
+                $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+            }
+            else{
+                $giftCardStatus = 0;
+            }
+
+        }
         
         if(Auth::user()->role_type == 2){
             $promoStatus = 2;
@@ -359,16 +369,7 @@ class OrderController extends Controller
 
         }
       
-        if($constant){
-            $gift_min_amt = $constant->gift_min_amount;
-            if($finalAmount > $gift_min_amt){
-                $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
-            }
-            else{
-                $giftCardStatus = 0;
-            }
-
-        }
+    
 
         
 
