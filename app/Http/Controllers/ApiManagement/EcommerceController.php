@@ -82,10 +82,10 @@ class EcommerceController extends Controller
     ];
 
     
-    Log::info("State_id: " . $request->state_id);
-    Log::info("city_id: " . $request->state_id);
-    Log::info("cat_id: " . $request->category_id);
-    Log::info("dev_id: " . $request->device_id);
+    // Log::info("State_id: " . $request->state_id);
+    // Log::info("city_id: " . $request->state_id);
+    // Log::info("cat_id: " . $request->category_id);
+    // Log::info("dev_id: " . $request->device_id);
 
     $is_hot = false;
     $is_trn = false;
