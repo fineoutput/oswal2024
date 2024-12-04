@@ -305,7 +305,6 @@ class CartController extends Controller
     }
 
         $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
         $cart_id   = $request->input('cart_id');
 
         if($role_type == 2){
