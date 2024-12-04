@@ -333,6 +333,7 @@ class OrderController extends Controller
                         'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
                         'gift_card_gst_amount'  => formatPrice($applyGiftCard['gst_amount'],false),
                   ];
+                  $finalAmount += $applyGiftCard['amount'];
                 }
                 else{
                     $reponse['gift_card_1']      = [
@@ -346,7 +347,7 @@ class OrderController extends Controller
             
            
 
-            $finalAmount += $applyGiftCard['amount'];
+           
         }
         
         if(Auth::user()->role_type == 2){
