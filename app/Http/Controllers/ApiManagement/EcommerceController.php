@@ -16,6 +16,7 @@ use App\Models\Type_sub;
 use App\Models\User;
 use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 class EcommerceController extends Controller
 {
 
@@ -79,6 +80,12 @@ class EcommerceController extends Controller
         'page'      => 'nullable|integer|min:1',
         'per_page'  => 'nullable|integer|min:1|max:100',
     ];
+
+    
+    Log::info("State_id: " . $request->state_id);
+    Log::info("city_id: " . $request->state_id);
+    Log::info("cat_id: " . $request->category_id);
+    Log::info("dev_id: " . $request->device_id);
 
     $is_hot = false;
     $is_trn = false;
