@@ -321,17 +321,30 @@ class OrderController extends Controller
             'promo_name'     => $promocode_name,
         ];
 
+        $constant = DB::table('constants')->first();
+
         // First Gift Card Detail
         if (!empty($applyGiftCard)) {
+            if($constant){
+                $gift_min_amt = $constant->gift_min_amount;
+                if($finalAmount > $gift_min_amt){
+                    $reponse['gift_card_1']      = [
+                        'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
+                        'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
+                        'gift_card_gst_amount'  => formatPrice($applyGiftCard['gst_amount'],false),
+                  ];
+                }
+                else{
+                    $reponse['gift_card_1']      = [
+                        'cal_promo_amu'         => 0,
+                        'gift_card_amount'      => 0,
+                        'gift_card_gst_amount'  => 0,
+                  ];
+                }
+    
+            }
             
-             Log::info("Gift Card 1: " . $finalAmount);
-             Log::info("Gift Card 2: " . json_encode($applyGiftCard));
-             Log::info("Gift Card 3: " . $applyGiftCard);
-            $reponse['gift_card_1']      = [
-                  'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
-                  'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
-                  'gift_card_gst_amount'  => formatPrice($applyGiftCard['gst_amount'],false),
-            ];
+           
 
             $finalAmount += $applyGiftCard['amount'];
         }
@@ -346,7 +359,7 @@ class OrderController extends Controller
             $cod_char = formatPrice(getConstant()->cod_charge,false);
 
         }
-        $constant = DB::table('constants')->first();
+      
         if($constant){
             $gift_min_amt = $constant->gift_min_amount;
             if($finalAmount > $gift_min_amt){
