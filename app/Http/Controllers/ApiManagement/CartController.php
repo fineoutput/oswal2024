@@ -54,7 +54,7 @@ class CartController extends Controller
             'quantity'    => 'required|integer|min:1'
         ];
         $user_id = 0;
-        $role_type = null;
+        $role_type = 1;
         $userDetails = null;
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
