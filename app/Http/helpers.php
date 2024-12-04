@@ -628,7 +628,7 @@ if(! function_exists('getLatLngFromAddress')){
     
     function getLatLngFromAddress($address) {
 
-        $apiKey = 'AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U'; 
+        $apiKey = config('constants.GOOGLE_LATLONG_API_KEY'); 
         $address = urlencode($address);
         
         $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&key={$apiKey}";
