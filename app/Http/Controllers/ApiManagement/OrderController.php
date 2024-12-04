@@ -348,7 +348,7 @@ class OrderController extends Controller
         }
         $constant = DB::table('constants')->first();
         if($constant){
-            $gift_min_amt = $constant->gift_min_amt;
+            $gift_min_amt = $constant->gift_min_amount;
             if($finalAmount > $gift_min_amt){
                 $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
             }
@@ -358,10 +358,9 @@ class OrderController extends Controller
 
         }
 
-        $wallet_constants = DB::table('constants')->first();
         
 
-        $reponse['wallet_per']  = $wallet_constants->wallet_use_amount;
+        $reponse['wallet_per']  = $constant->wallet_use_amount;
         $reponse['wallet_discount']  = $walletDescount;
         $reponse['promoStatus']  = $promoStatus == 1 ? 'Active' : 'Inactive';
         $reponse['giftCardStatus']  = $giftCardStatus ==1 ? 'Active' : 'Inactive';
