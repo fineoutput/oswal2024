@@ -383,8 +383,8 @@ class OrderController extends Controller
 
         $user = $order->user;
         $address = $order->address;
-        $city = $address->city ? $address->citys->name : '';
-        $state = $address->state ? $address->states->name : '';
+        $city = $address->city ? $address->citys->city_name : '';
+        $state = $address->state ? $address->states->state_name : '';
         $zipcode = $address->zipcode;
         $orderItems = $order->orderDetails;
         $invoice = $order->invoices;
