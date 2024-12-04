@@ -344,15 +344,13 @@ class OrderController extends Controller
                 }
     
             }
-            
-           
-
            
         }
         
         if(Auth::user()->role_type == 2){
             $promoStatus = 2;
             $cod_char = 0;
+            $giftCardStatus = 0;
         }
         else{
 
