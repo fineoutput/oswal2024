@@ -121,6 +121,7 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
     Route::post('get-cart-details', [CartController::class, 'getCartDetails'])->name('get-cart-details');
+    Route::post('get-cart-count', [CartController::class, 'getCartCount'])->name('get-cart-count');
     Route::post('destroy',[CartController::class, 'destroy'])->name('destroy');
 });
 Route::get('unroute', [AppController::class, 'unauth'])->name('unauth.route');

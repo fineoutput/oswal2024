@@ -330,6 +330,57 @@ class CartController extends Controller
         }
     }
 
+    public function getCartCount(Request $request)
+    {
+        $rules = [
+            'device_id'       => 'string'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            
+        }
+        $user_id = null;
+        $role_type = 1;
+        $cart_count = 0;
+        $wishlist = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $user = User::where('auth', $auth_token)->first();
+            if(!empty($user)){
+                $user_id =  $user->id;
+                $role_type =  $user->role_type;
+            }
+        }
+
+        if($role_type == 2){
+            $cart_count = Cart::whereNull('deleted_at')->where('user_id', $user_id)->count();
+        }
+        else{
+            if($user_id == null){
+                $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->count();
+            }
+            else{
+                $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->orWhere('user_id', $user_id)->count();
+            }
+        }
+
+        $data = array('cart_count' =>$cart_count, 'wishlist_count'=>$wishlist);
+
+        return response()->json([
+            'message' => 'Success',
+            'status' => 200,
+            'data' => $data
+        ]);
+
+
+
+
+
+    }
     public function getCartDetails(Request $request)
     {
 
