@@ -426,8 +426,8 @@ class CartController extends Controller
             if(!empty($user)){
                 $user_id =  $user->id;
                 $user_device_id =  $request->device_id;
-                Log::info("Cart user_id: " . $user_id);
-                Log::info("Cart device_id: " . $user_device_id);
+                // Log::info("Cart user_id: " . $user_id);
+                // Log::info("Cart device_id: " . $user_device_id);
                 $updatedRows = Cart::where('device_id', $request->device_id)
                 ->update(['user_id' => $user_id]);
 

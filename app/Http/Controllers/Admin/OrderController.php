@@ -162,7 +162,7 @@ class OrderController extends Controller
 
                 if($role_type == 2){
                 $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
-                Log::info("Total Weight: " . $vendortotalWeight);
+                // Log::info("Total Weight: " . $vendortotalWeight);
                 if($vendortotalWeight > 0){
                 $rewards = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
                 ->orderBy('weight', 'desc')
@@ -170,12 +170,12 @@ class OrderController extends Controller
                 if ($rewards) {
 
                     foreach ($rewards as $reward) {
-                        Log::info("Reward Name: " . $reward->name);
+                        // Log::info("Reward Name: " . $reward->name);
 
                         $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
     
                         if(!$AlreadyReward){   
-                            Log::info("Reward Given: " . $reward->name);           
+                            // Log::info("Reward Given: " . $reward->name);           
                         DB::table('vendor_rewards')->insert([
                         'vendor_id'     => $vendor_user_id,
                         'order_id'      => $orderId,
