@@ -333,7 +333,16 @@ class OrderController extends Controller
             $finalAmount += $applyGiftCard['amount'];
         }
         
-        $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+        if(Auth::user()->role_type == 2){
+            $promoStatus = 2;
+            $cod_char = 0;
+        }
+        else{
+
+            $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+            $cod_char = formatPrice(getConstant()->cod_charge,false);
+
+        }
 
         $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
 
@@ -349,7 +358,7 @@ class OrderController extends Controller
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
-        $reponse['cod_charge']    = formatPrice(getConstant()->cod_charge,false);
+        $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
         
         return response()->json($reponse);
