@@ -40,6 +40,7 @@ use App\Models\Type_sub;
 
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\Order;
 
 class CartController extends Controller
 {
@@ -361,11 +362,17 @@ class CartController extends Controller
         if($role_type == 2){
             $cart_count = Cart::whereNull('deleted_at')->where('user_id', $user_id)->count();
              // Get address of users and show default address
-             $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
-             if(!empty($Address)){
-                 $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
-
+             $Order = Order::wherenull('deleted_at')->where('user_id', $user_id)->orderBy('id', 'desc')->first();
+             if(!empty($Order)){
+                $Address = Address::wherenull('deleted_at')->where('id', $Order->address_id)->first();
              }
+             else{
+                $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
+             }
+             if(!empty($Address)){
+                $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
+            }
+            
         }
         else{
             if($user_id == null){
