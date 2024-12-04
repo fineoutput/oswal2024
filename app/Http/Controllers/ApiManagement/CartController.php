@@ -291,14 +291,35 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
+        $user_id = 0;
+        $role_type = null;
+        $userDetails = null;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        if ($userDetails) {
+            $device_id = $userDetails->device_id;
+            $user_id = $userDetails->id;
+            $role_type = $userDetails->role_type;
+        }
+    }
+
         $device_id = $request->input('device_id');
         $user_id   = $request->input('user_id');
         $cart_id   = $request->input('cart_id');
 
-        $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
-            $query->Where('device_id', $device_id)
-            ->orwhere('user_id', $user_id);
-        });
+        if($role_type == 2){
+            $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
+                $query->Where('user_id', $user_id)
+            });
+        }
+        else{
+            $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
+                $query->Where('device_id', $device_id)
+                ->orwhere('user_id', $user_id);
+            });
+        }
+      
 
         $cart = $query->where('id', $cart_id)->first();
 
