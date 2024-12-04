@@ -363,6 +363,7 @@ class CartController extends Controller
                 Log::info("Cart device_id: " . $user_device_id);
                 $updatedRows = Cart::where('device_id', $user_device_id)
                 ->update(['user_id' => $user_id]);
+
             }
         }
 
