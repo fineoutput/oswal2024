@@ -457,12 +457,12 @@ class EcommerceController extends Controller
         if ($roleType && $roleType == 2) {
             $typeQuery = VendorType::where('product_id', $product_id)->where('is_active', 1);
 
-            if ($state_id) {
-                $typeQuery->where('state_id', $state_id);
-                if ($city_id) {
-                    $typeQuery->where('city_id', $city_id);
-                }
-            }
+            // if ($state_id) {
+            //     $typeQuery->where('state_id', $state_id);
+            //     if ($city_id) {
+            //         $typeQuery->where('city_id', $city_id);
+            //     }
+            // }
             if ($type_id) {
                 $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
             } else {
@@ -470,27 +470,30 @@ class EcommerceController extends Controller
             }
             $vendorTypes = $typeQuery->get();
         }
+        else{
+                    // Query for regular types (non-vendor users)
+                    $typeQuery = Type::where('product_id', $product_id)
+                    ->where('is_active', 1);
 
-        // Query for regular types (non-vendor users)
-        $typeQuery = Type::where('product_id', $product_id)
-            ->where('is_active', 1);
+                    if ($state_id) {
+                    $typeQuery->where('state_id', $state_id);
+                    if ($city_id) {
+                        $typeQuery->where('city_id', $city_id);
+                    }
+                    
+                    } 
 
-        if ($state_id) {
-            $typeQuery->where('state_id', $state_id);
-            if ($city_id) {
-                $typeQuery->where('city_id', $city_id);
-            }
-            
-        } 
-        
-        else {
-            $typeQuery->groupBy('type_name');
+                    else {
+                    $typeQuery->groupBy('type_name');
+                    }
+                    if($type_id){
+                    $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
+                    }
+
+                    $regularTypes = $typeQuery->get(); // Get the result as a collection
         }
-        if($type_id){
-            $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
-        }
 
-        $regularTypes = $typeQuery->get(); // Get the result as a collection
+       
 
         // Format function for types
         $formatTypes = function ($types) use ($lang, $roleType) {
