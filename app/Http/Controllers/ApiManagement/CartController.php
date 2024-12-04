@@ -310,7 +310,7 @@ class CartController extends Controller
 
         if($role_type == 2){
             $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
-                $query->Where('user_id', $user_id)
+                $query->Where('user_id', $user_id);
             });
         }
         else{
