@@ -192,8 +192,14 @@ class CartController extends Controller
 
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
+        if($role_type == 1){
+            $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+        }
+        else{
+            $data = $request->only(['category_id', 'product_id', 'quantity', 'cart_from']);
 
-        $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+        }
+        
 
 
         $data['user_id'] = $user_id;
@@ -212,11 +218,12 @@ class CartController extends Controller
 
         // Handle backup in CartOld
         $backupCartItem = CartOld::where('product_id', $data['product_id'])
-                         ->where(function($query) use ($data, $request) {
+                         ->where(function($query) use ($data, $request,$role_type) {
                              $query->orWhere('user_id', $request->user_id);
-                             
                              if (!empty($request->device_id)) {
-                                 $query->where('device_id', $data['device_id']);
+                                if($role_type == 1){
+                                    $query->where('device_id', $data['device_id']);
+                                }
                              }
                          })
                          ->first();
@@ -238,10 +245,10 @@ class CartController extends Controller
 
         // Handle current cart in Cart
         $cartItem = Cart::where('product_id', $data['product_id'])
-                ->where(function($query) use ($data, $request) {
-                
+                ->where(function($query) use ($data, $request, $role_type) {
+                    if($role_type == 1){
                     $query->where('device_id', $data['device_id']);
-                
+                    }
                     if (!empty($request->user_id)) {
                         $query->orWhere('user_id', $request->user_id);
                     }
