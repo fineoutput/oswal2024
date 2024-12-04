@@ -239,12 +239,24 @@ class EcommerceController extends Controller
             
         }
         else{
-        $cart = $user_id ? Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->Where('device_id', $device_id)->first() : null;
-        $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
-        $cart_type_price = $cart ? $cart->type_price : null;
-        $cart_quantity = $cart ? $cart->quantity : null;
-        $cart_total_price = $cart ? $cart->total_qty_price : null;
-        $cart_status = $cart ? 1 : 0;
+            if($user_id){
+                $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->Where('device_id', $device_id)->first();
+                $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+                $cart_type_price = $cart ? $cart->type_price : null;
+                $cart_quantity = $cart ? $cart->quantity : null;
+                $cart_total_price = $cart ? $cart->total_qty_price : null;
+                $cart_status = $cart ? 1 : 0;
+            }
+            else{
+                $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->Where('device_id', $device_id)->first();
+                $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+                $cart_type_price = $cart ? $cart->type_price : null;
+                $cart_quantity = $cart ? $cart->quantity : null;
+                $cart_total_price = $cart ? $cart->total_qty_price : null;
+                $cart_status = $cart ? 1 : 0;
+
+            }
+        
         }
 
         $rating_avg = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->avg('rating');
