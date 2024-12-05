@@ -360,7 +360,15 @@ class CartController extends Controller
         }
 
         if($role_type == 2){
-            $cart_count = Cart::whereNull('deleted_at')->where('user_id', $user_id)->count();
+            $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+            ->where('user_id', $user_id)
+            ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+            ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+            ->where('ecom_products.is_active', 1) // Exclude inactive products
+            ->join('vendor_types', 'carts.type_id', '=', 'vendor_types.id') // Join with types
+            ->whereNull('vendor_types.deleted_at') // Check 'deleted_at' in the types table
+            ->where('vendor_types.is_active', 1) // Exclude inactive types
+            ->count();
              // Get address of users and show default address
              $Order = Order::wherenull('deleted_at')->where('user_id', $user_id)->orderBy('id', 'desc')->first();
              if(!empty($Order)){
@@ -376,10 +384,28 @@ class CartController extends Controller
         }
         else{
             if($user_id == null){
-                $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->count();
+   
+                $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+                ->where('device_id', $request->device_id)
+                ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+                ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+                ->where('ecom_products.is_active', 1) // Exclude inactive products
+                ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
+                ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
+                ->where('types.is_active', 1) // Exclude inactive types
+                ->count();
             }
             else{
-                $cart_count = Cart::whereNull('deleted_at')->where('device_id', $request->device_id)->orWhere('user_id', $user_id)->count();
+                $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+                ->where('device_id', $request->device_id)->orWhere('user_id', $user_id)
+                ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+                ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+                ->where('ecom_products.is_active', 1) // Exclude inactive products
+                ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
+                ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
+                ->where('types.is_active', 1) // Exclude inactive types
+                ->count();
+                
                 $wishlist = Wishlist::where('user_id', $user_id)->count();
 
                 $Order = Order::wherenull('deleted_at')->where('user_id', $user_id)->orderBy('id', 'desc')->first();
