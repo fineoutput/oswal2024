@@ -1303,7 +1303,13 @@ $cartItems = $cartQuery->get();
             $finalAmount += $applyGiftCard['amount'];
         }
         if (!empty($applyGiftCardSec)) {
-            $reponse['gift_card2']      = $applyGiftCardSec;
+            if($role_type == 2){
+                $reponse['gift_card2']      = [];
+            }
+            else{
+                $reponse['gift_card2']      = $applyGiftCardSec;
+            }
+            
         }
         
         $reponse['wallet_discount']  = $walletDescount;
