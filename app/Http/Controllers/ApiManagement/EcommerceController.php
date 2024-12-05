@@ -73,6 +73,7 @@ class EcommerceController extends Controller
     $currentRouteName = Route::currentRouteName();
 
     $rules = [
+        'device_id'      => 'string',
         'lang'      => 'required|string',
         'state_id'  => 'nullable|integer',
         'city_id'   => 'nullable|integer',
@@ -93,6 +94,7 @@ class EcommerceController extends Controller
     $search = false;
 
     $device_id = null;
+    $device_id = $request->device_id;
     $user_id = null;
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
