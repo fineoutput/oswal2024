@@ -1057,6 +1057,7 @@ $cartItems = $cartQuery->get();
                                 if ($cityId) {
                                     $typeData->where('city_id', $cityId); // Check state_id
                                 }
+                                $typeData->where('is_active', 1);
                                 $typeData->groupBy('type_name');
                               // Fetch the results
                     $typeData = $typeData->get();
