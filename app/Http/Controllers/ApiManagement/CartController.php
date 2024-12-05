@@ -508,7 +508,7 @@ class CartController extends Controller
             
             $cartQuery->where('user_id', $user_id);
         } else {
-            $cartQuery->where('device_id', $device_id)->where('user_id', 0);
+            $cartQuery->where('device_id', $device_id);
             // $cartQuery->where('device_id', $device_id)->where('user_id', 0);
         }
         
