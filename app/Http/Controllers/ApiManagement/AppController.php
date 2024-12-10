@@ -234,13 +234,15 @@ class AppController extends Controller
 
     public function headerSlider(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'role_type'        => 'nullable|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        $role_type = 1;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
         }
 
         $sliders =  Websliders2::where('is_active', 1)->get();
@@ -283,12 +285,22 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'lang'      => 'required|string',
-            'role_type' => 'nullable|integer',
+            'lang'      => 'required|string'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        $role_type = 1;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
         }
 
         $sliders =  Slider2::where('is_active', 1)->get();
