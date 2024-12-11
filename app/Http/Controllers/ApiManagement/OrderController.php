@@ -304,7 +304,11 @@ class OrderController extends Controller
 
         }
 
+
         $totalwalletAmount = $user->wallet_amount;
+        if(Auth::user()->role_type == 2){
+            $deliveryCharge = 0;
+        }
 
         $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
 
@@ -577,8 +581,13 @@ class OrderController extends Controller
 
             return $shippingChargesResponse;
         }
-
-        $deliveryCharge = $shippingChargesResponse->original['total_weight_charge'];
+        if(Auth::user()->role_type == 2){
+            $deliveryCharge = $shippingChargesResponse->original['total_weight_charge'];
+        }
+        else{
+            $deliveryCharge = 0;
+        }
+       
 
         $totalPriceWithDelivery = $subtotal + $deliveryCharge;
 
