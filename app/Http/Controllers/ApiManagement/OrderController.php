@@ -586,10 +586,11 @@ class OrderController extends Controller
             return $shippingChargesResponse;
         }
         if(Auth::user()->role_type == 2){
-            $deliveryCharge = $shippingChargesResponse->original['total_weight_charge'];
+            $deliveryCharge = 0;
         }
         else{
-            $deliveryCharge = 0;
+            
+            $deliveryCharge = $shippingChargesResponse->original['total_weight_charge'];
         }
        
 
