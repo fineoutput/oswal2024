@@ -372,10 +372,14 @@ class OrderController extends Controller
             $cod_char = formatPrice(getConstant()->cod_charge,false);
 
         }
+        if(Auth::user()->role_type == 2){
       
-    
+    $cod_final_amount = formatPrice(($finalAmount),false);
 
-        
+        }
+        else{
+            $cod_final_amount = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+        }
 
         $reponse['wallet_per']  = $constant->wallet_use_amount;
         $reponse['wallet_discount']  = $walletDescount;
@@ -387,7 +391,7 @@ class OrderController extends Controller
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
         $reponse['cod_charge']    = $cod_char;
-        $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+        $reponse['cod_final_amount' ]    = $cod_final_amount;
         
         return response()->json($reponse);
     }
