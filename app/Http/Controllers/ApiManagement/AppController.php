@@ -654,13 +654,23 @@ class AppController extends Controller
                     $status = '';
                 }
 
+                
+            } elseif ($totalWeight >= $reward->weight) {
+
+                $status = 'eligible';
+
+            } else {
+
+                $status = 'not eligible';
+            }
+
             $data[] = [
                 'id'     => $reward->id,
                 'name'   => $reward->name,
                 'image'  => asset($reward->image),
                 'price' => $reward->price,
-                'weight' => $reward->weight.' KG',
-                'order_weight' => $totalWeight.' KG',
+                'weight' => $reward->weight.'KG',
+                'order_weight' => $totalWeight.'KG',
                 'status' => $status,
             ];
         }
