@@ -392,6 +392,7 @@ class OrderController extends Controller
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
+        $reponse['get_online_payment_status' ]    = 0;
         
         return response()->json($reponse);
     }
