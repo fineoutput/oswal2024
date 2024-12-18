@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\ApiManagement;
 
+use App\Models\Wishlist;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
 
@@ -37,6 +40,7 @@ use App\Models\Type_sub;
 
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\Order;
 
 class CartController extends Controller
 {
@@ -54,7 +58,7 @@ class CartController extends Controller
             'quantity'    => 'required|integer|min:1'
         ];
         $user_id = 0;
-        $role_type = null;
+        $role_type = 1;
         $userDetails = null;
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
@@ -130,6 +134,9 @@ class CartController extends Controller
                     $typePrice = $filteredType->selling_price;
                 } else {
                     $typePrice = "";
+                    if ($request->quantity < $type->min_qty) {
+                        return response()->json(['success' => false, 'message' => "The quantity must be at least {$type->min_qty}."]);
+                    }
                     return response()->json([
                         'success' => false,
                         'message' => 'Price not found for the selected type.',
@@ -192,8 +199,14 @@ class CartController extends Controller
 
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
+        if($role_type == 1){
+            $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+        }
+        else{
+            $data = $request->only(['category_id', 'product_id', 'quantity', 'cart_from']);
 
-        $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
+        }
+        
 
 
         $data['user_id'] = $user_id;
@@ -212,11 +225,12 @@ class CartController extends Controller
 
         // Handle backup in CartOld
         $backupCartItem = CartOld::where('product_id', $data['product_id'])
-                         ->where(function($query) use ($data, $request) {
+                         ->where(function($query) use ($data, $request,$role_type) {
                              $query->orWhere('user_id', $request->user_id);
-                             
                              if (!empty($request->device_id)) {
-                                 $query->where('device_id', $data['device_id']);
+                                if($role_type == 1){
+                                    $query->where('device_id', $data['device_id']);
+                                }
                              }
                          })
                          ->first();
@@ -238,10 +252,10 @@ class CartController extends Controller
 
         // Handle current cart in Cart
         $cartItem = Cart::where('product_id', $data['product_id'])
-                ->where(function($query) use ($data, $request) {
-                
+                ->where(function($query) use ($data, $request, $role_type) {
+                    if($role_type == 1){
                     $query->where('device_id', $data['device_id']);
-                
+                    }
                     if (!empty($request->user_id)) {
                         $query->orWhere('user_id', $request->user_id);
                     }
@@ -284,14 +298,32 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
+        $user_id = 0;
+        $role_type = null;
+        $userDetails = null;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        if ($userDetails) {
+            $device_id = $userDetails->device_id;
+            $user_id = $userDetails->id;
+            $role_type = $userDetails->role_type;
+        }
+    }
+
         $device_id = $request->input('device_id');
-        $user_id   = $request->input('user_id');
         $cart_id   = $request->input('cart_id');
 
-        $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
-            $query->Where('device_id', $device_id)
-            ->orwhere('user_id', $user_id);
-        });
+        if($role_type == 2){
+            $query = Cart::where('user_id', $user_id);
+        }
+        else{
+            $query = Cart::query()->where(function ($query) use ($user_id, $device_id) {
+                $query->Where('device_id', $device_id)
+                ->orwhere('user_id', $user_id);
+            });
+        }
+      
 
         $cart = $query->where('id', $cart_id)->first();
 
@@ -303,6 +335,109 @@ class CartController extends Controller
         }
     }
 
+    public function getCartCount(Request $request)
+    {
+        $rules = [
+            'device_id'       => 'string'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+            
+        }
+        $user_id = null;
+        $role_type = 1;
+        $cart_count = 0;
+        $wishlist = 0;
+        $addres = "";
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $user = User::where('auth', $auth_token)->first();
+            if(!empty($user)){
+                $user_id =  $user->id;
+                $role_type =  $user->role_type;
+            }
+        }
+
+        if($role_type == 2){
+            $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+            ->where('user_id', $user_id)
+            ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+            ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+            ->where('ecom_products.is_active', 1) // Exclude inactive products
+            ->join('vendor_types', 'carts.type_id', '=', 'vendor_types.id') // Join with types
+            ->whereNull('vendor_types.deleted_at') // Check 'deleted_at' in the types table
+            ->where('vendor_types.is_active', 1) // Exclude inactive types
+            ->count();
+             // Get address of users and show default address
+             $Order = Order::wherenull('deleted_at')->where('user_id', $user_id)->orderBy('id', 'desc')->first();
+             if(!empty($Order)){
+                $Address = Address::wherenull('deleted_at')->where('id', $Order->address_id)->first();
+             }
+             else{
+                $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
+             }
+             if(!empty($Address)){
+                $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
+            }
+            
+        }
+        else{
+            if($user_id == null){
+   
+                $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+                ->where('device_id', $request->device_id)
+                ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+                ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+                ->where('ecom_products.is_active', 1) // Exclude inactive products
+                ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
+                ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
+                ->where('types.is_active', 1) // Exclude inactive types
+                ->count();
+            }
+            else{
+                $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+                ->where('device_id', $request->device_id)->orWhere('user_id', $user_id)
+                ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+                ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+                ->where('ecom_products.is_active', 1) // Exclude inactive products
+                ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
+                ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
+                ->where('types.is_active', 1) // Exclude inactive types
+                ->count();
+                
+                $wishlist = Wishlist::where('user_id', $user_id)->count();
+
+                $Order = Order::wherenull('deleted_at')->where('user_id', $user_id)->orderBy('id', 'desc')->first();
+             if(!empty($Order)){
+                $Address = Address::wherenull('deleted_at')->where('id', $Order->address_id)->first();
+             }
+             else{
+                $Address = Address::wherenull('deleted_at')->where('user_id', $user_id)->first();
+             }
+                if(!empty($Address)){
+                    $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
+
+                }
+            }
+        }
+
+        $data = array('cart_count' =>$cart_count, 'wishlist_count'=>$wishlist, 'address'=>$addres);
+
+        return response()->json([
+            'message' => 'Success',
+            'status' => 200,
+            'data' => $data
+        ]);
+
+
+
+
+
+    }
     public function getCartDetails(Request $request)
     {
 
@@ -331,9 +466,16 @@ class CartController extends Controller
             $user = User::where('auth', $auth_token)->first();
             if(!empty($user)){
                 $user_id =  $user->id;
-                $user_device_id =  $user->device_id;
-                $updatedRows = Cart::where('device_id', $user_device_id)
-                ->update(['user_id' => $user_id]);
+                $user_device_id =  $request->device_id;
+                $roleType =  $user->role_type;
+                // Log::info("Cart user_id: " . $user_id);
+                // Log::info("Cart device_id: " . $user_device_id);
+                if($roleType == 1){
+                    $updatedRows = Cart::where('device_id', $request->device_id)
+                    ->update(['user_id' => $user_id]);
+                }
+              
+
             }
         }
 
@@ -366,7 +508,7 @@ class CartController extends Controller
             
             $cartQuery->where('user_id', $user_id);
         } else {
-            $cartQuery->where('device_id', $device_id)->where('user_id', 0);
+            $cartQuery->where('device_id', $device_id);
             // $cartQuery->where('device_id', $device_id)->where('user_id', 0);
         }
         
@@ -838,9 +980,9 @@ $cartItems = $cartQuery->get();
                     })
                     ->when($cityId, function ($query, $cityId) {
                         return $query->where('city_id', $cityId);
-                    })
-                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                        return $query->groupBy('type_name');
+                    // })
+                    // ->when(is_null($stateId) || is_null($cityId), function ($query) {
+                    //     return $query->groupBy('type_name');
                     })->with(['type_sub']);
             }])
     
@@ -853,25 +995,101 @@ $cartItems = $cartQuery->get();
 
         }else{
             
-            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
-                $query->where('is_active', 1)
-                    ->when($stateId, function ($query, $stateId) {
-                        return $query->where('state_id', $stateId);
-                    })
-                    ->when($cityId, function ($query, $cityId) {
-                        return $query->where('city_id', $cityId);
-                    })
-                    ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                        return $query->groupBy('type_name');
-                    });
-            }])
+            // $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
+            //     $query->where('is_active', 1)
+            //         ->when($stateId, function ($query, $stateId) {
+            //             return $query->where('state_id', $stateId);
+            //         })
+            //         ->when($cityId, function ($query, $cityId) {
+            //             return $query->where('city_id', $cityId);
+            //         })
+            //         ->when(is_null($stateId) || is_null($cityId), function ($query) {
+            //             return $query->groupBy('type_name');
+            //         });
+            // }])
     
-            ->where(function ($query) use ($userId, $deviceId) {
-                $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
-            })
+            // ->where(function ($query) use ($userId, $deviceId) {
+            //     $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
+            // })
     
-            ->get();
+            // ->get();
+
+
+
+            $CartData2 = Cart::whereNull('deleted_at');
+
+            if ($userId) {
+                $CartData2 = $CartData2->where(function($query) use ($userId, $deviceId) {
+                    $query->where('user_id', $userId)
+                          ->orWhere('device_id', $deviceId);
+                });
+            }
+            else{
+
+                $CartData2 = $CartData2->where(function($query) use ($userId, $deviceId) {
+                    $query->Where('device_id', $deviceId);
+                });
+
+            }
+            
+            $CartData2 = $CartData2->get(); // Fetch the cart data
+            // Initialize array
+        $CartNew = [];
+        foreach($CartData2 as $cd_data){
+             // Create a custom object for each cart item
+            $cartItem = new \stdClass();
+
+             // Add cart data to the object
+                // Add all cart data to the cartItem object
+                foreach ($cd_data->getAttributes() as $key => $value) {
+                    $cartItem->$key = $value; // Dynamically add all attributes of $cd_data to $cartItem
+                }
+
+            $productData = EcomProduct::where('id', $cd_data->product_id)->first();
+
+            if ($productData) {
+                // Fetch type data using type_id from product
+               
+                $typeData = Type::where('product_id', $productData->id);
+                                if ($stateId) {
+                                    $typeData->where('state_id', $stateId); // Check state_id
+                                }
+                                if ($cityId) {
+                                    $typeData->where('city_id', $cityId); // Check state_id
+                                }
+                                $typeData->where('is_active', 1);
+                                $typeData->groupBy('type_name');
+                              // Fetch the results
+                    $typeData = $typeData->get();
+        
+                // Add type data inside product array
+                 // Add product data to the object
+                $cartItem->product = $productData;
+                $cartItem->product->type = $typeData;
+
+                $typeDataSelected = Type::whereNull('deleted_at')->where('id', $cd_data->type_id)->first();
+                              // Fetch the results
+                $cartItem->type = $typeDataSelected;
+                        
+                // dd($cartItem->type);
+                // $productArray = $productData->toArray();
+                // $productArray['type'] = $typeData ? $typeData->toArray() : null;
+            } else {
+                $cartItem->product = null;
+            }
+
+              // Add product data directly inside the cart entry
+                // $cartEntry = $cd_data->toArray();
+                // $cartEntry['product'] = $productArray;
+
+            // Add updated cart entry to the CartNew array
+             $cartData[] = $cartItem;
+           
         }
+
+        }
+
+        
         
         $totalWeight = 0;
         $totalAmount = 0;
@@ -1051,20 +1269,20 @@ $cartItems = $cartQuery->get();
             // 'final_amount'     => $finalAmount
         ];
 
-        // if($role_type == 2){
+        if($role_type == 2){
 
-        //     $reward = $this->applyReward($totalWeight, $userId, 'cart');
+            $reward = $this->applyReward($totalWeight, $userId, 'cart');
 
-        //     if (!$reward->original['success']) {
+            if (!$reward->original['success']) {
     
-        //         $reponse['reward'] = [];
+                $reponse['reward'] = [];
     
-        //     }else{
+            }else{
     
-        //         $reponse['reward'] = $reward->original['reward_detail'];
+                $reponse['reward'] = $reward->original['reward_detail'];
     
-        //     }
-        // }
+            }
+        }
 
         $reponse['promocode'] = [
             'promo_id'       => $promo_id,
@@ -1086,7 +1304,13 @@ $cartItems = $cartQuery->get();
             $finalAmount += $applyGiftCard['amount'];
         }
         if (!empty($applyGiftCardSec)) {
-            $reponse['gift_card2']      = $applyGiftCardSec;
+            if($role_type == 2){
+                $reponse['gift_card2']      = [];
+            }
+            else{
+                $reponse['gift_card2']      = $applyGiftCardSec;
+            }
+            
         }
         
         $reponse['wallet_discount']  = $walletDescount;

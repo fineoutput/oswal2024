@@ -171,11 +171,16 @@ class AppController extends Controller
 
         $custom_address = $request->doorflat . " " . $request->landmark . " " . $request->address . " " . $city->city_name . " " . $city->state->state_name . " " . $request->zipcode . " " . 'India';
 
-        if (!getLatLngFromAddress($custom_address)) {
-            return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
-        }
+        // $location = getLatLngFromAddress($custom_address);
 
-        $location = getLatLngFromAddress($custom_address);
+        // if (!getLatLngFromAddress($custom_address)) {
+        //     $live_location = "not able to get from google";
+        //     // return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
+        // }
+        // else{
+        //     $live_location =
+        // }
+
 
         $addressData = [
             'user_id'          =>  auth()->id(),
@@ -186,8 +191,8 @@ class AppController extends Controller
             'state'            => strval($state_id),
             'zipcode'          => $request->zipcode,
             'address'          => $request->address,
-            'latitude'         => $location['latitude'],
-            'longitude'        => $location['longitude'],
+            'latitude'         => $request->latitude,
+            'longitude'        => $request->longitude,
             'location_address' => $request->location_address,
             'date'             => now()->setTimezone('Asia/Calcutta')->toDateTimeString(),
         ];
@@ -229,13 +234,15 @@ class AppController extends Controller
 
     public function headerSlider(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'role_type'        => 'nullable|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        $role_type = 1;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
         }
 
         $sliders =  Websliders2::where('is_active', 1)->get();
@@ -278,12 +285,22 @@ class AppController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'lang'      => 'required|string',
-            'role_type' => 'nullable|integer',
+            'lang'      => 'required|string'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        $role_type = 1;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
         }
 
         $sliders =  Slider2::where('is_active', 1)->get();
@@ -325,11 +342,21 @@ class AppController extends Controller
 
         $validator = Validator::make($request->all(), [
             'lang'      => 'required|string',
-            'role_type' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        $role_type = 1;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
         }
 
         $sliders =  Slider::where('is_active', 1)->get();
@@ -622,13 +649,11 @@ class AppController extends Controller
 
                     $status = 'accepted';
 
-                }elseif($totalWeight >= $reward->weight){
-
-                    $status = 'eligible';
-
                 }else{
-                    $status = 'not eligible';
+
+                    $status = '';
                 }
+
                 
             } elseif ($totalWeight >= $reward->weight) {
 
@@ -643,8 +668,9 @@ class AppController extends Controller
                 'id'     => $reward->id,
                 'name'   => $reward->name,
                 'image'  => asset($reward->image),
-                'weight' => formatWeight($reward->weight),
-                'order_weight' => formatWeight($totalWeight),
+                'price' => $reward->price,
+                'weight' => $reward->weight.'KG',
+                'order_weight' => $totalWeight.'KG',
                 'status' => $status,
             ];
         }

@@ -133,14 +133,28 @@ class CartController extends Controller
             $identifierValue  = $data['persistent_id'];
         }
 
-        $cartItems = Cart::where($identifierColumn, $identifierValue)->with('type','product','category')->get();
+        // $cartItems = Cart::where($identifierColumn, $identifierValue)->with('type','product','category')->get();
+        $cartItems = Cart::where($identifierColumn, $identifierValue)
+                    ->whereHas('product', function ($query) { $query->where('is_active', 1); })
+                    ->with(['type','product' => function ($query) {$query->where('is_active', 1);
+                        },
+                        'category'
+    ])
+    ->get();
+
 
         $cartItems->each(function ($cartItem) {
             if ($cartItem->type) {
                 $cartItem->type_price = $cartItem->type->selling_price;
                 $cartItem->total_qty_price = $cartItem->quantity * $cartItem->type_price;
                 $cartItem->save();
+
+                if($cartItem->type->is_active == 0){
+                    $cartItem->delete();
+                }
+
             }
+
         });
 
        return view('cart', compact('cartItems'));

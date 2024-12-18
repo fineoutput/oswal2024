@@ -16,6 +16,7 @@ use App\Models\Type_sub;
 use App\Models\User;
 use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 class EcommerceController extends Controller
 {
 
@@ -72,6 +73,7 @@ class EcommerceController extends Controller
     $currentRouteName = Route::currentRouteName();
 
     $rules = [
+        'device_id'      => 'string',
         'lang'      => 'required|string',
         'state_id'  => 'nullable|integer',
         'city_id'   => 'nullable|integer',
@@ -80,12 +82,19 @@ class EcommerceController extends Controller
         'per_page'  => 'nullable|integer|min:1|max:100',
     ];
 
+    
+    // Log::info("State_id: " . $request->state_id);
+    // Log::info("city_id: " . $request->state_id);
+    // Log::info("cat_id: " . $request->category_id);
+    // Log::info("dev_id: " . $request->device_id);
+
     $is_hot = false;
     $is_trn = false;
     $is_fea = false;
     $search = false;
 
     $device_id = null;
+    $device_id = $request->device_id;
     $user_id = null;
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
@@ -162,7 +171,7 @@ class EcommerceController extends Controller
     // print_r($user);
     // exit;
     // Check user role type if logged in
-    $roleType = $user ? $user->role_type : null;
+    $roleType = $user ? $user->role_type : 1;
 
     $category_id = $request->input('category_id');
     $lang = $request->input('lang');
@@ -191,7 +200,7 @@ class EcommerceController extends Controller
             // echo $product->id;
             // exit;
             // $cart = Cart::where('product_id', $product->id)->where('user_id', $user_id)->first();
-            $cart = DB::table('carts')->where('product_id', $product->id)->where('user_id', $user_id)->first();
+            $cart = DB::table('carts')->whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->first();
             // dd($cart);
             // exit;
 
@@ -232,12 +241,24 @@ class EcommerceController extends Controller
             
         }
         else{
-        $cart = $user_id ? Cart::where('product_id', $product->id)->where('user_id', $user_id)->where('device_id', $device_id)->first() : null;
-        $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
-        $cart_type_price = $cart ? $cart->type_price : null;
-        $cart_quantity = $cart ? $cart->quantity : null;
-        $cart_total_price = $cart ? $cart->total_qty_price : null;
-        $cart_status = $cart ? 1 : 0;
+            if($user_id){
+                $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->Where('device_id', $device_id)->first();
+                $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+                $cart_type_price = $cart ? $cart->type_price : null;
+                $cart_quantity = $cart ? $cart->quantity : null;
+                $cart_total_price = $cart ? $cart->total_qty_price : null;
+                $cart_status = $cart ? 1 : 0;
+            }
+            else{
+                $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->Where('device_id', $device_id)->first();
+                $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+                $cart_type_price = $cart ? $cart->type_price : null;
+                $cart_quantity = $cart ? $cart->quantity : null;
+                $cart_total_price = $cart ? $cart->total_qty_price : null;
+                $cart_status = $cart ? 1 : 0;
+
+            }
+        
         }
 
         $rating_avg = ProductRating::where('product_id', $product->id)->where('category_id', $product->category_id)->avg('rating');
@@ -276,12 +297,22 @@ class EcommerceController extends Controller
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
-                    $selected_type_id = '';
-                    $selected_type_name = 'Def1';  // Default Name if no match found
-                    $selected_type_selling_price = 00;
-                    $selected_type_mrp = 00;
-                    $selected_type_percent_off = 00;
-                    $selected_min_qty = 00;
+                    if($roleType == 1){
+                    $selected_type_id = $typedata[0]['type_id'] ?? '';
+                    $selected_type_name = $typedata[0]['type_name'] ?? '';  // Default Name if no match found
+                    $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+                    $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+                    $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
+                    $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    }
+                    else{
+                        $selected_type_id = '0';
+                        $selected_type_name = 'Def1';  // Default Name if array is empty
+                        $selected_type_selling_price = 00;
+                        $selected_type_mrp = 00;
+                        $selected_type_percent_off = 00;
+                        $selected_min_qty = 00;
+                    }
                     // return response()->json([
                     //     'message' => '"type  not found"',
                     //     'status' => 201,
@@ -447,12 +478,12 @@ class EcommerceController extends Controller
         if ($roleType && $roleType == 2) {
             $typeQuery = VendorType::where('product_id', $product_id)->where('is_active', 1);
 
-            if ($state_id) {
-                $typeQuery->where('state_id', $state_id);
-                if ($city_id) {
-                    $typeQuery->where('city_id', $city_id);
-                }
-            }
+            // if ($state_id) {
+            //     $typeQuery->where('state_id', $state_id);
+            //     if ($city_id) {
+            //         $typeQuery->where('city_id', $city_id);
+            //     }
+            // }
             if ($type_id) {
                 $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
             } else {
@@ -460,27 +491,30 @@ class EcommerceController extends Controller
             }
             $vendorTypes = $typeQuery->get();
         }
+        else{
+                    // Query for regular types (non-vendor users)
+                    $typeQuery = Type::where('product_id', $product_id)
+                    ->where('is_active', 1);
 
-        // Query for regular types (non-vendor users)
-        $typeQuery = Type::where('product_id', $product_id)
-            ->where('is_active', 1);
+                    if ($state_id) {
+                    $typeQuery->where('state_id', $state_id);
+                    if ($city_id) {
+                        $typeQuery->where('city_id', $city_id);
+                    }
+                    
+                    } 
 
-        if ($state_id) {
-            $typeQuery->where('state_id', $state_id);
-            if ($city_id) {
-                $typeQuery->where('city_id', $city_id);
-            }
-            
-        } 
-        
-        else {
-            $typeQuery->groupBy('type_name');
+                    else {
+                    $typeQuery->groupBy('type_name');
+                    }
+                    if($type_id){
+                    $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
+                    }
+
+                    $regularTypes = $typeQuery->get(); // Get the result as a collection
         }
-        if($type_id){
-            $typeQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$type_id]);
-        }
 
-        $regularTypes = $typeQuery->get(); // Get the result as a collection
+       
 
         // Format function for types
         $formatTypes = function ($types) use ($lang, $roleType) {

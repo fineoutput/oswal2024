@@ -159,6 +159,7 @@
                                                     <th data-priority="3">Type Name</th>
 
                                                     <th data-priority="3">Min. Quantity</th>
+                                                    <th data-priority="4">Weight(KG)</th>
 
                                                     {{-- <th data-priority="3">Quantity</th> --}}
                                                     
@@ -199,6 +200,7 @@
                                                         <td>{{ $value->type_name }}</td>
 
                                                         <td>{{ $value->min_qty }}</td>
+                                                        <td>{{ $value->weight }}</td>
 
                                                         {{-- <td>{{ $value->start_range }}-{{ $value->end_range }}</td> --}}
 

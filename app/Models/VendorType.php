@@ -27,7 +27,7 @@ class VendorType extends Model
         // 'gst_percentage',
         // 'gst_percentage_price',
         // 'selling_price',
-        // 'weight',
+        'weight',
         // 'rate',
         'ip',
         'date',

@@ -244,7 +244,7 @@ if (!function_exists('sendOtpSms')) {
             Log::error("cURL Error #:" . $err);
         } else {
             // Process the response if needed
-            Log::info("cURL Response: " . $response);
+            // Log::info("cURL Response: " . $response);
         }
     }
 }
@@ -628,7 +628,7 @@ if(! function_exists('getLatLngFromAddress')){
     
     function getLatLngFromAddress($address) {
 
-        $apiKey = 'AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U'; 
+        $apiKey = config('constants.GOOGLE_LATLONG_API_KEY'); 
         $address = urlencode($address);
         
         $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&key={$apiKey}";
@@ -649,7 +649,7 @@ if(! function_exists('getLatLngFromAddress')){
             return ['latitude' => $latitude, 'longitude' => $longitude];
 
         } else {
-
+        Log::info("Google Location Response: " . $response);
             return false; 
             
         }

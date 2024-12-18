@@ -100,9 +100,9 @@
 
                                                     <th data-priority="3">Quantity</th>
 
-                                                    <th data-priority="3">Type (in gm)</th>
+                                                    <th data-priority="3">price</th>
 
-                                                    <th data-priority="3">Weight</th>
+                                                    <th data-priority="3">Weight(KG)</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -130,7 +130,7 @@
 
                                                    <td>{{ $sticker->quantity }}</td>
 
-                                                   <td>{{ $sticker->type }}</td>
+                                                   <td>{{ $sticker->price }}</td>
 
                                                    <td>{{ $sticker->weight }}</td>
 

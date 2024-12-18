@@ -73,7 +73,7 @@ class UserAuthController extends Controller
             $OTP = generateOtp();
 
             // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
-            $msg = "Dear User,Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.Welcome!!Regards, OSWAL SOAP";
+            $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
 
             sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); 
             
@@ -125,7 +125,7 @@ class UserAuthController extends Controller
 
         $OTP = generateOtp();
 
-        $msg = "Dear User, Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.Welcome!! Regards, OSWAL SOAP";
+        $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
 
         sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 
@@ -282,7 +282,7 @@ class UserAuthController extends Controller
             $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
 
             // $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
-            $msg = "Dear User,Your OTP for login on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone. Regards, OSWAL SOAP";
+            $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
 
 
             sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);

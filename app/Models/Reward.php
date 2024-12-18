@@ -18,7 +18,7 @@ class Reward extends Model
         'name',
         'image',
         'quantity',
-        'type',
+        'price',
         'weight',
         'ip',
         'date',

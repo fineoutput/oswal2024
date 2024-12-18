@@ -304,7 +304,11 @@ class OrderController extends Controller
 
         }
 
+
         $totalwalletAmount = $user->wallet_amount;
+        if(Auth::user()->role_type == 2){
+            $deliveryCharge = 0;
+        }
 
         $finalAmount = $totalAmount + $deliveryCharge - $promo_discount - $walletDescount;
 
@@ -321,26 +325,63 @@ class OrderController extends Controller
             'promo_name'     => $promocode_name,
         ];
 
+        $constant = DB::table('constants')->first();
+
         // First Gift Card Detail
         if (!empty($applyGiftCard)) {
-  
-            $reponse['gift_card_1']      = [
-                  'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
-                  'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
-                  'gift_card_gst_amount'  => formatPrice($applyGiftCard['gst_amount'],false),
-            ];
+            if($constant){
+                $gift_min_amt = $constant->gift_min_amount;
+                if($finalAmount > $gift_min_amt){
+                    $reponse['gift_card_1']      = [
+                        'cal_promo_amu'         => formatPrice($finalAmount + $applyGiftCard['amount'],false),
+                        'gift_card_amount'      => formatPrice($applyGiftCard['amount'],false),
+                        'gift_card_gst_amount'  => formatPrice($applyGiftCard['gst_amount'],false),
+                  ];
+                  $finalAmount += $applyGiftCard['amount'];
+                }
+                else{
+                    $reponse['gift_card_1']      = [
+                        'cal_promo_amu'         => 0,
+                        'gift_card_amount'      => 0,
+                        'gift_card_gst_amount'  => 0,
+                  ];
+                }
+    
+            }
+           
+        }
+        if($constant){
+            $gift_min_amt = $constant->gift_min_amount;
+            if($finalAmount > $gift_min_amt){
+                $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+            }
+            else{
+                $giftCardStatus = 0;
+            }
 
-            $finalAmount += $applyGiftCard['amount'];
         }
         
-        $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+        if(Auth::user()->role_type == 2){
+            $promoStatus = 2;
+            $cod_char = 0;
+            $giftCardStatus = 0;
+        }
+        else{
 
-        $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_active');
+            $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
+            $cod_char = formatPrice(getConstant()->cod_charge,false);
 
-        $wallet_constants = DB::table('constants')->first();
-        
+        }
+        if(Auth::user()->role_type == 2){
+      
+    $cod_final_amount = formatPrice(($finalAmount),false);
 
-        $reponse['wallet_per']  = $wallet_constants->wallet_use_amount;
+        }
+        else{
+            $cod_final_amount = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+        }
+
+        $reponse['wallet_per']  = $constant->wallet_use_amount;
         $reponse['wallet_discount']  = $walletDescount;
         $reponse['promoStatus']  = $promoStatus == 1 ? 'Active' : 'Inactive';
         $reponse['giftCardStatus']  = $giftCardStatus ==1 ? 'Active' : 'Inactive';
@@ -349,8 +390,9 @@ class OrderController extends Controller
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
-        $reponse['cod_charge']    = formatPrice(getConstant()->cod_charge,false);
-        $reponse['cod_final_amount' ]    = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+        $reponse['cod_charge']    = $cod_char;
+        $reponse['cod_final_amount' ]    = $cod_final_amount;
+        $reponse['get_online_payment_status' ]    = 0;
         
         return response()->json($reponse);
     }
@@ -544,8 +586,14 @@ class OrderController extends Controller
 
             return $shippingChargesResponse;
         }
-
-        $deliveryCharge = $shippingChargesResponse->original['total_weight_charge'];
+        if(Auth::user()->role_type == 2){
+            $deliveryCharge = 0;
+        }
+        else{
+            
+            $deliveryCharge = $shippingChargesResponse->original['total_weight_charge'];
+        }
+       
 
         $totalPriceWithDelivery = $subtotal + $deliveryCharge;
 
@@ -633,8 +681,9 @@ class OrderController extends Controller
         // Return the calculated data (or proceed with further processing)
         // return response()->json(['success' => true, 'message'=> 'Order successfully created', 'data'=>['order_id'=>$order->id , 'final_amount' => formatPrice($totalAmount ,false) ], 'status'=> 200],200);
 
-        if($payment_type == 1){
+        //reward work for vendor
 
+        if($payment_type == 1){
           return $this->codCheckout($order->id,$payment_type);
         }else{
           return $this->paidCheckout($order->id,$payment_type);
@@ -672,7 +721,7 @@ class OrderController extends Controller
                     ->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
+            return response()->json(['message' => 'invalid status', 'status' => 404], 404);
         }
 
         if ($paymentType != 1) {
@@ -686,13 +735,19 @@ class OrderController extends Controller
             if ($order->sub_total > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
-                    'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
+                    'message' => "Payment type invalid for large amount ".formatPrice($maxCodAmount)
                 ]);
             }
 
         }
         // Handle COD payment type
-        $codCharge = getConstant()->cod_charge;
+        if(Auth::user()->role_type == 2){
+            $codCharge = 0;
+
+        }
+        else{
+            $codCharge = getConstant()->cod_charge;
+        }
 
         $order->update([
             'order_status'   => 1,
@@ -1350,5 +1405,7 @@ class OrderController extends Controller
         }
         
     }
+
+   
 
 }

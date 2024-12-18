@@ -159,10 +159,10 @@
                                             <div class="form-floating">
 
                                                 <input type="text" class="form-control" id="type"
-                                                    value="{{ $sticker ? $sticker->type : old('type') }}"
-                                                    name="type" placeholder="Enter type" required onkeyup="calculateTotalWeight()">
+                                                    value="{{ $sticker ? $sticker->price : old('price') }}"
+                                                    name="price" placeholder="Enter type" required onkeyup="calculateTotalWeight()">
 
-                                                <label for="type">Type &nbsp;<span
+                                                <label for="type">Price &nbsp;<span
                                                         style="color:red;">*</span></label>
 
                                             </div>

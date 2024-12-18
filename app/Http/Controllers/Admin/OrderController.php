@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 // use App\Services\GoogleAccessTokenService;
 
+use App\Models\VendorReward;
 use Illuminate\Support\Facades\Session;
 
 use App\Http\Controllers\Controller;
@@ -31,6 +32,9 @@ use App\Models\DeliveryBoy;
 use App\Models\OrderDetail;
 
 use App\Models\Order;
+use App\Models\Reward;
+use Illuminate\Support\Facades\DB;
+
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
@@ -148,6 +152,47 @@ class OrderController extends Controller
         
                 $this->sendEmailNotification($user, $order, $order_status);
 
+            }
+
+            if($order_status == 4)
+            {
+                $orderId = $id ?? 0;
+                $vendor_user_id = $user->id;
+                $role_type = $user->role_type;
+
+                if($role_type == 2){
+                $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
+                // Log::info("Total Weight: " . $vendortotalWeight);
+                if($vendortotalWeight > 0){
+                $rewards = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
+                ->orderBy('weight', 'desc')
+                ->get(); 
+                if ($rewards) {
+
+                    foreach ($rewards as $reward) {
+                        // Log::info("Reward Name: " . $reward->name);
+
+                        $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
+    
+                        if(!$AlreadyReward){   
+                            // Log::info("Reward Given: " . $reward->name);           
+                        DB::table('vendor_rewards')->insert([
+                        'vendor_id'     => $vendor_user_id,
+                        'order_id'      => $orderId,
+                        'reward_name'   => $reward->name,
+                        'reward_image'  => $reward->image,
+                        'reward_id'     => $reward->id,
+                        'status'     => 1,
+                        'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+                         ]);
+    
+                        }
+                    }
+
+                    }
+                }
+
+                } //role type end
             }
 
         }
@@ -338,8 +383,8 @@ class OrderController extends Controller
 
         $user = $order->user;
         $address = $order->address;
-        $city = $address->city ? $address->citys->name : '';
-        $state = $address->state ? $address->states->name : '';
+        $city = $address->city ? $address->citys->city_name : '';
+        $state = $address->state ? $address->states->state_name : '';
         $zipcode = $address->zipcode;
         $orderItems = $order->orderDetails;
         $invoice = $order->invoices;
@@ -540,4 +585,39 @@ class OrderController extends Controller
         return view('admin.VendorOrders.view_all_orders', compact('orders', 'pageTitle'));
        
     }
+
+    public function users_transfer(){
+    
+        $old_orders = DB::table('tbl_users')->get(); 
+
+            foreach($old_orders as $od){
+
+                $data_insert = [
+                    'role_type' => 1,
+                    'first_name' => $od->first_name,
+                    'first_name_hi' => $od->first_name_hi,
+                    'device_id' => $od->device_id,
+                    'auth' => $od->auth,
+                    'fcm_token' => "",
+                    'email' => $od->email,
+                    'contact' => $od->contact,
+                    'password' => $od->password,
+                    'image' => $od->image,
+                    'status' => $od->status,
+                    'wallet_amount' => 0,
+                    'referral_code' => User::generateReferralCode(),
+                    'is_hidden' => $od->is_hidden,
+                    'ip' => $od->ip,
+                    'date' => $od->date,
+                    'added_by' => $od->added_by,
+                    'is_active' => $od->is_active
+                ];
+    
+                $last_id = User::create($data_insert)->id;
+             
+                
+            }
+
+
+      }
 }

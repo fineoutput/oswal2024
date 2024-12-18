@@ -166,9 +166,9 @@
                                                 <tr>
                                                     <td class="text-center">{{ ++$key }}</td>
 
-                                                    <td class="text-center">{{ $shippingCharge->state->state_name }}</td>
+                                                    <td class="text-center">{{ $shippingCharge->state->state_name ?? '' }}</td>
 
-                                                    <td class="text-center">{{ $shippingCharge->city->city_name }}</td>
+                                                    <td class="text-center">{{ $shippingCharge->city->city_name ?? '' }}</td>
 
                                                     <td class="text-center">{{ $shippingCharge->weight1 }}</td>
                                                     

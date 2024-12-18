@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reward;
+use App\Models\User;
+use App\Models\Order;
 use App\Models\VendorReward;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +51,7 @@ class RewardController extends Controller
         $rules = [
             'name'              => 'required|string',
             'quantity'          => 'required|integer',
-            'type'              => 'required|integer',
+            'price'              => 'required|integer',
             'weight'            => 'required|integer',
         ];
 
@@ -161,9 +163,18 @@ class RewardController extends Controller
 
     public function applied(Request $request) {
 
-        $rewards = VendorReward::select('vendor_rewards.*', 'users.*', 'tbl_order1.*')
-        ->leftJoin('users', 'vendor_rewards.vendor_id', '=', 'users.id')
-        ->leftJoin('tbl_order1', 'users.id', '=', 'tbl_order1.user_id')
+        // $rewards = VendorReward::select('vendor_rewards') ->get();
+        // $rewards = User::select('users')->where('id',$rewards->user_id)->get();
+        // $rewards = Order::select('tbl_order1') ->get();
+        
+        // $rewards = VendorReward::select('vendor_rewards.*', 'users.first_name', 'tbl_order1.id')
+        // ->join('users', 'vendor_rewards.vendor_id', '=', 'users.id') 
+        // ->join('tbl_order1', 'vendor_rewards.order_id', '=', 'tbl_order1.id')
+        // ->get();
+
+        $rewards = VendorReward::select('vendor_rewards.*', 'users.first_name', 'tbl_order1.id', 'tbl_order1.total_order_weight')
+        ->join('users', 'vendor_rewards.vendor_id', '=', 'users.id')
+        ->join('tbl_order1', 'vendor_rewards.order_id', '=', 'tbl_order1.id')
         ->get();
 
       return view('admin.Rewards.applied-reward' , compact('rewards'));
