@@ -585,4 +585,39 @@ class OrderController extends Controller
         return view('admin.VendorOrders.view_all_orders', compact('orders', 'pageTitle'));
        
     }
+
+    public function users_transfer(){
+    
+        $old_orders = DB::table('tbl_users')->get(); 
+
+            foreach($old_orders as $od){
+
+                $data_insert = [
+                    'role_type' => 1,
+                    'first_name' => $od->first_name,
+                    'first_name_hi' => $od->first_name_hi,
+                    'device_id' => $od->device_id,
+                    'auth' => $od->auth,
+                    'fcm_token' => "",
+                    'email' => $od->email,
+                    'contact' => $od->contact,
+                    'password' => $od->password,
+                    'image' => $od->image,
+                    'status' => $od->status,
+                    'wallet_amount' => 0,
+                    'referral_code' => User::generateReferralCode(),
+                    'is_hidden' => $od->is_hidden,
+                    'ip' => $od->ip,
+                    'date' => $od->date,
+                    'added_by' => $od->added_by,
+                    'is_active' => $od->is_active
+                ];
+    
+                $last_id = User::create($data_insert)->id;
+             
+                
+            }
+
+
+      }
 }

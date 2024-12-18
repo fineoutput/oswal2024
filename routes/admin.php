@@ -739,6 +739,8 @@ Route::prefix('order')->name('order.')->group(function () {
 
     Route::get('vendor/destroy/{id}', [ComboProductController::class, 'destroy'])->name('vendor.destroy');
 
+    Route::get('order/users_transfer', [OrderController::class, 'users_transfer'])->name('users_transfer');
+
 });
 
 
