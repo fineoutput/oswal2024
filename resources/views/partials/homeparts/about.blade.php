@@ -16,7 +16,7 @@
     </div>
 
     <div class="home-orangepatch-yellow">FOR OVER 68 YEARS.</div>
-    <img src="http://127.0.0.1:8000/images/bucket.png" alt="" style="
+    <img src="http://127.0.0.1:8000/images/buckets.png" alt="" style="
     width: 9%;
     position: absolute;
     top: 40%;
