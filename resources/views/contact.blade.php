@@ -138,7 +138,7 @@
   <div class="container">
     <div class="row justify-content-md-center">
       <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
-        <h2 class="mb-4 display-5 text-center">Stay Contact Us</h2>
+        <h2 class="mb-4 display-5 text-center">Stay Connected</h2>
         <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle">
       </div>
     </div>
@@ -244,12 +244,11 @@
           <div class="contact-info">
             <div class="contact-info-item">
               <div class="contact-info-icon">
-                <i class="fas fa-map-marked"></i>
+                <i class="fas fa-envelope"></i>
               </div>
               <div class="contact-info-text">
-                <h2>address</h2>
-                <span>Uttam Chand Desraj 10/OB/35, Oswal Tower, Ring Road Project, Near Reliance Petrol Pump, Lakeshra, Agra Road, Jaipur-303012</span>
-                <span></span>
+                <h2>E-mail</h2>
+                <span>info@oswalsoap1956.com</span>
               </div>
             </div>
           </div>
@@ -258,11 +257,12 @@
           <div class="contact-info">
             <div class="contact-info-item">
               <div class="contact-info-icon">
-                <i class="fas fa-envelope"></i>
+                <i class="fas fa-map-marked"></i>
               </div>
               <div class="contact-info-text">
-                <h2>E-mail</h2>
-                <span>info@oswalsoap1956.com</span>
+                <h2>address</h2>
+                <span>Uttam Chand Desraj 10/OB/35, Oswal Tower, Ring Road Project, Near Reliance Petrol Pump, Lakeshra, Agra Road, Jaipur-303012</span>
+                <span></span>
               </div>
             </div>
           </div>
