@@ -392,7 +392,7 @@ class OrderController extends Controller
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
-        $reponse['get_online_payment_status' ]    = 0;
+        $reponse['get_online_payment_status' ]    = 1;
         
         return response()->json($reponse);
     }
@@ -967,8 +967,7 @@ class OrderController extends Controller
     public function orders(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'lang'         => 'required|string',
-            'device_id'   => 'string',
+            'lang'         => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -976,19 +975,7 @@ class OrderController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
 
-        $user_id = 0;
-        $role_type = 1;
-        $userDetails = null;
-    if ($request->header('Authorization')) {
-        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
-        $userDetails = User::where('auth', $auth_token)->first();
-        if ($userDetails) {
-            $device_id = $userDetails->device_id;
-            $user_id = $userDetails->id;
-            $role_type = $userDetails->role_type;
-        }
-    }
-
+        $user_id = auth()->user()->id;
 
 
         $lang    = $request->input('lang');
@@ -1400,7 +1387,7 @@ class OrderController extends Controller
 
     private function sendPushNotification($fcm_token) {
 
-        $title = '🎉 Reward Alert! 🎉';
+        $title = 'ðŸŽ‰ Reward Alert! ðŸŽ‰';
         $message = 'Congratulations! You are now eligible for a special reward! Tap to claim it now.';
 
         if($fcm_token != null){
