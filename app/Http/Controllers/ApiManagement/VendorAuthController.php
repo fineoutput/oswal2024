@@ -177,13 +177,7 @@ class VendorAuthController extends Controller
 
         // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
 
-        $msg = "Dear User,
-                Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
-
-                Welcome!!
-
-                Regards,
-                OSWAL SOAP";
+        $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
 
         sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 
