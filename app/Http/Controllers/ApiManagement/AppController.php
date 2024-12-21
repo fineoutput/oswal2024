@@ -747,12 +747,12 @@ class AppController extends Controller
         $lat = $request->lat;
         $long = $request->long;
 
-        if($api_key == API_KEY_OSWALAPP){
+        if($api_key == config('constants.API_KEY_OSWALAPP')){
 
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-              CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.'%2C'.$long.'&key='.GOOGLE_LATLONG_API_KEY,
+              CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.'%2C'.$long.'&key='.config('constants.AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U'),
               CURLOPT_RETURNTRANSFER => true,
               CURLOPT_ENCODING => '',
               CURLOPT_MAXREDIRS => 10,
