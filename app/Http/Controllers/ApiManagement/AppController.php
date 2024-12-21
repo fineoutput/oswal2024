@@ -761,7 +761,8 @@ class AppController extends Controller
               CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
               CURLOPT_CUSTOMREQUEST => 'POST',
               CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer AIzaSyAtZ7Ez9JnhpOsvmJSfv53F-p-O4CsJgmo'
+                'Authorization: Bearer AIzaSyAtZ7Ez9JnhpOsvmJSfv53F-p-O4CsJgmo',
+                'Content-Type: application/json'
               ),
             ));
             
