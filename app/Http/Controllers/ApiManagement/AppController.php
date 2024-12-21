@@ -731,6 +731,55 @@ class AppController extends Controller
         return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
     }
 
+    public function get_location(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'api_key' => 'required',
+            'lat' => 'required',
+            'long' => 'required',
+            'device_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+        $api_key = $request->api_key;
+        $lat = $request->lat;
+        $long = $request->long;
+
+        if($api_key == API_KEY_OSWALAPP){
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.'%2C'.$long.'&key='.GOOGLE_LATLONG_API_KEY,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST'
+            ));
+            
+            $response = curl_exec($curl);
+            
+            curl_close($curl);
+            echo $response;
+
+        // if (!getLatLngFromAddress($custom_address)) {
+        //     $live_location = "not able to get from google";
+        //     // return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
+        // }
+        // else{
+        //     $live_location =
+        // }
+
+
+        }
+
+    }
+
 
     public function unauth()
     {
