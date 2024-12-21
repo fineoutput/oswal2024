@@ -64,7 +64,7 @@ class OrderController extends Controller
             'promocode'       => 'nullable|string',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
-            'device_id'   => 'required|integer',
+            'device_id'   => 'integer',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -77,6 +77,13 @@ class OrderController extends Controller
 
         $deviceId       = $request->device_id;
 
+        if(auth()->user()->id)
+        $order1update =[
+          'device_id'=>$deviceId
+        ];
+        
+        $updated_last_id = Order1::where('id', $order1_id)->first();
+        $updated_last_id->update($order1update);
 
         $userId         = auth()->user()->id;
 
