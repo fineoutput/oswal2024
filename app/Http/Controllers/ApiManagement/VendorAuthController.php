@@ -292,13 +292,12 @@ class VendorAuthController extends Controller
         }
 
         $user = User::where('contact', $request->phone_no)->where('role_type', 2)->first();
-
-        if ($user->is_active != 1) {
-
-            return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
-        }
         
         if ($user) {
+            if ($user->is_active != 1) {
+
+                return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
+            }
             $OTP = generateOtp();
 
             $dlt = config('constants.SMS_LOGIN_DLT');
