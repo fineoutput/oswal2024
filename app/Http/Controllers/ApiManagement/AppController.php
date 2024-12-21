@@ -768,7 +768,7 @@ class AppController extends Controller
             curl_close($curl);
 
             $r = json_decode($response);
-            $r2 = json_encode($r->results[0]->formatted_address);
+            $r2 = $r->results[0]->formatted_address;
             if(!empty($r2 )){
                 return response()->json(['status' => 'Success', 'message' => $r2]);
             }
