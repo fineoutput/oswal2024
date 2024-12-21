@@ -2136,8 +2136,8 @@ canvas {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  height: 50vh;
-  box-shadow: -2px 2px 20px 0px #0000004d;
+  height: 40vh;
+  box-shadow: 0px 6px 13px 0px #f48720;
 }
 
 .product_category_title {
