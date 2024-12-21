@@ -216,11 +216,6 @@ if (!function_exists('sendOtpSms')) {
         $authKey = config('constants.SMS_API_KEY'); 
         $senderId = $sender_id;
 
-        Log::error("cURL Error1 #:" . $senderId);
-        Log::error("cURL Error2 #:" . $phone);
-        Log::error("cURL Error3 #:" . $msg);
-        Log::error("cURL Error4 #:" . $otp);
-        Log::error("cURL Error5 #:" . $dlt);
         $ch = curl_init();
 
         curl_setopt_array($ch, [
@@ -249,7 +244,7 @@ if (!function_exists('sendOtpSms')) {
             Log::error("cURL Error #:" . $err);
         } else {
             // Process the response if needed
-            Log::info("cURL Response: " . $response);
+            // Log::info("cURL Response: " . $response);
         }
     }
 }
