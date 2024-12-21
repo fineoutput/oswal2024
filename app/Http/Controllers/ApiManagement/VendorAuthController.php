@@ -24,6 +24,7 @@ use App\Models\Vendor;
 use App\Models\User;
 
 use App\Models\Otp;
+use Illuminate\Validation\Rule;
 
 class VendorAuthController extends Controller
 {
@@ -57,8 +58,11 @@ class VendorAuthController extends Controller
 
             } else {
 
-                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
-
+                $rules['phone_no'] = [
+                    'required',
+                    'digits:10',
+                    Rule::unique('users', 'contact')->whereNull('deleted_at'),
+                ];
                 $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
                 $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             }
@@ -67,7 +71,11 @@ class VendorAuthController extends Controller
 
             session()->flush();
 
-            $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+            $rules['phone_no'] = [
+                'required',
+                'digits:10',
+                Rule::unique('users', 'contact')->whereNull('deleted_at'),
+            ];
 
             $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
