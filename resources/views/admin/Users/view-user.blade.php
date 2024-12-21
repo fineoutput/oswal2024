@@ -102,6 +102,7 @@
 
                                                     <th data-priority="3">Wallet Amount</th>
                                                     <th data-priority="5">Date</th>
+                                                    <th data-priority="5">Old Date</th>
 
                                                     <th data-priority="6">Status</th>
 
@@ -128,6 +129,12 @@
                                                     <td>
                                                     @php
                                                     $newDate = \Carbon\Carbon::parse($user->created_at);
+                                                @endphp
+                                                {{ $newDate->format('j F, Y, g:i a') }}
+                                            </td>
+                                            <td>
+                                                    @php
+                                                    $newDate = \Carbon\Carbon::parse($user->date);
                                                 @endphp
                                                 {{ $newDate->format('j F, Y, g:i a') }}
                                             </td>
