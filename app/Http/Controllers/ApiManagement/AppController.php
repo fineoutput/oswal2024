@@ -746,30 +746,33 @@ class AppController extends Controller
         $api_key = $request->api_key;
         $lat = $request->lat;
         $long = $request->long;
+        $apiKey = config('constants.GOOGLE_MAP_KEY');
 
         if($api_key == config('constants.API_KEY_OSWALAPP')){
 
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-              CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.'%2C'.$long.'&key='.config('constants.AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U'),
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'POST',
-              CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer AIzaSyAtZ7Ez9JnhpOsvmJSfv53F-p-O4CsJgmo',
-                'Content-Type: application/json'
-              ),
+                CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $lat . ',' . $long . '&key=' . $apiKey,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET', // Change to GET
             ));
             
             $response = curl_exec($curl);
             
             curl_close($curl);
-            echo $response;
+
+            $r = json_decode($response);
+            $r2 = json_encode($r->results[0]->formatted_address);
+            if(!empty($r2 )){
+                return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            }
+            // print_r($r2);
 
         // if (!getLatLngFromAddress($custom_address)) {
         //     $live_location = "not able to get from google";
