@@ -22,6 +22,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 use App\Models\Otp;
+use Illuminate\Validation\Rule;
+
 
 class UserAuthController extends Controller
 {
@@ -45,7 +47,11 @@ class UserAuthController extends Controller
 
             }else{
 
-                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+                $rules['phone_no'] = [
+                    'required',
+                    'digits:10',
+                    Rule::unique('users', 'contact')->whereNull('deleted_at'),
+                ];
                 
             }
 
@@ -53,7 +59,11 @@ class UserAuthController extends Controller
 
             session()->flush();
 
-            $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+            $rules['phone_no'] = [
+                'required',
+                'digits:10',
+                Rule::unique('users', 'contact')->whereNull('deleted_at'),
+            ];
 
         }
         
