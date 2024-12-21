@@ -141,13 +141,7 @@ class UserAuthController extends Controller
 
         // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
 
-        $msg = "Dear User,
-Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
-
-Welcome!!
-
-Regards,
-OSWAL SOAP";
+        $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
 
         sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 
