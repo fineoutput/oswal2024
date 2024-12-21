@@ -239,7 +239,7 @@ class VendorAuthController extends Controller
             $otpRecord->is_active = 0;
 
             $otpRecord->save();
-
+            Log::info("user_id: " . $user_id);
             $user = User::find($user_id);
 
             $user->status = 1;
