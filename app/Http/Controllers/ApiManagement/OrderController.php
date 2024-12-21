@@ -967,7 +967,8 @@ class OrderController extends Controller
     public function orders(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'lang'         => 'required|string'
+            'lang'         => 'required|string',
+            'device_id'   => 'string',
         ]);
 
         if ($validator->fails()) {
@@ -975,7 +976,25 @@ class OrderController extends Controller
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
 
-        $user_id = auth()->user()->id;
+        $user_id = 0;
+        $role_type = 1;
+        $userDetails = null;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        if ($userDetails) {
+            $device_id = $userDetails->device_id;
+            $user_id = $userDetails->id;
+            $role_type = $userDetails->role_type;
+        }
+    }
+   
+
+        if ($user_id == null && ($user_id && $userDetails->role_type == 2)) {
+
+            return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
+
+        }
 
 
         $lang    = $request->input('lang');
