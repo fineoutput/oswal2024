@@ -770,7 +770,7 @@ class AppController extends Controller
             $r = json_decode($response);
             $r2 = json_encode($r->results[0]->formatted_address);
             if(!empty($r2 )){
-                return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+                return response()->json(['status' => 'Success', 'message' => $r2]);
             }
             // print_r($r2);
 
