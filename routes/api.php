@@ -128,4 +128,4 @@ Route::prefix('cart')->name('cart.')->group(function () {
 });
 Route::get('unroute', [AppController::class, 'unauth'])->name('unauth.route');
 Route::post('order/orders', [OrderController::class, 'orders'])->name('order/orders');
-Route::get('get-location-from-latlong', [AppController::class, 'get_location'])->name('get-location-from-latlong');
+Route::post('get-location-from-latlong', [AppController::class, 'get_location'])->name('get-location-from-latlong');
