@@ -291,7 +291,7 @@ class VendorAuthController extends Controller
             return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
-        $user = User::where('contact', $request->phone_no)->first();
+        $user = User::where('contact', $request->phone_no)->where('role_type', 2)->first();
 
         if ($user->is_active != 1) {
 
