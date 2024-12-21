@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
 
     Route::prefix('order')->name('order.')->group(function () {
         Route::post('cod-checkout', [OrderController::class, 'codCheckout'])->name('codCheckout');
-        Route::post('orders', [OrderController::class, 'orders'])->name('orders');
+      
         Route::post('order-details', [OrderController::class, 'orderDetail'])->name('order-details');
         Route::post('cancel-order', [OrderController::class, 'cancelOrder'])->name('cancel-order');
         Route::post('track-order', [OrderController::class, 'trackOrder'])->name('track-order');
@@ -62,6 +62,8 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::get('vendor/reward-list' , [AppController::class , 'getReward']);
     Route::get('vendor/reward-claim' , [AppController::class , 'claimReward']);
 });
+
+Route::post('order/orders', [OrderController::class, 'orders'])->name('order/orders');
 
 Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
     Route::get('dashboard', [DeliveryBoyController::class, 'dashboard'])->name('dashboard');

@@ -100,7 +100,7 @@ class EcommerceController extends Controller
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
         $userDetails = User::where('auth', $auth_token)->first();
         if ($userDetails) {
-            $device_id = $userDetails->device_id;
+            // $device_id = $userDetails->device_id;
             $user_id = $userDetails->id;
         }
     }
