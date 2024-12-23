@@ -4,6 +4,64 @@
 
 @section('content')
 <style>
+ /* Basic Styling for Notification */
+/* Basic Styling for Notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 10px;
+    width: 300px;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    color: #fff;
+    z-index: 20000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f44336; /* Default error color */
+    opacity: 0;
+    animation: slideInOut 5s forwards; /* Slide in and out animation */
+}
+
+.notification.success {
+    background-color: #4CAF50; /* Green for success */
+}
+
+.notification.error {
+    background-color: #f44336; /* Red for error */
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+@keyframes slideInOut {
+    0% {
+        top: -100px; /* Start off-screen */
+        opacity: 0;
+    }
+    5% {
+        top: 20px; /* Final position */
+        opacity: 1;
+    }
+    95% {
+        top: 20px; /* Stay in place */
+        opacity: 1;
+    }
+    100% {
+        top: -100px; /* Move off-screen again */
+        opacity: 0;
+    }
+}
+
+
+
     .free_offer_imag {
         position: relative;
     }
@@ -125,7 +183,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
     </div>
 
     <div class="row">
-
+        
         <div class="col-md-6 order-md-2 mb-4">
 
             <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -547,6 +605,12 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
 
+                <!-- Notification Container -->
+                <div id="notification-container" class="d-none notification">
+                    <span id="notification-message"></span>
+                </div>
+
+
                 {{-- <div id="fixedButton" class="store_data d-flex butn-fxd hidden-button d-lg-none" style="bottom: 0 !important;">
 
                         <a href="#">
@@ -920,42 +984,100 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
     function updateAmount(type) {
 
-        const codContainer = $('#CodCaharges');
+const codContainer = $('#CodCaharges');
+const codChargeAmount = $('#codChargeAmount');
+const totalorderAmount = $('#totalorderAmount');
+const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
+const codLimit = 200; // Set your COD limit here
+let total_amount;
 
-        const codChargeAmount = $('#codChargeAmount');
+if (type == 1) {
+    // Calculate the total amount including the COD charge
+    total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
 
-        const totalorderAmount = $('#totalorderAmount');
+    // Check if total amount exceeds the COD limit
+    if (total_amount > codLimit) {
+        // Show a custom notification if the total amount exceeds the COD limit
+        showNotificationss("You have crossed your COD amount limit. Please choose another payment method.", "error");
 
-        const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
-
-        let total_amount;
-
-        if (type == 1) {
-
-            total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
-
-            totalorderAmount.text(`₹${total_amount}`);
-
-            $('#totalorderAmounti').val(total_amount);
-
-            codChargeAmount.text(`+₹${codCharge}`);
-
-            codContainer.removeClass('d-none').addClass('d-block');
-
-        } else {
-
-            total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
-
-            $('#totalorderAmounti').val(total_amount);
-
-            totalorderAmount.text(`₹${total_amount}`)
-
-            codChargeAmount.text(`+₹${codCharge}`);
-
-            codContainer.removeClass('d-block').addClass('d-none');
-
-        }
+        // return; // Exit the function early to prevent further actions
     }
+
+    // Update the total amount and COD charge
+    totalorderAmount.text(`₹${total_amount}`);
+    $('#totalorderAmounti').val(total_amount);
+    codChargeAmount.text(`+₹${codCharge}`);
+
+    // Show the COD charge container
+    codContainer.removeClass('d-none').addClass('d-block');
+
+} else {
+    // Calculate the total amount excluding the COD charge
+    total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
+
+    // Update the total amount and remove COD charge
+    totalorderAmount.text(`₹${total_amount}`);
+    $('#totalorderAmounti').val(total_amount);
+    codChargeAmount.text(`+₹${codCharge}`);
+
+    // Hide the COD charge container
+    codContainer.removeClass('d-block').addClass('d-none');
+}
+}
+
+// Custom function to show notifications
+function showNotificationss(message, type) {
+    console.log('check');
+    const notificationContainer = $('#notification-container');
+    notificationContainer.removeClass('d-none');
+    notificationContainer.text(message);
+    notificationContainer.addClass(type);
+
+    // Optionally, you can hide the notification after a certain time (e.g., 5 seconds)
+    setTimeout(() => {
+        notificationContainer.addClass('d-none');
+    }, 5000);
+}
+
+
+    // function updateAmount(type) {
+
+    //     const codContainer = $('#CodCaharges');
+
+    //     const codChargeAmount = $('#codChargeAmount');
+
+    //     const totalorderAmount = $('#totalorderAmount');
+
+    //     const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
+
+    //     let total_amount;
+
+    //     if (type == 1) {
+
+    //         total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
+
+    //         totalorderAmount.text(`₹${total_amount}`);
+
+    //         $('#totalorderAmounti').val(total_amount);
+
+    //         codChargeAmount.text(`+₹${codCharge}`);
+
+    //         codContainer.removeClass('d-none').addClass('d-block');
+
+    //     } else {
+
+    //         total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
+
+    //         $('#totalorderAmounti').val(total_amount);
+
+    //         totalorderAmount.text(`₹${total_amount}`)
+
+    //         codChargeAmount.text(`+₹${codCharge}`);
+
+    //         codContainer.removeClass('d-block').addClass('d-none');
+
+    //     }
+    // }
 
     function convertCurrencyToFloat(value) {
 

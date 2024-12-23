@@ -736,7 +736,7 @@ class OrderController extends Controller
             if ($order->sub_total > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
-                    'message' => "Payment type invalid for large amount ".formatPrice($maxCodAmount)
+                    'message' => "Cod not allowed for order above ₹".formatPrice($maxCodAmount)
                 ]);
             }
 
