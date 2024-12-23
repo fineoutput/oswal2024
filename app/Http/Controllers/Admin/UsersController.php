@@ -100,11 +100,15 @@ public function destroypopup($id)
                 unlink($oldImagePath); // Delete the old image
             }
     
-            // Store the new image in the 'uploads/popup_images' directory inside the public directory
-            $imagePath = $request->file('image')->store('uploads/popup_images', 'public'); // Using 'public' disk
-            
-            // Update the image path in the database
-            $popup->image = $imagePath;
+            // Get the new image file
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension(); // Create a unique name for the image
+    
+            // Store the new image in 'uploads/popup_images' directory inside the public directory
+            $image->move(public_path('uploads/popup_images'), $imageName);
+    
+            // Update the image path in the database (save only the relative path)
+            $popup->image = 'uploads/popup_images/' . $imageName;
         }
     
         // Save the updated record
@@ -113,6 +117,7 @@ public function destroypopup($id)
         // Redirect with a success message
         return redirect('admin/popupimage')->with('success', 'Popup image updated successfully!');
     }
+    
     
     public function index()
     {
