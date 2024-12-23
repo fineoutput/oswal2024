@@ -193,15 +193,20 @@ class UserAuthController extends Controller
 
         $otpRecord = Otp::find($userOtpId);
         $storeuser = Otp::orderBy('id','DESC')->where('otp',$request->otp)->first();
+        // if($storeuser)
         $usertemp = UserTemp::orderBy('id','DESC')->where('name',$storeuser->name)->first();
+        if(empty($usertemp->name)){
+             $usertempuser = User::orderBy('id','DESC')->where('first_name',$storeuser->name)->first();
+        }
         // return $usertemp;
+       if(!empty($usertemp)){
         $date = [
-            'first_name'      => $usertemp->name ?? '',
-            'first_name_hi'   => lang_change($usertemp->name ?? ''),
-            'device_id'       => $usertemp->device_id ?? '',
+            'first_name'      => $usertemp->name ,
+            'first_name_hi'   => lang_change($usertemp->name ),
+            'device_id'       => $usertemp->device_id,
             'auth'            => generateRandomString(),
-            'email'           => $usertemp->email ?? '',
-            'contact'         => $usertemp->contact ?? '',
+            'email'           => $usertemp->email,
+            'contact'         => $usertemp->contact,
             'password'        => null,
             'status'          => '1',
             'referral_code'   => User::generateReferralCode(),
@@ -209,6 +214,22 @@ class UserAuthController extends Controller
             'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'              => $request->ip(),
         ];
+       }else{
+        $date = [
+            'first_name'      =>  $usertempuser->first_name,
+            'first_name_hi'   => lang_change( $usertempuser->first_name),
+            'device_id'       =>  $usertempuser->device_id,
+            'auth'            => generateRandomString(),
+            'email'           =>  $usertempuser->email,
+            'contact'         =>  $usertempuser->contact,
+            'password'        => null,
+            'status'          => '1',
+            'referral_code'   => User::generateReferralCode(),
+            'added_by'        => 1,
+            'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            'ip'              => $request->ip(),
+        ];
+       }
 
         $user = User::create($date);
 
