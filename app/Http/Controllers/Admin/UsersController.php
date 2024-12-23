@@ -8,16 +8,105 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\Popupimage;
 
 class UsersController extends Controller
 {
 
+
+    public function popupimage(Request $request){
+        $data['popup'] = Popupimage::orderBy('id','DESC')->get();
+        return view('admin/popupimage',$data);
+    }
+
+    public function addpopupimage(Request $request){
+        
+        if ($request->method() == 'POST') {
+
+            // Validate the incoming request to ensure the file is an image
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+    
+            // Check if an image file is uploaded
+            if ($request->hasFile('image')) {
+                // Store the image in the 'public/popup_images' directory
+                $imagePath = $request->file('image')->store('/popup_images');
+    
+                // Create a new Popupimage record and store the image path
+                $popupImage = Popupimage::create([
+                    'image' => $imagePath
+                ]);
+    
+                // Optionally, you can show a success message or return a response
+                return redirect('admin/popupimage')->with('success', 'Image uploaded successfully');
+            }
+    
+            // If no file was uploaded, return with an error
+            return redirect('admin/popupimage')->with('error', 'No image file uploaded');
+        }
+    return view('admin/addpopupimage');
+}
+
+public function destroypopup($id)
+    {
+        $popupImage = Popupimage::find($id);
+
+        if ($popupImage) {
+            Storage::delete($popupImage->image);
+            $popupImage->delete();
+
+            return redirect()->back()->with('success', 'Image deleted successfully');
+        }
+
+        // In case the image doesn't exist, redirect with error message
+        return redirect()->back()->with('error', 'Image not found');
+    }
+
+    public function editpopup($id)
+    {
+        $popup = Popupimage::findOrFail($id); // Find the popup image by ID
+        return view('admin.editpopupimage', compact('popup'));
+    }
+
+    // Update the popup image in the database
+    public function updatepopup(Request $request, $id)
+    {
+        // Validate the uploaded image
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+    
+        // Find the existing popup image record
+        $popup = Popupimage::findOrFail($id);
+    
+        // If a new image is uploaded, delete the old one and store the new image
+        if ($request->hasFile('image')) {
+            // Delete the old image from storage
+            if (Storage::exists('popup_images/' . $popup->image)) {
+                Storage::delete('popup_images/' . $popup->image);
+            }
+    
+            // Store the new image in the default storage directory (without the 'public' prefix)
+            $imagePath = $request->file('image')->store('popup_images', 'local'); // Using 'local' disk
+            
+            // Update the image path in the database
+            $popup->image = $imagePath;
+        }
+    
+        // Save the updated record
+        $popup->save();
+    
+        // Redirect with a success message
+        return redirect('admin/popupimage')->with('success', 'Popup image updated successfully!');
+    }
+    
     public function index()
     {
         

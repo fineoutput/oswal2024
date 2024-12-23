@@ -47,9 +47,21 @@ use App\Models\Blog;
 use App\Models\City;
 
 use App\Models\User;
+use App\Models\Popupimage;
 
 class AppController extends Controller
 {
+
+    public function popupimage()
+    {
+
+        $popupImages = Popupimage::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $popupImages
+        ], 200);
+    }
 
     public function blog()
     {

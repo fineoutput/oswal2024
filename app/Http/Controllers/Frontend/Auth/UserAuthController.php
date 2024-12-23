@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\UserTemp;
 
 use App\Models\Otp;
 
@@ -33,7 +34,7 @@ class UserAuthController extends Controller
 
     public function register(Request $request)
     {
-        
+
         $rules = [
             'username'      => 'required|string|max:255',
             'email'         => 'required|string|email',
@@ -101,7 +102,7 @@ class UserAuthController extends Controller
         $name =  $request->username;
 
         $date = [
-            'first_name'      => $name,
+            'name'      => $name,
             'first_name_hi'   => lang_change($name),
             'device_id'       => $request->device_id,
             'auth'            => generateRandomString(),
@@ -115,7 +116,7 @@ class UserAuthController extends Controller
             'ip'              => $request->ip(),
         ];
 
-        $user = User::create($date);
+        $user = UserTemp::create($date);
 
         if ($request->referral_code != null && $request->referral_code != '') {
 
@@ -191,18 +192,38 @@ class UserAuthController extends Controller
         $referee_tr_id  = session()->get('referee_tr_id') ?? null;
 
         $otpRecord = Otp::find($userOtpId);
+        $storeuser = Otp::orderBy('id','DESC')->where('otp',$request->otp)->first();
+        $usertemp = UserTemp::orderBy('id','DESC')->where('name',$storeuser->name)->first();
+        // return $usertemp;
+        $date = [
+            'first_name'      => $usertemp->name,
+            'first_name_hi'   => lang_change($usertemp->name),
+            'device_id'       => $usertemp->device_id,
+            'auth'            => generateRandomString(),
+            'email'           => $usertemp->email,
+            'contact'         => $usertemp->contact,
+            'password'        => null,
+            'status'          => '1',
+            'referral_code'   => User::generateReferralCode(),
+            'added_by'        => 1,
+            'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            'ip'              => $request->ip(),
+        ];
+
+        $user = User::create($date);
+
 
         if ($otpRecord && $otpRecord->otp == $enteredOtp) {
             
-            $otpRecord->is_active = 1; 
+            // $otpRecord->is_active = 1; 
 
-            $otpRecord->save();
+            // $otpRecord->save();
 
-            $user = User::find($user_id);
+            // $user = User::find($user_id);
 
-            $user->status = 1;
+            // $user->status = 1;
 
-            $user->save();
+            // $user->save();
 
             $request->session()->regenerate();
 
