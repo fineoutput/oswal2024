@@ -100,7 +100,6 @@ public function destroypopup($id)
                 unlink($oldImagePath); // Delete the old image
             }
     
-            // Get the new image file
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension(); // Create a unique name for the image
     

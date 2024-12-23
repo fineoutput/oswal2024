@@ -141,9 +141,9 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-left">
-        <h4 style="
+        {{-- <h4 style="
     text-align: center;
-">Oswal Products</h4>
+">Oswal Products</h4> --}}
         </div>
         <div class="modal-right">
             <img src="{{ asset('images/product_diversification.png') }}" alt="Popup Image" style="width:100%;">
