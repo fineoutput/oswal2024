@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use App\Models\PopupImage;
+use App\Models\Popupimage;
 
 class UsersController extends Controller
 {
@@ -78,30 +78,35 @@ public function destroypopup($id)
     // Update the popup image in the database
     public function updatepopup(Request $request, $id)
     {
+        // Validate the uploaded image
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-
+    
+        // Find the existing popup image record
         $popup = Popupimage::findOrFail($id);
-
+    
         // If a new image is uploaded, delete the old one and store the new image
         if ($request->hasFile('image')) {
             // Delete the old image from storage
-            if (Storage::exists($popup->image)) {
-                Storage::delete($popup->image);
+            if (Storage::exists('popup_images/' . $popup->image)) {
+                Storage::delete('popup_images/' . $popup->image);
             }
-
-            // Store the new image
-            $imagePath = $request->file('image')->store('public/popup_images');
+    
+            // Store the new image in the default storage directory (without the 'public' prefix)
+            $imagePath = $request->file('image')->store('popup_images', 'local'); // Using 'local' disk
+            
+            // Update the image path in the database
             $popup->image = $imagePath;
         }
-
-        // Save the updated information (if only the image was updated)
+    
+        // Save the updated record
         $popup->save();
-
+    
+        // Redirect with a success message
         return redirect('admin/popupimage')->with('success', 'Popup image updated successfully!');
     }
-
+    
     public function index()
     {
         
