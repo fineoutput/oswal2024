@@ -114,6 +114,16 @@ Route::get('/view_change_password', [AdminLoginController::class, 'admin_change_
 Route::post('/admin_change_password', [AdminLoginController::class, 'admin_change_password'])->name('admin_change_password');
 
 
+
+
+Route::get('/popupimage', [UsersController::class, 'popupimage'])->name('popupimage');
+Route::match(['get','post'],'/add/popupimage', [UsersController::class, 'addpopupimage'])->name('add_popup_image');
+// Route to delete popup image
+Route::get('popup/{id}/edit', [UsersController::class, 'editpopup'])->name('popup.edit');
+Route::put('popup/{id}', [UsersController::class, 'updatepopup'])->name('popup.update');
+Route::delete('popup/{id}', [UsersController::class, 'destroypopup'])->name('popup.destroy');
+
+
 // Admin Team routes
 
 Route::get('/view_team', [TeamController::class, 'view_team'])->name('view_team');
