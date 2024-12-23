@@ -196,12 +196,12 @@ class UserAuthController extends Controller
         $usertemp = UserTemp::orderBy('id','DESC')->where('name',$storeuser->name)->first();
         // return $usertemp;
         $date = [
-            'first_name'      => $usertemp->name,
-            'first_name_hi'   => lang_change($usertemp->name),
-            'device_id'       => $usertemp->device_id,
+            'first_name'      => $usertemp->name ?? '',
+            'first_name_hi'   => lang_change($usertemp->name ?? ''),
+            'device_id'       => $usertemp->device_id ?? '',
             'auth'            => generateRandomString(),
-            'email'           => $usertemp->email,
-            'contact'         => $usertemp->contact,
+            'email'           => $usertemp->email ?? '',
+            'contact'         => $usertemp->contact ?? '',
             'password'        => null,
             'status'          => '1',
             'referral_code'   => User::generateReferralCode(),
