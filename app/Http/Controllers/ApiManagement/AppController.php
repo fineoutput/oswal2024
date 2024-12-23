@@ -54,20 +54,26 @@ class AppController extends Controller
 
     public function popupimage()
     {
-        // Retrieve all the popup images
-        $popupImages = Popupimage::all();
+        // Retrieve the latest popup image
+        $latestPopupImage = Popupimage::latest()->first();
     
-        // Map through the images and add the full URL to the response
-        $popupImagesWithUrls = $popupImages->map(function($image) {
-            // Assuming your images are stored in public/popup_images directory
-            $image->url = asset('storage/popup_images/' . basename($image->image));
-            return $image;
-        });
+        // Check if there is any image available
+        if ($latestPopupImage) {
+            // Generate the full URL for the image
+            $imageUrl = asset('storage/popup_images/' . basename($latestPopupImage->image));
     
+            // Return only the image URL in the response
+            return response()->json([
+                'success' => true,
+                'image_url' => $imageUrl
+            ], 200);
+        }
+    
+        // If no image is found, return a failure response
         return response()->json([
-            'success' => true,
-            'data' => $popupImagesWithUrls
-        ], 200);
+            'success' => false,
+            'message' => 'No popup images found'
+        ], 404);
     }
 
     public function blog()
