@@ -32,6 +32,7 @@ use App\Models\DeliveryBoy;
 use App\Models\OrderDetail;
 
 use App\Models\Order;
+use App\Models\Address;
 use App\Models\Reward;
 use Illuminate\Support\Facades\DB;
 
@@ -380,9 +381,11 @@ class OrderController extends Controller
 
             $order = Order::with(['user', 'address.citys', 'address.states','orderDetails.product', 'orderDetails.type', 'invoices', 'gift'])->findOrFail( $id );
         }
+        $useraddress = Address::where('user_id',$id)->first();
 
         $user = $order->user;
         $address = $order->address;
+        // return $address;
         $city = $address->city ? $address->citys->city_name : '';
         $state = $address->state ? $address->states->state_name : '';
         $zipcode = $address->zipcode;

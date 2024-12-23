@@ -54,12 +54,19 @@ class AppController extends Controller
 
     public function popupimage()
     {
-
+        // Retrieve all the popup images
         $popupImages = Popupimage::all();
-
+    
+        // Map through the images and add the full URL to the response
+        $popupImagesWithUrls = $popupImages->map(function($image) {
+            // Assuming your images are stored in public/popup_images directory
+            $image->url = asset('storage/popup_images/' . basename($image->image));
+            return $image;
+        });
+    
         return response()->json([
             'success' => true,
-            'data' => $popupImages
+            'data' => $popupImagesWithUrls
         ], 200);
     }
 
