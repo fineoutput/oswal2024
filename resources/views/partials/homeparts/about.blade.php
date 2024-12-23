@@ -141,9 +141,7 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-left">
-        {{-- <h4 style="
-    text-align: center;
-">Oswal Products</h4> --}}
+            {{-- <h4 style="text-align: center;">Oswal Products</h4> --}}
         </div>
         <div class="modal-right">
             <img src="{{ asset('images/product_diversification.png') }}" alt="Popup Image" style="width:100%;">
@@ -373,12 +371,17 @@
     </script>
 <script>
     window.onload = function () {
-        setTimeout(function () {
-            var modal = document.getElementById("myModal");
-            if (modal) {
-                modal.style.display = "block";
-            }
-        }, 3000);
+        // Check if the popup has been shown before
+        if (!localStorage.getItem("popupShown")) {
+            setTimeout(function () {
+                var modal = document.getElementById("myModal");
+                if (modal) {
+                    modal.style.display = "block";
+                }
+                // Set a flag in localStorage to remember the popup was shown
+                localStorage.setItem("popupShown", "true");
+            }, 3000);
+        }
     };
 
     var span = document.getElementsByClassName("close")[0];
