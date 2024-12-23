@@ -26,40 +26,39 @@ class UsersController extends Controller
     }
 
     public function addpopupimage(Request $request)
-    {
-        if ($request->method() == 'POST') {
-    
-            // Validate the incoming request to ensure the file is an image
-            $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+{
+    if ($request->method() == 'POST') {
+
+        // Validate the incoming request to ensure the file is an image
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        // Check if an image file is uploaded
+        if ($request->hasFile('image')) {
+
+            // Store the image to public/uploads/popup_images
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension(); // Create a unique name for the image
+
+            // Move the image to the 'public/uploads/popup_images' directory
+            $image->move(public_path('uploads/popup_images'), $imageName);
+
+            // Save the image path to the database
+            $popupImage = Popupimage::create([
+                'image' => 'uploads/popup_images/' . $imageName // Store the relative path in the database
             ]);
-    
-            // Check if an image file is uploaded
-            if ($request->hasFile('image')) {
-                // Get the image file from the request
-                $image = $request->file('image');
-    
-                // Define the image file name with a unique name (optional)
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-    
-                // Move the image to the 'public/uploads/popup_images' directory
-                $image->move(public_path('uploads/popup_images'), $imageName);
-    
-                // Save the image path to the database (relative path)
-                $popupImage = Popupimage::create([
-                    'image' => 'uploads/popup_images/' . $imageName
-                ]);
-    
-                // Optionally, you can show a success message or return a response
-                return redirect('admin/popupimage')->with('success', 'Image uploaded successfully');
-            }
-    
-            // If no file was uploaded, return with an error
-            return redirect('admin/popupimage')->with('error', 'No image file uploaded');
+
+            // Optionally, you can show a success message or return a response
+            return redirect('admin/popupimage')->with('success', 'Image uploaded successfully');
         }
-    
-        return view('admin/addpopupimage');
+
+        // If no file was uploaded, return with an error
+        return redirect('admin/popupimage')->with('error', 'No image file uploaded');
     }
+    return view('admin/addpopupimage');
+}
+
 
 public function destroypopup($id)
     {
@@ -113,7 +112,7 @@ public function destroypopup($id)
     
         // Redirect with a success message
         return redirect('admin/popupimage')->with('success', 'Popup image updated successfully!');
-    
+    }
     
     public function index()
     {
