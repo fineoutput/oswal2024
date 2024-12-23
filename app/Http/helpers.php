@@ -413,6 +413,8 @@ if (!function_exists('generateInvoiceNumber')){
     {
      
         $order = Order::findOrFail($order1Id);
+        $OrderInvoice = OrderInvoice::wherenull('deleted_at')->orderBy('id', 'desc')->first();
+        $new_order_id = $OrderInvoice->invoice_no + 1;
 
         $orderinvoice = new OrderInvoice;
         
@@ -420,7 +422,7 @@ if (!function_exists('generateInvoiceNumber')){
 
         $orderinvoice->order_id   = $order->id;
 
-        $orderinvoice->invoice_no = date('YmdHis');
+        $orderinvoice->invoice_no = $new_order_id;
 
         $orderinvoice->save();
 

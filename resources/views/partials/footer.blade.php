@@ -138,7 +138,7 @@
                             
                             <li><a href="{{route('contact')}}"class="nav-link_color">Contact US</a></li>
                             
-                            <li><a href="{{route('privacy_policy')}}"class="nav-link_color">Privacy Policy</a></li>
+                            <li><a href="{{route('Privacy-Policy')}}"class="nav-link_color">Privacy Policy</a></li>
 
                             <li><a href="{{route('terms_conditions')}}"class="nav-link_color">Terms & Conditions</a></li>
                             

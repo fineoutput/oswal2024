@@ -22,6 +22,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 use App\Models\Otp;
+use Illuminate\Validation\Rule;
+
 
 class UserAuthController extends Controller
 {
@@ -45,7 +47,11 @@ class UserAuthController extends Controller
 
             }else{
 
-                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+                $rules['phone_no'] = [
+                    'required',
+                    'digits:10',
+                    Rule::unique('users', 'contact')->whereNull('deleted_at'),
+                ];
                 
             }
 
@@ -53,7 +59,11 @@ class UserAuthController extends Controller
 
             session()->flush();
 
-            $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+            $rules['phone_no'] = [
+                'required',
+                'digits:10',
+                Rule::unique('users', 'contact')->whereNull('deleted_at'),
+            ];
 
         }
         
@@ -64,15 +74,15 @@ class UserAuthController extends Controller
             return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
-        $dlt = config('constants.SMS_SIGNUP_DLT');
-        $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
+        $dlt = config('constants.SMS_LOGIN_DLT');
+        $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
 
         if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
         
             $OTP = generateOtp();
 
             // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
-            $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
+            $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
     
             sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Uncomment this line to send the OTP SMS
     
@@ -131,13 +141,7 @@ class UserAuthController extends Controller
 
         // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
 
-        $msg = "Dear User,
-Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
-
-Welcome!!
-
-Regards,
-OSWAL SOAP";
+        $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
 
         sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 

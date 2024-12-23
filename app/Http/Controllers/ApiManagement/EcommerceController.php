@@ -100,8 +100,16 @@ class EcommerceController extends Controller
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
         $userDetails = User::where('auth', $auth_token)->first();
         if ($userDetails) {
-            $device_id = $userDetails->device_id;
+            $device_id2 = $userDetails->device_id;
             $user_id = $userDetails->id;
+            if($device_id2 != $request->device_id){
+                $order1update =[
+                  'device_id'=>$request->device_id
+                ];
+                
+                $updated_last_id = User::where('id', $userDetails->id)->first();
+                $updated_last_id->update($order1update);
+            }
         }
     }
 

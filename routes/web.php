@@ -65,7 +65,7 @@ Route::group(['prefix' => '/'], function () {
 
     Route::get('vido_recipie3',[HomeController::class, 'vido_recipie3'])->name('vido_recipie3');
 
-    Route::get('privacy_policy',[HomeController::class, 'privacy_policy'])->name('privacy_policy');
+    Route::get('Privacy-Policy',[HomeController::class, 'privacy_policy'])->name('Privacy-Policy');
 
     Route::get('terms_conditions',[HomeController::class, 'terms_conditions'])->name('terms_conditions');
 

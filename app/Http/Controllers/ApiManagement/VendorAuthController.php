@@ -24,6 +24,7 @@ use App\Models\Vendor;
 use App\Models\User;
 
 use App\Models\Otp;
+use Illuminate\Validation\Rule;
 
 class VendorAuthController extends Controller
 {
@@ -57,8 +58,11 @@ class VendorAuthController extends Controller
 
             } else {
 
-                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
-
+                $rules['phone_no'] = [
+                    'required',
+                    'digits:10',
+                    Rule::unique('users', 'contact')->whereNull('deleted_at'),
+                ];
                 $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
                 $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             }
@@ -67,7 +71,11 @@ class VendorAuthController extends Controller
 
             session()->flush();
 
-            $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+            $rules['phone_no'] = [
+                'required',
+                'digits:10',
+                Rule::unique('users', 'contact')->whereNull('deleted_at'),
+            ];
 
             $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
             $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
@@ -80,15 +88,15 @@ class VendorAuthController extends Controller
             return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
-        $dlt = config('constants.SMS_SIGNUP_DLT');
+        $dlt = config('constants.SMS_LOGIN_DLT');
 
-        $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
+        $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
 
         if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
             $OTP = generateOtp();
 
             // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
-            $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
+            $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
 
             sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Uncomment this line to send the OTP SMS
 
@@ -169,13 +177,7 @@ class VendorAuthController extends Controller
 
         // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
 
-        $msg = "Dear User,
-                Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
-
-                Welcome!!
-
-                Regards,
-                OSWAL SOAP";
+        $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
 
         sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
 
@@ -237,7 +239,7 @@ class VendorAuthController extends Controller
             $otpRecord->is_active = 0;
 
             $otpRecord->save();
-
+            Log::info("user_id: " . $user_id);
             $user = User::find($user_id);
 
             $user->status = 1;
@@ -291,14 +293,13 @@ class VendorAuthController extends Controller
             return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
         }
 
-        $user = User::where('contact', $request->phone_no)->first();
-
-        if ($user->is_active != 1) {
-
-            return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
-        }
+        $user = User::where('contact', $request->phone_no)->where('role_type', 2)->first();
         
         if ($user) {
+            if ($user->is_active != 1) {
+
+                return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
+            }
             $OTP = generateOtp();
 
             $dlt = config('constants.SMS_LOGIN_DLT');
