@@ -1,4 +1,156 @@
+<style>
+ 
+ .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 999999; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+ }
+ 
+ /* Modal Content (Image) */
+ .modal-content {
+  margin: auto;
+  display: flex;
+  /* width: 80%; */
+  max-width: 700px;
+ }
+ 
+ /* The Close Button */
+ .close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+ }
+ 
+ .close:hover,
+ .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+ }
+ 
+ 
+ 
+ 
+ /* Modal Content */
+ .modal-content {
+     position: relative;
+     background-color: #fefefe;
+     margin: auto;
+     padding: 0;
+     border: 1px solid #888;
+     width: 80%;
+     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+     animation-name: animatetop;
+     animation-duration: 0.4s;
+     display: flex; /* Add this to make the content a flex container */
+     flex-direction: column;
+     border-radius: 20px;
+     -webkit-animation-name: zoom;
+     -webkit-animation-duration: 0.6s;
+     animation-name: zoom;
+     animation-duration: 0.6s;
+     justify-content: center;
+     align-items: center;
+ }
+ 
+ @-webkit-keyframes zoom {
+  from {-webkit-transform:scale(0)}
+  to {-webkit-transform:scale(1)}
+ }
+ 
+ @keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+ }
+ /* Modal Left (Form) */
+ .modal-left {
+     width: 50%; /* Set the width to 50% */
+     padding: 20px; /* Add some padding */
+ }
+ 
+ /* Modal Right (Image) */
+ .modal-right {
+     width: 100%; /* Set the width to 50% */
+ }
+ 
+ /* Close Button */
+ .close {
+     color: #000000;
+     float: right;
+     font-size: 28px;
+     font-weight: bold;
+ }
+ 
+ .close:hover,
+ .close:focus {
+     color: black;
+     text-decoration: none;
+     cursor: pointer;
+ }
+ .modal-right img {
+     height: 100%;
+     padding: 10px;
+     border-radius: 30px;
+ }
+ .modal-left input[type="submit"] {
+     width: 100%;
+     border-radius: 15px;
+ }
+ .modal-left input {
+     border: 1px solid #cdd6df;
+     padding: 10px;
+     border-radius: 20px;
+     font-weight: 700;
+     font-size: 13px;
+ }
+ .modal-left h4 {
+     margin-bottom: 0px;
+ }
+ .modal-left p {
+     margin-bottom: 20px;
+ }
+ @media (max-width: 600px){
+  .modal-content {
+    flex-direction: column;
+  }
+  .modal-left{
+    width: 100%;
+  }
+  .modal-right{
+    width: 100%;
+  }
+  .modal-left input {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+ }
+    </style>
 
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-left">
+        <h4 style="
+    text-align: center;
+">Oswal Products</h4>
+        </div>
+        <div class="modal-right">
+            <img src="{{ asset('images/product_diversification.png') }}" alt="Popup Image" style="width:100%;">
+        </div>
+        <span class="close">&times;</span>
+    </div>
+</div>
 <section class="module"
 
     style="background-image: url('{{ asset('images/3.webp') }}'); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">
@@ -219,3 +371,30 @@
             });
         });
     </script>
+<script>
+    window.onload = function () {
+        setTimeout(function () {
+            var modal = document.getElementById("myModal");
+            if (modal) {
+                modal.style.display = "block";
+            }
+        }, 3000);
+    };
+
+    var span = document.getElementsByClassName("close")[0];
+    if (span) {
+        span.onclick = function () {
+            var modal = document.getElementById("myModal");
+            if (modal) {
+                modal.style.display = "none";
+            }
+        };
+    }
+
+    window.onclick = function (event) {
+        var modal = document.getElementById("myModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
