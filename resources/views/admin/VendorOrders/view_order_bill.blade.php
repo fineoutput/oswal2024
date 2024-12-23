@@ -58,9 +58,9 @@
         <div class="col-sm-6"></div>
         <div class="col-sm-6 shipping_content">
           <span class="font-weight-bold">Shipping Address:</span><br>
-          Address:{{$address->doorflat ?? ''}},{{$address->landmark ?? ''}},{{$address->city ?? ''}},{{$address->state ?? ''}},{{$address->zipcode ?? ''}},{{ $address->address ?? 'No address' }}
+          Address:{{$address->doorflat ?? ''}},{{$address->landmark ?? ''}},{{ $address->address ?? 'No address' }},{{$address->citys->city_name ?? ''}},{{$address->states->state_name ?? ''}},{{$address->zipcode ?? ''}}
           <br>
-          State/UT Code: RJ14<br>
+          State/UT Code: RJ<br>
           Place of supply: {{ $city ?? 'N/A' }}<br>
           Place of delivery: {{ $city ?? 'N/A' }}, {{ $state ?? 'N/A' }}<br>
           Zipcode: {{ $zipcode ?? 'N/A' }}<br>
