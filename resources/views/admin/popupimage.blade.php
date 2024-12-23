@@ -108,7 +108,8 @@
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>
                                                         <!-- Display the image -->
-                                                        <img src="{{ asset('storage/' . $value->image) }}" alt="Popup Image" width="100" height="100">
+                                                        <img src="{{ asset($value->image) }}" alt="Popup Image" width="100" height="100">
+
                                                     </td>
                                                     <td>
                                                         <!-- Edit Button (Navigate to the Edit Form) -->

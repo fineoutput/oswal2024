@@ -59,23 +59,23 @@ class AppController extends Controller
     
         // Check if there is any image available
         if ($latestPopupImage) {
-            // Generate the full URL for the image
-            $imageUrl = asset('storage/popup_images/' . basename($latestPopupImage->image));
+            // Generate the full URL for the image stored in 'uploads/popup_images' directory
+            $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
     
-            // Return only the image URL in the response
+            // Return a JSON response with the image URL
             return response()->json([
                 'success' => true,
                 'image_url' => $imageUrl
             ], 200);
         }
     
-        // If no image is found, return a failure response
+        // Return a failure response if no image is found
         return response()->json([
             'success' => false,
             'message' => 'No popup images found'
         ], 404);
     }
-
+    
     public function blog()
     {
 

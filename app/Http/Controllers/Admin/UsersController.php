@@ -25,10 +25,10 @@ class UsersController extends Controller
         return view('admin/popupimage',$data);
     }
 
-    public function addpopupimage(Request $request){
-        
+    public function addpopupimage(Request $request)
+    {
         if ($request->method() == 'POST') {
-
+    
             // Validate the incoming request to ensure the file is an image
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
@@ -36,12 +36,18 @@ class UsersController extends Controller
     
             // Check if an image file is uploaded
             if ($request->hasFile('image')) {
-                // Store the image in the 'public/popup_images' directory
-                $imagePath = $request->file('image')->store('/popup_images');
+                // Get the image file from the request
+                $image = $request->file('image');
     
-                // Create a new Popupimage record and store the image path
+                // Define the image file name with a unique name (optional)
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+    
+                // Move the image to the 'public/uploads/popup_images' directory
+                $image->move(public_path('uploads/popup_images'), $imageName);
+    
+                // Save the image path to the database (relative path)
                 $popupImage = Popupimage::create([
-                    'image' => $imagePath
+                    'image' => 'uploads/popup_images/' . $imageName
                 ]);
     
                 // Optionally, you can show a success message or return a response
@@ -51,8 +57,9 @@ class UsersController extends Controller
             // If no file was uploaded, return with an error
             return redirect('admin/popupimage')->with('error', 'No image file uploaded');
         }
-    return view('admin/addpopupimage');
-}
+    
+        return view('admin/addpopupimage');
+    }
 
 public function destroypopup($id)
     {
@@ -88,13 +95,14 @@ public function destroypopup($id)
     
         // If a new image is uploaded, delete the old one and store the new image
         if ($request->hasFile('image')) {
-            // Delete the old image from storage
-            if (Storage::exists('popup_images/' . $popup->image)) {
-                Storage::delete('popup_images/' . $popup->image);
+            // Delete the old image from the public/uploads/popup_images directory
+            $oldImagePath = public_path('uploads/popup_images/' . basename($popup->image));
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath); // Delete the old image
             }
     
-            // Store the new image in the default storage directory (without the 'public' prefix)
-            $imagePath = $request->file('image')->store('popup_images', 'local'); // Using 'local' disk
+            // Store the new image in the 'uploads/popup_images' directory inside the public directory
+            $imagePath = $request->file('image')->store('uploads/popup_images', 'public'); // Using 'public' disk
             
             // Update the image path in the database
             $popup->image = $imagePath;
@@ -105,7 +113,7 @@ public function destroypopup($id)
     
         // Redirect with a success message
         return redirect('admin/popupimage')->with('success', 'Popup image updated successfully!');
-    }
+    
     
     public function index()
     {
