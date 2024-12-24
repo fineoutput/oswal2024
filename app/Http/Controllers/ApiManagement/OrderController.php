@@ -1058,6 +1058,7 @@ class OrderController extends Controller
                     
                     $rating_avg = number_format((float)$rating_avg, 1, '.', '');
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
+                    $track_status = $tracktransfer ? $tracktransfer->status : null;
                     // return $tracktransfer->status;
                     $dataw[] = [
                         'order_id'        => $order->id,
@@ -1074,7 +1075,7 @@ class OrderController extends Controller
                         'date'            => $order->date,
                         'promocode'       => $promo,
                         'product_image'   => $productImage,
-                        'track_status' =>  $tracktransfer->status,
+                        'track_status' =>  $track_status,
                     ];
                 }
             }
