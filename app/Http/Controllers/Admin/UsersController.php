@@ -30,10 +30,10 @@ class UsersController extends Controller
     if ($request->method() == 'POST') {
 
         // Validate the incoming request to ensure the file is an image
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'web_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
+        // $request->validate([
+        //     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        //     'web_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        // ]);
 
         // Check if an image file is uploaded
         if ($request->hasFile('image') && $request->hasFile('web_image')) {
@@ -87,10 +87,10 @@ public function destroypopup($id)
     // Update the popup image in the database
     public function updatepopup(Request $request, $id)
     {
-        $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Validate main image
-            'web_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'  // Validate web image
-        ]);
+        // $request->validate([
+        //     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Validate main image
+        //     'web_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'  // Validate web image
+        // ]);
     
         // Find the existing popup image record
         $popup = Popupimage::findOrFail($id);
