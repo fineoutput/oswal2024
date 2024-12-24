@@ -1058,7 +1058,7 @@ class OrderController extends Controller
                     
                     $rating_avg = number_format((float)$rating_avg, 1, '.', '');
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
-                    return $tracktransfer->status;
+                    // return $tracktransfer->status;
                     $dataw[] = [
                         'order_id'        => $order->id,
                         'order_status'    => getOrderStatus($order->order_status),
