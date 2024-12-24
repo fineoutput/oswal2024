@@ -136,23 +136,19 @@ public function destroypopup($id)
             // Delete the old web image if exists
             $oldWebImagePath = public_path('uploads/popup_images/' . basename($popup->web_image));
             if (file_exists($oldWebImagePath)) {
-                unlink($oldWebImagePath); // Delete the old web image
+                unlink($oldWebImagePath); 
             }
-            // Set the web_image field to null
+
             $popup->web_image = null;
         }
     
-        // Process the 'web_image' if a new one is uploaded
         if ($request->hasFile('web_image')) {
-            // Process the new web image if uploaded
             $webimage = $request->file('web_image');
-            $webimageName = time() . '_' . uniqid() . '.' . $webimage->getClientOriginalExtension(); // Generate unique name for the new web image
+            $webimageName = time() . '_' . uniqid() . '.' . $webimage->getClientOriginalExtension(); // 
             $webimage->move(public_path('uploads/popup_images'), $webimageName);
-            // Update the web image path in the database
             $popup->web_image = 'uploads/popup_images/' . $webimageName;
         }
-    
-        // Save the updated record
+
         $popup->save();
     
     
