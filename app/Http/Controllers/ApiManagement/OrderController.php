@@ -652,7 +652,7 @@ class OrderController extends Controller
         if ($applyGiftCardSec->original['success']) {
 
             $applyGiftCardSec = $applyGiftCardSec->original['gift_detail'];
-
+            
         }else{
             $applyGiftCardSec = [];
         }
