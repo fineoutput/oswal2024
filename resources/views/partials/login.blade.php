@@ -1,3 +1,17 @@
+<style>
+    .resend_button {
+    max-width: 100px;
+    background: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: 0.5s;
+    border: none;
+    height: 41px;
+}
+</style>
 <section class="bb-section">
 
     <div id="bb-modal" class="bb-modal">
@@ -67,8 +81,10 @@
                                 </div>
 
                                 <input type="submit" value="Submit OTP" />
-
+                                <button class="resend_button" type="button" onclick="handleLoginFormSubmit(event)">Resend OTP</button>
+                                
                             </form>
+
 
                         </div>
 
@@ -128,6 +144,7 @@
                                 <p class="error" id="sotpError" style="color: red; margin-left: 8px;"></p>
                             
                                 <input type="submit" value="Submit OTP" />
+                                <button class="resend_button" type="button" onclick="handleSignupFormSubmit(event)">Resend OTP</button>
                             
                             </form>
                             
