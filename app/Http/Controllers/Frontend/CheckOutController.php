@@ -664,7 +664,7 @@ class CheckOutController extends Controller
         if ($order->sub_total > $maxCodAmount) {
             return response()->json([
                 'success' => false,
-                'message' => "The payment type is invalid for amounts exceeding ".formatPrice($maxCodAmount)
+                'message' => "COD not allowed for order above ".formatPrice($maxCodAmount)
             ]);
         }
 

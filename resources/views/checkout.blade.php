@@ -992,9 +992,9 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
         if (type == 1) {
             total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
-            if (total_amount > codLimit) {
-                showNotificationss("You have crossed your COD amount limit. Please choose another payment method.", "error");
-            }
+            // if (total_amount > codLimit) {
+            //     showNotificationss("You have crossed your COD amount limit. Please choose another payment method.", "error");
+            // }
 
             totalorderAmount.text(`₹${total_amount}`);
             $('#totalorderAmounti').val(total_amount);
@@ -1013,18 +1013,18 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
     }
 
 // Custom function to show notifications
-function showNotificationss(message, type) {
-    console.log('check');
-    const notificationContainer = $('#notification-container');
-    notificationContainer.removeClass('d-none');
-    notificationContainer.text(message);
-    notificationContainer.addClass(type);
+// function showNotificationss(message, type) {
+//     console.log('check');
+//     const notificationContainer = $('#notification-container');
+//     notificationContainer.removeClass('d-none');
+//     notificationContainer.text(message);
+//     notificationContainer.addClass(type);
 
-    // Optionally, you can hide the notification after a certain time (e.g., 5 seconds)
-    setTimeout(() => {
-        notificationContainer.addClass('d-none');
-    }, 5000);
-}
+//     // Optionally, you can hide the notification after a certain time (e.g., 5 seconds)
+//     setTimeout(() => {
+//         notificationContainer.addClass('d-none');
+//     }, 5000);
+// }
 
 
     // function updateAmount(type) {
@@ -1098,6 +1098,11 @@ function showNotificationss(message, type) {
             data: $('#placeOrder').serialize() + '&address_id=' + addressId,
             success: function(response) {
                 // console.log();
+                if (!response.success) {
+
+showNotification(response.message, 'error');
+return;
+}
 
                 if (response.data.form != 1) {
 
