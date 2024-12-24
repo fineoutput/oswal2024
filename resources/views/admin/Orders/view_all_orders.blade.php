@@ -95,7 +95,7 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1">BY Admin</th>
+                                                    {{-- <th data-priority="1">BY Admin</th> --}}
 
                                                     <th data-priority="3">User</th>
 
@@ -155,7 +155,7 @@
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
 
-                                                        <td>{{ $order->user->first_name }}</td>
+                                                        {{-- <td>{{ $order->user->first_name }}</td> --}}
 
                                                         <td>{{ $order->user->first_name }}</td>
 
