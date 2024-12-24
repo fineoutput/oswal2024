@@ -146,7 +146,7 @@
 ">Oswal Products</h4> --}}
         </div>
         <div class="modal-right">
-            <img src="{{ asset('images/product_diversification.png') }}" alt="Popup Image" style="width:100%;">
+            <img src="{{ asset($latestPopupImage->image) }}" alt="Popup Image" style="width:100%;">
         </div>
         <span class="close">&times;</span>
     </div>

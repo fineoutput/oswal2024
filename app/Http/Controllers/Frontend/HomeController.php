@@ -21,6 +21,7 @@ use App\Models\Carrier_contact;
 use App\Models\DealerEnquiry;
 
 use App\Models\Address;
+use App\Models\Popupimage;
 
 use App\Models\Type;
 
@@ -28,9 +29,11 @@ class HomeController extends Controller
 {
     // ============================= START INDEX ============================ 
     public function index(Request $request)
-    {
+    {   
 
-        return view('index')->with('title', 'Oswal');
+        $data['latestPopupImage'] = Popupimage::latest()->first();
+
+        return view('index',$data)->with('title', 'Oswal');
     }
 
     public function category(Request $request,$type=null)
