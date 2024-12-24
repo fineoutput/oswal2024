@@ -41,7 +41,7 @@
           Email: {{ $user->email ?? 'N/A' }}<br>
           Contact: {{ $user->contact ?? 'N/A' }}<br><br>
           <span class="font-weight-bold">Address:</span><br>
-          {{ $address->address ?? 'No address' }}<br>
+          {{$address->doorflat ?? ''}}{{ $address->address ?? 'No address' }},{{$address->landmark ?? ''}},{{$address->citys->city_name ?? ''}},{{$address->states->state_name ?? ''}},{{$address->zipcode ?? ''}}<br>
           State/UT Code: RJ<br>
           Place of supply: {{ $city ?? 'N/A' }}<br>
           Place of delivery: {{ $city ?? 'N/A' }}, {{ $state ?? 'N/A' }}<br>
