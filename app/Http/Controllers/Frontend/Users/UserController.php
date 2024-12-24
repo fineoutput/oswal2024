@@ -269,8 +269,7 @@ class UserController extends Controller
 
     public function trackOrder(Request $request, $id)
     {
-        
-
+    
         $user_id = Auth::user()->id;
         $order_id = $id;
 
