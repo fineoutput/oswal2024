@@ -48,6 +48,12 @@
                                             <input class="form-control" style="margin-left: 10px" type="file" value="" id="img" name="image">
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4"><br>
+                                            <label class="form-label" style="margin-left: 10px" for="power">Web Image</label>
+                                            <input class="form-control" style="margin-left: 10px" type="file" value="" id="img" name="web_image">
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <div class="w-100 text-center">
                                             <button type="submit" style="margin-top: 10px;" class="btn btn-danger"><i class="fa fa-user"></i> Submit</button>

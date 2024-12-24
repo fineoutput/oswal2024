@@ -55,7 +55,7 @@ class AppController extends Controller
     public function popupimage()
     {
         // Retrieve the latest popup image
-        $latestPopupImage = Popupimage::latest()->first();
+        $latestPopupImage = Popupimage::where('status','1')->latest()->first();
     
         // Check if there is any image available
         if ($latestPopupImage) {

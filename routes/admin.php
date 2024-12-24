@@ -122,6 +122,7 @@ Route::match(['get','post'],'/add/popupimage', [UsersController::class, 'addpopu
 Route::get('popup/{id}/edit', [UsersController::class, 'editpopup'])->name('popup.edit');
 Route::put('popup/{id}', [UsersController::class, 'updatepopup'])->name('popup.update');
 Route::delete('popup/{id}', [UsersController::class, 'destroypopup'])->name('popup.destroy');
+Route::patch('popupimage/{id}/update-status', [UsersController::class, 'updateStatus'])->name('popupimage.updateStatus');
 
 
 // Admin Team routes

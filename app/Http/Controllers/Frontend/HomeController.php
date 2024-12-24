@@ -31,7 +31,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {   
 
-        $data['latestPopupImage'] = Popupimage::latest()->first();
+        $data['latestPopupImage'] = Popupimage::where('status','1')->latest()->first();
 
         return view('index',$data)->with('title', 'Oswal');
     }

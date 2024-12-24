@@ -94,7 +94,9 @@
 
                                                     <th>#</th>
 
-                                                    <th data-priority="1"> Image</th>
+                                                    <th data-priority="1">App Image</th>
+                                                    <th data-priority="1">Web Image</th>
+                                                    <th data-priority="1">Status</th>
 
                                                     <th data-priority="6">Action</th>
 
@@ -112,6 +114,18 @@
 
                                                     </td>
                                                     <td>
+                                                        <!-- Display the image -->
+                                                        <img src="{{ asset($value->web_image) }}" alt="Popup Image" width="100" height="100">
+
+                                                    </td>
+                                                    <td>
+                                                        @if($value->status == '1')
+                                                        <p>Active</p>
+                                                        @else
+                                                        Deactive
+                                                        @endif
+                                                    </td>
+                                                    <td>
                                                         <!-- Edit Button (Navigate to the Edit Form) -->
                                                         <a href="{{ route('popup.edit', $value->id) }}" class="btn btn-warning">Edit</a>
                                     
@@ -120,6 +134,13 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                        <form action="{{ route('popupimage.updateStatus', $value->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH') <!-- Or POST if you don't want to use a PATCH method -->
+                                                            <button type="submit" class="btn btn-primary">
+                                                                {{ $value->status == 1 ? 'Deactivate' : 'Activate' }} Image
+                                                            </button>
                                                         </form>
                                                     </td>
                                                 </tr>

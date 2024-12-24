@@ -144,7 +144,11 @@
             {{-- <h4 style="text-align: center;">Oswal Products</h4> --}}
         </div>
         <div class="modal-right">
-            <img src="{{ asset($latestPopupImage->image) }}" alt="Popup Image" style="width:100%;">
+            @if($latestPopupImage->web_image)
+            <img src="{{ asset($latestPopupImage->web_image) }}" alt="Popup Image" style="width:100%;">
+            @else
+            <p>No Image Found</p>
+            @endif
         </div>
         <span class="close">&times;</span>
     </div>
