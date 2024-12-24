@@ -94,6 +94,7 @@
                                                 <tr>
 
                                                     <th>#</th>
+                                                    <th>Order ID</th>
 
                                                     {{-- <th data-priority="1">BY Admin</th> --}}
 
@@ -157,6 +158,7 @@
 
                                                         {{-- <td>{{ $order->user->first_name }}</td> --}}
 
+                                                        <td>{{ $order->id ?? '' }}</td>
                                                         <td>{{ $order->user->first_name }}</td>
 
                                                         <td> {{ formatPrice($order->total_amount) }}</td>
