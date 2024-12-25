@@ -338,12 +338,11 @@ class DeliveryBoyController extends Controller
         $time = ($distance / 30) * 60; // Time in minutes
     
         return [
-            'distance' => round($distance, 2), // Round to 2 decimal places
-            'time' => round($time, 2), // Round to 2 decimal places
+            'distance' => number_format($distance, 2), // Format to 2 decimal places
+            'time' => number_format($time, 2), // Format to 2 decimal places
             'unit' => 'km', // Distance unit (kilometers)
         ];
     }
-
 
     public function orderDetail(Request $request) {
    
