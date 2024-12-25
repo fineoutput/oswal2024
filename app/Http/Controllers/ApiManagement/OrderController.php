@@ -693,118 +693,11 @@ class OrderController extends Controller
           return $this->paidCheckout($order->id,$payment_type);
         }
 
-    //     $order_id = $order->id;
-
-    //     $ip = request()->ip();
-
-    //     $cur_date = now();
-
-    //     $addedby = Auth::id();
-
-    //     $order = Order::with('address','user')->find($order_id);
-
-    //     if (!$order) {
-    //        Session::flash('emessage', 'Order not found');
-    //         return redirect()->back();
-    //     }
-
-    //     $pincode = $order->address->zipcode;
-
-    //     if ($order->user->role_type == 2) {
-           
-    //         $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
-
-    //     }else{
-
-    //         $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
-
-    //     }
-
-    //     if ($delivery_users->isEmpty()) {
-    //         Session::flash('emessage', 'No delivery users available for this pincode');
-    //         return redirect()->back();
-    //     }
-
-    //     $delivery_user_id = $delivery_users->first()->id;
-
-    //     TransferOrder::where('order_id', $order_id)->delete();
-
-    //     $data_insert = [
-    //         'order_id' => $order_id,
-    //         'delivery_user_id' => $delivery_user_id,
-    //         'status' => 1,
-    //         'ip' => $ip,
-    //         'added_by' => $addedby,
-    //         'date' => $cur_date
-    //     ];
-
-    //     $last_id = TransferOrder::create($data_insert)->id;
-
-    //     $order->update(['delivery_status' => 1]);
-
-    //     if ($last_id != 0) {
-
-    //         $delivery_user_data = DeliveryBoy::find($delivery_user_id);
-
-    //         if ($delivery_user_data) {
-                   
-    //             $title = "New Order Arrived";
-
-    //             $body = "New delivery order transferred to you from admin. Please check.";
-
-    //                 // $payload = [
-    //                 //     'message' => [
-    //                 //         'token' => $delivery_user_data->fcm_token,
-    //                 //         'notification' => [
-    //                 //             'body' => "New delivery order transferred to you from admin. Please check.",
-    //                 //             'title' => "New Order Arrived",
-    //                 //         ],
-    //                 //     ],
-    //                 // ];
-
-    //                 if($delivery_user_data->fcm_token != null){
-
-    //                     $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
-
-    //                     if(!$response['success']) {
-            
-    //                         if (!$response['success']) {
-                
-    //                             Log::error('FCM send error: ' . $response['error']);
-                                
-    //                         }
-    //                     }
-                        
-    //                 }
-    //                 // $response = Http::withHeaders([
-    //                 //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
-    //                 //     'Content-Type' => 'application/json',
-    //                 // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
-                   
-    //                 // if ($response->successful()) {
-    //                 //     return $response->body(); 
-    //                 // } else {
-    //                 //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
-    //                 // }
-                
-    //             Session::flash('smessage', 'Order Transferred successfully');
-    //             return redirect()->back();
-
-    //         } else {
-    //             Session::flash('emessage', 'Delivery user not found');
-    //             return redirect()->back();
-    //         }
-    //     } else {
-    //         Session::flash('emessage', 'Sorry, an error occurred');
-    //         return redirect()->back();
-    //     }
-    // // } else {
-    // //     return redirect()->route('admin_login');
-    // // }
+   
 
     }
 
- 
+
     public function codCheckout($orderId, $paymentType)
     {
         // // Define validation rules
@@ -1047,7 +940,7 @@ class OrderController extends Controller
         // if ($validator->fails()) {
         //     return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         // }
- 
+
         // Get authenticated user
         $user = Auth::user();
         if (!$user) {
