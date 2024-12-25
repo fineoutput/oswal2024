@@ -1,3 +1,17 @@
+<style>
+    .resend_button {
+    max-width: 100px;
+    background: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: 0.5s;
+    border: none;
+    height: 41px;
+}
+</style>
 <section class="bb-section">
 
     <div id="bb-modal" class="bb-modal">
@@ -51,11 +65,8 @@
                                     <img width="80px" src="{{ asset('images/oswal-logo.png') }}" alt="" />
 
                                     <h2 style="text-align: center; color: #e91e63; font-size: 25px;">Oswal Ecommerce</h2>
-
                                 </div>
-
                                 <h2 >Enter OTP</h2>
-
                                 <p class="error" id="lsucessmsg" style="color: green; margin-left: 8px;">
 
                                 <div id="otpField">
@@ -63,12 +74,14 @@
                                     <input type="text" id="loginOtpv" name="otp" placeholder="Enter OTP" />
 
                                     <p class="error" id="lotpError" style="color: red; margin-left: 8px;"> </p>
-
                                 </div>
 
+                                <p id="loginResendButton"></p>
                                 <input type="submit" value="Submit OTP" />
-
+                                <button class="resend_button" type="button" onclick="handleLoginFormSubmit(event)">Resend OTP</button>
+                                
                             </form>
+
 
                         </div>
 
@@ -126,8 +139,9 @@
                                 <input type="text" id="signupOtpField" name="otp" placeholder="OTP" required />
                             
                                 <p class="error" id="sotpError" style="color: red; margin-left: 8px;"></p>
-                            
+                                <p id="signupResendButton"></p>
                                 <input type="submit" value="Submit OTP" />
+                                <button class="resend_button" type="button" onclick="handleSignupFormSubmit(event)">Resend OTP</button>
                             
                             </form>
                             
@@ -173,68 +187,144 @@
     };
 
     // Handle Login Form Submission
-    const handleLoginFormSubmit = (event) => {
+    // const handleLoginFormSubmit = (event) => {
 
-        event.preventDefault();
+    //     event.preventDefault();
 
-        const phoneInput = document.getElementById("phone_no").value; 
+    //     const phoneInput = document.getElementById("phone_no").value; 
 
-        const loginForm = document.getElementById("loginForm");
+    //     const loginForm = document.getElementById("loginForm");
 
-        const loginOtpForm = document.getElementById("loginOtp"); 
+    //     const loginOtpForm = document.getElementById("loginOtp"); 
 
-        const errorLphone = document.getElementById("lphone_no");
+    //     const errorLphone = document.getElementById("lphone_no");
 
-        const lsucessmsg = document.getElementById("lsucessmsg"); 
+    //     const lsucessmsg = document.getElementById("lsucessmsg"); 
 
-        // Clear previous error message
-        errorLphone.textContent = '';
+    //     // Clear previous error message
+    //     errorLphone.textContent = '';
 
-        lsucessmsg.textContent = '';
+    //     lsucessmsg.textContent = '';
 
-        if (phoneInput) {
+    //     if (phoneInput) {
 
-            $.ajax({
-                url: "{{ route('login') }}",
-                type: 'POST',
-                data: $('#loginForm').serialize(), 
+    //         $.ajax({
+    //             url: "{{ route('login') }}",
+    //             type: 'POST',
+    //             data: $('#loginForm').serialize(), 
 
-                success: function(response) {
+    //             success: function(response) {
 
-                    if (response.success) {
+    //                 if (response.success) {
                       
-                        loginForm.style.display = "none";
+    //                     loginForm.style.display = "none";
 
-                        loginOtpForm.style.display = "block";
+    //                     loginOtpForm.style.display = "block";
                         
-                        lsucessmsg.textContent = response.message;
+    //                     lsucessmsg.textContent = response.message;
 
-                    } else {
+    //                 } else {
                         
-                        errorLphone.textContent = response.message || 'Something went wrong, please try again.';
-                    }
-                },
-                error: function(xhr) {
-                    if (!response.success) {
+    //                     errorLphone.textContent = response.message || 'Something went wrong, please try again.';
+    //                 }
+    //             },
+    //             error: function(xhr) {
+    //                 if (!response.success) {
 
-                      errorLphone.textContent = response.message
+    //                   errorLphone.textContent = response.message
 
-                    }else{
+    //                 }else{
 
-                        console.error(xhr.responseText);
+    //                     console.error(xhr.responseText);
 
-                        errorLphone.textContent = 'An error occurred. Please try again.';
-                    }
+    //                     errorLphone.textContent = 'An error occurred. Please try again.';
+    //                 }
                    
-                }
-            });
+    //             }
+    //         });
 
-        } else {
+    //     } else {
           
-            errorLphone.textContent = "Please enter your phone number.";
+    //         errorLphone.textContent = "Please enter your phone number.";
 
+    //     }
+    // };
+
+
+    const handleLoginFormSubmit = (event) => {
+    event.preventDefault();
+
+    const phoneInput = document.getElementById("phone_no").value;
+    const loginForm = document.getElementById("loginForm");
+    const loginOtpForm = document.getElementById("loginOtp");
+    const errorLphone = document.getElementById("lphone_no");
+    const lsucessmsg = document.getElementById("lsucessmsg");
+
+    // Get the Resend OTP button
+    const resendButton = document.getElementById("loginResendButton");
+
+    // Clear previous error message
+    errorLphone.textContent = '';
+    lsucessmsg.textContent = '';
+
+    if (phoneInput) {
+        $.ajax({
+            url: "{{ route('login') }}",
+            type: 'POST',
+            data: $('#loginForm').serialize(),
+
+            success: function(response) {
+                if (response.success) {
+                    // Hide the login form and show the OTP form
+                    loginForm.style.display = "none";
+                    loginOtpForm.style.display = "block";
+
+                    lsucessmsg.textContent = response.message;
+
+                    // Start the 60-second countdown for the resend OTP button
+                    startResendTimer(resendButton);
+
+                } else {
+                    errorLphone.textContent = response.message || 'Something went wrong, please try again.';
+                }
+            },
+            error: function(xhr) {
+                errorLphone.textContent = 'An error occurred. Please try again.';
+                console.error(xhr.responseText);
+            }
+        });
+
+    } else {
+        errorLphone.textContent = "Please enter your phone number.";
+    }
+};
+
+// Function to start the 60-second countdown
+function startResendTimer(button) {
+    let countdownSeconds = 60; // 60-second countdown
+
+    // Disable the Resend OTP button
+    button.disabled = true;
+
+    // Update the button text with the remaining time
+    button.textContent = `Resend OTP (${countdownSeconds}s)`;
+
+    // Start the countdown
+    const countdownInterval = setInterval(() => {
+        countdownSeconds--;
+
+        // Update the button text
+        button.textContent = `Resend OTP (${countdownSeconds}s)`;
+
+        // Once the countdown reaches 0, re-enable the button
+        if (countdownSeconds <= 0) {
+            clearInterval(countdownInterval);
+            button.disabled = false;
+            button.textContent = 'Resend OTP'; // Reset the button text
         }
-    };
+    }, 1000); // Update every second (1000 milliseconds)
+}
+
 
 
     const SubmitOtpForm = (event) => {
@@ -293,78 +383,165 @@
 
 
     // Handle Signup Form Submission
-    const handleSignupFormSubmit = (event) => {
+    // const handleSignupFormSubmit = (event) => {
 
-        event.preventDefault(); 
+    //     event.preventDefault(); 
 
-        // registerForm.style.display = "none";
-        // signupOtpForm.style.display = "block";
-        const phoneInput = document.getElementById("signupPhoneNo").value;
+    //     // registerForm.style.display = "none";
+    //     // signupOtpForm.style.display = "block";
+    //     const phoneInput = document.getElementById("signupPhoneNo").value;
 
-        const registerForm = document.getElementById("registerForm");
+    //     const registerForm = document.getElementById("registerForm");
 
-        const signupOtpForm = document.getElementById("signupOtpForm");
+    //     const signupOtpForm = document.getElementById("signupOtpForm");
 
-        const sphone_no = document.getElementById("contact");
+    //     const sphone_no = document.getElementById("contact");
 
-        const ssucessmsg = document.getElementById("ssucessmsg"); 
+    //     const ssucessmsg = document.getElementById("ssucessmsg"); 
 
-        document.querySelectorAll('.error').forEach(el => el.textContent = '');
+    //     document.querySelectorAll('.error').forEach(el => el.textContent = '');
         
-        if (phoneInput) {
+    //     if (phoneInput) {
 
-           $.ajax({
-                url: "{{ route('register') }}",
-                type: 'POST',
-                data: $('#registerForm').serialize(), 
+    //        $.ajax({
+    //             url: "{{ route('register') }}",
+    //             type: 'POST',
+    //             data: $('#registerForm').serialize(), 
 
-                success: function(response) {
+    //             success: function(response) {
       
-                    if (response.success) {
+    //                 if (response.success) {
                       
-                        registerForm.style.display = "none";
+    //                     registerForm.style.display = "none";
 
-                        signupOtpForm.style.display = "block";
+    //                     signupOtpForm.style.display = "block";
 
-                        ssucessmsg.textContent = response.message;
+    //                     ssucessmsg.textContent = response.message;
 
-                    } else {
+    //                 } else {
 
-                        const errors = response.message;
+    //                     const errors = response.message;
 
-                        for (const field in errors) {
+    //                     for (const field in errors) {
                             
-                            if (errors.hasOwnProperty(field)) {
+    //                         if (errors.hasOwnProperty(field)) {
                                
-                                document.getElementById(field).textContent = errors[field][0];
-                            }
-                        }
-                    }
-                },
-                error: function(xhr) {
+    //                             document.getElementById(field).textContent = errors[field][0];
+    //                         }
+    //                     }
+    //                 }
+    //             },
+    //             error: function(xhr) {
 
-                    if (!response.success) {
+    //                 if (!response.success) {
 
-                        sphone_no.textContent = response.message
+    //                     sphone_no.textContent = response.message
 
-                    }else{
+    //                 }else{
 
-                        console.error(xhr.responseText);
+    //                     console.error(xhr.responseText);
 
-                        sphone_no.textContent = 'An error occurred. Please try again.';
-                    }
+    //                     sphone_no.textContent = 'An error occurred. Please try again.';
+    //                 }
                     
-                }
+    //             }
 
-            });
+    //         });
 
            
-        } else {
+    //     } else {
 
-            sphone_no.textContent = "Please enter your phone number";
+    //         sphone_no.textContent = "Please enter your phone number";
 
+    //     }
+    // };
+
+
+    const handleSignupFormSubmit = (event) => {
+    event.preventDefault();
+
+    const phoneInput = document.getElementById("signupPhoneNo").value;
+
+    const registerForm = document.getElementById("registerForm");
+    const signupOtpForm = document.getElementById("signupOtpForm");
+
+    const sphone_no = document.getElementById("contact");
+    const ssucessmsg = document.getElementById("ssucessmsg");
+
+    // const resendButton = document.getElementById("loginResendButton");
+
+    document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+    if (phoneInput) {
+
+        $.ajax({
+            url: "{{ route('register') }}",
+            type: 'POST',
+            data: $('#registerForm').serialize(),
+
+            success: function(response) {
+                if (response.success) {
+                    // Hide the register form and show the OTP form
+                    registerForm.style.display = "none";
+                    signupOtpForm.style.display = "block";
+
+                    // Display success message
+                    ssucessmsg.textContent = response.message;
+
+                    // Start the 60-second countdown for Resend OTP button
+                    startResendTimer(document.getElementById("signupResendButton"));
+
+                } else {
+                    const errors = response.message;
+                    for (const field in errors) {
+                        if (errors.hasOwnProperty(field)) {
+                            document.getElementById(field).textContent = errors[field][0];
+                        }
+                    }
+                }
+            },
+            error: function(xhr) {
+                if (!response.success) {
+                    sphone_no.textContent = response.message;
+                } else {
+                    console.error(xhr.responseText);
+                    sphone_no.textContent = 'An error occurred. Please try again.';
+                }
+            }
+
+        });
+
+    } else {
+        sphone_no.textContent = "Please enter your phone number";
+    }
+};
+
+// Function to start the 60-second countdown for Resend OTP button
+function startResendTimer(button) {
+    let countdownSeconds = 60; // 60-second countdown
+
+    // Disable the Resend OTP button
+    button.disabled = true;
+
+    // Update the button text with the remaining time
+    button.textContent = `Resend OTP (${countdownSeconds}s)`;
+
+    // Start the countdown
+    const countdownInterval = setInterval(() => {
+        countdownSeconds--;
+
+        // Update the button text
+        button.textContent = `Resend OTP (${countdownSeconds}s)`;
+
+        // Once the countdown reaches 0, re-enable the button
+        if (countdownSeconds <= 0) {
+            clearInterval(countdownInterval);
+            button.disabled = false;
+            button.textContent = 'Resend OTP'; // Reset the button text
         }
-    };
+    }, 1000); // Update every second (1000 milliseconds)
+}
+
 
     const SubmitSignupOtpForm = (event) => {
 

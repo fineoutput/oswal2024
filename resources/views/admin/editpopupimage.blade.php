@@ -39,22 +39,49 @@
                             <!-- End show success and error messages -->
                             <h4 class="mt-0 header-title">Add Popup Image</h4>
                             <hr style="margin-bottom: 50px;background-color: darkgrey;">
-                            <form action="{{route('popup.update',$popup->id)}}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('popup.update', $popup->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
+                            
                                 <div class="form-group row">
-                                    <div class="form-group row">
-                                        <div class="col-sm-4"><br>
-                                            <label class="form-label" style="margin-left: 10px" for="power">Image</label>
-                                            <input class="form-control" style="margin-left: 10px" type="file" value="" id="img" name="image">
-                                        </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" style="margin-left: 10px" for="image">Image</label>
+                                        <input class="form-control" style="margin-left: 10px" type="file" id="image" name="image">
+                                        @if($popup->image)
+                                            <div>
+                                                <img src="{{ asset($popup->image) }}" alt="Current Image" style="max-width: 100px; margin-top: 10px;">
+                                                <br>
+                                                <label for="remove_image">
+                                                    <input type="checkbox" id="remove_image" name="remove_image" value="1"> Remove current image
+                                                </label>
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="form-group">
-                                        <div class="w-100 text-center">
-                                            <button type="submit" style="margin-top: 10px;" class="btn btn-danger"><i class="fa fa-user"></i> Submit</button>
-                                        </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" style="margin-left: 10px" for="web_image">Web Image</label>
+                                        <input class="form-control" style="margin-left: 10px" type="file" id="web_image" name="web_image">
+                                        @if($popup->web_image)
+                                            <div>
+                                                <img src="{{ asset($popup->web_image) }}" alt="Current Web Image" style="max-width: 100px; margin-top: 10px;">
+                                                <br>
+                                                <label for="remove_web_image">
+                                                    <input type="checkbox" id="remove_web_image" name="remove_web_image" value="1"> Remove current web image
+                                                </label>
+                                            </div>
+                                        @endif
                                     </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                    <div class="w-100 text-center">
+                                        <button type="submit" style="margin-top: 10px;" class="btn btn-danger"><i class="fa fa-user"></i> Submit</button>
+                                    </div>
+                                </div>
                             </form>
+                            
                         </div>
                     </div>
                 </div> <!-- end col -->

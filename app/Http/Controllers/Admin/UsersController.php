@@ -29,34 +29,52 @@ class UsersController extends Controller
 {
     if ($request->method() == 'POST') {
 
-        // Validate the incoming request to ensure the file is an image
+        // Optional validation for image fields
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'web_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        // Check if an image file is uploaded
+        // Initialize the variables to hold the image paths, defaulting to null
+        $imagePath = null;
+        $webimagePath = null;
+
+        // Check if the main image is uploaded
         if ($request->hasFile('image')) {
-
-            // Store the image to public/uploads/popup_images
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension(); // Create a unique name for the image
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension(); // Generate unique name for main image
 
-            // Move the image to the 'public/uploads/popup_images' directory
+            // Move the uploaded image to the 'uploads/popup_images' directory
             $image->move(public_path('uploads/popup_images'), $imageName);
 
-            // Save the image path to the database
-            $popupImage = Popupimage::create([
-                'image' => 'uploads/popup_images/' . $imageName // Store the relative path in the database
-            ]);
-
-            // Optionally, you can show a success message or return a response
-            return redirect('admin/popupimage')->with('success', 'Image uploaded successfully');
+            // Store the image path
+            $imagePath = 'uploads/popup_images/' . $imageName;
         }
 
-        // If no file was uploaded, return with an error
-        return redirect('admin/popupimage')->with('error', 'No image file uploaded');
+        // Check if the web image is uploaded
+        if ($request->hasFile('web_image')) {
+            $webimage = $request->file('web_image');
+            $webimageName = time() . '_' . uniqid() . '.' . $webimage->getClientOriginalExtension(); // Generate unique name for web image
+
+            // Move the uploaded web image to the 'uploads/popup_images' directory
+            $webimage->move(public_path('uploads/popup_images'), $webimageName);
+
+            // Store the web image path
+            $webimagePath = 'uploads/popup_images/' . $webimageName;
+        }
+
+        // Create a new record in the Popupimage table
+        $popupImage = Popupimage::create([
+            'image' => $imagePath,    // This will be null if no image is uploaded
+            'web_image' => $webimagePath, // This will be null if no web image is uploaded
+        ]);
+
+        // Redirect back with a success message
+        return redirect('admin/popupimage')->with('success', 'Image file uploaded successfully');
     }
-    return view('admin/addpopupimage');
+
+    // Return the view for adding a popup image
+    return view('admin.addpopupimage');
 }
 
 
@@ -84,38 +102,74 @@ public function destroypopup($id)
     // Update the popup image in the database
     public function updatepopup(Request $request, $id)
     {
-        // Validate the uploaded image
-        $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
+        // $request->validate([
+        //     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Validate main image
+        //     'web_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'  // Validate web image
+        // ]);
     
         // Find the existing popup image record
         $popup = Popupimage::findOrFail($id);
-    
-        // If a new image is uploaded, delete the old one and store the new image
-        if ($request->hasFile('image')) {
-            // Delete the old image from the public/uploads/popup_images directory
+
+        // Handle Image Removal if the checkbox is checked
+        if ($request->has('remove_image') && $request->remove_image == '1') {
+            // Delete the old main image if exists
             $oldImagePath = public_path('uploads/popup_images/' . basename($popup->image));
             if (file_exists($oldImagePath)) {
                 unlink($oldImagePath); // Delete the old image
             }
+            // Set the image field to null
+            $popup->image = null;
+        }
     
+        // Process the 'image' if a new one is uploaded
+        if ($request->hasFile('image')) {
+            // Process the new main image if uploaded
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension(); // Create a unique name for the image
-    
-            // Store the new image in 'uploads/popup_images' directory inside the public directory
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension(); // Generate unique name for the new image
             $image->move(public_path('uploads/popup_images'), $imageName);
-    
-            // Update the image path in the database (save only the relative path)
+            // Update the image path in the database
             $popup->image = 'uploads/popup_images/' . $imageName;
         }
     
-        // Save the updated record
+        // Handle Web Image Removal if the checkbox is checked
+        if ($request->has('remove_web_image') && $request->remove_web_image == '1') {
+            // Delete the old web image if exists
+            $oldWebImagePath = public_path('uploads/popup_images/' . basename($popup->web_image));
+            if (file_exists($oldWebImagePath)) {
+                unlink($oldWebImagePath); 
+            }
+
+            $popup->web_image = null;
+        }
+    
+        if ($request->hasFile('web_image')) {
+            $webimage = $request->file('web_image');
+            $webimageName = time() . '_' . uniqid() . '.' . $webimage->getClientOriginalExtension(); // 
+            $webimage->move(public_path('uploads/popup_images'), $webimageName);
+            $popup->web_image = 'uploads/popup_images/' . $webimageName;
+        }
+
         $popup->save();
+    
     
         // Redirect with a success message
         return redirect('admin/popupimage')->with('success', 'Popup image updated successfully!');
     }
+
+    public function updateStatus($id)
+{
+    // Find the popup image record by its ID
+    $popup = Popupimage::findOrFail($id);
+
+    // Toggle the status between 'active' and 'inactive'
+    $popup->status = ($popup->status == '1') ? '2' : '1';
+
+    // Save the updated status
+    $popup->save();
+
+    // Redirect with a success message
+    return redirect()->back()->with('success', 'Image status updated successfully!');
+}
     
     
     public function index()

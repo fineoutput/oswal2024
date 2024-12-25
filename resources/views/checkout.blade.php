@@ -983,61 +983,48 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
 
     function updateAmount(type) {
+        const codContainer = $('#CodCaharges');
+        const codChargeAmount = $('#codChargeAmount');
+        const totalorderAmount = $('#totalorderAmount');
+        const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
+        const codLimit = 200; // Set your COD limit here
+        let total_amount;
 
-const codContainer = $('#CodCaharges');
-const codChargeAmount = $('#codChargeAmount');
-const totalorderAmount = $('#totalorderAmount');
-const codCharge = parseFloat('{{ getConstant()->cod_charge }}');
-const codLimit = 200; // Set your COD limit here
-let total_amount;
+        if (type == 1) {
+            total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
+            // if (total_amount > codLimit) {
+            //     showNotificationss("You have crossed your COD amount limit. Please choose another payment method.", "error");
+            // }
 
-if (type == 1) {
-    // Calculate the total amount including the COD charge
-    total_amount = convertCurrencyToFloat(totalorderAmount.text()) + codCharge;
+            totalorderAmount.text(`₹${total_amount}`);
+            $('#totalorderAmounti').val(total_amount);
+            codChargeAmount.text(`+₹${codCharge}`);
 
-    // Check if total amount exceeds the COD limit
-    if (total_amount > codLimit) {
-        // Show a custom notification if the total amount exceeds the COD limit
-        showNotificationss("You have crossed your COD amount limit. Please choose another payment method.", "error");
+            codContainer.removeClass('d-none').addClass('d-block');
 
-        // return; // Exit the function early to prevent further actions
+        } else {
+            total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
+            totalorderAmount.text(`₹${total_amount}`);
+            $('#totalorderAmounti').val(total_amount);
+            codChargeAmount.text(`+₹${codCharge}`);
+
+            codContainer.removeClass('d-block').addClass('d-none');
+        }
     }
 
-    // Update the total amount and COD charge
-    totalorderAmount.text(`₹${total_amount}`);
-    $('#totalorderAmounti').val(total_amount);
-    codChargeAmount.text(`+₹${codCharge}`);
-
-    // Show the COD charge container
-    codContainer.removeClass('d-none').addClass('d-block');
-
-} else {
-    // Calculate the total amount excluding the COD charge
-    total_amount = convertCurrencyToFloat(totalorderAmount.text()) - codCharge;
-
-    // Update the total amount and remove COD charge
-    totalorderAmount.text(`₹${total_amount}`);
-    $('#totalorderAmounti').val(total_amount);
-    codChargeAmount.text(`+₹${codCharge}`);
-
-    // Hide the COD charge container
-    codContainer.removeClass('d-block').addClass('d-none');
-}
-}
-
 // Custom function to show notifications
-function showNotificationss(message, type) {
-    console.log('check');
-    const notificationContainer = $('#notification-container');
-    notificationContainer.removeClass('d-none');
-    notificationContainer.text(message);
-    notificationContainer.addClass(type);
+// function showNotificationss(message, type) {
+//     console.log('check');
+//     const notificationContainer = $('#notification-container');
+//     notificationContainer.removeClass('d-none');
+//     notificationContainer.text(message);
+//     notificationContainer.addClass(type);
 
-    // Optionally, you can hide the notification after a certain time (e.g., 5 seconds)
-    setTimeout(() => {
-        notificationContainer.addClass('d-none');
-    }, 5000);
-}
+//     // Optionally, you can hide the notification after a certain time (e.g., 5 seconds)
+//     setTimeout(() => {
+//         notificationContainer.addClass('d-none');
+//     }, 5000);
+// }
 
 
     // function updateAmount(type) {
@@ -1111,6 +1098,11 @@ function showNotificationss(message, type) {
             data: $('#placeOrder').serialize() + '&address_id=' + addressId,
             success: function(response) {
                 // console.log();
+                if (!response.success) {
+
+showNotification(response.message, 'error');
+return;
+}
 
                 if (response.data.form != 1) {
 
@@ -1160,6 +1152,7 @@ function showNotificationss(message, type) {
             }
         });
     }
+
 
     function convertCurrencyToFloat(value) {
 

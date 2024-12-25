@@ -54,7 +54,6 @@ class OrderController extends Controller
 
 
     public function index()
-
     {
         
         $routeName = Route::currentRouteName();

@@ -14,6 +14,8 @@ class Popupimage extends Model
 
     protected $fillable = [
         'image',
+        'status',
+        'web_image',
     ];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
