@@ -231,11 +231,18 @@ imgBtns.forEach((imgItem) => {
 });
 
 function slideImage() {
-  const displayWidth = document.querySelector('.details-img-showcase img:first-child').clientWidth;
+  const imgElement = document.querySelector('.details-img-showcase img:first-child');
+  if (!imgElement) {
+    console.warn("The element '.details-img-showcase img:first-child' was not found.");
+    return;
+  }
+  
+  const displayWidth = imgElement.clientWidth;
   document.querySelector('.details-img-showcase').style.transform = `translateX(${-(imgId - 1) * displayWidth}px)`;
 }
 
 window.addEventListener('resize', slideImage);
+
 
 
 /////////////////////////splide section//////////////////
@@ -346,6 +353,11 @@ document.addEventListener('DOMContentLoaded', function () {
 /////Sticky buttons category//////////////
 document.addEventListener("DOMContentLoaded", function () {
   const button = document.getElementById("fixedButton");
+  if (!button) {
+    console.warn("The element with id 'fixedButton' was not found.");
+    return;
+  }
+
   const statBtns = document.querySelector(".stat-btns");
   let lastScrollTop = 0;
 
@@ -374,6 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
 
 
 
