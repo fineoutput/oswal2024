@@ -804,7 +804,7 @@ class OrderController extends Controller
         //     // return $order_id;
 
         //     $ip = request()->ip();
-
+ 
         //     $cur_date = now();
 
         //     $addedby = Auth::id();

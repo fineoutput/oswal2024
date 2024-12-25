@@ -214,48 +214,136 @@ class DeliveryBoyController extends Controller
 
     }
 
-    public function orderList(Request $request) {
+    // public function orderList(Request $request) {
    
-        $user = Auth::user();
+    //     $user = Auth::user();
 
-        $latitude =  $user->latitude;
+    //     $latitude =  $user->latitude;
 
-        $longitude =  $user->longitude;
+    //     $longitude =  $user->longitude;
 
-        $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
-                        ->with(['Orders.user', 'Orders.address'])
-                        ->get();
-                        
-        $data = [];
+    //     $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
+    //                     ->with(['Orders.user', 'Orders.address'])
+    //                     ->get();
+    //     $data = [];
         
-        foreach($transferOrders as $value){
+    //     foreach($transferOrders as $value){
 
-            $order =$value->orders;
+    //         $order =$value->orders;
 
-            if(!$order){
-                continue;
-            }
+    //         if(!$order){
+    //             continue;
+    //         }
 
-            $userAddress = $order->address;
+    //         $userAddress = $order->address;
 
             
-            $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+    //         $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
 
+    //         $data[] = [
+    //             'transfer_order_id' => $value->id,
+    //             'delivery_status'=> deliveryStatus($value->status),
+    //             'order_id' => $value->order_id,
+    //             'user_id' => $value->orders->user_id,
+    //             'user_name' => $value->orders->user->first_name,
+    //             'distance' => $dist['distance'] ?? '0',
+    //             'time' => $dist['time'] ?? '0',
+    //             'unit' => $dist['unit'] ?? 'Not Found',
+    //         ];
+
+    //     }
+
+    //     return response()->json(['sucess' => true , 'message' => 'order featch SucessFully' , 'orders' => $data], 200);
+    // }
+
+
+    public function orderList(Request $request) {
+        $user = Auth::user();
+    
+        // Get the latitude and longitude of the delivery boy
+        $latitude = $user->latitude;
+        $longitude = $user->longitude;
+    
+        // Fetch all transfer orders assigned to the current delivery boy
+        $transferOrders = TransferOrder::where('status', '!=', 4) // Exclude canceled orders
+            ->where('delivery_user_id', $user->id) // Filter by delivery boy
+            ->with(['orders.user', 'orders.address'])
+            ->get();
+    
+        $data = [];
+    
+        // Calculate distance for each order and add it to the data array
+        foreach ($transferOrders as $value) {
+            $order = $value->orders;
+    
+            // If order does not exist, skip this iteration
+            if (!$order) {
+                continue;
+            }
+    
+            $userAddress = $order->address;
+    
+            // If user does not exist in the order, skip this iteration
+            if (!$order->user) {
+                continue;
+            }
+    
+            // Calculate the distance between the delivery boy and the order's address
+            $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+    
+            // Add order data to the array
             $data[] = [
                 'transfer_order_id' => $value->id,
-                'delivery_status'=> deliveryStatus($value->status),
+                'delivery_status' => deliveryStatus($value->status),
                 'order_id' => $value->order_id,
                 'user_id' => $value->orders->user_id,
-                'user_name' => $value->orders->user->first_name,
-                'distance' => $dist['distance'] ?? '0',
-                'time' => $dist['time'] ?? '0',
-                'unit' => $dist['unit'] ?? 'Not Found',
+                'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
+                'distance' => $dist['distance'] ?? '0', // Distance in km
+                'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
+                'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
             ];
-
         }
-
-        return response()->json(['sucess' => true , 'message' => 'order featch SucessFully' , 'orders' => $data], 200);
+    
+        // Sort orders by distance (nearest first)
+        usort($data, function ($a, $b) {
+            return $a['distance'] <=> $b['distance'];
+        });
+    
+        // Return the sorted list of orders
+        return response()->json([
+            'success' => true,
+            'message' => 'Orders fetched successfully.',
+            'orders' => $data
+        ], 200);
     }
+
+    public function calculate_distanceee($lat1, $lon1, $lat2, $lon2) {
+        $earth_radius = 6371; // Radius of Earth in kilometers
+    
+        // Convert degrees to radians
+        $dlat = deg2rad($lat2 - $lat1);
+        $dlon = deg2rad($lon2 - $lon1);
+    
+        // Apply Haversine formula
+        $a = sin($dlat / 2) * sin($dlat / 2) +
+             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+             sin($dlon / 2) * sin($dlon / 2);
+    
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+    
+        // Calculate the distance
+        $distance = $earth_radius * $c; // Distance in kilometers
+    
+        // Calculate the estimated delivery time assuming an average speed of 30 km/h
+        $time = ($distance / 30) * 60; // Time in minutes
+    
+        return [
+            'distance' => round($distance, 2), // Round to 2 decimal places
+            'time' => round($time, 2), // Round to 2 decimal places
+            'unit' => 'km', // Distance unit (kilometers)
+        ];
+    }
+
 
     public function orderDetail(Request $request) {
    
