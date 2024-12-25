@@ -386,14 +386,13 @@ class DeliveryBoyController extends Controller
         } elseif ($transferOrder->orders->payment_type == 2) {
 
             $payment_type = 'All Ready Pay';
-
         }
 
         $latitude =  $user->latitude;
 
         $longitude =  $user->longitude;
         
-        $dist = $this->calculate_distance($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
+        $dist = $this->calculate_distanceee($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
         $data= [
             'order_id'    => $transferOrder->order_id,
