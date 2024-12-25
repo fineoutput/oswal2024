@@ -224,26 +224,32 @@
 
                                                         <td>
                                                             @if ($order->delivery_status == 0)
-                                                                <span class="label label-warning"
-                                                                    style="font-size:13px;">None</span>
-                                                            @elseif ($order->delivery_status == 1)
-                                                             @php
-                                                                $order->transferOrder->load('deliveryBoy');
-                                                                $deliveryBoy = $order->transferOrder->deliveryBoy;
-                                                             @endphp
-                                                              Transfered To ({{$deliveryBoy->name}})
-                                                            @elseif ($order->delivery_status == 2)
-                                                                @php
-                                                                $order->transferOrder->load('deliveryBoy');
-                                                                $deliveryBoy = $order->transferOrder->deliveryBoy;
-                                                                @endphp
-                                                            <span class="label label-info" style="font-size:13px;">
-                                                                Accepted By ({{$deliveryBoy->name}})
-                                                                </span>
-                                                            @elseif ($order->delivery_status == 3)
-                                                                <span class="label label-success"
-                                                                    style="font-size:13px;">Delivered</span>
+                                                            <span class="label label-warning" style="font-size:13px;">None</span>
+                                                        @elseif ($order->delivery_status == 1)
+                                                            @php
+                                                                // Check if the transferOrder exists before accessing it
+                                                                $deliveryBoy = $order->transferOrder ? $order->transferOrder->deliveryBoy : null;
+                                                            @endphp
+                                                            @if ($deliveryBoy)
+                                                                Transfered To ({{$deliveryBoy->name}})
+                                                            @else
+                                                                <span class="label label-danger" style="font-size:13px;">Transfer not found</span>
                                                             @endif
+                                                        @elseif ($order->delivery_status == 2)
+                                                            @php
+                                                                // Check if the transferOrder exists before accessing it
+                                                                $deliveryBoy = $order->transferOrder ? $order->transferOrder->deliveryBoy : null;
+                                                            @endphp
+                                                            @if ($deliveryBoy)
+                                                                <span class="label label-info" style="font-size:13px;">
+                                                                    Accepted By ({{$deliveryBoy->name}})
+                                                                </span>
+                                                            @else
+                                                                <span class="label label-danger" style="font-size:13px;">Delivery Boy not found</span>
+                                                            @endif
+                                                        @elseif ($order->delivery_status == 3)
+                                                            <span class="label label-success" style="font-size:13px;">Delivered</span>
+                                                        @endif
                                                         </td>
 
                                                         <td> {{ $order->track_id }}</td>
