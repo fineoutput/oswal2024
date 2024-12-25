@@ -809,7 +809,7 @@ class DeliveryBoyController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'message' => 'Within 500 meters of delivery address to start.',
+                    'message' => 'Within 500 meters of delivery address to End.',
                     'status' => 400
                 ]);
             }
