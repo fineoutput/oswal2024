@@ -804,7 +804,7 @@ class OrderController extends Controller
 
     }
 
-
+ 
     public function codCheckout($orderId, $paymentType)
     {
         // // Define validation rules
@@ -1047,7 +1047,7 @@ class OrderController extends Controller
         // if ($validator->fails()) {
         //     return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         // }
-
+ 
         // Get authenticated user
         $user = Auth::user();
         if (!$user) {
