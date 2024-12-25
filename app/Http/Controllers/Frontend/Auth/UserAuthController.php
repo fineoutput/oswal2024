@@ -192,17 +192,25 @@ class UserAuthController extends Controller
         $referee_tr_id  = session()->get('referee_tr_id') ?? null;
 
         $otpRecord = Otp::find($userOtpId);
-        $storeuser = Otp::orderBy('id','DESC')->where('otp',$request->otp)->first();
-        // if($storeuser)
-        $usertemp = UserTemp::orderBy('id','DESC')->where('name',$storeuser->name)->first();
-        if(empty($usertemp->name)){
-             $usertempuser = User::orderBy('id','DESC')->where('first_name',$storeuser->name)->first();
-        }
-        // return $usertemp;
-       if(!empty($usertemp)){
+       // First, get the store user based on the OTP provided.
+$storeuser = Otp::orderBy('id', 'DESC')->where('otp', $request->otp)->first();
+
+// If the storeuser is found, proceed with fetching the user data.
+if ($storeuser) {
+    // Try to find the temporary user associated with this OTP.
+    $usertemp = UserTemp::orderBy('id', 'DESC')->where('name', $storeuser->name)->first();
+    
+    // If the temporary user is not found, check the main User table for the user.
+    if (empty($usertemp->name)) {
+        $usertempuser = User::orderBy('id', 'DESC')->where('first_name', $storeuser->name)->first();
+    }
+    
+    // Check if user exists in the UserTemp table.
+    if (!empty($usertemp)) {
+        // If a temporary user is found, prepare the data.
         $date = [
-            'first_name'      => $usertemp->name ,
-            'first_name_hi'   => lang_change($usertemp->name ),
+            'first_name'      => $usertemp->name,
+            'first_name_hi'   => lang_change($usertemp->name),
             'device_id'       => $usertemp->device_id,
             'auth'            => generateRandomString(),
             'email'           => $usertemp->email,
@@ -214,14 +222,15 @@ class UserAuthController extends Controller
             'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'              => $request->ip(),
         ];
-       }else{
+    } else {
+        // If no temporary user is found, use the main User data.
         $date = [
-            'first_name'      =>  $usertempuser->first_name,
-            'first_name_hi'   => lang_change( $usertempuser->first_name),
-            'device_id'       =>  $usertempuser->device_id,
+            'first_name'      => $usertempuser->first_name,
+            'first_name_hi'   => lang_change($usertempuser->first_name),
+            'device_id'       => $usertempuser->device_id,
             'auth'            => generateRandomString(),
-            'email'           =>  $usertempuser->email,
-            'contact'         =>  $usertempuser->contact,
+            'email'           => $usertempuser->email,
+            'contact'         => $usertempuser->contact,
             'password'        => null,
             'status'          => '1',
             'referral_code'   => User::generateReferralCode(),
@@ -229,9 +238,19 @@ class UserAuthController extends Controller
             'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
             'ip'              => $request->ip(),
         ];
-       }
+    }
+    
+    // Check if the contact already exists in the User table.
+    $existingUser = User::orderBy('id','DESC')->where('contact', $date['contact'])->first();
 
+    if ($existingUser) {
+        // If the contact exists, use the existing user.
+        $user = $existingUser;
+    } else {
+        // If the contact does not exist, create a new user.
         $user = User::create($date);
+    }
+}
 
 
         if ($otpRecord && $otpRecord->otp == $enteredOtp) {

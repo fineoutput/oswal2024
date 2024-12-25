@@ -692,7 +692,6 @@ class OrderController extends Controller
         }else{
           return $this->paidCheckout($order->id,$payment_type);
         }
-
    
 
     }

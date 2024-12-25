@@ -55,17 +55,12 @@
                         </div>
 
                         @forelse ($address_data as $address)
-
                         <div class="col-md-12">
-
                             <div class="bottom-11 p-3 over">
-
                                 <div class="row add_sel" onclick="selectAddress('{{ $address->id }}')">
-
                                     <div class="col-1 col-md-1 p-0" style="text-align: end;">
                                         <input type="radio" id="address_{{ $address->id }}" name="address_id" value="{{ $address->id }}" required />
                                     </div>
-
                                     <div class="col-10 col-md-11">
                                         <p class="bottom-m"><b>Name:</b> <a>{{ $address->name }}</a></p>
                                         <p class="bottom-m"><b>Address:</b> <a>{{ $address->custom_address }}</a></p>
@@ -74,36 +69,25 @@
                                         <p class="bottom-m"><b>Landmark:</b> <a>{{ $address->landmark }}</a></p>
                                         <p class="bottom-m"><b>Pincode:</b> <a>{{ $address->zipcode }}</a></p>
                                     </div>
-
                                 </div>
-
                                 <div style="display: flex; justify-content: end;">
-
-                                    <a href="{{ route('user.add-address',['redirect' => 'checkout', 'id' => base64_encode($address->id)]) }}" class="mr-2">
-
+                                    <a href="{{ route('user.add-address', ['redirect' => 'checkout', 'id' => base64_encode($address->id)]) }}" class="mr-2">
                                         <button type="button" class="animated-button">
-
                                             <span><i class="fa-solid fa-pencil"></i></span>
-
                                             <span></span>
-
                                         </button>
-
                                     </a>
-
                                 </div>
-
                             </div>
-
                         </div>
-
-                        @empty
+                    @empty
                         <div class="w-100 text-center mt-5">
-
+                            {{-- @php
+                                dd($address_data);
+                            @endphp --}}
                             <h5 class="text-center" style="color: #ff324d;">Please add an address for checkout</h5>
-
                         </div>
-                        @endforelse
+                    @endforelse
 
 
                     </div>

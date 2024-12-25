@@ -315,35 +315,72 @@ class HomeController extends Controller
         return response()->json(['webproduct' => $htmlwebProduct ,'mobproduct' => $htmlmobProduct]);
     }
 
-    public function getAddress(Request $request, $place = null) {
+    // public function getAddress(Request $request, $place = null) {
 
-        $addresses = Address::where('user_id', Auth::User()->id)->get();
+    //     $addresses = Address::where('user_id', Auth::User()->id)->get();
 
-        $address_data = [];
+    //     $address_data = [];
 
-        foreach ($addresses as $address) {
+    //     foreach ($addresses as $address) {
 
-            $address->load('states', 'citys');
+    //         $address->load('states', 'citys');
 
-            $addr_string = "Doorflat {$address->doorflat}, ";
+    //         $addr_string = "Doorflat {$address->doorflat}, ";
 
-            if (!empty($address->landmark)) {
-                $addr_string .= "{$address->landmark}, ";
-            }
-            $addr_string .= "{$address->address}, {$address->location_address}, {$address->zipcode}";
+    //         if (!empty($address->landmark)) {
+    //             $addr_string .= "{$address->landmark}, ";
+    //         }
+    //         $addr_string .= "{$address->address}, {$address->location_address}, {$address->zipcode}";
 
-            $address['custom_address'] = $addr_string;
+    //         $address['custom_address'] = $addr_string;
 
-            $address_data[] =  $address;
-        }
+    //         $address_data[] =  $address;
+    //     }
         
-        if(session()->has('address_id') && $place == null){
-            return redirect()->route('checkout.process');
-        }else{
+    //     if(session()->has('address_id') && $place == null){
+    //         return redirect()->route('checkout.process');
+    //     }else{
 
-            return view('selectaddress' , compact('address_data','place'));
-        }
+    //         return view('selectaddress' , compact('address_data','place'));
+    //     }
             
+    // }
+
+    public function getAddress(Request $request, $place = null) {
+        // Get all addresses for the logged-in user
+        // return Auth::user()->id;
+        $addresses = Address::where('user_id', Auth::user()->id)->get();
+        // Initialize an array to hold the address data
+        $address_data = [];
+    
+        // Check if the user has any existing addresses
+        if ($addresses->isNotEmpty()) {
+            // Load related data (states, cities) for each address
+            foreach ($addresses as $address) {
+                $address->load('states', 'citys');
+    
+                // Create a custom address string
+                $addr_string = "Doorflat {$address->doorflat}, ";
+    
+                if (!empty($address->landmark)) {
+                    $addr_string .= "{$address->landmark}, ";
+                }
+                $addr_string .= "{$address->address}, {$address->location_address}, {$address->zipcode}";
+    
+                $address['custom_address'] = $addr_string;
+    
+                // Add the address to the address_data array
+                $address_data[] = $address;
+            }
+        }
+    
+        // If no address exists, provide an empty array
+        if ($addresses->isEmpty()) {
+            $address_data = []; // Ensure it's an empty array, not null
+        }
+    
+        // Return the view with the address data
+        return view('selectaddress', compact('address_data', 'place'));
     }
 
     public function Search(Request $request) {
