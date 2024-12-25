@@ -289,7 +289,7 @@ class DeliveryBoyController extends Controller
             }
     
             // Calculate the distance between the delivery boy and the order's address
-            $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+            $dist = $this->calculate_distanceee($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
     
             // Add order data to the array
             $data[] = [
