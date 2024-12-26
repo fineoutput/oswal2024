@@ -136,7 +136,7 @@
               <td>Rs. {{ $giftCard->price ?? 'N/A' }}</td>
               <td>1</td>
               <td>Rs. {{ $giftCard->price ?? 'N/A' }}</td>
-              <td>%</td>
+              <td>18%</td>
               <td>IGST</td>
               <td>Rs. {{ $order->gift_gst_amt }}</td>
               <td>Rs. {{ $order->gift_amt }}</td>
