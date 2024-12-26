@@ -272,7 +272,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
             </ul>
 
             @if($giftCardStatus == 1)
-
+            @if(!empty($giftCards))
             <div class="gift-card-section ribbon" id="giftCardSection">
 
                 <div class="age_class d-flex justify-content-center">
@@ -284,7 +284,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
             </div>
 
             <div class="gift-card-list" id="giftCardList">
-
+                
                 @foreach ($giftCards as $key => $giftCard)
 
                 <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
@@ -296,8 +296,15 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </div>
 
                 @endforeach
+                @else
+                <div class="gift-card-item">
+                    
+                </div>
+
+               
 
             </div>
+            @endif
 
             @endif
 
