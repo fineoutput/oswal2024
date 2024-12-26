@@ -275,17 +275,11 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
             @endphp
             @if($calculatedAmount >= 2000)
             <div class="gift-card-section ribbon" id="giftCardSection">
-
-
                 <div class="age_class d-flex justify-content-center">
-
                     <p><b id="cleargiftsecation">Click here to select a gift card</b></p>
-
                 </div>
-
             </div>
             @endif
-
             <div class="gift-card-list" id="giftCardList">
 
                
