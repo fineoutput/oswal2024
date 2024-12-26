@@ -737,15 +737,15 @@ class OrderController extends Controller
         if(Auth::check() && Auth::user()->role_type != 2) {
 
             $maxCodAmount = getConstant()->cod_max_process_amount;
-
+            
             if ($order->sub_total > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
                     'message' => "Cod not allowed for order above ₹".formatPrice($maxCodAmount)
                 ]);
             }
-
         }
+
         // Handle COD payment type
         if(Auth::user()->role_type == 2){
             $codCharge = 0;
