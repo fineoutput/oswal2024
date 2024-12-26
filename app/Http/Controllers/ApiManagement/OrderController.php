@@ -738,7 +738,8 @@ class OrderController extends Controller
 
             $maxCodAmount = getConstant()->cod_max_process_amount;
             
-            if ($order->sub_total > $maxCodAmount) {
+            $new = $order->sub_total + getConstant()->cod_charge;
+            if ($new > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
                     'message' => "Cod not allowed for order above ₹".formatPrice($maxCodAmount)
