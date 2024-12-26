@@ -269,7 +269,13 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
             @if($giftCardStatus == 1)
 
+                @php
+                // Compute the sum of total amount and COD charge
+                $calculatedAmount = (float) $orderdetails->total_amount + (float) getConstant()->cod_charge;
+            @endphp
+            @if($calculatedAmount >= 2000)
             <div class="gift-card-section ribbon" id="giftCardSection">
+
 
                 <div class="age_class d-flex justify-content-center">
 
@@ -278,13 +284,11 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 </div>
 
             </div>
+            @endif
 
             <div class="gift-card-list" id="giftCardList">
 
-                @php
-                // Compute the sum of total amount and COD charge
-                $calculatedAmount = (float) $orderdetails->total_amount + (float) getConstant()->cod_charge;
-            @endphp
+               
             
             @if($calculatedAmount >= 2000)
                 @foreach ($giftCards as $key => $giftCard)
