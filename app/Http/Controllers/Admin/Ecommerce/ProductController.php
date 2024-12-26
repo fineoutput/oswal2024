@@ -29,7 +29,7 @@ class ProductController extends Controller
         
     }
 
-    public function create($id =null, Request $request)
+    public function create(Request $request ,$id =null )
     {
         $product = null;
 
