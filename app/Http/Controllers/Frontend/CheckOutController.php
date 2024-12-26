@@ -659,10 +659,10 @@ class CheckOutController extends Controller
             return response()->json(['successs' => false ,'message' => 'Invalid payment type']);
         }
 
-        $maxCodAmount = getConstant()->cod_max_process_amount + getConstant()->cod_charge;
+        $maxCodAmount = getConstant()->cod_max_process_amount;
         // return $maxCodAmount;
-
-        if ($order->sub_total > $maxCodAmount) {
+        $new = $order->sub_total + getConstant()->cod_charge;
+        if ($new > $maxCodAmount) {
             return response()->json([
                 'success' => false,
                 'message' => "COD not allowed for order above ".formatPrice($maxCodAmount)
