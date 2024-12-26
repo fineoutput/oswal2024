@@ -123,12 +123,8 @@ $addr_string .= "{$userAddress->landmark}, ";
 
 $addr_string .= "{$userAddress->address}, {$userAddress->citys->city_name }, {$userAddress->states->state_name}, {$userAddress->zipcode}";
 
-if ($orderdetails->total_amount == '2000') {
-    // Get all active gift cards
-    $giftCards = GiftCard::where('is_active', 1)->get();
-}else {
-    $giftCards = null;
-}
+$giftCards = App\Models\GiftCard::where('is_active', 1)->get();
+
 $promocodes = App\Models\Promocode::where('is_active', 1)->get();
 
 $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
@@ -272,7 +268,7 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
             </ul>
 
             @if($giftCardStatus == 1)
-            @if(!empty($giftCards))
+
             <div class="gift-card-section ribbon" id="giftCardSection">
 
                 <div class="age_class d-flex justify-content-center">
@@ -284,27 +280,25 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
             </div>
 
             <div class="gift-card-list" id="giftCardList">
-                
+
+                @php
+                // Compute the sum of total amount and COD charge
+                $calculatedAmount = (float) $orderdetails->total_amount + (float) getConstant()->cod_charge;
+            @endphp
+            
+            @if($calculatedAmount >= 2000)
                 @foreach ($giftCards as $key => $giftCard)
-
-                <div class="gift-card-item" data-id="{{$giftCard->id }}" onclick="applyGiftCard('{{$giftCard->id }}')">
-
-                    <img src="{{ asset($giftCard->image) }}" alt="Gift Card 1" />
-
-                    <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
-
-                </div>
-
+                    <div class="gift-card-item" data-id="{{ $giftCard->id }}" onclick="applyGiftCard('{{ $giftCard->id }}')">
+                        <img src="{{ asset($giftCard->image) }}" alt="Gift Card" />
+                        <p>{{ $giftCard->name }} ₹{{ $giftCard->price }} </p>
+                    </div>
                 @endforeach
-                @else
-                <div class="gift-card-item">
-                    
-                </div>
-
-               
+            @else
+                <p>The total amount + COD charge is not equal to ₹2000. It is ₹{{ $calculatedAmount }}.</p>
+            @endif
+            
 
             </div>
-            @endif
 
             @endif
 
