@@ -123,7 +123,7 @@ $addr_string .= "{$userAddress->landmark}, ";
 
 $addr_string .= "{$userAddress->address}, {$userAddress->citys->city_name }, {$userAddress->states->state_name}, {$userAddress->zipcode}";
 
-if ($OrderDetails->total_amount == '2000') {
+if ($orderdetails->total_amount == '2000') {
     // Get all active gift cards
     $giftCards = GiftCard::where('is_active', 1)->get();
 
