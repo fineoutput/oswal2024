@@ -126,11 +126,8 @@ $addr_string .= "{$userAddress->address}, {$userAddress->citys->city_name }, {$u
 if ($orderdetails->total_amount == '2000') {
     // Get all active gift cards
     $giftCards = GiftCard::where('is_active', 1)->get();
-
-    // If no active gift cards exist, set $giftCards to null
-    if ($giftCards->isEmpty()) {
-        $giftCards = null;
-    }
+}else {
+    $giftCards = null;
 }
 $promocodes = App\Models\Promocode::where('is_active', 1)->get();
 
