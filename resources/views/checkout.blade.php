@@ -123,8 +123,15 @@ $addr_string .= "{$userAddress->landmark}, ";
 
 $addr_string .= "{$userAddress->address}, {$userAddress->citys->city_name }, {$userAddress->states->state_name}, {$userAddress->zipcode}";
 
-$giftCards = App\Models\GiftCard::where('is_active', 1)->get();
+if ($orderdetails->total_amount == '2000') {
+    // Get all active gift cards
+    $giftCards = GiftCard::where('is_active', 1)->get();
 
+    // If no active gift cards exist, set $giftCards to null
+    if ($giftCards->isEmpty()) {
+        $giftCards = null;
+    }
+}
 $promocodes = App\Models\Promocode::where('is_active', 1)->get();
 
 $promoStatus = DB::table('gift_promo_status')->where('id', 1)->value('is_active');
