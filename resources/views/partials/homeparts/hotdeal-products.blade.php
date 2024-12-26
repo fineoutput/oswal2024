@@ -44,7 +44,7 @@
     height: 300px;
 }
 </style>
-<section class="product-sect py-5 hot-deals" style="background-image: url('{{ asset('images/rice1.png') }}');">
+<section class="product-sect py-5 hot-deals" style="background-image: url('{{ asset('images/rice1.webp') }}');">
     <div class="container-fluid">
         <h2 class="text-center sect-text mb-5" style="color: #373737;">Hot Deals Products</h2>
 
