@@ -170,12 +170,7 @@
     </div>
 
     <div class="home-orangepatch-yellow">FOR OVER 68 YEARS.</div>
-    <img src="{{ asset('images/buckets.png') }}" alt="" style="
-    width: 9%;
-    position: absolute;
-    top: 40%;
-    left: 0;
-">
+  
 
 </section>
 
