@@ -214,47 +214,130 @@ class DeliveryBoyController extends Controller
 
     }
 
-    public function orderList(Request $request) {
+    // public function orderList(Request $request) {
    
-        $user = Auth::user();
+    //     $user = Auth::user();
 
-        $latitude =  $user->latitude;
+    //     $latitude =  $user->latitude;
 
-        $longitude =  $user->longitude;
+    //     $longitude =  $user->longitude;
 
-        $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
-                        ->with(['Orders.user', 'Orders.address'])
-                        ->get();
-                        
-        $data = [];
+    //     $transferOrders = TransferOrder::where('status','!=', 4)->where('delivery_user_id', $user->id)
+    //                     ->with(['Orders.user', 'Orders.address'])
+    //                     ->get();
+    //     $data = [];
         
-        foreach($transferOrders as $value){
+    //     foreach($transferOrders as $value){
 
-            $order =$value->orders;
+    //         $order =$value->orders;
 
-            if(!$order){
-                continue;
-            }
+    //         if(!$order){
+    //             continue;
+    //         }
 
-            $userAddress = $order->address;
+    //         $userAddress = $order->address;
 
             
-            $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+    //         $dist = $this->calculate_distance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
 
+    //         $data[] = [
+    //             'transfer_order_id' => $value->id,
+    //             'delivery_status'=> deliveryStatus($value->status),
+    //             'order_id' => $value->order_id,
+    //             'user_id' => $value->orders->user_id,
+    //             'user_name' => $value->orders->user->first_name,
+    //             'distance' => $dist['distance'] ?? '0',
+    //             'time' => $dist['time'] ?? '0',
+    //             'unit' => $dist['unit'] ?? 'Not Found',
+    //         ];
+
+    //     }
+
+    //     return response()->json(['sucess' => true , 'message' => 'order featch SucessFully' , 'orders' => $data], 200);
+    // }
+
+
+    public function orderList(Request $request) {
+        $user = Auth::user();
+    
+        // Get the latitude and longitude of the delivery boy
+        $latitude = $user->latitude;
+        $longitude = $user->longitude;
+    
+        // Fetch all transfer orders assigned to the current delivery boy
+        $transferOrders = TransferOrder::where('status', '!=', 4) // Exclude canceled orders
+            ->where('delivery_user_id', $user->id) // Filter by delivery boy
+            ->with(['orders.user', 'orders.address'])
+            ->get();
+    
+        $data = [];
+    
+        // Calculate distance for each order and add it to the data array
+        foreach ($transferOrders as $value) {
+            $order = $value->orders;
+    
+            // If order does not exist, skip this iteration
+            if (!$order) {
+                continue;
+            }
+    
+            $userAddress = $order->address;
+    
+            // If user does not exist in the order, skip this iteration
+            if (!$order->user) {
+                continue;
+            }
+    
+            // Calculate the distance between the delivery boy and the order's address
+            $dist = $this->calculate_distanceee($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+    
+            // Add order data to the array
             $data[] = [
                 'transfer_order_id' => $value->id,
-                'delivery_status'=> deliveryStatus($value->status),
+                'delivery_status' => deliveryStatus($value->status),
                 'order_id' => $value->order_id,
                 'user_id' => $value->orders->user_id,
-                'user_name' => $value->orders->user->first_name,
-                'distance' => $dist['distance'] ?? '0',
-                'time' => $dist['time'] ?? '0',
-                'unit' => $dist['unit'] ?? 'Not Found',
+                'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
+                'distance' => $dist['distance'] ?? '0', // Distance in km
+                'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
+                'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
             ];
-
         }
+    
+        // Sort orders by distance (nearest first)
+        usort($data, function ($a, $b) {
+            return $a['distance'] <=> $b['distance'];
+        });
+    
+        // Return the sorted list of orders
+        return response()->json([
+            'success' => true,
+            'message' => 'Orders fetched successfully.',
+            'orders' => $data
+        ], 200);
+    }
 
-        return response()->json(['sucess' => true , 'message' => 'order featch SucessFully' , 'orders' => $data], 200);
+    public function calculate_distanceee($lat1, $lon1, $lat2, $lon2) {
+        $earth_radius = 6371; 
+ 
+        $dlat = deg2rad($lat2 - $lat1);
+        $dlon = deg2rad($lon2 - $lon1);
+    
+        // Apply Haversine formula
+        $a = sin($dlat / 2) * sin($dlat / 2) +
+             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+             sin($dlon / 2) * sin($dlon / 2);
+    
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = $earth_radius * $c; 
+        $time = ($distance / 30) * 60; 
+    
+        return [
+            'distance' => number_format($distance, 2), 
+            'time' => number_format($time, 2), 
+            'unit' => 'km', 
+        ];
     }
 
     public function orderDetail(Request $request) {
@@ -298,14 +381,13 @@ class DeliveryBoyController extends Controller
         } elseif ($transferOrder->orders->payment_type == 2) {
 
             $payment_type = 'All Ready Pay';
-
         }
 
         $latitude =  $user->latitude;
 
         $longitude =  $user->longitude;
         
-        $dist = $this->calculate_distance($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
+        $dist = $this->calculate_distanceee($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
         $data= [
             'order_id'    => $transferOrder->order_id,
@@ -497,66 +579,169 @@ class DeliveryBoyController extends Controller
         ]);
     }
     
-    public function startDelivery(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'transfer_id'  => 'required|integer|exists:transfer_orders,id',
-            'latitude'     => 'required|numeric',
-            'longitude'    => 'required|numeric'
-        ]);
+    // public function startDelivery(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'transfer_id'  => 'required|integer|exists:transfer_orders,id',
+    //         'latitude'     => 'required|numeric',
+    //         'longitude'    => 'required|numeric'
+    //     ]);
 
-        if ($validator->fails()) {
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'message' => $validator->errors()->first(),
+    //             'status' => 400
+    //         ]);
+    //     }
+
+    //     $orderId   = $request->input('transfer_id');
+    //     $latitude  = $request->input('latitude');
+    //     $longitude = $request->input('longitude');
+    //     $ride = $request->input('ride');
+    //     $startTime = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
+
+    //     $user = Auth::user();
+
+    //     $ongoingOrder = TransferOrder::where('status', 2)
+    //         ->orWhere('status', 3)
+    //         ->where('delivery_user_id', $user->id)
+    //         ->first();
+
+    //     if ($ongoingOrder) {
+    //         if ($ongoingOrder->id != $orderId) {
+
+    //             return response()->json([
+    //                 'message' => 'First complete your ongoing order before accepting a new one.',
+    //                 'status'  => 400
+    //             ]);
+    //         }
+    //     }
+
+    //     $deliveryOrder = TransferOrder::with('Orders.address')->where('id', $orderId)
+    //         ->where('delivery_user_id', $user->id)
+    //         ->first();
+
+    //     if ($deliveryOrder) {
+    //         $order = $deliveryOrder->Orders;
+    //         if (!$order) {
+    //             return response()->json([
+    //                 'message' => 'Order details not found.',
+    //                 'status'  => 400
+    //             ]);
+    //         }
+
+    //         Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
+
+    //         $userAddress = $order->address;
+    //         if (!$userAddress) {
+    //             return response()->json([
+    //                 'message' => 'Address details not found.',
+    //                 'status'  => 400
+    //             ]);
+    //         }
+
+    //         $deliveryOrder->update([
+    //             'status' => 2, 
+    //             'start_location' => "$latitude,$longitude",
+    //             'start_time' => $startTime
+    //         ]);
+
+    //         return response()->json([
+    //             'message' => 'Delivery started successfully',
+    //             'status' => 200,
+    //             'data' => [
+    //                 'order_id' => $deliveryOrder->id,
+    //                 'delivery_status'=> deliveryStatus(2),
+    //                 'start_location' => $deliveryOrder->start_location,
+    //                 'start_time' => $deliveryOrder->start_time,
+    //                 'user_address' => [
+    //                     'name' => $userAddress->name,
+    //                     'address' => $userAddress->address,
+    //                     'landmark' => $userAddress->landmark,
+    //                     'doorflat' => $userAddress->doorflat,
+    //                     'latitude' => $userAddress->latitude,
+    //                     'longitude' => $userAddress->longitude,
+    //                     'location_address' => $userAddress->location_address,
+    //                     'city' => $userAddress->citys->city_name,
+    //                     'state' => $userAddress->states->state_name,
+    //                     'zipcode' => $userAddress->zipcode,
+    //                 ],
+    //             ]
+    //         ]);
+
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'Order not found or not assigned to you.',
+    //             'status'  => 400
+    //         ]);
+    //     }
+    // }
+
+
+
+    public function startDelivery(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'transfer_id'  => 'required|integer|exists:transfer_orders,id',
+        'latitude'     => 'required|numeric',
+        'longitude'    => 'required|numeric',
+        'ride'          => 'required|integer|in:1,2', // Ensure 'ride' input is either 1 or 2
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => $validator->errors()->first(),
+            'status' => 400
+        ]);
+    }
+
+    $orderId   = $request->input('transfer_id');
+    $latitude  = $request->input('latitude');
+    $longitude = $request->input('longitude');
+    $ride = $request->input('ride');
+    $startTime = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
+
+    $user = Auth::user();
+
+    $ongoingOrder = TransferOrder::where('status', 2)
+        ->orWhere('status', 3)
+        ->where('delivery_user_id', $user->id)
+        ->first();
+
+    if ($ongoingOrder) {
+        if ($ongoingOrder->id != $orderId) {
             return response()->json([
-                'message' => $validator->errors()->first(),
-                'status' => 400
+                'message' => 'First complete your ongoing order before accepting a new one.',
+                'status'  => 400
+            ]);
+        }
+    }
+
+    $deliveryOrder = TransferOrder::with('Orders.address')->where('id', $orderId)
+        ->where('delivery_user_id', $user->id)
+        ->first();
+
+    if ($deliveryOrder) {
+        $order = $deliveryOrder->Orders;
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order details not found.',
+                'status'  => 400
             ]);
         }
 
-        $orderId   = $request->input('transfer_id');
-        $latitude  = $request->input('latitude');
-        $longitude = $request->input('longitude');
-        $startTime = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
+        Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
 
-        $user = Auth::user();
-
-        $ongoingOrder = TransferOrder::where('status', 2)
-            ->orWhere('status', 3)
-            ->where('delivery_user_id', $user->id)
-            ->first();
-
-        if ($ongoingOrder) {
-            if ($ongoingOrder->id != $orderId) {
-
-                return response()->json([
-                    'message' => 'First complete your ongoing order before accepting a new one.',
-                    'status'  => 400
-                ]);
-            }
+        $userAddress = $order->address;
+        if (!$userAddress) {
+            return response()->json([
+                'message' => 'Address details not found.',
+                'status'  => 400
+            ]);
         }
 
-        $deliveryOrder = TransferOrder::with('Orders.address')->where('id', $orderId)
-            ->where('delivery_user_id', $user->id)
-            ->first();
-
-        if ($deliveryOrder) {
-            $order = $deliveryOrder->Orders;
-            if (!$order) {
-                return response()->json([
-                    'message' => 'Order details not found.',
-                    'status'  => 400
-                ]);
-            }
-
-            Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
-
-            $userAddress = $order->address;
-            if (!$userAddress) {
-                return response()->json([
-                    'message' => 'Address details not found.',
-                    'status'  => 400
-                ]);
-            }
-
+        // Handle ride = 1 (just start delivery without location check)
+        if ($ride == 1) {
             $deliveryOrder->update([
                 'status' => 2, 
                 'start_location' => "$latitude,$longitude",
@@ -585,14 +770,75 @@ class DeliveryBoyController extends Controller
                     ],
                 ]
             ]);
-
-        } else {
-            return response()->json([
-                'message' => 'Order not found or not assigned to you.',
-                'status'  => 400
-            ]);
         }
+
+        // Handle ride = 2 (check if rider is within 500 meters)
+        if ($ride == 2) {
+            // Calculate distance using the Haversine formula
+            $distance = $this->calculateDistance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+
+            // Check if the rider is within 500 meters
+            if ($distance <= 0.5) { // 500 meters = 0.5 kilometers
+                $deliveryOrder->update([
+                    'status' => 2, 
+                    'start_location' => "$latitude,$longitude",
+                    'start_time' => $startTime
+                ]);
+
+                return response()->json([
+                    'message' => 'Delivery started successfully',
+                    'status' => 200,
+                    'data' => [
+                        'order_id' => $deliveryOrder->id,
+                        'delivery_status'=> deliveryStatus(2),
+                        'start_location' => $deliveryOrder->start_location,
+                        'start_time' => $deliveryOrder->start_time,
+                        'user_address' => [
+                            'name' => $userAddress->name,
+                            'address' => $userAddress->address,
+                            'landmark' => $userAddress->landmark,
+                            'doorflat' => $userAddress->doorflat,
+                            'latitude' => $userAddress->latitude,
+                            'longitude' => $userAddress->longitude,
+                            'location_address' => $userAddress->location_address,
+                            'city' => $userAddress->citys->city_name,
+                            'state' => $userAddress->states->state_name,
+                            'zipcode' => $userAddress->zipcode,
+                        ],
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Within 500 meters of delivery address to End.',
+                    'status' => 400
+                ]);
+            }
+        }
+
+    } else {
+        return response()->json([
+            'message' => 'Order not found or not assigned to you.',
+            'status'  => 400
+        ]);
     }
+}
+
+private function calculateDistance($lat1, $lon1, $lat2, $lon2)
+{
+    $earthRadius = 6371; // Earth radius in kilometers
+
+    $dLat = deg2rad($lat2 - $lat1);
+    $dLon = deg2rad($lon2 - $lon1);
+
+    $a = sin($dLat / 2) * sin($dLat / 2) +
+         cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+         sin($dLon / 2) * sin($dLon / 2);
+    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+    $distance = $earthRadius * $c; // Distance in kilometers
+
+    return $distance; // Return the distance in kilometers
+}
 
     public function completeOrder(Request $request)
     {

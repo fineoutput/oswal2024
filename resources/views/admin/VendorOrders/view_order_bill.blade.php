@@ -41,7 +41,7 @@
           Email: {{ $user->email ?? 'N/A' }}<br>
           Contact: {{ $user->contact ?? 'N/A' }}<br><br>
           <span class="font-weight-bold">Address:</span><br>
-          {{ $address->address ?? 'No address' }}<br>
+          {{ $address->address ?? '' }}<br>
           State/UT Code: RJ14<br>
           Place of supply: {{ $city ?? 'N/A' }}<br>
           Place of delivery: {{ $city ?? 'N/A' }}, {{ $state ?? 'N/A' }}<br>
@@ -58,7 +58,7 @@
         <div class="col-sm-6"></div>
         <div class="col-sm-6 shipping_content">
           <span class="font-weight-bold">Shipping Address:</span><br>
-          Address:{{$address->doorflat ?? ''}}{{ $address->address ?? 'No address' }},{{$address->landmark ?? ''}},{{$address->citys->city_name ?? ''}},{{$address->states->state_name ?? ''}},{{$address->zipcode ?? ''}}
+          Address:{{$address->doorflat ?? ''}}{{ $address->address ?? '' }},{{$address->landmark ?? ''}},{{$address->citys->city_name ?? ''}},{{$address->states->state_name ?? ''}},{{$address->zipcode ?? ''}}
           <br>
           State/UT Code: RJ<br>
           Place of supply: {{ $city ?? 'N/A' }}<br>
