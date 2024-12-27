@@ -340,14 +340,15 @@
                                                                                 Accept Order Confirm
                                                                             </a>
                                                                         </li>
-                                                                        <li>
-                                                                            <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(5)]) }}">
-                                                                                Reject
-                                                                            </a>
-                                                                        </li>
+                                                                       
                                                                     @endif
                                                     
                                                                     @if ($order->order_status == 2)
+                                                                    <li>
+                                                                        <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(5)]) }}">
+                                                                            Reject
+                                                                        </a>
+                                                                    </li>
                                                                         <li>
                                                                             <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(3)]) }}">
                                                                                 Dispatch Order
