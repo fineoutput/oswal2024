@@ -23,6 +23,7 @@ use App\Models\Order;
 use App\Models\State;
 
 use App\Models\City;
+use App\Models\TransferOrder;
 
 use App\Models\User;
 
@@ -102,6 +103,7 @@ class UserController extends Controller
                 $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
                 
                 $rating_avg = number_format((float)$rating_avg, 1, '.', '');
+                $tracktransfer = TransferOrder::where('order_id',$order->id)->get();
 
                 $dataw[] = [
                     'order_id'        => $order->id,
@@ -118,6 +120,7 @@ class UserController extends Controller
                     'date'            => $order->date,
                     'promocode'       => $promo,
                     'product_image'   => $productImage,
+                    'track'   => $tracktransfer,
                 ];
             }
         }

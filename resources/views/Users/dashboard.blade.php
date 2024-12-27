@@ -126,7 +126,17 @@
                                 <td>{{ $order['order_status'] }}</td>
                                 <td><a href="{{ route('user.get-order-details',['id' => encrypt($order['order_id'])]) }}"><button class="btn btn-warning btn-sm">View</button< /a>
                                 </td>
-                                <td><button class="btn btn-warning btn-sm">Track</button></td>
+                                <td>
+                                    @php
+                                        $track = $order['track']->firstWhere('order_id', $order['order_id']);
+                                    @endphp
+                                
+                                    @if($track)
+                                        <button class="btn btn-success btn-sm">Track</button>
+                                    @else
+                                       
+                                    @endif
+                                </td>
 
                                 <td onclick="window.alert()">
     @if(in_array($order['order_status'], ['Confirmed', 'Dispatched', 'Delivered', 'Rejected']))
