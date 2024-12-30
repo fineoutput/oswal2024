@@ -151,7 +151,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                                     <div class="upper_txt_input">
 
-                                        <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                        <input type="hidden" name="type_id" value="{{ $productType->first()->id ?? '' }}">
 
                                         <select name="type_{{$product->id}}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{$product->id}}')">
 
@@ -342,13 +342,21 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                                            <del>
 
-                                               <p class="prev_rate">{{ formatPrice($productType->first()->del_mrp) }}</p>
+                                               <p class="prev_rate">@if(isset($productType->first()->del_mrp))
+                                                {{ formatPrice($productType->first()->del_mrp) }}
+                                            @else
+                                                {{ formatPrice(0) }}
+                                            @endif</p>
 
                                            </del>
 
-                                           <p>{{ formatPrice($productType->first()->selling_price) }}</p>
+                                           <p>@if(isset($productType->first()->selling_price))
+                                            {{ formatPrice($productType->first()->selling_price) }}
+                                        @else
+                                            {{ formatPrice(0) }}
+                                        @endif</p>
 
-                                           <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+                                           <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price ?? '' }}">
 
                                        </div>
 
@@ -358,7 +366,7 @@ $products = sendProduct(false, false, false, false, true, false, false) ?? [];
 
                                        <div class="upper_txt_input">
 
-                                           <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                           <input type="hidden" name="type_id" value="{{ $productType->first()->id ?? '' }}">
 
                                            <select name="mob_type_{{$product->id}}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{$product->id}}')">
 

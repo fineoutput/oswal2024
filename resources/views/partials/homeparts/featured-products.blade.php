@@ -130,7 +130,7 @@
 
                                 <div class="upper_txt_input">
 
-                                    <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                    <input type="hidden" name="type_id" value="{{ $productType->first()->id ?? '' }}">
 
                                     <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
 
@@ -331,7 +331,7 @@
 
                                                     <div class="upper_txt_input">
 
-                                                        <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+                                                        <input type="hidden" name="type_id" value="{{ $productType->first()->id ?? '' }}">
 
                                                         <select name="mob_type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'mob_type_{{ $product->id }}')">
 

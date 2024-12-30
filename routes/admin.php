@@ -709,6 +709,7 @@ Route::prefix('combo-product')->name('comboproduct.')->group(function () {
 
 Route::prefix('order')->name('order.')->group(function () {
 
+
     Route::get('new', [OrderController::class, 'index'])->name('new-order');
 
     Route::get('dispatched', [OrderController::class, 'index'])->name('dispatched-order');
@@ -751,6 +752,8 @@ Route::prefix('order')->name('order.')->group(function () {
     Route::get('vendor/destroy/{id}', [ComboProductController::class, 'destroy'])->name('vendor.destroy');
 
     Route::get('users_transfer', [OrderController::class, 'users_transfer'])->name('users_transfer');
+
+    Route::post('verify_payment', [OrderController::class, 'verify_payment'])->name('verify_payment');
 
 });
 

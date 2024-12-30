@@ -37,8 +37,9 @@ class FirebaseService
                 'image' => $image != null ? $image : '',
                 
             ]);
-        
+            
         try {
+            
             $result = $this->messaging->send($message);
 
             return ['success' => true, 'result' => $result];
@@ -69,7 +70,7 @@ class FirebaseService
             // ->withData($data); 
 
         try {
-
+            
             $result = $this->messaging->send($message);
 
             return ['success' => true, 'result' => $result];
