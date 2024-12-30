@@ -46,7 +46,6 @@ class CheckOutController extends Controller
     public function checkout(Request $request)
     {
         
-        
         $addressId = $request->input('address_id') ?? session('address_id');
 
         if ($addressId == null) {
@@ -771,6 +770,415 @@ class CheckOutController extends Controller
 
         return response()->json(['success'=> true, 'data' => $data], 200);
     }
+
+    public function verify_payment()
+    {
+        $entityBody = file_get_contents('php://input');
+        $body = json_decode($entityBody);
+        //--- insert data in webhook table --------
+        date_default_timezone_set("Asia/Calcutta");
+        $cur_date = date("Y-m-d H:i:s");
+        // print_r($body->payload->order->entity->amount_paid);
+        if (!empty($body->event)) {
+            $event = $body->event; //order.paid
+            if ($event == 'order.paid') {
+                $data_insert = array(
+                    'body' => $entityBody,
+                    'razor_id' => $body->payload->order->entity->id,
+                    'paid_amount' => $body->payload->order->entity->amount_paid,
+                    'date' => $cur_date
+                );
+                $last_id = $this->base_model->insert_table("tbl_razor_webhook", $data_insert, 1);
+                $status = $body->payload->order->entity->status; //paid
+                $razor_id = $body->payload->order->entity->id;
+                $paid_amount = $body->payload->order->entity->amount_paid;
+                if ($status == 'paid') {
+                    $this->db->select('*');
+                    $this->db->from('tbl_order1');
+                    $this->db->where('txn_id', $razor_id);
+                    $order_data = $this->db->get()->row();
+                    if ($order_data->order_status == 0) {
+                        $online_amount = $paid_amount / 100;
+                        //start caculation of amount
+                        $type_weight = 0;
+                        $total_rate_sell = 0;
+                        $final_amount = [];
+                        $total_type_wght = 0;
+                        $total_type_mrp = 0;
+                        $total_amountt = 0;
+                        $user_id = $order_data->user_id;
+                        $order_id = $order_data->id;
+                        $address_id = $order_data->address_id;
+                        $this->db->select('*');
+                        $this->db->from('tbl_cart');
+                        $this->db->where('user_id', $user_id);
+                        $cart_data = $this->db->get();
+                        $this->db->select('*');
+                        $this->db->from('tbl_user_address');
+                        $this->db->where('id', $order_data->address_id);
+                        $addres = $this->db->get()->row();
+                        // print_r($cart_data->result()); die();
+                        if (!empty($cart_data)) {
+                            foreach ($cart_data->result() as $cart) {
+                                // echo $i;
+                                $type_id = $cart->type_id;
+                                $quantity = $cart->quantity;
+                                if (!empty($state_id)) {
+                                    $this->db->select('*');
+                                    $this->db->from('tbl_type');
+                                    $this->db->where('id', $type_id);
+                                    $this->db->where('is_active', 1);
+                                    // $this->db->group_by('type_name');
+                                    $this->db->where('state_id', $addres->state_id);
+                                    $this->db->where('city_id', $addres->city_id);
+                                    $typeData = $this->db->get()->row();
+                                } else {
+                                    $this->db->select('*');
+                                    $this->db->from('tbl_type');
+                                    $this->db->where('id', $type_id);
+                                    $this->db->where('is_active', 1);
+                                    $this->db->group_by('type_name');
+                                    $typeData = $this->db->get()->row();
+                                }
+                                $type_rate_selling = $typeData->selling_price;
+                                $type_wgt = $typeData->weight;
+                                $total_weight = $type_wgt * $quantity;
+                                $total_type_wght = $total_type_wght + $total_weight;
+                                $total_qty_price = $cart->total_qty_price;
+                                $total_amountt = $total_amountt + $total_qty_price;
+                            }
+                        }
+                        $total_order_weights = $total_type_wght;
+                        $total_order_weight = round($total_type_wght);
+                        // $order_main_price= $order_main_prices;
+                        $total_amount = $total_amountt;
+                        // echo $address_id;
+                        //user address shipping Charges
+                        // print_r($addres) ; die();
+                        if (!empty($addres)) {
+                            $stateid = $addres->state;
+                            $cityid = $addres->city;
+                            $this->db->select('*');
+                            $this->db->from('tbl_shipping_charge');
+                            $this->db->where('city', $cityid);
+                            // $this->db->where('state',$state_id);
+                            $shipping_data = $this->db->get()->row();
+                            if (!empty($shipping_data)) {
+                                $weight1 = $shipping_data->weight1;
+                                $shipping_amount1 = $shipping_data->shipping_charge1;
+                                // die();
+                                $weight2 = $shipping_data->weight2;
+                                $shipping_amount2 = $shipping_data->shipping_charge2;
+                                $weight3 = $shipping_data->weight3;
+                                $shipping_amount3 = $shipping_data->shipping_charge3;
+                                $weight4 = $shipping_data->weight4;
+                                $shipping_amount4 = $shipping_data->shipping_charge4;
+                                $weight5 = $shipping_data->weight5;
+                                $shipping_amount5 = $shipping_data->shipping_charge5;
+                                $weight6 = $shipping_data->weight6;
+                                $shipping_amount6 = $shipping_data->shipping_charge6;
+                            } else {
+                                $res = array(
+                                    'message' => "Shipping services not available in this area.",
+                                    'status' => 201
+                                );
+                                echo json_encode($res);
+                            }
+                        }
+                        // total weight charges acording to admin weight
+                        if ($weight1 >= $total_order_weight) {
+                            $total_weight_charge = $shipping_amount1;
+                        } elseif ($weight2 >= $total_order_weight) {
+                            $total_weight_charge = $shipping_amount2;
+                        } elseif ($weight3 >= $total_order_weight) {
+                            $total_weight_charge = $shipping_amount3;
+                        } elseif ($weight4 >= $total_order_weight) {
+                            $total_weight_charge = $shipping_amount4;
+                        } elseif ($weight5 >= $total_order_weight) {
+                            $total_weight_charge = $shipping_amount5;
+                        } elseif ($weight6 >= $total_order_weight) {
+                            $total_weight_charge = $shipping_amount6;
+                        } else {
+                            $total_weight_charge = $shipping_amount6;
+                        }
+                        $extradiscount = 0;
+                        $discount_am = 0;
+                        $del_charge = $total_weight_charge;
+                        $am = $total_amount + $total_weight_charge;
+                        $total_order_wegt = number_format((float)$total_order_weight, 1, '.', '');
+                        $total_order_weight = $total_order_wegt;
+                        $order_shipping_amount = round($total_weight_charge);
+                        $delivery_charge = round($del_charge);
+                        $total_amount = $total_amount;
+                        $sub_total = round($am);;
+                        //end caculation of amount
+                        //online payment status check
+                        $payment_statuss = 1;
+                        $order_statuss = 1;
+                        // // get and save promocode discount in order start
+                        // $this->db->select('*');
+                        // $this->db->from('tbl_promocode_applied');
+                        // $this->db->where('user_id', $user_id);
+                        // $this->db->where('order_id', $order_id);
+                        // $promoco_da = $this->db->get()->row();
+                        // if (!empty($promoco_da)) {
+                        //     $promocode_deduction = $promoco_da->promocode_discount;
+                        //     $promocode_id = $promoco_da->promocode_id;
+                        // } else {
+                        //     $promocode_deduction = 0;
+                        //     $promocode_id = '';
+                        // }
+                        $gift_id = $order_data->gift_id;
+                        if (!empty($gift_id)) {
+                            $this->db->select('*');
+                            $this->db->from('tbl_gift_card');
+                            $this->db->where('id', $gift_id);
+                            $dsa = $this->db->get();
+                            $da = $dsa->row();
+                            $gift_price1 = $da->price;
+                            $gift_price_gst1 = round($gift_price1 + $gift_price1 * gif_percentage / 100, 2);
+                            $total_amount = round($total_amount + $gift_price_gst1);
+                            $sub_total = round($sub_total + $gift_price_gst1);
+                        } else {
+                            $gift_price_gst1 = 0;
+                        }
+                        //---- start calculate invoice number ----
+                        $now = date('y');
+                        $next = date('y', strtotime('+1 year'));
+                        $N = date('Y', strtotime('+1 year'));
+                        $order1 = $this->db->order_by('invoice_no', 'desc')->get_where('tbl_order1', array('payment_status' => 1, 'invoice_year' => $now . '-' . $next, 'year' => $N))->result();
+                        if (empty($order1)) {
+                            $invoice_year = $now . '-' . $next;
+                            $invoice_no = 1;
+                        } else {
+                            $invoice_year = $now . '-' . $next;
+                            $invoice_no = $order1[0]->invoice_no + 1;
+                        }
+                        //---- end calculate invoice number ----
+                        $ip = $this->input->ip_address();
+                        date_default_timezone_set("Asia/Calcutta");
+                        $cur_date = date("Y-m-d H:i:s");
+                        $data_update = array(
+                            'total_amount' => $total_amount,
+                            'sub_total' => $online_amount,
+                            'address_id' => $address_id,
+                            'promocode' => $order_data->promocode,
+                            'promo_deduction_amount' => $order_data->promo_deduction_amount,
+                            'payment_type' => 2,
+                            'payment_status' => $payment_statuss,
+                            'order_status' => $order_statuss,
+                            'delivery_charge' => $delivery_charge,
+                            'discount' => "",
+                            'extra_discount' => 0,
+                            'total_order_weight' => $total_order_weight,
+                            'total_order_mrp' => 0,
+                            'total_order_rate_am' => 0,
+                            'order_price' => 0,
+                            'ten_percent_of_order_price' => 0,
+                            'order_main_price' => 0,
+                            'order_shipping_amount' => $order_shipping_amount,
+                            'last_update_date' => $cur_date,
+                            'invoice_year' => $invoice_year,
+                            'invoice_no' => $invoice_no,
+                            'year' => $N,
+                            'payment_gateway_amount' => $online_amount,
+                            'online_payment_status' => $status,
+                            'order_from' => "Application",
+                            'gift_id' => $gift_id,
+                            'gift_amt' => $gift_price_gst1,
+                            'webhook' => 1
+                        );
+                        $this->db->where('id', $order_id);
+                        $zapak = $this->db->update('tbl_order1', $data_update);
+                        $this->db->select('*');
+                        $this->db->from('tbl_users');
+                        $this->db->where('id', $order_data->user_id);
+                        $user_datass = $this->db->get()->row();
+                        if (!empty($user_datass)) {
+                            $first_name = $user_datass->first_name;
+                            $email = $user_datass->email;
+                            $phone = $user_datass->contact;
+                        } else {
+                            $first_name = "";
+                            $email = "";
+                            $phone = "";
+                        }
+                        //----sent push notification to user---------
+                        $this->db->select('*');
+                        $this->db->from('tbl_users_device_token');
+                        $this->db->where('device_id', $user_datass->device_id);
+                        $dsa = $this->db->get();
+                        $d_token = $dsa->row();
+                        if (!empty($d_token)) {
+                            $url = 'https://fcm.googleapis.com/fcm/send';
+                            $title = "Order Placed";
+                            $message = "Your order has been placed. ";
+                            $msg2 = array(
+                                'body' => $title,
+                                'title' => $message,
+                                "sound" => "default"
+                            );
+                            // echo $user_device_tokens->device_token; die();
+                            $fields = array(
+                                // 'to'=>"/topics/all",
+                                'to' => $d_token->device_token,
+                                'notification' => $msg2,
+                                'priority' => 'high'
+                            );
+                            $fields = json_encode($fields);
+                            $headers = array(
+                                'Authorization: key=' . PUSH_AUTH,
+                                'Content-Type: application/json'
+                            );
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_URL, $url);
+                            curl_setopt($ch, CURLOPT_POST, true);
+                            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+                            $result = curl_exec($ch);
+                            // echo $fields;
+                            // echo $result;
+                            curl_close($ch);
+                        }
+                        //----- send sms to user --------
+                        $msg = "Hello $first_name, your order " . "#" . $order_data->id . " of amount Rs. $online_amount has been received. Thank You for placing the order OSWAL SOAP";
+                        $message = urlencode($msg);
+                        $dlt = '1207166877911124809';
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'http://api.msg91.com/api/sendhttp.php?authkey=' . SMSAUTH . '&mobiles=91' . $phone . '&message=' . $message . '&sender=' . SMSID . '&DLT_TE_ID=' . $dlt . '',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array(
+                                'Cookie: PHPSESSID=prqus0jgeu7bi43bp2d1hjgtv0'
+                            ),
+                        ));
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        //---------sent push notification to admin-----------------
+                        $url = 'https://fcm.googleapis.com/fcm/send';
+                        $title = "New Order";
+                        $message = "Order recieved of amount:- Rs." . $online_amount . " and order id:- " . $order_data->id . " ";
+                        $msg2 = array(
+                            'title' => $title,
+                            'body' => $message,
+                            "sound" => "default"
+                        );
+                        $fields = array(
+                            // 'to'=>"/topics/all",
+                            'to' => "/topics/weather",
+                            'notification' => $msg2,
+                            'priority' => 'high'
+                        );
+                        $fields = json_encode($fields);
+                        $headers = array(
+                            'Authorization: key=' . PUSH_AUTH,
+                            'Content-Type: application/json'
+                        );
+                        $ip = $this->input->ip_address();
+                        date_default_timezone_set("Asia/Calcutta");
+                        $cur_date = date("Y-m-d H:i:s");
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_POST, true);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+                        $result = curl_exec($ch);
+                        curl_close($ch);
+                        $notification = [
+                            'title' => $title,
+                            'message' => $message,
+                            'ip' => $ip,
+                            'date' => $cur_date
+                        ];
+                        $last_id = $this->base_model->insert_table("tbl_admin_notification", $notification, 1);
+                        $payment_method = 2;
+                        date_default_timezone_set("Asia/Calcutta");
+                        $cur_date = date("Y-m-d H:i:s");
+                        if ($payment_method == 1) {
+                            $method = "Cash On Delivery";
+                        } else {
+                            $method = "Online Payment";
+                        }
+                        $this->db->select('*');
+                        $this->db->from('tbl_order2');
+                        $this->db->where('main_id', $order_data->id);
+                        $orderr_prodct = $this->db->get();
+                        // print_r($orderr_prodct);  die();
+                        $products = '';
+                        if (!empty($orderr_prodct)) {
+                            foreach ($orderr_prodct->result() as $ordr_p) {
+                                $orderr_prodct_quantity = $ordr_p->quantity;
+                                $orderr_prodct_amount = $ordr_p->amount;
+                                $this->db->select('*');
+                                $this->db->from('tbl_ecom_products');
+                                $this->db->where('id', $ordr_p->product_id);
+                                $op_data = $this->db->get()->row();
+                                if (!empty($op_data)) {
+                                    $product_name = $op_data->name;
+                                    $image = $op_data->img1;
+                                } else {
+                                    $product_name = "";
+                                    $image = "";
+                                }
+                                $this->db->select('*');
+                                $this->db->from('tbl_type');
+                                $this->db->where('id', $ordr_p->type_id);
+                                $p_t_data = $this->db->get()->row();
+                                if (!empty($p_t_data)) {
+                                    $type_name = $p_t_data->type_name;
+                                } else {
+                                    $type_name = "";
+                                }
+                                $p = $product_name . "(" . $type_name . " x " . $orderr_prodct_quantity . "), ";
+                                $products = $products . $p;
+                            }
+                        }
+                        ///----- send whatsapp msg to admin ----------
+                        $others = '';
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://www.fineoutput.com/Whatsapp/send_order_message',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => 'phone=' . WHATSAPP_NUMBERS . '&order_id=' . $order_data->id . '&amount=' . $online_amount . '&date=' . $cur_date . '&method=' . $method . '&products=' . $products . '&customer_name=' . $first_name . '&others=' . $others . '',
+                            CURLOPT_HTTPHEADER => array(
+                                'token:' . TOKEN . '',
+                                'Content-Type:application/x-www-form-urlencoded',
+                                'Cookie:ci_session=e40e757b02bc2d8fb6f5bf9c5b7bb2ea74c897e8'
+                            ),
+                        ));
+                        $respons = curl_exec($curl);
+                        curl_close($curl);
+                        $res = array(
+                            'message' => 'success',
+                            'status' => 200
+                        );
+                        echo json_encode($res);
+                    }
+                } else {
+                    $res = array(
+                        'message' => 'Payment Failed',
+                        'status' => 201
+                    );
+                    echo json_encode($res);
+                }
+            }
+        }
+    }
+
 
     public function verifyPayment(Request $request)
     {

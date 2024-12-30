@@ -117,6 +117,7 @@ Route::prefix('checkout')->middleware(['auth'])->name('checkout.')->group(functi
     Route::post('place-order', [CheckOutController::class, 'placeOrder'])->name('place-order');
    
     Route::post('verify-payment', [CheckOutController::class, 'verifyPayment'])->name('verifypayment');
+    Route::post('verify_payment', [CheckOutController::class, 'verify_payment'])->name('verify_payment');
 
     Route::get('order-success/{order_id?}', [CheckOutController::class, 'orderSuccess'])->name('order-success');
  
