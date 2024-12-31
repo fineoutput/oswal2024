@@ -778,7 +778,7 @@ class CheckOutController extends Controller
         //--- insert data in webhook table --------
         date_default_timezone_set("Asia/Calcutta");
         $cur_date = date("Y-m-d H:i:s");
-        return $body->payload->order->entity->amount_paid;
+        // return $body->payload->order->entity->amount_paid;
         if (!empty($body->event)) {
             $event = $body->event; //order.paid
             if ($event == 'order.paid') {
