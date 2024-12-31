@@ -773,6 +773,7 @@ class CheckOutController extends Controller
 
     public function verify_payment()
     {
+        return 'hello';
         $entityBody = file_get_contents('php://input');
         $body = json_decode($entityBody);
         //--- insert data in webhook table --------
@@ -1182,7 +1183,6 @@ class CheckOutController extends Controller
 
     public function verifyPayment(Request $request)
     {
-
         $user = Auth::user();
 
         if (!$user) {
@@ -1244,7 +1244,7 @@ class CheckOutController extends Controller
             $order->update([
                 'order_status'        => 1,
                 'payment_status'      => 1,
-                'txn_id'              => 1,
+                'txn_id'              => 2,
                 'razorpay_payment_id' => $razorpayPaymentId,
                 'razorpay_signature'  => $razorpaySignature,
             ]);
