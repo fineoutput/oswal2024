@@ -780,6 +780,7 @@ class CheckOutController extends Controller
         $cur_date = date("Y-m-d H:i:s");
         // print_r($body->payload->order->entity->amount_paid);
         if (!empty($body->event)) {
+            return 'hello';
             $event = $body->event; //order.paid
             if ($event == 'order.paid') {
                 $data_insert = array(
