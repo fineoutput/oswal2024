@@ -113,7 +113,7 @@ class PushNotificationController extends Controller
             
             // $notification->notify(new PushNotification($notification->title, $notification->description, $notification->image, $this->googleAccessTokenService->getAccessToken()));
 
-            $response = $this->firebaseService->sendNotificationToTopic('OswalSoap', $notification->title, $notification->description, asset($notification->image));
+            $response = $this->firebaseService->sendPushNotification('OswalSoap', $notification->title, $notification->description, asset($notification->image));
 
              return $response;
             

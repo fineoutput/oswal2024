@@ -1,4 +1,4 @@
-<form action="{{ route('checkout.verify_payment') }}" method="POST" id="razorpayform">
+<form action="{{ route('checkout.verifypayment') }}" method="POST" id="razorpayform">
 
     {{-- @dd($data); --}}
 

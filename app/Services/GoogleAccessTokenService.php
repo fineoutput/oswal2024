@@ -15,8 +15,8 @@ class GoogleAccessTokenService
     {
         $this->client = new Google_Client();
 
-        // $this->client->setAuthConfig(storage_path('app/serviceaccount.json'));
-        $this->client->setAuthConfig(public_path('admin/assets/serviceaccount.json'));
+        $this->client->setAuthConfig(storage_path('app/service-account.json'));
+        // $this->client->setAuthConfig(public_path('admin/assets/serviceaccount.json'));
 
         $this->client->setScopes(['https://www.googleapis.com/auth/cloud-platform']); 
     }

@@ -771,14 +771,14 @@ class CheckOutController extends Controller
         return response()->json(['success'=> true, 'data' => $data], 200);
     }
 
-    public function verifyPayment()
+    public function verify_payment()
     {
         $entityBody = file_get_contents('php://input');
         $body = json_decode($entityBody);
         //--- insert data in webhook table --------
         date_default_timezone_set("Asia/Calcutta");
         $cur_date = date("Y-m-d H:i:s");
-        // return $body->payload->order->entity->amount_paid;
+        // print_r($body->payload->order->entity->amount_paid);
         if (!empty($body->event)) {
             $event = $body->event; //order.paid
             if ($event == 'order.paid') {
@@ -1180,8 +1180,9 @@ class CheckOutController extends Controller
     }
 
 
-    public function verify_payment(Request $request)
+    public function verifyPayment(Request $request)
     {
+
         $user = Auth::user();
 
         if (!$user) {

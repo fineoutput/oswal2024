@@ -20,10 +20,11 @@ use App\Services\FirebaseService;
 use App\Models\TransferOrder;
 
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 use App\Models\VendorReward;
 
 use App\Models\DeliveryBoy;
+use App\Models\Webhook;
 
 use App\Models\OrderDetail;
 
@@ -1408,6 +1409,8 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
 
+        $entityBody = file_get_contents('php://input');
+        $body = json_decode($entityBody);
         // Get authenticated user
         $user = Auth::user();
         if (!$user) {
@@ -1467,6 +1470,13 @@ class OrderController extends Controller
 
             }
 
+            $webhook_data = Webhook::create([
+                'body'        => $body,
+                'razor_id'    => $razorpayOrderId,
+                'paid_amount' => $order->extra_discount,
+                'date'        => Carbon::now()->format('Y-m-d'), 
+            ]);
+
             $order->update([
                 'order_status'        => 1,
                 'payment_status'      => 1,
@@ -1474,6 +1484,8 @@ class OrderController extends Controller
                 'razorpay_payment_id' => $razorpayPaymentId,
                 'razorpay_signature'  => $razorpaySignature,
             ]);
+
+           
             // Prepare response
             $response = [
                 'order_id' => $order->id,
