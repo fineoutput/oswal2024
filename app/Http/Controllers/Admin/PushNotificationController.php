@@ -17,6 +17,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 class PushNotificationController extends Controller
 {
@@ -113,15 +116,31 @@ class PushNotificationController extends Controller
             
             // $notification->notify(new PushNotification($notification->title, $notification->description, $notification->image, $this->googleAccessTokenService->getAccessToken()));
 
-            $response = $this->firebaseService->sendPushNotification('OswalSoap', $notification->title, $notification->description, asset($notification->image));
+            // $response = $this->firebaseService->sendPushNotification('OswalSoap', $notification->title, $notification->description, asset($notification->image));
 
-             return $response;
+            //  return $response;
+            // print_r(base_path(env('FIREBASE_CREDENTIALS')));
+            // exit;
+            $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
+            $messaging = $firebase->createMessaging();
+            $topic = 'OswalSoap';
+            // Build the message
+            $message = CloudMessage::withTarget('topic', $topic) // Target a topic
+                ->withNotification(Notification::create($notification->title, $notification->description))
+                ->withData(['key' => 'value']); // Optional custom data
+
+            // Send the message
+            $response = $messaging->send($message);
+         
+            // return $messaging;
+            // return "Notification sent to topic: {$topic}";
+
             
-            if (!$response['success']) {
+            // if (!$response['success']) {
 
-                Log::error('FCM send error: ' . $response['error']);
+            //     Log::error('FCM send error: ' . $response['error']);
                 
-            }
+            // }
             
             return redirect()->route('notification.index')->with('success', $message);
 

@@ -28,22 +28,26 @@ class FirebaseService
 function sendPushNotification($token, $title, $body)
 {
 
-    $firebase = (new Factory)->withServiceAccount(config('firebase.credentials.file'));
-    return $firebase;
+    $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
     $messaging = $firebase->createMessaging();
-
-    $message = CloudMessage::withTarget('token', $token)
+    $topic = 'OswalSoap';
+    // Build the message
+    $message = CloudMessage::withTarget('topic', $topic) // Target a topic
         ->withNotification(Notification::create($title, $body))
-        ->withData(['key' => 'value']); 
+        ->withData(['key' => 'value']); // Optional custom data
 
+    // Send the message
     $messaging->send($message);
+
+    return "Notification sent to topic: {$topic}";
+
 }
 
 // function sendPushNotification($token, $title, $body)
 //         {
 
 //             $firebase = (new Factory)->withServiceAccount(config('firebase.credentials'));
-//             return $firebase;
+//
 //             $messaging = $firebase->createMessaging();
 
 //             $message = CloudMessage::withTarget('token', $token)
