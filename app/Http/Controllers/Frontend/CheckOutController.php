@@ -26,6 +26,8 @@ use App\Models\Promocode;
 
 use App\Models\GiftCard;
 
+use App\Models\Webhook;
+
 use App\Models\Address;
 
 use App\Models\Order;
@@ -33,6 +35,8 @@ use App\Models\Order;
 use App\Models\Cart;
 
 use App\Models\Type;
+
+use Carbon\Carbon;
 
 class CheckOutController extends Controller
 {
@@ -1184,6 +1188,8 @@ class CheckOutController extends Controller
     {
 
         $user = Auth::user();
+        $entityBody = file_get_contents('php://input');
+        $body = json_decode($entityBody);
 
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
@@ -1240,6 +1246,14 @@ class CheckOutController extends Controller
                     }
                 }
             }
+
+            
+            $webhook_data = Webhook::create([
+                'body'        => $body,
+                'razor_id'    => $razorpayOrderId,
+                'paid_amount' => $order->extra_discount,
+                'date'        => Carbon::now()->format('Y-m-d'), 
+            ]);
 
             $order->update([
                 'order_status'        => 1,
