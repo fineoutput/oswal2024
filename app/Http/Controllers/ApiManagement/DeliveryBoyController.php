@@ -395,6 +395,7 @@ class DeliveryBoyController extends Controller
             'user_name'   => $transferOrder->orders->user->first_name,
             'phone_no'    => $transferOrder->orders->user->contact,
             'address'     => $transferOrder->orders->address,
+            'status'     => $transferOrder->status,
             'payment_type'=> $payment_type,
             'delivery_status'=> deliveryStatus($transferOrder->status),
              'order_detail' =>[
