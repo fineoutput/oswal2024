@@ -46,7 +46,7 @@ class VendorAuthController extends Controller
             'address'           => 'required|string',
             'addhar_front_image'=> 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'addhar_back_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'gstno'             => 'nullable|string|size:15',
+            // 'gstno'             => 'nullable|string|size:15',
         ];
 
         if (session()->has('user_contact') && session()->get('user_contact') == $request->phone_no) {

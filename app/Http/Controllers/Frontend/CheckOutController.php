@@ -154,7 +154,6 @@ class CheckOutController extends Controller
 
             // Apply Combo Product if exsit
             $comboProduct =  $this->comboProduct($cartItem->type_id, $product, 'en');
-
             OrderDetail::create([
                 'main_id'               =>  $order->id,
                 'product_id'            =>  $product->id,
