@@ -1251,7 +1251,7 @@ class CheckOutController extends Controller
             $webhook_data = Webhook::create([
                 'body'        => $body,
                 'razor_id'    => $razorpayOrderId,
-                'paid_amount' => $order->extra_discount,
+                'paid_amount' => $order->total_amount,
                 'date'        => Carbon::now()->format('Y-m-d'), 
             ]);
 
