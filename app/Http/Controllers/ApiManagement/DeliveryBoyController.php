@@ -389,6 +389,7 @@ class DeliveryBoyController extends Controller
         
         $dist = $this->calculate_distanceee($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
+        
         $data= [
             'order_id'    => $transferOrder->order_id,
             'user_id'     => $transferOrder->orders->user_id,
