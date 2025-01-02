@@ -117,7 +117,7 @@
                   Rs. {{ $item->type->gst_percentage_price * $item->quantity }}
                 @endif
               </td>
-              <td>Rs. {{ $item->amount + ($item->type->gst_percentage_price * $item->quantity) / 2 }}</td>
+              <td>Rs. {{ ($item->amount + ($item->type->gst_percentage_price * $item->quantity)) / 2 }}</td>
             </tr>
             @if ($item->combo_product != null)
               <tr class="product_table2">
