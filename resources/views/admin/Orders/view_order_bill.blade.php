@@ -104,9 +104,9 @@
               <td>{{ $item->product->name ?? 'N/A' }}</td>
               <td>{{ $item->product->hsn_code ?? 'N/A' }}</td>
               <td>{{ $item->type->type_name ?? 'N/A' }}</td>
-              <td>Rs. {{ $item->type->mrp ?? 'N/A' }}</td>
+              <td>Rs. {{ $item->type_mrp ?? 'N/A' }}</td>
               <td>{{ $item->quantity }}</td>
-              <td>Rs. {{ $item->type->mrp * $item->quantity }}</td>
+              <td>Rs. {{ $item->type_mrp * $item->quantity }}</td>
               <td>{{ $item->type->gst_percentage ?? 18}}%</td>
               <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
               <td>
