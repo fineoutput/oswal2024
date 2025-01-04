@@ -301,6 +301,7 @@ class DeliveryBoyController extends Controller
                 'distance' => $dist['distance'] ?? '0', // Distance in km
                 'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
                 'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
+                'delivery_status' => $value->status, // Distance unit
             ];
         }
     
@@ -396,7 +397,7 @@ class DeliveryBoyController extends Controller
             'user_name'   => $transferOrder->orders->user->first_name,
             'phone_no'    => $transferOrder->orders->user->contact,
             'address'     => $transferOrder->orders->address,
-            'status'     => $transferOrder->status,
+            'delivery_status'     => $transferOrder->status,
             'payment_type'=> $payment_type,
             'delivery_status'=> deliveryStatus($transferOrder->status),
              'order_detail' =>[
