@@ -606,7 +606,7 @@ class AppController extends Controller
         return response()->json(['success' => true, 'data' => $data]);
     }
 
-    public function updateFcm(Request $request)
+    public function updateFcm(Request $request,$device_id)
 {
     // Validate the incoming request
     $validator = Validator::make($request->all(), [
@@ -635,6 +635,8 @@ class AppController extends Controller
     // $user_id = auth()->user()->id;
 
     // Retrieve the user using either the device_id or user_id
+    $user = User::where('device_id',$device_id)->get();
+    return $user; 
     $user = auth()->user();
 
     // If the user is not found, return an unauthorized error
