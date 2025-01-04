@@ -606,7 +606,7 @@ class AppController extends Controller
         return response()->json(['success' => true, 'data' => $data]);
     }
 
-    public function updateFcm(Request $request, $device_id ,$fcm_token)
+    public function updateFcm(Request $request)
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
