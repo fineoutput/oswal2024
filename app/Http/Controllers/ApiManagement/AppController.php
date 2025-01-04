@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\ShippingCharge;
@@ -612,7 +612,19 @@ class AppController extends Controller
         $validator = Validator::make($request->all(), [
             'fcm_token' => 'required|string',
         ]);
+
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
     
+        Log::info("fcm_token: " . $fcm_token);
+        Log::info("auth: " . $request->header('Authorization'));
         // If validation fails, return an error
         if ($validator->fails()) {
             return response()->json([
@@ -622,7 +634,7 @@ class AppController extends Controller
         }
     
         // Check if the user is authenticated
-        if (auth()->check()) {  // Check if the user is authenticated, correct the condition
+        if (!auth()->check()) {  // Check if the user is authenticated, correct the condition
             return response()->json([
                 'success' => false,
                 'status' => 401,
