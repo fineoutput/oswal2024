@@ -606,59 +606,53 @@ class AppController extends Controller
         return response()->json(['success' => true, 'data' => $data]);
     }
 
-    public function updateFcm(Request $request,$device_id)
-{
-    // Validate the incoming request
-    $validator = Validator::make($request->all(), [
-        'fcm_token' => 'required|string',
-    ]);
-
-    // If validation fails, return an error
-    if ($validator->fails()) {
+    public function updateFcm(Request $request, $device_id)
+    {
+        // Validate the incoming request
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+        ]);
+    
+        // If validation fails, return an error
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+    
+        // Check if the user is authenticated
+        if (auth()->check()) {  // Check if the user is authenticated, correct the condition
+            return response()->json([
+                'success' => false,
+                'status' => 401,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+    
+        // Retrieve the user based on the device_id, we expect a single user, not a collection
+        $user = User::where('device_id', $device_id)->first();  // Use first() to get a single user
+    
+        // If the user is not found, return an error
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'status' => 404,
+                'message' => 'User not found'
+            ], 404);
+        }
+    
+        // Update the FCM token for the user
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+    
+        // Return a successful response
         return response()->json([
-            'success' => false,
-            'message' => $validator->errors()->first()
-        ], 400);
+            'success' => true,
+            'status' => 200,
+            'message' => 'FCM token updated successfully'
+        ], 200);
     }
-
-    // Check if the user is authenticated
-    if (auth()->check()) {
-        return response()->json([
-            'success' => false,
-            'status' => 401,
-            'message' => 'Unauthorized'
-        ], 401);
-    }
-
-    // Get the user information
-    // $device_id = auth()->user()->device_id;
-    // $user_id = auth()->user()->id;
-
-    // Retrieve the user using either the device_id or user_id
-    $user = User::where('device_id',$device_id)->get();
-    return $user; 
-    $user = auth()->user();
-
-    // If the user is not found, return an unauthorized error
-    if (!$user) {
-        return response()->json([
-            'success' => false,
-            'status' => 401,
-            'message' => 'User not found'
-        ], 404);
-    }
-
-    // Update the FCM token
-    $user->fcm_token = $request->fcm_token;
-    $user->save();
-
-    // Return a successful response
-    return response()->json([
-        'success' => true,
-        'status' => 200,
-        'message' => 'FCM token updated successfully'
-    ], 200);
-}
 
     // public function updateFcm(Request $request)
     // {
