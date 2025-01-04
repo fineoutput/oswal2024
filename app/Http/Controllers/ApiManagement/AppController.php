@@ -635,7 +635,7 @@ class AppController extends Controller
     $user_id = auth()->user()->id;
 
     // Retrieve the user using either the device_id or user_id
-    $user = User::where('device_id', $device_id)->orWhere('id', $user_id)->first();
+    $user = User::where('device_id', $request->device_id)->orWhere('id', $user_id)->first();
 
     // If the user is not found, return an unauthorized error
     if (!$user) {
