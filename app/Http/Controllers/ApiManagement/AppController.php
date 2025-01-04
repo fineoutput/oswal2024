@@ -672,7 +672,7 @@ class AppController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
-        $device_id = auth()->user()->device_id;
+        // $device_id = auth()->user()->device_id;
         $user_id = auth()->user()->id;
 
         $user = User::where('id', $user_id)->first();
