@@ -30,7 +30,7 @@ Route::get('festival-slider' , [AppController::class , 'festivalSlider']);
 Route::get('popup' , [AppController::class , 'popup']);
 Route::get('popup-image' , [AppController::class , 'popupimage']);
 
-Route::get('update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
+Route::post('update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
 Route::post('delivery-boy/update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 
 Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::get('user', function (Request $request) {
