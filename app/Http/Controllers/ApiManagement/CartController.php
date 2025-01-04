@@ -431,11 +431,13 @@ class CartController extends Controller
     ->where('device_id', $request->device_id)
     ->get();
 
+    $subtotal = $cart_subtotal->pluck('total_qty_price')->sum();
+
         $data = array(
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
             'address'=>$addres,
-            'subtotal'=> $cart_subtotal,
+            'subtotal'=> $subtotal,
         );
 
         return response()->json([
