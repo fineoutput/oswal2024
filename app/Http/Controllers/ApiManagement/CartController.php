@@ -417,7 +417,7 @@ class CartController extends Controller
                 ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
                 ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
                 ->where('types.is_active', 1) // Exclude inactive types
-                ->count();
+                ->get();
                 
                 $wishlist = Wishlist::where('user_id', $user_id)->count();
 
