@@ -439,7 +439,7 @@ class CartController extends Controller
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
             'address'=>$addres,
-            'subtotal'=> $cart_count->total_qty_price,
+            'subtotal'=> $cart_subtotal->total_qty_price,
         );
 
         return response()->json([
