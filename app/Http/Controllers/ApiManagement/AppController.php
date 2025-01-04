@@ -696,31 +696,41 @@ class AppController extends Controller
     // }
 
     public function updateFcm(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'fcm_token' => 'required|string',
-    ]);
-
-    if ($validator->fails()) {
+    {
+        // Validate the input
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+        ]);
+    
+        // If validation fails, return error
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+    
+        // Check if the user is authenticated
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+    
+        // Get the authenticated user
+        $user = auth()->user();
+    
+        // Update the FCM token
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+    
         return response()->json([
-            'success' => false,
-            'message' => $validator->errors()->first()
-        ], 400);
+            'success' => true,
+            'status' => 200,
+            'message' => 'FCM token updated successfully'
+        ], 200);
     }
-
-    // Get the authenticated user directly
-    $user = auth()->user();
-
-    // No need to check if user exists since we know the user is authenticated
-    $user->fcm_token = $request->fcm_token;
-    $user->save();
-
-    return response()->json([
-        'success' => true,
-        'status' => 200,
-        'message' => 'FCM token updated successfully'
-    ], 200);
-}
 
     public function getReward()
     {
