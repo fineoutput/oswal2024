@@ -632,11 +632,8 @@ class AppController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
-    
-        // Check if the user is authenticated
-    
-        // Retrieve the user based on the device_id, we expect a single user, not a collection
-        $user = $user_id;  // Use first() to get a single user
+
+        $user = User::where('id',$user_id)->first();  
     
         // If the user is not found, return an error
         if (!$user) {
