@@ -398,15 +398,7 @@ class CartController extends Controller
                 ->where('types.is_active', 1) // Exclude inactive types
                 ->count();
 
-                $cart_subtotal = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
-                ->where('device_id', $request->device_id)
-                ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
-                ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
-                ->where('ecom_products.is_active', 1) // Exclude inactive products
-                ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
-                ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
-                ->where('types.is_active', 1) // Exclude inactive types
-                ->get();
+               
             }
             else{
                 $cart_count = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
@@ -435,6 +427,16 @@ class CartController extends Controller
             }
         }
 
+        $cart_subtotal = Cart::whereNull('carts.deleted_at') // Check 'deleted_at' in the Cart table
+        ->where('device_id', $request->device_id)
+        ->join('ecom_products', 'carts.product_id', '=', 'ecom_products.id') // Join with ecom_products
+        ->whereNull('ecom_products.deleted_at') // Check 'deleted_at' in the ecom_products table
+        ->where('ecom_products.is_active', 1) // Exclude inactive products
+        ->join('types', 'carts.type_id', '=', 'types.id') // Join with types
+        ->whereNull('types.deleted_at') // Check 'deleted_at' in the types table
+        ->where('types.is_active', 1) // Exclude inactive types
+        ->get();
+        
         $data = array(
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
