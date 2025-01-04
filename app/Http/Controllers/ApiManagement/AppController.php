@@ -658,42 +658,69 @@ class AppController extends Controller
 //     ], 200);
 // }
 
+    // public function updateFcm(Request $request)
+    // {
+
+    //     $validator = Validator::make($request->all(), [
+    //         'fcm_token' => 'required|string',
+    //     ]);
+
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors()->first()
+    //         ], 400);
+    //     }
+    //     // $device_id = auth()->user()->device_id;
+    //     $user_id = auth()->user()->id;
+
+    //     $user = User::where('id', $user_id)->first();
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 401,
+    //             'message' => 'Unauthorized'
+    //         ]);
+    //     }
+
+    //     $user->fcm_token = $request->fcm_token;
+    //     $user->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'status' => 200,
+    //         'message' => 'FCM token updated successfully'
+    //     ], 200);
+    // }
+
     public function updateFcm(Request $request)
-    {
+{
+    $validator = Validator::make($request->all(), [
+        'fcm_token' => 'required|string',
+    ]);
 
-        $validator = Validator::make($request->all(), [
-            'fcm_token' => 'required|string',
-        ]);
-
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first()
-            ], 400);
-        }
-        // $device_id = auth()->user()->device_id;
-        $user_id = auth()->user()->id;
-
-        $user = User::where('id', $user_id)->first();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'status' => 401,
-                'message' => 'Unauthorized'
-            ]);
-        }
-
-        $user->fcm_token = $request->fcm_token;
-        $user->save();
-
+    if ($validator->fails()) {
         return response()->json([
-            'success' => true,
-            'status' => 200,
-            'message' => 'FCM token updated successfully'
-        ], 200);
+            'success' => false,
+            'message' => $validator->errors()->first()
+        ], 400);
     }
+
+    // Get the authenticated user directly
+    $user = auth()->user();
+
+    // No need to check if user exists since we know the user is authenticated
+    $user->fcm_token = $request->fcm_token;
+    $user->save();
+
+    return response()->json([
+        'success' => true,
+        'status' => 200,
+        'message' => 'FCM token updated successfully'
+    ], 200);
+}
 
     public function getReward()
     {
