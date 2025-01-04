@@ -675,7 +675,7 @@ class AppController extends Controller
         $device_id = auth()->user()->device_id;
         $user_id = auth()->user()->id;
 
-        $user = User::where('device_id', $request->device_id)->orwhere('id', $user_id)->first();
+        $user = User::where('id', $user_id)->first();
 
         if (!$user) {
             return response()->json([
