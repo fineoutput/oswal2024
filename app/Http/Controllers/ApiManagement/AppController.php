@@ -623,7 +623,7 @@ class AppController extends Controller
             }
         }
     
-        Log::info("fcm_token: " . $fcm_token);
+        Log::info("fcm_token: " . $request->fcm_token);
         Log::info("auth: " . $request->header('Authorization'));
         // If validation fails, return an error
         if ($validator->fails()) {
