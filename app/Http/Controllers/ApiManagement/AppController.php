@@ -606,7 +606,7 @@ class AppController extends Controller
         return response()->json(['success' => true, 'data' => $data]);
     }
 
-    public function updateFcm(Request $request, $device_id)
+    public function updateFcm(Request $request, $device_id ,$fcm_token)
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
@@ -643,7 +643,7 @@ class AppController extends Controller
         }
     
         // Update the FCM token for the user
-        $user->fcm_token = $request->fcm_token;
+        $user->fcm_token = $fcm_token;
         $user->save();
     
         // Return a successful response
