@@ -622,7 +622,7 @@ class AppController extends Controller
     }
 
     // Check if the user is authenticated
-    if (!auth()->check()) {
+    if (auth()->check()) {
         return response()->json([
             'success' => false,
             'status' => 401,
