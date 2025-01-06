@@ -694,16 +694,36 @@ class AppController extends Controller
     //     ], 200);
     // }
 
-    public function getReward()
+    public function getReward(Request $request)
     {
+        $user_id = 0;
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+        
+        if ($userDetails) {
+            $user_id = $userDetails->id;
+            Log::info("User authenticated with ID: " . $user_id);
+        } else {
+            Log::warning("Failed to authenticate user with token: " . $auth_token);
+            return response()->json(['success' => false, 'message' => 'Invalid token'], 401);
+        }
+    } else {
+        Log::warning("Authorization header missing.");
+        return response()->json(['success' => false, 'message' => 'Authorization header is missing.'], 401);
+    }
+
+    $user = User::where('id', $user_id)->first();
+    // return $user;
+
 
         $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
 
-        $user = Auth::user();
+        // $user = Auth::user();
 
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not authenticated']);
-        }
+        // if (!$user) {
+        //     return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        // }
 
         $totalWeight = $user->orders->sum('total_order_weight');
 
