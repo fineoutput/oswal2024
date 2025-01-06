@@ -76,8 +76,6 @@ Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')-
     Route::post('start-delivery', [DeliveryBoyController::class , 'startDelivery'])->name('start-delivery');
     Route::post('complete-order', [DeliveryBoyController::class , 'completeOrder'])->name('complete-order');
     Route::post('update-current-location', [DeliveryBoyController::class , 'currentLocation'])->name('update-current-location');
-       
-
 });
 //New route
  Route::get('get-address',[AppController::class , 'getAddress'])->name('get-adress');

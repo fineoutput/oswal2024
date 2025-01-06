@@ -80,7 +80,7 @@ class OrderController extends Controller
             'promocode'       => 'nullable|string',
             'gift_card_id'    => 'nullable|integer|exists:gift_cards,id',
             'wallet_status'   => 'required|integer',
-            'device_id'   => 'integer',
+            'device_id'   => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -91,11 +91,13 @@ class OrderController extends Controller
 
         }
 
-
+// return $user_id;
 
         $user = User::where('id',$user_id)->first();
+        // return $user;
 
         $deviceId       = $user->device_id;
+        // return $deviceId;
 
 
         $userId         = $user->id;
