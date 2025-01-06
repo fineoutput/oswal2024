@@ -192,7 +192,7 @@ class AppController extends Controller
         }
 
         $user = User::where('id',$user_id)->first();
-        return $user;
+        // return $user;
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
