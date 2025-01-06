@@ -137,7 +137,7 @@
                                                 value="{{ $cartdata->quantity }}"
                                                 type="number"
                                                 class="form-control form-control-sm carts_puts intern_bord"
-                                                onkeyup="UpdateQuantity('{{$cartdata->id}}','{{$cartdata->type->selling_price}}' ,'{{ $product->id }}')"
+                                                onkeyup="UpdateQuantity('{{ $cartdata->id }}', '{{ $cartdata->type ? $cartdata->type->selling_price : '' }}', '{{ $product->id }}')"
                                             />
 
                                             <!-- Increase Quantity Button -->
@@ -147,7 +147,7 @@
                                         </div>
 
                                         <div class="col-12 col-md-1 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
-                                            <h6 class="mb-0" id="sellingpricse{{ $product->id }}">{{ formatPrice($cartdata->type->selling_price) }}</h6>
+                                            <h6 class="mb-0" id="sellingpricse{{ $product->id }}">{{ formatPrice($cartdata->type ? $cartdata->type->selling_price : '') }}</h6>
                                         </div>
 
                                         <div class="col-12 col-md-2 d-flex flex-column align-items-center align-items-md-start mt-2 mt-md-0">
