@@ -69,6 +69,8 @@ class CartController extends Controller
             $role_type = $userDetails->role_type;
         }
     }
+
+    return $user_id;
    
 
         if ($user_id == null && ($user_id && $userDetails->role_type == 2)) {
@@ -172,8 +174,6 @@ class CartController extends Controller
         }}
 
         if(empty($userDetails->role_type)){
-         
-       
             $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
             // dd($ty1);
             if(!empty($ty1)){
@@ -208,7 +208,7 @@ class CartController extends Controller
         }
         
 
-return $user_id;
+
         $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
    
