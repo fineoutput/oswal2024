@@ -74,7 +74,9 @@ class Order extends Model
         'invoice_year',
         'invoice_no',
         'year',
-        'remarks'
+        'remarks',
+        'latitude',
+        'longitude',
     ];
 
     // Define relationships

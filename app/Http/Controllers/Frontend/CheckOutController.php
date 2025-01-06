@@ -623,9 +623,17 @@ class CheckOutController extends Controller
 
     public function placeOrder(Request $request)
     {
+        $userLocation = $request->input('user_location');
+
+        if ($userLocation) {
+            $location = json_decode($userLocation, true);
+            $latitude = $location['latitude'];
+            $longitude = $location['longitude'];
+        }
+
         if($request->address_id != 0){
         $order = Order::where('id', $request->order_id)->first();
-         $order->update(['address_id' => $request->address_id]);
+         $order->update(['address_id' => $request->address_id],['latitude' => $latitude],['longitude' => $longitude]);
         }
         if ($request->payment_option == 1) {
 
