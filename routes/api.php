@@ -80,9 +80,10 @@ Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')-
 
 });
 //New route
-Route::middleware(['auth:sanctum', 'auth:user'])->group(function () {
-    Route::get('get-address',[AppController::class , 'getAddress'])->name('get-adress');
+ Route::get('get-address',[AppController::class , 'getAddress'])->name('get-adress');
     Route::post('add-address',[AppController::class , 'addAddress'])->name('add-address');
+Route::middleware(['auth:sanctum', 'auth:user'])->group(function () {
+   
 Route::prefix('wishlist')->name('wishlist.')->group(function () {
     Route::post('/', [WishlistController::class, 'Show'])->name('index');
     Route::post('store', [WishlistController::class, 'store'])->name('store');

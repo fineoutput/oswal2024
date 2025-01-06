@@ -180,6 +180,20 @@ class AppController extends Controller
 
         ]);
 
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        $user = User::where('id',$user_id)->first();
+        return $user;
+
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
@@ -209,7 +223,7 @@ class AppController extends Controller
 
         $addressData = [
             'user_id'          =>  auth()->id(),
-            'name'             => Auth::user()->first_name,
+            'name'             => $user->first_name,
             'doorflat'         => $request->doorflat,
             'landmark'         => $request->landmark,
             'city'             => strval($city->id),
