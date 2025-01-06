@@ -388,10 +388,10 @@ class OrderController extends Controller
         }
 
         $reponse['wallet_per']  = $constant->wallet_use_amount;
-        $reponse['wallet_discount']  = $walletDescount;
+        $reponse['wallet_discount']  = round($walletDescount, 2);
         $reponse['promoStatus']  = $promoStatus == 1 ? 'Active' : 'Inactive';
         $reponse['giftCardStatus']  = $giftCardStatus ==1 ? 'Active' : 'Inactive';
-        $reponse['wallet_amount']    = $totalwalletAmount;
+        $reponse['wallet_amount']    = round($totalwalletAmount, 2);
         $reponse['total_discount' ]  = $promo_discount + $walletDescount;
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
