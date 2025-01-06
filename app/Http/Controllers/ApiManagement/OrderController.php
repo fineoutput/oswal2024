@@ -118,13 +118,13 @@ class OrderController extends Controller
         $cityId       = $userAddress->city;
 
         $addressresponse = [
-            'user_name' => Auth::user()->first_name,
+            'user_name' => $user->first_name,
             'address'   => $userAddress->address,
             'state'     => $userAddress->states->state_name,
             'city'      => $userAddress->citys->city_name,
             'zipcode'   => $userAddress->zipcode,
-            'email'     => Auth::user()->email,
-            'phone'     => Auth::user()->contact,
+            'email'     => $user->email,
+            'phone'     => $user->contact,
         ];
 
         $cartItems = Cart::query()
@@ -134,14 +134,14 @@ class OrderController extends Controller
                     ->orWhere('user_id', $userId);
             })
 
-            ->when(Auth::check() && Auth::user()->role_type == 2, function ($query) use ($stateId, $cityId) {
+            ->when(Auth::check() && $user->role_type == 2, function ($query) use ($stateId, $cityId) {
                 $query->with(['vendortype' => function ($query) use ($stateId, $cityId) {
                     $query->where('state_id', $stateId)
                         ->where('city_id', $cityId);
                 }]);
             })
 
-            ->when(Auth::check() && Auth::user()->role_type == 1, function ($query) {
+            ->when(Auth::check() && $user->role_type == 1, function ($query) {
                 $query->with(['type' => function ($query) {
                     $query->where('state_id', 29)
                         ->where('city_id', 629);
@@ -157,7 +157,7 @@ class OrderController extends Controller
 
         $cartItems->each(function ($cartItem) {
 
-            if(Auth::user()->role_type == 2){
+            if($user->role_type == 2){
                 $type_sub_data = Type_sub::where('type_id', $cartItem->type_id)->first();
                 // dd($type_sub_data);
                 $type = $type_sub_data;
@@ -170,7 +170,7 @@ class OrderController extends Controller
 
                 $cartItem->type_price = $type->selling_price;
 
-                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $cartItem->quantity * $type->selling_price :$cartItem->quantity * $cartItem->type_price;
+                $cartItem->total_qty_price = $user->role_type == 2 ? $cartItem->quantity * $type->selling_price :$cartItem->quantity * $cartItem->type_price;
 
                 $cartItem->save();
 
@@ -190,7 +190,7 @@ class OrderController extends Controller
 
             $total_order_weight = $cartItems->sum(function ($cartItem) {
 
-                $type = Auth::user()->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
+                $type = $user->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
 
                 return (float)($type->weight ?? 0) * (int)$cartItem->quantity;
 
@@ -246,7 +246,7 @@ class OrderController extends Controller
 
     public function generateResponse($deviceId,$userId,$stateId,$cityId,$wallet_status,$deliveryCharge,$promo_discount,$promocode_id,$promocode_name,$addressresponse,$applyGiftCard,$status,$message) {
 
-        if(Auth::check() && Auth::user()->role_type == 2){
+        if(Auth::check() && $user->role_type == 2){
 
             $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
                 $query->where('is_active', 1)
@@ -329,7 +329,7 @@ class OrderController extends Controller
 
 
         $totalwalletAmount = $user->wallet_amount;
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             $deliveryCharge = 0;
         }
 
@@ -384,7 +384,7 @@ class OrderController extends Controller
 
         }
         
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             $promoStatus = 2;
             $cod_char = 0;
             $giftCardStatus = 0;
@@ -395,7 +395,7 @@ class OrderController extends Controller
             $cod_char = formatPrice(getConstant()->cod_charge,false);
 
         }
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
       
     $cod_final_amount = formatPrice(($finalAmount),false);
 
