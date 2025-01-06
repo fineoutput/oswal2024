@@ -592,7 +592,7 @@ class OrderController extends Controller
 
             }else {
 
-                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight ?? '';
     
                 $subtotal    += $cartItem->total_qty_price;
             
