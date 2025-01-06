@@ -331,7 +331,7 @@ class OrderController extends Controller
 
 
         $totalwalletAmount = $user->wallet_amount;
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             $deliveryCharge = 0;
         }
 
@@ -386,7 +386,7 @@ class OrderController extends Controller
 
         }
         
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             $promoStatus = 2;
             $cod_char = 0;
             $giftCardStatus = 0;
@@ -397,7 +397,7 @@ class OrderController extends Controller
             $cod_char = formatPrice(getConstant()->cod_charge,false);
 
         }
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
       
     $cod_final_amount = formatPrice(($finalAmount),false);
 
