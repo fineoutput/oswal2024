@@ -188,9 +188,11 @@ class OrderController extends Controller
         
         if (!empty($addressId)) {
 
-            $total_order_weight = $cartItems->sum(function ($cartItem) {
+            // $user = User::find($user_id);
 
-                $type = Auth::user()->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
+            $total_order_weight = $cartItems->sum(function ($cartItem)  use ($user) {
+
+                $type = $user->role_type == 2 ? $cartItem->vendortype : $cartItem->type;
 
                 return (float)($type->weight ?? 0) * (int)$cartItem->quantity;
 
