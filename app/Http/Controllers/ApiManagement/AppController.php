@@ -249,7 +249,18 @@ class AppController extends Controller
 
     public function getAddress(Request $request)
     {
-        $user_id   = auth()->id();
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        // $user_id   = auth()->id();
         $address_data = [];
         $addresses = Address::where('user_id', $user_id)->get();
         foreach ($addresses as $address) {
