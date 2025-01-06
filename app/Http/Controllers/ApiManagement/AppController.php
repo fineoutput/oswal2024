@@ -755,7 +755,9 @@ class AppController extends Controller
 
     public function claimReward(Request $request)
     {
+        // return $request;
         // $user = Auth::user();
+        $user_id = 0;
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $userDetails = User::where('auth', $auth_token)->first();
