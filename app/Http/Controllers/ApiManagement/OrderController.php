@@ -64,6 +64,17 @@ class OrderController extends Controller
     public function calculate(Request $request)
     {
         
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+        
         $rules = [
             'address_id'      => 'required|exists:user_address,id',
             'promocode'       => 'nullable|string',
@@ -80,10 +91,14 @@ class OrderController extends Controller
 
         }
 
-        $deviceId       = auth()->user()->device_id;
 
 
-        $userId         = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
+
+        $deviceId       = $user->device_id;
+
+
+        $userId         = $user->id;
 
 
         $promocode      = $request->input('promocode');
