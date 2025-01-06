@@ -60,9 +60,9 @@ Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::get('gift-card-sec' ,[AppController::class, 'giftCardSec']);
     Route::post('rating' ,[AppController::class, 'giveRating']);
     Route::post('wallet' ,[AppController::class, 'getWalletAmount']);
-    Route::get('vendor/reward-list' , [AppController::class , 'getReward']);
-    Route::get('vendor/reward-claim' , [AppController::class , 'claimReward']);
 });
+Route::get('vendor/reward-list' , [AppController::class , 'getReward'])->middleware('auth:api');
+Route::get('vendor/reward-claim' , [AppController::class , 'claimReward'])->middleware('auth:api');
 
 
 

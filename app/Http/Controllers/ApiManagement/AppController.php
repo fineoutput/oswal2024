@@ -756,7 +756,8 @@ class AppController extends Controller
     public function claimReward(Request $request)
     {
         $user = Auth::user();
-        return $user;
+
+        Log::info('Authenticated user:', ['user' => $user]);
 
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'User not authenticated']);
