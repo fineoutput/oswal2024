@@ -136,6 +136,8 @@
 
                                                     <th data-priority="6">Order From</th>
 
+                                                    <th data-priority="6">Order Rating</th>
+
                                                     <th data-priority="6">Gift</th>
 
                                                     <th data-priority="6">Gift 1</th>
@@ -150,6 +152,8 @@
                                             </thead>
 
                                             <tbody>
+
+                                         
 
                                                 @foreach ($orders as $key => $order)
                         
@@ -307,6 +311,31 @@
                                                         </td>
 
                                                         <td> {{ $order->order_from }}</td>
+                                                        <td> @if($order->average_rating == '5')
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                @elseif ($order->average_rating == '4')
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                @elseif ($order->average_rating == '3')
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                @elseif ($order->average_rating == '2')
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                @elseif ($order->average_rating == '1')
+                                                                <i class="fa-solid fa-star"></i>
+                                                                <i class="fa-solid fa-star"></i>
+                                                                @else
+                                                                No Rating Found
+                                                                @endif
+                                                          </td>
 
                                                         <td>
                                                              @if($order->gift_id != null && $order->gift_id != '' && $order->gift_id != 0)

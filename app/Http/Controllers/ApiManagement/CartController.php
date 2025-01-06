@@ -208,7 +208,7 @@ class CartController extends Controller
         }
         
 
-
+return $user_id;
         $data['user_id'] = $user_id;
         $data['type_id'] = $typeId;
    

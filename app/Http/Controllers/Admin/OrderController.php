@@ -97,16 +97,44 @@ class OrderController extends Controller
                 abort(404, 'Order status not found');
         }
 
-        $orders = is_array($status)? Order::whereIn('order_status', $status)->orderBy('id', 'desc'): Order::where('order_status', $status)->orderBy('id', 'desc');
+    //     $orders = is_array($status)? Order::whereIn('order_status', $status)->orderBy('id', 'desc'): Order::where('order_status', $status)->orderBy('id', 'desc');
 
-        $orders = $orders->whereHas('user', function ($query) {
-            $query->where('role_type', '!=' , 2);
-        });
+    //     $orders = $orders->whereHas('user', function ($query) {
+    //         $query->where('role_type', '!=' , 2);
+    //     });
 
-        $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices' )->get();
+    //     $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices','rating' )->get();
+
+    //    $orderIds = $orders->pluck('id'); // This will give you an array of order_ids
+    //     $rating_avg = DB::table('order_ratings')
+    //         ->whereIn('order_id', $orderIds) // Use whereIn to filter by multiple order_ids
+    //         ->avg('rating'); 
+
+    $orders = is_array($status)
+    ? Order::whereIn('order_status', $status)->orderBy('id', 'desc')
+    : Order::where('order_status', $status)->orderBy('id', 'desc');
+
+// Filter orders based on user role
+$orders = $orders->whereHas('user', function ($query) {
+    $query->where('role_type', '!=', 2);
+});
+
+// Eager load relationships
+$orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states', 'gift', 'gift1', 'promocodes', 'invoices', 'rating')->get();
+
+// Loop through each order and calculate its individual average rating
+foreach ($orders as $order) {
+    // Calculate the average rating for this specific order
+    $rating_avg = DB::table('order_ratings')
+        ->where('order_id', $order->id)
+        ->avg('rating'); // Get the average of the 'rating' column for this order_id
+    
+    // Store the average rating in the order instance
+    $order->average_rating = $rating_avg; // Adding a custom attribute to the order
+}
 
        
-        return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle'));
+        return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle','rating_avg'));
        
     }
 

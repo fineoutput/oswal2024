@@ -105,6 +105,11 @@ class Order extends Model
         return $this->belongsTo(GiftCardSec::class, 'gift1_id');
     }
 
+    public function rating()
+    {
+        return $this->belongsTo(OrderRatings::class, 'order_id', 'id');
+    }
+
     public function promocodes()
     {
         return $this->belongsTo(Promocode::class, 'promocode');
