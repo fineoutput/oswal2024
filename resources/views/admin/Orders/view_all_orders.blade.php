@@ -276,7 +276,7 @@
 
                                                         </td>
 
-                                                        <td>
+                                                        {{-- <td>
 
                                                             @if ($order->orderDetails->count() > 0)
                                                                 @foreach ($order->orderDetails as $index => $order2pro)
@@ -303,6 +303,33 @@
                                                                 N/A
                                                             @endif
 
+                                                        </td> --}}
+
+                                                        <td>
+                                                            @if ($order->orderDetails->count() > 0)
+                                                                @foreach ($order->orderDetails as $index => $order2pro)
+                                                                    @php
+                                                                        $typeName = $order2pro->type ? $order2pro->type->type_name : '';
+                                                                        $productName = $order2pro->product ? $order2pro->product->name : '';
+                                                                        $quantity = $order2pro->quantity;
+                                                                        $output = $productName
+                                                                            ? "{$productName} ({$typeName} x {$quantity})"
+                                                                            : 'N/A';
+                                                                        // Shorten output
+                                                                        $shortOutput = $productName
+                                                                            ? "{$productName} " . ($typeName ? "({$typeName}) " : '') . "x{$quantity}"
+                                                                            : 'N/A';
+                                                                    @endphp
+                                                        
+                                                                    {{ $shortOutput }}
+                                                        
+                                                                    @if ($index < $order->orderDetails->count() - 1)
+                                                                        ,
+                                                                    @endif
+                                                                @endforeach
+                                                            @else
+                                                                N/A
+                                                            @endif
                                                         </td>
 
                                                         <td> {{ $order->order_from }}</td>
