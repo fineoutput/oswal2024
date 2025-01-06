@@ -171,7 +171,7 @@ class CartController extends Controller
         
         }}
 
-        $typePrice = 0;
+        // $typePrice = 0;
 
         if(empty($userDetails->role_type)){
          
