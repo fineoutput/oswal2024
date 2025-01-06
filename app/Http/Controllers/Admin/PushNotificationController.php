@@ -73,21 +73,76 @@ class PushNotificationController extends Controller
 
     $request->validate($rules);
 
+    // if (!isset($request->notifaction_id)) {
+    //     $notification = new PushNotificationModel;
+    // } else {
+    //     $notification = PushNotificationModel::find($request->notifaction_id);
+
+    //     if (!$notification) {
+    //         return redirect()->route('notification.index')->with('error', 'notifaction not found.');
+    //     }
+    // }
+
+    // // Handle image upload
+    // if ($request->hasFile('img')) {
+    //     $notification->image = uploadImage($request->file('img'), 'notifaction');
+    // }
+
+    // // Set notification properties
+    // $notification->title = $request->title;
+    // $notification->description = $request->description;
+    // $notification->ip = $request->ip();
+    // $notification->date = now();
+    // $notification->added_by = Auth::user()->id;
+    // $notification->is_active = 1;
+
+    // // Save notification to database
+    // if ($notification->save()) {
+    //     $message = isset($request->notifaction_id) ? 'Notification updated successfully.' : 'Notification inserted successfully.';
+
+    //     // Firebase push notification setup
+    //     $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
+    //     $messaging = $firebase->createMessaging();
+    //     $topic = 'OswalSoap';
+
+    //     // Build the CloudMessage object
+    //     $cloudMessage = CloudMessage::withTarget('topic', $topic)
+    //         ->withNotification(Notification::create($notification->title, $notification->description))
+    //         ->withData(['key' => 'value']);  // Optional custom data
+
+    //     try {
+    //         // Send the message
+    //         $response = $messaging->send($cloudMessage);
+
+    //         // Handle the response
+    //         if (isset($response['success']) && !$response['success']) {
+    //             Log::error('FCM send error: ' . $response['error']);
+    //         }
+
+    //         return redirect()->route('notification.index')->with('success', $message);
+    //     } catch (\Exception $e) {
+    //         // Handle any error that occurred during the sending process
+    //         Log::error('FCM send exception: ' . $e->getMessage());
+    //         return redirect()->route('notification.index')->with('error', 'Error sending notification to Firebase.');
+    //     }
+    // } else {
+    //     return redirect()->route('notification.index')->with('error', 'Something went wrong. Please try again later.');
+    // }
+
     if (!isset($request->notifaction_id)) {
         $notification = new PushNotificationModel;
     } else {
         $notification = PushNotificationModel::find($request->notifaction_id);
-
+    
         if (!$notification) {
-            return redirect()->route('notification.index')->with('error', 'notifaction not found.');
+            return redirect()->route('notification.index')->with('error', 'Notification not found.');
         }
     }
 
-    // Handle image upload
     if ($request->hasFile('img')) {
         $notification->image = uploadImage($request->file('img'), 'notifaction');
     }
-
+    
     // Set notification properties
     $notification->title = $request->title;
     $notification->description = $request->description;
@@ -95,30 +150,43 @@ class PushNotificationController extends Controller
     $notification->date = now();
     $notification->added_by = Auth::user()->id;
     $notification->is_active = 1;
-
-    // Save notification to database
+    
+    // Save notification to the database
     if ($notification->save()) {
         $message = isset($request->notifaction_id) ? 'Notification updated successfully.' : 'Notification inserted successfully.';
-
+    
         // Firebase push notification setup
         $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
         $messaging = $firebase->createMessaging();
         $topic = 'OswalSoap';
-
+    
+        // Prepare the notification and data payloads
+        $notificationPayload = [
+            'title' => $notification->title,
+            'body' => $notification->description,
+            'image' => $notification->image, // This is the URL to the image (must be public)
+        ];
+    
+        // You can also add custom data if needed
+        $dataPayload = [
+            'key' => 'value',
+            'image' => $notification->image, // Include the image URL in the data
+        ];
+    
         // Build the CloudMessage object
         $cloudMessage = CloudMessage::withTarget('topic', $topic)
-            ->withNotification(Notification::create($notification->title, $notification->description))
-            ->withData(['key' => 'value']);  // Optional custom data
-
+            ->withNotification($notificationPayload) // Set the notification payload (title, body, image)
+            ->withData($dataPayload); // Add custom data (image URL, etc.)
+    
         try {
             // Send the message
             $response = $messaging->send($cloudMessage);
-
+    
             // Handle the response
             if (isset($response['success']) && !$response['success']) {
                 Log::error('FCM send error: ' . $response['error']);
             }
-
+    
             return redirect()->route('notification.index')->with('success', $message);
         } catch (\Exception $e) {
             // Handle any error that occurred during the sending process
