@@ -455,6 +455,7 @@ class OrderController extends Controller
         }
 
         $user = User::where('id',$user_id)->first();
+        // return $user;
        
         // Retrieve request inputs
         $userId       =  $user->id;
@@ -562,7 +563,7 @@ class OrderController extends Controller
             }
 
              // Apply Combo Product if exsit
-           $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en', Auth::user()->role_type);
+           $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en', $user->role_type);
 
             if(Auth::check() && $user->role_type == 2) {
 
