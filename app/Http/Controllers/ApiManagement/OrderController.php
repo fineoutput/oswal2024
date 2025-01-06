@@ -442,11 +442,24 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
 
         }
+
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        $user = User::where('id',$user_id)->first();
        
         // Retrieve request inputs
-        $userId       =  auth()->user()->id;
+        $userId       =  $user->id;
 
-        $deviceId     =  auth()->user()->device_id;
+        $deviceId     =  $user->device_id;
 
 
         $addressId    = $request->input('address_id');
@@ -468,7 +481,7 @@ class OrderController extends Controller
 
         // Fetch cart data with related products and types
 
-        if(Auth::check() && Auth::user()->role_type == 2){
+        if(Auth::check() && $user->role_type == 2){
 
             $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
 
@@ -551,7 +564,7 @@ class OrderController extends Controller
              // Apply Combo Product if exsit
            $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en', Auth::user()->role_type);
 
-            if(Auth::check() && Auth::user()->role_type == 2) {
+            if(Auth::check() && $user->role_type == 2) {
 
                 $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
 
@@ -613,7 +626,7 @@ class OrderController extends Controller
 
             return $shippingChargesResponse;
         }
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             $deliveryCharge = 0;
         }
         else{
@@ -684,7 +697,7 @@ class OrderController extends Controller
         // $this->cart->applyReward($totalWeight, Auth::user()->id, 'checkout' , $order->id);
         
         Order::where('id', $order->id)->update([
-            'user_id'                    => $userId ?? Auth::user()->id,
+            'user_id'                    => $userId ?? $user->id,
             'total_amount'               => $request->total_amount ?? $totalAmount,
             'sub_total'                  => $subtotal,
             'address_id'                 => $addressId,
