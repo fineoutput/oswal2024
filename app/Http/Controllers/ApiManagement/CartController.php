@@ -57,7 +57,7 @@ class CartController extends Controller
             'cart_from'   => 'required|string',
             'quantity'    => 'required|integer|min:1'
         ];
-        $user_id = 0;
+        // $user_id = 0;
         $role_type = 1;
         $userDetails = null;
     if ($request->header('Authorization')) {
@@ -69,14 +69,11 @@ class CartController extends Controller
             $role_type = $userDetails->role_type;
         }
     }
-
     return $user_id;
-   
 
         if ($user_id == null && ($user_id && $userDetails->role_type == 2)) {
 
             return response()->json(['success' => false, 'message' => 'Please log in first, then proceed to add the product.' ]);
-
         }
 
         $user = $user_id;
