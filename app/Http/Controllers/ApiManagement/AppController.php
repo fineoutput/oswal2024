@@ -755,13 +755,23 @@ class AppController extends Controller
 
     public function claimReward(Request $request)
     {
-        $user = Auth::user();
-
-        Log::info('Authenticated user:', ['user' => $user]);
-
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        // $user = Auth::user();
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
         }
+        // return $user_id;
+        Log::info("auth: " . $request->header('Authorization'));
+        // Log::info('Authenticated user:', ['user' => $user]);
+
+        // if (!$user) {
+        //     return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        // }
 
         $validator = Validator::make($request->all(), [
             'reward_id' => 'required|integer|exists:rewards,id',
@@ -771,6 +781,7 @@ class AppController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
+        $user = User::where('id',$user_id)->first();
         $rewardId = $request->reward_id;
         $reward = Reward::find($rewardId);
 
