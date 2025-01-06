@@ -753,131 +753,131 @@ class AppController extends Controller
         return response()->json(['success' =>  true, 'data' => $data], 200);
     }
 
-    // public function claimReward(Request $request)
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user) {
-    //         return response()->json(['success' => false, 'message' => 'User not authenticated']);
-    //     }
-
-    //     $validator = Validator::make($request->all(), [
-    //         'reward_id' => 'required|integer|exists:rewards,id',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
-    //     }
-
-    //     $rewardId = $request->reward_id;
-    //     $reward = Reward::find($rewardId);
-
-    //     if (!$reward || !$reward->is_active) {
-    //         return response()->json(['success' => false, 'message' => 'Reward is not available']);
-    //     }
-
-    //     $totalWeight = $user->orders->sum('total_order_weight');
-
-    //     $lastOrder = $user->orders()->latest()->first();
-
-    //     if ($totalWeight < $reward->weight) {
-    //         return response()->json(['success' => false, 'message' => 'Not eligible for this reward']);
-    //     }
-
-    //     $exists = VendorReward::where('reward_id', $rewardId)
-    //         ->where('vendor_id', $user->id)
-    //         ->where('status', '!=', 3)
-    //         ->exists();
-
-    //     if ($exists) {
-    //         return response()->json(['success' => false, 'message' => 'Reward already applied']);
-    //     }
-
-    //     VendorReward::create([
-    //         'vendor_id'     => $user->id,
-    //         'order_id'      => $lastOrder ? $lastOrder->id : null, 
-    //         'reward_name'   => $reward->name,
-    //         'reward_image'  => $reward->image,
-    //         'reward_id'     => $reward->id,
-    //         'status'        => VendorReward::STATUS_APPLIED,
-    //         'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
-    //     ]);
-
-    //     return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
-    // }
-
-
     public function claimReward(Request $request)
     {
-        $user_id = 0;
-    if ($request->header('Authorization')) {
-        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
-        $userDetails = User::where('auth', $auth_token)->first();
-        
-        if ($userDetails) {
-            $user_id = $userDetails->id;
-            Log::info("User authenticated with ID: " . $user_id);
-        } else {
-            Log::warning("Failed to authenticate user with token: " . $auth_token);
-            return response()->json(['success' => false, 'message' => 'Invalid token'], 401);
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated']);
         }
-    } else {
-        Log::warning("Authorization header missing.");
-        return response()->json(['success' => false, 'message' => 'Authorization header is missing.'], 401);
+
+        $validator = Validator::make($request->all(), [
+            'reward_id' => 'required|integer|exists:rewards,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        $rewardId = $request->reward_id;
+        $reward = Reward::find($rewardId);
+
+        if (!$reward || !$reward->is_active) {
+            return response()->json(['success' => false, 'message' => 'Reward is not available']);
+        }
+
+        $totalWeight = $user->orders->sum('total_order_weight');
+
+        $lastOrder = $user->orders()->latest()->first();
+
+        if ($totalWeight < $reward->weight) {
+            return response()->json(['success' => false, 'message' => 'Not eligible for this reward']);
+        }
+
+        $exists = VendorReward::where('reward_id', $rewardId)
+            ->where('vendor_id', $user->id)
+            ->where('status', '!=', 3)
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['success' => false, 'message' => 'Reward already applied']);
+        }
+
+        VendorReward::create([
+            'vendor_id'     => $user->id,
+            'order_id'      => $lastOrder ? $lastOrder->id : null, 
+            'reward_name'   => $reward->name,
+            'reward_image'  => $reward->image,
+            'reward_id'     => $reward->id,
+            'status'        => VendorReward::STATUS_APPLIED,
+            'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
     }
 
-    $user = User::where('id', $user_id)->first();
 
-    if (!$user) {
-        return response()->json(['success' => false, 'message' => 'User not found'], 404);
-    }
+    // public function claimReward(Request $request)
+    // {
+    //     $user_id = 0;
+    // if ($request->header('Authorization')) {
+    //     $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+    //     $userDetails = User::where('auth', $auth_token)->first();
+        
+    //     if ($userDetails) {
+    //         $user_id = $userDetails->id;
+    //         Log::info("User authenticated with ID: " . $user_id);
+    //     } else {
+    //         Log::warning("Failed to authenticate user with token: " . $auth_token);
+    //         return response()->json(['success' => false, 'message' => 'Invalid token'], 401);
+    //     }
+    // } else {
+    //     Log::warning("Authorization header missing.");
+    //     return response()->json(['success' => false, 'message' => 'Authorization header is missing.'], 401);
+    // }
 
-    $validator = Validator::make($request->all(), [
-        'reward_id' => 'required|integer|exists:rewards,id',
-    ]);
+    // $user = User::where('id', $user_id)->first();
 
-    if ($validator->fails()) {
-        return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
-    }
+    // if (!$user) {
+    //     return response()->json(['success' => false, 'message' => 'User not found'], 404);
+    // }
 
-    $rewardId = $request->reward_id;
-    $reward = Reward::find($rewardId);
+    // $validator = Validator::make($request->all(), [
+    //     'reward_id' => 'required|integer|exists:rewards,id',
+    // ]);
 
-    if (!$reward || !$reward->is_active) {
-        return response()->json(['success' => false, 'message' => 'Reward is not available']);
-    }
+    // if ($validator->fails()) {
+    //     return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+    // }
 
-    // Check if user is eligible for reward
-    $totalWeight = $user->orders->sum('total_order_weight');
-    $lastOrder = $user->orders()->latest()->first();
+    // $rewardId = $request->reward_id;
+    // $reward = Reward::find($rewardId);
 
-    if ($totalWeight < $reward->weight) {
-        return response()->json(['success' => false, 'message' => 'Not eligible for this reward']);
-    }
+    // if (!$reward || !$reward->is_active) {
+    //     return response()->json(['success' => false, 'message' => 'Reward is not available']);
+    // }
 
-    // Check if reward has already been claimed
-    $exists = VendorReward::where('reward_id', $rewardId)
-        ->where('vendor_id', $user->id)
-        ->where('status', '!=', 3)
-        ->exists();
+    // // Check if user is eligible for reward
+    // $totalWeight = $user->orders->sum('total_order_weight');
+    // $lastOrder = $user->orders()->latest()->first();
 
-    if ($exists) {
-        return response()->json(['success' => false, 'message' => 'Reward already applied']);
-    }
+    // if ($totalWeight < $reward->weight) {
+    //     return response()->json(['success' => false, 'message' => 'Not eligible for this reward']);
+    // }
 
-    // Create VendorReward
-    VendorReward::create([
-        'vendor_id'     => $user->id,
-        'order_id'      => $lastOrder ? $lastOrder->id : null,
-        'reward_name'   => $reward->name,
-        'reward_image'  => $reward->image,
-        'reward_id'     => $reward->id,
-        'status'        => VendorReward::STATUS_APPLIED,
-        'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
-    ]);
+    // // Check if reward has already been claimed
+    // $exists = VendorReward::where('reward_id', $rewardId)
+    //     ->where('vendor_id', $user->id)
+    //     ->where('status', '!=', 3)
+    //     ->exists();
 
-    return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
-    }
+    // if ($exists) {
+    //     return response()->json(['success' => false, 'message' => 'Reward already applied']);
+    // }
+
+    // // Create VendorReward
+    // VendorReward::create([
+    //     'vendor_id'     => $user->id,
+    //     'order_id'      => $lastOrder ? $lastOrder->id : null,
+    //     'reward_name'   => $reward->name,
+    //     'reward_image'  => $reward->image,
+    //     'reward_id'     => $reward->id,
+    //     'status'        => VendorReward::STATUS_APPLIED,
+    //     'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+    // ]);
+
+    // return response()->json(['success' => true, 'message' => 'Reward successfully applied'], 201);
+    // }
 
     public function get_location(Request $request)
     {
