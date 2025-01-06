@@ -155,9 +155,9 @@ class OrderController extends Controller
             return response()->json(['message' => 'Your cart is empty.', 'status' => 400]);
         }
 
-        $cartItems->each(function ($cartItem) {
+        $cartItems->each(function ($cartItem) use ($user) {
 
-            if(Auth::user()->role_type == 2){
+            if($user->role_type == 2){
                 $type_sub_data = Type_sub::where('type_id', $cartItem->type_id)->first();
                 // dd($type_sub_data);
                 $type = $type_sub_data;
@@ -170,7 +170,7 @@ class OrderController extends Controller
 
                 $cartItem->type_price = $type->selling_price;
 
-                $cartItem->total_qty_price = Auth::user()->role_type == 2 ? $cartItem->quantity * $type->selling_price :$cartItem->quantity * $cartItem->type_price;
+                $cartItem->total_qty_price = $user->role_type == 2 ? $cartItem->quantity * $type->selling_price :$cartItem->quantity * $cartItem->type_price;
 
                 $cartItem->save();
 
