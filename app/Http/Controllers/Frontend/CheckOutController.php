@@ -621,30 +621,63 @@ class CheckOutController extends Controller
         ]);
     }
 
+    // public function placeOrder(Request $request)
+    // {
+    //     $userLocation = $request->input('user_location');
+
+    //     if ($userLocation) {
+    //         $location = json_decode($userLocation, true);
+    //         $latitude = $location['latitude'];
+    //         $longitude = $location['longitude'];
+    //     }
+
+    //     if($request->address_id != 0){
+    //     $order = Order::where('id', $request->order_id)->first();
+    //      $order->update(['address_id' => $request->address_id],['latitude' => $latitude],['longitude' => $longitude]);
+    //     }
+    //     if ($request->payment_option == 1) {
+
+    //         return $this->codCheckout(intval($request->order_id), $request->payment_option);
+
+    //     } else {
+
+    //         return $this->paidCheckout(intval($request->order_id), $request->payment_option);
+
+    //     }
+    // }
+
     public function placeOrder(Request $request)
-    {
-        $userLocation = $request->input('user_location');
+{
+    // Get the user location from the request
+    $userLocation = $request->input('user_location');
 
-        if ($userLocation) {
-            $location = json_decode($userLocation, true);
-            $latitude = $location['latitude'];
-            $longitude = $location['longitude'];
-        }
-
-        if($request->address_id != 0){
-        $order = Order::where('id', $request->order_id)->first();
-         $order->update(['address_id' => $request->address_id],['latitude' => $latitude],['longitude' => $longitude]);
-        }
-        if ($request->payment_option == 1) {
-
-            return $this->codCheckout(intval($request->order_id), $request->payment_option);
-
-        } else {
-
-            return $this->paidCheckout(intval($request->order_id), $request->payment_option);
-
-        }
+    // Check if the location is provided
+    if ($userLocation) {
+        $location = json_decode($userLocation, true);
+        $latitude = $location['latitude'];
+        $longitude = $location['longitude'];
     }
+
+    // Check if address_id is not 0
+    if ($request->address_id != 0) {
+        // Fetch the order based on order_id
+        $order = Order::where('id', $request->order_id)->first();
+
+        // Update the order with address_id, latitude, and longitude
+        $order->update([
+            'address_id' => $request->address_id,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ]);
+    }
+
+    // Process payment options
+    if ($request->payment_option == 1) {
+        return $this->codCheckout(intval($request->order_id), $request->payment_option);
+    } else {
+        return $this->paidCheckout(intval($request->order_id), $request->payment_option);
+    }
+}
 
     public function codCheckout($orderId, $paymentType)
     {
