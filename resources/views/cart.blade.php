@@ -160,10 +160,10 @@
                                                 <option value="" disabled>Select Type</option>
                                                 @foreach ($productType as $type)
                                                     <option
-                                                        value="{{ $type->id }}"
-                                                        {{ $type->id == $cartdata->type->id ? 'selected' : '' }}
+                                                    value="{{ $type->id ?? '' }}"
+                                                    {{ $cartdata->type && $cartdata->type->id == $type->id ? 'selected' : '' }}
                                                     >
-                                                        {{ $type->type_name }}
+                                                        {{ $type->type_name ?? ''}}
                                                     </option>
                                                 @endforeach
                                             </select>
