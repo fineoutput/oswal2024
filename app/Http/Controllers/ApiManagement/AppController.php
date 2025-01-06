@@ -613,6 +613,7 @@ class AppController extends Controller
             'fcm_token' => 'required|string',
         ]);
 
+        $user_id = 0;
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $userDetails = User::where('auth', $auth_token)->first();
