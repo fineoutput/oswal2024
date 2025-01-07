@@ -134,7 +134,7 @@ foreach ($orders as $order) {
 }
 
        
-        return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle','rating_avg'));
+        return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle'));
        
     }
 
