@@ -505,23 +505,34 @@ class OrderController extends Controller
         }else{
             
 
-            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
+            // $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
 
+            //     $query->where('is_active', 1)
+    
+            //         ->when($stateId, fn ($query) => $query->where('state_id', $stateId))
+    
+            //         ->when($cityId, fn ($query) => $query->where('city_id', $cityId))
+    
+            //         ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
+    
+            // }])->where(function ($query) use ($userId, $deviceId) {
+    
+            //         $query->where('user_id', $userId)
+    
+            //             ->orWhere('device_id', $deviceId);
+    
+            //     })->get();
+            $cartData = Cart::with(['product.type' => function ($query) use ($stateId, $cityId) {
                 $query->where('is_active', 1)
-    
                     ->when($stateId, fn ($query) => $query->where('state_id', $stateId))
-    
                     ->when($cityId, fn ($query) => $query->where('city_id', $cityId))
-    
                     ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
-    
-            }])->where(function ($query) use ($userId, $deviceId) {
-    
-                    $query->where('user_id', $userId)
-    
-                        ->orWhere('device_id', $deviceId);
-    
-                })->get();
+            }])
+            ->where(function ($query) use ($userId, $deviceId) {
+                $query->where('user_id', $userId)
+                      ->orWhere('device_id', $deviceId);
+            })
+            ->get();
         }
        
         
@@ -554,6 +565,8 @@ class OrderController extends Controller
             'order_from'      => 'Application',
 			'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
         ]);
+        dd($cartData->toArray());
+        exit;
         foreach ($cartData as $cartItem) {
             
             $product = $cartItem->product;
@@ -564,7 +577,7 @@ class OrderController extends Controller
              // Apply Combo Product if exsit
             //  return $user->role_type;
             // return $cartItem->vendortype->weight;
-           $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en', $user->role_type);
+            $comboProduct = $this->cart->comboProduct($cartItem->type_id, $product, 'en', $user->role_type);
             return $comboProduct;
             if($user->role_type == 2) {
 
