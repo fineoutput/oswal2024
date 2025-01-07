@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\UserDeviceToken;
 
+use App\Models\Cart;
+
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -247,6 +249,12 @@ class UserAuthController extends Controller
             }
 
             $user = User::find($user->id);
+            if($user){
+            if ($user->role_type == 1) {
+                // return 'hello';/
+                Cart::where('device_id', $user->device_id)->delete();
+            }
+        }
 
             return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' =>  $message], 200);
             
