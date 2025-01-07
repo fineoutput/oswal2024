@@ -62,10 +62,11 @@ class WishlistController extends Controller
         if($user->role_type == 2){
             
             // $Rtype = Type::find($request->type_id);
-            return $request;
+            // return $request;
             $type = VendorType::where('product_id', $request->product_id)
                 ->where('id', $request->type_id)
                 ->first();
+                return $type;
 
             $typeid = $type->id;
 
