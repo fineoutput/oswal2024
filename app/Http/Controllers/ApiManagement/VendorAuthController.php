@@ -367,11 +367,11 @@ class VendorAuthController extends Controller
 
                 if ($user) {
                     return response()->json([
-                        'success' => true,
+                        'status' => 200,
+                        // 'token' => $token,
                         'user' => $user,
                         'message' => $message,
-                        // 'user' => $user
-                    ]);
+                    ], 200);
                 }
                 // Create the user record first
                 $user = User::create($uservendorData['user']);
