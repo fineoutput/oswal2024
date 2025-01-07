@@ -201,7 +201,7 @@ class CartController extends Controller
 
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
-        if($role_type == 1){
+        if($role_type == 2){
             $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
         }
         else{
