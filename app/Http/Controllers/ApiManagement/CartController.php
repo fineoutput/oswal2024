@@ -206,7 +206,6 @@ class CartController extends Controller
         }
         else{
             $data = $request->only(['device_id','category_id', 'product_id', 'quantity', 'cart_from']);
-
         }
         
 
@@ -241,7 +240,7 @@ class CartController extends Controller
 
             $data['created_at'] = $curDate;
 
-            CartOld::create($data);
+            Cart::create($data);
 
         } elseif ($data['quantity'] == 0) {
 
@@ -255,7 +254,7 @@ class CartController extends Controller
         // Handle current cart in Cart
         $cartItem = Cart::where('product_id', $data['product_id'])
                 ->where(function($query) use ($data, $request, $role_type) {
-                    if($role_type == 2){
+                    if($role_type == 1){
                     $query->where('device_id', $data['device_id']);
                     }
                     if (!empty($request->user_id)) {
