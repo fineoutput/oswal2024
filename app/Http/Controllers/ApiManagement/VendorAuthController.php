@@ -362,7 +362,16 @@ class VendorAuthController extends Controller
                         'gstno'          => $uservendor->gstno,
                     ]
                 ];
-    
+                
+                $user = User::where('contact', $uservendor->contact)->first();
+
+                if ($user) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'OTP verified successfully, logging in.',
+                        'user' => $user
+                    ]);
+                }
                 // Create the user record first
                 $user = User::create($uservendorData['user']);
     
