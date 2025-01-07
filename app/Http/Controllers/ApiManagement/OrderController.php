@@ -726,7 +726,7 @@ class OrderController extends Controller
         //reward work for vendor
 
         if($payment_type == 1){
-          return $this->codCheckout($order->id,$payment_type);
+          return $this->codCheckout($order->id,$payment_type,$user);
         }else{
           return $this->paidCheckout($order->id,$payment_type);
         }
@@ -735,7 +735,7 @@ class OrderController extends Controller
     }
 
 
-    public function codCheckout($orderId, $paymentType)
+    public function codCheckout($orderId, $paymentType,$user)
     {
         // // Define validation rules
         // $rules = [
@@ -750,8 +750,7 @@ class OrderController extends Controller
         //     return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         // }
 
-        // Get authenticated user
-        $user = Auth::user();
+        $user = User::where('id',$user->id)->first();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
@@ -772,7 +771,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'Invalid payment type', 'status' => 400], 400);
         }
 
-        if(Auth::check() && Auth::user()->role_type != 2) {
+        if($user->role_type != 2) {
 
             $maxCodAmount = getConstant()->cod_max_process_amount;
             
@@ -786,7 +785,7 @@ class OrderController extends Controller
         }
 
         // Handle COD payment type
-        if(Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             $codCharge = 0;
 
         }
@@ -955,7 +954,7 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            if(Auth::check() && Auth::user()->role_type == 2){
+            if($user->role_type == 2){
 
                 $this->checkEligibleAndNotify();
             }
