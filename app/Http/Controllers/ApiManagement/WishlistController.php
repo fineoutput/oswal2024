@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 use App\Models\EcomProduct;
+use App\Models\User;
 
 use App\Models\VendorType;
 
@@ -303,6 +304,17 @@ class WishlistController extends Controller
 
     public function moveToCart(Request $request)
     {
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             
             'wishlist_id' => 'required|integer',
@@ -321,9 +333,11 @@ class WishlistController extends Controller
             'wishlist_id', 'type_id', 'type_price', 'cart_from', 'state_id', 'city_id'
         ]);
 
+        $user = User::where('id',$user_id)->first();
+
         $ip = $request->ip();
-        $device_id = auth()->user()->device_id;
-        $user_id = auth()->user()->id;
+        $device_id = $user->device_id;
+        // $user_id = $user->id;
 
         $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
