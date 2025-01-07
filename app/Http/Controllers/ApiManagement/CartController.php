@@ -434,15 +434,13 @@ class CartController extends Controller
     ->get();
     // return  $cart_subtotal;
 
-    $subtotal = $cart_subtotal->pluck('total_qty_price')->reduce(function ($carry, $item) {
-        return bcadd($carry, (string) $item, 2); // Add with 2 decimal places precision
-    }, '0');
-
+    $subtotal = round($cart_subtotal->pluck('total_qty_price')->sum(), 2);
+        return $subtotal;
         $data = array(
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
             'address'=>$addres,
-            'subtotal'=> round($subtotal, 2),
+            'subtotal'=> $subtotal,
         );
 
         return response()->json([
