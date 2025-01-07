@@ -45,11 +45,24 @@ class WishlistController extends Controller
 
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
+
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        $user = User::where('id', $user_id)->first();
         
-        if(Auth::check() && Auth::user()->role_type == 2){
+        if($user->role_type == 2){
             
             // $Rtype = Type::find($request->type_id);
-
+            return $request;
             $type = VendorType::where('product_id', $request->product_id)
                 ->where('id', $request->type_id)
                 ->first();
@@ -60,7 +73,7 @@ class WishlistController extends Controller
             
             $typeid = $request->type_id;
         }
-        $user = auth()->user();
+        // $user = $user;
         
     
         if($user->id){
@@ -115,10 +128,24 @@ class WishlistController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
+
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        $user = User::where('id',$user_id)->first();
+
     
         // Retrieve request parameters
-        $device_id = auth()->user()->device_id;
-        $user_id   = auth()->user()->id;
+        $device_id = $user->device_id;
+        $user_id   = $user->id;
         $lang      = $request->lang;
         $state_id  = $request->state_id ?? null;
         $city_id   = $request->city_id ?? null;
@@ -156,7 +183,7 @@ class WishlistController extends Controller
             $typedata = [];
     
           
-            if(Auth::check() && Auth::user()->role_type == 2){
+            if($user->role_type == 2){
                 
                 $typeData =  VendorType::where('product_id', $product_id)->where('id', $wishlistItem->type_id)
                 ->where('is_active', 1)->get();
@@ -185,7 +212,7 @@ class WishlistController extends Controller
             // Process each type data
             foreach ($typeData as $type) {
     
-                if(Auth::check() && Auth::user()->role_type == 2){
+                if($user->role_type == 2){
                     $subTypes = Type_sub::where('type_id', $type->id)
                     ->get();
                     $range = [];
