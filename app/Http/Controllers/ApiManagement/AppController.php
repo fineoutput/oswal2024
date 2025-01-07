@@ -637,6 +637,7 @@ class AppController extends Controller
         }
 
         $user = User::where('id',$user_id)->first();
+        return $user;
 
         $data = [
             'wallet_amount' => $user->wallet_amount,
