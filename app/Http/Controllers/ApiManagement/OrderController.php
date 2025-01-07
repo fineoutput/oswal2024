@@ -424,8 +424,8 @@ class OrderController extends Controller
 
     public function checkout(Request $request)
     {
-        // Validation rules
-        $rules = [
+
+                $rules = [
             'address_id'    => 'required|exists:user_address,id',
             'promocode_id'  => 'nullable|exists:promocodes,id',
             'gift_card_id'  => 'nullable|exists:gift_cards,id',
@@ -453,6 +453,7 @@ class OrderController extends Controller
                 $role_type = $userDetails->role_type;
             }
         }
+        // return $user_id;
 
         $user = User::where('id',$user_id)->first();
         // return $user;
