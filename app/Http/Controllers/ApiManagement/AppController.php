@@ -260,6 +260,8 @@ class AppController extends Controller
             }
         }
 
+        return $user_id;
+
         // $user_id   = auth()->id();
         $address_data = [];
         $addresses = Address::where('user_id', $user_id)->get();
