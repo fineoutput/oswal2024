@@ -1670,6 +1670,19 @@ class OrderController extends Controller
 
     public function orderDetail(Request $request)
     {
+
+        
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             'order_id'  => 'required',
             'lang'      => 'required',
@@ -1679,7 +1692,7 @@ class OrderController extends Controller
             return response()->json([ 'message' => $validator->errors()->first(), 'status' => 422],422);
         }
 
-        $user_id = auth()->user()->id;
+        // $user_id = $user_id;
         $order_id = $request->input('order_id');
         $lang = $request->input('lang');
         $deleveryBoy = [];
