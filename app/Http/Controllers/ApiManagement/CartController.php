@@ -205,7 +205,7 @@ class CartController extends Controller
             $data = $request->only(['device_id', 'category_id', 'product_id', 'quantity', 'cart_from']);
         }
         else{
-            $data = $request->only(['category_id', 'product_id', 'quantity', 'cart_from']);
+            $data = $request->only(['device_id','category_id', 'product_id', 'quantity', 'cart_from']);
 
         }
         
