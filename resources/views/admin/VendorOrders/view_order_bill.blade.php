@@ -40,8 +40,9 @@
           User: {{ $user->first_name ?? 'N/A' }}<br>
           Email: {{ $user->email ?? 'N/A' }}<br>
           Contact: {{ $user->contact ?? 'N/A' }}<br><br>
+
           <span class="font-weight-bold">Address:</span><br>
-          {{ $address->address ?? '' }}<br>
+           Address:{{$address->doorflat ?? ''}}{{ $address->address ?? '' }},{{$address->landmark ?? ''}},{{$address->citys->city_name ?? ''}},{{$address->states->state_name ?? ''}},{{$address->zipcode ?? ''}}<br>
           State/UT Code: RJ14<br>
           Place of supply: {{ $city ?? 'N/A' }}<br>
           Place of delivery: {{ $city ?? 'N/A' }}, {{ $state ?? 'N/A' }}<br>
