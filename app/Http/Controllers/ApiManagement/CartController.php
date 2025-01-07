@@ -440,7 +440,7 @@ class CartController extends Controller
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
             'address'=>$addres,
-            'subtotal'=> round($subtotal,2)
+            'subtotal'=> round($subtotal, 2)
         );
 
         return response()->json([
