@@ -955,7 +955,7 @@ class OrderController extends Controller
 
             if($user->role_type == 2){
 
-                $this->checkEligibleAndNotify();
+                $this->checkEligibleAndNotify($user->id);
             }
 
             return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
@@ -1444,10 +1444,22 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
 
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+
         $entityBody = file_get_contents('php://input');
         $body = json_decode($entityBody);
         // Get authenticated user
-        $user = Auth::user();
+        $user = User::where('id',$user_id)->first();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
@@ -1528,9 +1540,9 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            if(Auth::check() && Auth::user()->role_type == 2){
+            if($user->role_type == 2){
 
-                $this->checkEligibleAndNotify();
+                $this->checkEligibleAndNotify($user->id);
             }
 
             return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
@@ -1971,10 +1983,10 @@ class OrderController extends Controller
         return response()->json(['status' => 200, 'data' => $data]);
     }
     
-    private function checkEligibleAndNotify() {
+    private function checkEligibleAndNotify($userid) {
       
         $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
-        $user = Auth::user();
+        $user = User::where('id',$userid)->first();
     
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'User not authenticated']);
