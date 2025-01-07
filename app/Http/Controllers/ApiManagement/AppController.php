@@ -625,9 +625,21 @@ class AppController extends Controller
     public function getWalletAmount(Request $request)
     {
 
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        $user = User::where('id',$user_id)->first();
 
         $data = [
-            'wallet_amount' => Auth::user()->wallet_amount,
+            'wallet_amount' => $user->wallet_amount,
         ];
 
         return response()->json(['success' => true, 'data' => $data]);
