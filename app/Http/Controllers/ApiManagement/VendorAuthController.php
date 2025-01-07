@@ -368,6 +368,7 @@ class VendorAuthController extends Controller
                 if ($user) {
                     return response()->json([
                         'success' => true,
+                        'user' => $user,
                         'message' => 'OTP verified successfully, logging in.',
                         'user' => $user
                     ]);
