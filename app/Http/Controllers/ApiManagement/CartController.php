@@ -240,7 +240,7 @@ class CartController extends Controller
 
             $data['created_at'] = $curDate;
 
-            Cart::create($data);
+            CartOld::create($data);
 
         } elseif ($data['quantity'] == 0) {
 
