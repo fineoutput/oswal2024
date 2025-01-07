@@ -369,7 +369,7 @@ class VendorAuthController extends Controller
 
                 if ($user) {
                     if ($user->role_type == 2) {
-                        return 'hello';
+                        // return 'hello';/
                         Cart::where('device_id', $user->device_id)->delete();
                     }
                     return response()->json([
