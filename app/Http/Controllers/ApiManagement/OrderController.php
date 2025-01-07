@@ -728,9 +728,8 @@ class OrderController extends Controller
         if($payment_type == 1){
           return $this->codCheckout($order->id,$payment_type,$user);
         }else{
-          return $this->paidCheckout($order->id,$payment_type);
+          return $this->paidCheckout($order->id,$payment_type,$user);
         }
-   
 
     }
 
@@ -966,7 +965,7 @@ class OrderController extends Controller
         return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
-    public function paidCheckout($orderId , $paymentType) {
+    public function paidCheckout($orderId , $paymentType, $user) {
 
         // Define validation rules
         // $rules = [
@@ -981,7 +980,7 @@ class OrderController extends Controller
         // }
 
         // Get authenticated user
-        $user = Auth::user();
+        $user = User::where('id',$user->id)->first();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized', 'status' => 401], 401);
         }
