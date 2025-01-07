@@ -482,7 +482,7 @@ class OrderController extends Controller
 
         // Fetch cart data with related products and types
 
-        if(Auth::check() && $user->role_type == 2){
+        if($user->role_type == 2){
 
             $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
 
@@ -553,19 +553,19 @@ class OrderController extends Controller
             'order_from'      => 'Application',
 			'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
         ]);
-
         foreach ($cartData as $cartItem) {
-
+            
             $product = $cartItem->product;
-
             if (!$product || !$product->is_active) {
                 continue;
             }
 
              // Apply Combo Product if exsit
+            //  return $user->role_type;
+            // return $cartItem->vendortype->weight;
            $comboProduct =  $this->cart->comboProduct($cartItem->type_id, $product, 'en', $user->role_type);
-
-            if(Auth::check() && $user->role_type == 2) {
+            // return $comboProduct;
+            if($user->role_type == 2) {
 
                 $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
 
