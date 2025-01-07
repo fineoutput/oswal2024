@@ -260,7 +260,7 @@ class AppController extends Controller
             }
         }
 
-        return $user_id;
+        // return $user_id;
 
         // $user_id   = auth()->id();
         $address_data = [];
