@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\UserDeviceToken;
+use App\Models\Cart;
 
 use Illuminate\Http\Request;
 
@@ -364,11 +365,15 @@ class VendorAuthController extends Controller
                 ];
                 
                 $user = User::where('contact', $uservendor->contact)->first();
+                // return $user;
 
                 if ($user) {
+                    if ($user->role_type == 2) {
+                        return 'hello';
+                        Cart::where('device_id', $user->device_id)->delete();
+                    }
                     return response()->json([
                         'status' => 200,
-                        // 'token' => $token,
                         'user' => $user,
                         'message' => $message,
                     ], 200);
