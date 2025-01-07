@@ -432,14 +432,19 @@ class CartController extends Controller
         $cart_subtotal = Cart::whereNull('carts.deleted_at')
     ->where('device_id', $request->device_id)
     ->get();
-    // return  $cart_subtotal;
 
-    $subtotal = $cart_subtotal->pluck('total_qty_price')->sum();
+        $subtotal = 0;
+
+        foreach ($cart_subtotal as $cartItem) {
+            $subtotal += $cartItem->quantity * $cartItem->total_qty_price;
+        }
+
+    $subtotal = round($subtotal, 2);
         $data = array(
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
             'address'=>$addres,
-            'subtotal'=> round($subtotal, 2),
+            'subtotal'=> $subtotal,
         );
 
         return response()->json([
