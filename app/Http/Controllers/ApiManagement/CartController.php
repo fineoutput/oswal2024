@@ -432,7 +432,7 @@ class CartController extends Controller
         $cart_subtotal = Cart::whereNull('carts.deleted_at')
     ->where('device_id', $request->device_id)
     ->get();
-    return  $cart_subtotal;
+    // return  $cart_subtotal;
 
     $subtotal = $cart_subtotal->pluck('total_qty_price')->sum();
 
