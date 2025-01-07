@@ -252,7 +252,7 @@ class UserAuthController extends Controller
             if($user){
             if ($user->role_type == 1) {
                 // return 'hello';/
-                Cart::where('device_id', $user->device_id)->delete();
+                Cart::where('device_id', $user->device_id)->where('user_id','!=',0)->delete();
             }
         }
 
