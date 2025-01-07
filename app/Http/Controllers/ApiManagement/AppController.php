@@ -522,9 +522,21 @@ class AppController extends Controller
     public function walletTransaction(Request $request)
     {
 
+        $userId = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $userId = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+
         $completedTransactions = WalletTransactionHistory::getByStatus(
             WalletTransactionHistory::STATUS_COMPLETED,
-            Auth::id()
+            $userId
         );
 
         $data = [];
