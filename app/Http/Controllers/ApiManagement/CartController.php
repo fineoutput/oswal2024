@@ -434,13 +434,12 @@ class CartController extends Controller
     ->get();
     // return  $cart_subtotal;
 
-    $subtotal = round($cart_subtotal->pluck('total_qty_price')->sum(), 2);
-        return $subtotal;
+    $subtotal = $cart_subtotal->pluck('total_qty_price')->sum();
         $data = array(
             'cart_count' =>$cart_count,
             'wishlist_count'=>$wishlist, 
             'address'=>$addres,
-            'subtotal'=> $subtotal,
+            'subtotal'=> round($subtotal, 2),
         );
 
         return response()->json([
