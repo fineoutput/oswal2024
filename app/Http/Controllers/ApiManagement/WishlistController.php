@@ -66,9 +66,8 @@ class WishlistController extends Controller
             $type = VendorType::where('product_id', $request->product_id)
                 ->where('id', $request->type_id)
                 ->first();
-                return $type;
-
-            $typeid = $type->id;
+                // return $type;
+                $typeid = $type->id;
 
         }else{
             
