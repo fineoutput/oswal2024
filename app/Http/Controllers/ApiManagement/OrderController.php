@@ -313,7 +313,7 @@ class OrderController extends Controller
 
         }
 
-        $user = User::where('device_id', $deviceId)->orWhere('id', $userId)->first();
+        $user = User::Where('id', $userId)->first();
         
         if($wallet_status){
             
