@@ -566,7 +566,7 @@ class OrderController extends Controller
 			'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
         ]);
 
-        
+
         foreach ($cartData as $cartItem) {
             
             $product = $cartItem->product;
@@ -578,7 +578,10 @@ class OrderController extends Controller
             //  return $user->role_type;
             // return $cartItem->vendortype->weight;
             $comboProduct = $this->cart->comboProduct($cartItem->type_id, $product, 'en', $user->role_type);
-            dd($cartItem->type_id, $product);
+            return [
+                'type_id' => $cartItem->type_id,
+                'product' => $product
+            ];
             if($user->role_type == 2) {
 
                 $totalWeight += $cartItem->quantity * (float)$cartItem->vendortype->weight;
