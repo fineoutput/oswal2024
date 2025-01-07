@@ -270,6 +270,23 @@ if(!function_exists('generateRandomString')){
 	}
 }
 
+if(!function_exists('generateAuthString')){
+function generateAuthString($prefixLength = 3, $authLength = 56) {
+    // Step 1: Generate the numeric prefix (e.g., 503)
+    $prefix = rand(100, 999); // Generates a 3-digit number
+
+    // Step 2: Generate the alphanumeric part
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Define possible characters
+    $charactersLength = strlen($characters);
+    $authString = '';
+    for ($i = 0; $i < $authLength; $i++) {
+        $authString .= $characters[rand(0, $charactersLength - 1)]; // Randomly pick a character
+    }
+
+    // Step 3: Combine the prefix, pipe (`|`), and alphanumeric string
+    return $prefix . '|' . $authString; // Format: 503|U1M2UXWQlNeZzPFWw0KT3w6fjwmMYGiruAf6wA97
+}}
+
 if(!function_exists('generateOtp')){
 
     function generateOtp() {

@@ -32,7 +32,7 @@ Route::get('popup-image' , [AppController::class , 'popupimage']);
 
 Route::post('update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
 Route::post('delivery-boy/update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 
-// Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
+Route::middleware('auth:sanctum' , 'auth:user')->group(function () {
     Route::get('user', function (Request $request) {
         return $request->user();
     });
@@ -60,7 +60,7 @@ Route::post('delivery-boy/update-fcm',[DeliveryBoyController::class , 'updateFcm
     Route::get('gift-card-sec' ,[AppController::class, 'giftCardSec']);
     Route::post('rating' ,[AppController::class, 'giveRating']);
     Route::post('wallet' ,[AppController::class, 'getWalletAmount']);
-// });
+});
 Route::get('vendor/reward-list' , [AppController::class , 'getReward']);
 Route::get('vendor/reward-claim' , [AppController::class , 'claimReward']);
 

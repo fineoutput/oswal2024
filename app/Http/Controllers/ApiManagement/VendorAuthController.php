@@ -30,6 +30,8 @@ use Illuminate\Validation\Rule;
 class VendorAuthController extends Controller
 {
 
+ 
+
     public function register(Request $request)
     {
         $rules = [
@@ -152,7 +154,7 @@ class VendorAuthController extends Controller
             'first_name'    => $request->first_name,
             'first_name_hi' => lang_change($request->first_name), // Assuming lang_change() is used for translation
             'device_id'     => $request->device_id,
-            'auth'          => generateRandomString(), // Assuming generateRandomString() generates a unique string
+            'auth'          => generateAuthString(), // Assuming generateRandomString() generates a unique string
             'email'         => $request->email,
             'contact'       => $request->phone_no,
             'password'      => Hash::make($request->password) ?? null, // Hash the password
@@ -234,6 +236,8 @@ class VendorAuthController extends Controller
             return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
         }
     }
+
+
 
     public function verifyOtpProcess(Request $request)
     {
@@ -336,7 +340,7 @@ class VendorAuthController extends Controller
                         'first_name'    => $uservendor->first_name, // Assuming $uservendor has this info
                         'first_name_hi' => lang_change($uservendor->first_name),
                         'device_id'     => $uservendor->device_id,
-                        'auth'          => generateRandomString(),
+                        'auth'          => generateAuthString(),
                         'email'         => $uservendor->email,
                         'contact'       => $uservendor->contact,
                         'password'      => Hash::make($uservendor->password) ?? null,
@@ -387,6 +391,8 @@ class VendorAuthController extends Controller
             return response()->json(['status' => 401, 'message' => 'Invalid OTP. Please try again.']);
         }
     }
+
+   
 
     // public function register(Request $request)
     // {
