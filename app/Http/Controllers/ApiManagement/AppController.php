@@ -222,7 +222,7 @@ class AppController extends Controller
 
 
         $addressData = [
-            'user_id'          =>  auth()->id(),
+            'user_id'          =>  $user->id,
             'name'             => $user->first_name,
             'doorflat'         => $request->doorflat,
             'landmark'         => $request->landmark,
