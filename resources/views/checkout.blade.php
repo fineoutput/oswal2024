@@ -1182,6 +1182,7 @@ function placeOrder() {
 
     // Check if location is available in localStorage
     if (!userLocation) {
+        requestLocation();
         alert("Location is not available. Please enable location access.");
         return; // Stop the order process if location is not available
     }
