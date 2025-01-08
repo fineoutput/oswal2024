@@ -401,11 +401,13 @@ class OrderController extends Controller
       
         $cod_final_amount = formatPrice(($finalAmount),false);
         $get_online_payment_status = 0;
+        $save_total = 0;
 
         }
         else{
             $cod_final_amount = formatPrice(($finalAmount + getConstant()->cod_charge),false);
             $get_online_payment_status = 1;
+            $save_total = formatPrice(($totalSaveAmount - $totalAmount) , false);
         }
 
 
@@ -417,7 +419,7 @@ class OrderController extends Controller
         $reponse['wallet_amount']    = round($totalwalletAmount, 2);
         $reponse['total_discount' ]  = $promo_discount + $walletDescount;
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
-        $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
+        $reponse['save_total' ]      = $save_total;
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
