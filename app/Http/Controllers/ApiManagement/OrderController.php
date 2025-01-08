@@ -399,12 +399,16 @@ class OrderController extends Controller
         }
         if($user->role_type == 2){
       
-    $cod_final_amount = formatPrice(($finalAmount),false);
+        $cod_final_amount = formatPrice(($finalAmount),false);
+        $get_online_payment_status = 0;
 
         }
         else{
             $cod_final_amount = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+            $get_online_payment_status = 1;
         }
+
+
 
         $reponse['wallet_per']  = $constant->wallet_use_amount;
         $reponse['wallet_discount']  = round($walletDescount, 2);
@@ -417,7 +421,7 @@ class OrderController extends Controller
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
-        $reponse['get_online_payment_status' ]    = 1;
+        $reponse['get_online_payment_status' ]    = $get_online_payment_status;
         
         return response()->json($reponse);
     }
