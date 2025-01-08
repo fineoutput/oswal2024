@@ -1831,6 +1831,10 @@ class OrderController extends Controller
             ];
         }
 
+        if($order->order_status = 4){
+            $deleveryBoy = [];
+        }
+
         $data = [
             'product'          => $productdata,
             'order_id'         => $order->id,
