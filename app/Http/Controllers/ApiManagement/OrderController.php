@@ -495,11 +495,11 @@ class OrderController extends Controller
 
                 $query->where('is_active', 1)
     
-                    ->when($stateId, fn ($query) => $query->where('state_id', 29))
-    
-                    ->when($cityId, fn ($query) => $query->where('city_id', 629))
-    
-                    ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
+                ->when($stateId, fn ($query) => $query->where('state_id', 29))
+
+                ->when($cityId, fn ($query) => $query->where('city_id', 629))
+
+                ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
     
             }])->where(function ($query) use ($userId, $deviceId) {
     

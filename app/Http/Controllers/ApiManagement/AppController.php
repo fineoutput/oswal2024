@@ -594,6 +594,7 @@ class AppController extends Controller
     public function giveRating(Request $request)
     {
 
+
         $validator = Validator::make($request->all(), [
             'order_id'    => 'required|integer|exists:tbl_order1,id',
             'rating'      => 'required|integer|min:1|max:5',
@@ -607,9 +608,22 @@ class AppController extends Controller
             ], 400);
         }
 
+        $userId = 0;
+        $device_id = "";
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $userId = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+
         $data = [
-            'device_id'     =>  auth()->user()->device_id,
-            'user_id'       =>  auth()->user()->id,
+            'device_id'     =>  $device_id,
+            'user_id'       =>  $userId,
             'order_id'      => $request->input('order_id'),
             'rating'        => (float) $request->input('rating'),
             'description'   => $request->input('description'),
@@ -676,8 +690,8 @@ class AppController extends Controller
             }
         }
     
-        Log::info("fcm_token: " . $request->fcm_token);
-        Log::info("auth: " . $request->header('Authorization'));
+        // Log::info("fcm_token: " . $request->fcm_token);
+        // Log::info("auth: " . $request->header('Authorization'));
         // If validation fails, return an error
         if ($validator->fails()) {
             return response()->json([
@@ -755,7 +769,7 @@ class AppController extends Controller
         
         if ($userDetails) {
             $user_id = $userDetails->id;
-            Log::info("User authenticated with ID: " . $user_id);
+            // Log::info("User authenticated with ID: " . $user_id);
         } else {
             Log::warning("Failed to authenticate user with token: " . $auth_token);
             return response()->json(['success' => false, 'message' => 'Invalid token'], 401);
