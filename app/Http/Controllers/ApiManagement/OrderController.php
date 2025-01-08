@@ -719,7 +719,7 @@ class OrderController extends Controller
         
         Order::where('id', $order->id)->update([
             'user_id'                    => $userId ?? $user->id,
-            'total_amount'               => $request->total_amount ?? $totalAmount,
+            'total_amount'               => $totalAmount,
             'sub_total'                  => $subtotal,
             'address_id'                 => $addressId,
             'promocode'                  => $promocodeId ?? '',
