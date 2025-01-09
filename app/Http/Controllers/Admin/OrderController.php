@@ -171,6 +171,17 @@ foreach ($orders as $order) {
         $order->save();
 
         if ($order_status == 2 || $order_status == 3 || $order_status == 4) {
+            $dilivery_order = TransferOrder::where('order_id',$order->id)->first();
+            $dilivery_boy = DeliveryBoy::where('id',$dilivery_order->user_id)->first();
+
+            if ($dilivery_boy) {
+                $this->sendPushNotification($dilivery_boy->fcm_token, $order_status);
+                $this->sendEmailNotification($dilivery_boy, $order, $order_status);
+            }
+
+        }
+
+        if ($order_status == 2 || $order_status == 3 || $order_status == 4) {
 
             $user = User::find($order->user_id);
   
