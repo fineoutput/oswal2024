@@ -384,6 +384,8 @@ class CartController extends Controller
              if(!empty($Address)){
                 $addres = $Address->doorflat.", ".$Address->address." ".$Address->landmark." ".$Address->zipcode;
             }
+
+            $wishlist = Wishlist::where('user_id', $user_id)->count();
             
         }
         else{
