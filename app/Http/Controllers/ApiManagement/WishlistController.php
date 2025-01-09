@@ -340,6 +340,7 @@ class WishlistController extends Controller
                 $role_type = $userDetails->role_type;
             }
         }
+        return $user_id;
 
         $validator = Validator::make($request->all(), [
             
@@ -360,7 +361,6 @@ class WishlistController extends Controller
         ]);
 
         $user = User::where('id',$user_id)->first();
-        return $user; 
 
         $ip = $request->ip();
         $device_id = $user->device_id;
