@@ -456,7 +456,7 @@ class WishlistController extends Controller
                 'category_id' => $wishlist->category_id,
                 'product_id' => $wishlist->product_id,
                 'type_id' => $typeData->id,
-                'type_price' => $type_price->selling_price,
+                'type_price' => $typeData->selling_price,
                 'quantity' => $quantity->min_qty ?? 1,
                 'total_qty_price' => $totalQtyPrice,
                 'cart_from' => 7,
