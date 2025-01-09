@@ -366,7 +366,7 @@ class WishlistController extends Controller
 
         $curDate = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
 
-        $wishlist = Wishlist::where('user_id', $user_id)
+        $wishlist = Wishlist::where('user_id', $user->id)
                             ->where('id', $data['wishlist_id'])
                             ->first();
 
