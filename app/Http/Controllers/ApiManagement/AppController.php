@@ -56,41 +56,55 @@ class AppController extends Controller
     {
 
         $user_id = 0;
-        if ($request->header('Authorization')) {
-            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
-            $userDetails = User::where('auth', $auth_token)->first();
-            if ($userDetails) {
-                $device_id = $userDetails->device_id;
-                $user_id = $userDetails->id;
-                $role_type = $userDetails->role_type;
-            }
-        }
-        $user = User::where('id',$user_id)->first();
-        $latestPopupImage = Popupimage::where('status','1')->latest()->first();
+            $role_type = null; // Initialize to null
 
-        if($user->role_type == 2){
+            if ($request->header('Authorization')) {
+                $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+                $userDetails = User::where('auth', $auth_token)->first();
+
+                if ($userDetails) {
+                    $device_id = $userDetails->device_id;
+                    $user_id = $userDetails->id;
+                    $role_type = $userDetails->role_type;
+                }
+            }
+
+            $user = User::where('id', $user_id)->first();
+            $latestPopupImage = Popupimage::where('status', '1')->latest()->first();
+
+            // Check if the user is logged in and if they have the role_type 2
+            if ($role_type == 2) {
+                // If role_type is 2, return a response with false
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Role type 2 does not have permission to view image'
+                ], 403);  // You can use a 403 Forbidden HTTP status code
+            }
+
+            // If the user is logged in and role_type is not 2 (i.e. role_type == 1 or user is logged in)
+            if ($role_type == 1 || $user) {
+                // Check if there is a valid popup image
+                if ($latestPopupImage) {
+                    $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
+
+                    return response()->json([
+                        'success' => true,
+                        'image_url' => $imageUrl
+                    ], 200);
+                } else {
+                    // If there's no popup image, return success with a message
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'No popup image found'
+                    ], 200);
+                }
+            }
+
+            // Return a failure response if the user is not logged in and role type is undefined
             return response()->json([
                 'success' => false,
-                // 'image_url' => $imageUrl
-            ], 200);
-        }else{
-
-        if ($latestPopupImage) {
-            $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
-    
-            // Return a JSON response with the image URL
-            return response()->json([
-                'success' => true,
-                'image_url' => $imageUrl
-            ], 200);
-        }
-    }
-    
-        // Return a failure response if no image is found
-        return response()->json([
-            'success' => false,
-            'message' => 'No popup images found'
-        ], 404);
+                'message' => 'User not logged in or role type not found'
+            ], 401);  
     }
     
     public function blog()
