@@ -425,7 +425,8 @@ class UserController extends Controller
 
     public function storeAddress(Request $request)
     {
-       
+        // Validation rules
+        // return $request;    
         $rules = [
             'doorflat'  => 'required|string',
             'city'      => 'required|integer',
@@ -434,50 +435,76 @@ class UserController extends Controller
             'address'   => 'required|string',
             'landmark'  => 'required|string',
         ];
-
-        $request->validate($rules); 
-
+    
+        // Check if user_location is provided in the request
+        // $latitude = $request->input('latitude');
+        // $longitude = $request->input('longitude');
+        
+        // if ($userLocation) {
+        //     // Decode user_location to extract latitude and longitude
+        //     $location = json_decode($userLocation, true);
+        //     $latitude = $location['latitude'] ?? null;
+        //     $longitude = $location['longitude'] ?? null;
+        // } else {
+        //     // Default to null if location isn't provided
+        //     $latitude = $longitude = null;
+        // }
+    
+        // Check if address_id is not 0 and update the order if necessary
+        // if ($request->address_id != 0) {
+            // return $request->address_id;
+            // $address = Address::where('user_id', Auth::id())->first();
+            // if ($address) {
+            //     $address->update([
+            //         'address_id' => $request->address_id,
+            //         'latitude' => $latitude ,
+            //         'longitude' => $longitude,
+            //     ]);
+            // }
+        // }
+    
+        // Validate the incoming request data
+        $request->validate($rules);
+    
+        // Find existing address if address_id is provided, or create a new one
         $address = isset($request->address_id) ? Address::find($request->address_id) : new Address;
-
+    
+        // If address doesn't exist, return an error
         if (isset($request->address_id) && !$address) {
             return redirect()->back()->with('error', 'Address not found.');
         }
-
+    
+        // Check if shipping data exists for the given city
         $shippingData = ShippingCharge::where('city_id', $request->city)->first();
         if (!$shippingData) {
             return redirect()->back()->with('error', 'Shipping services not available in this area.');
         }
- 
+    
+        // Fill the address fields with the request data
         $address->fill($request->except('latitude', 'longitude'));
-
-        $address->latitude = $request->latitude ?? '131'; 
-
-        $address->longitude = $request->longitude ?? '131';  
-
-        $address->user_id = Auth::user()->id; 
-
+    
+        // If latitude and longitude are provided, set them; otherwise, set default values
+        $address->latitude = $latitude ?? $request->latitude ?? '131';  // Default to '131' if not provided
+        $address->longitude = $longitude ?? $request->longitude ?? '131'; // Default to '131' if not provided
+    
+        // Set user_id and current date
+        $address->user_id = Auth::user()->id;
         $address->date = now()->setTimezone('Asia/Calcutta')->toDateTimeString();
-
+    
+        // Save the address and return the appropriate response
         if ($address->save()) {
-
             $message = isset($request->address_id) ? 'Address updated successfully.' : 'Address inserted successfully.';
-
-            if($request->redirect == 'checkout'){
-
+    
+            if ($request->redirect == 'checkout') {
                 return redirect()->route('checkout.get-address')->with('success', $message);
-
-            }else{
-
+            } else {
                 return redirect()->to('/user')->with('success', $message);
-
             }
-           
         } else {
-
             return redirect()->back()->with('error', 'Something went wrong. Please try again later.');
         }
     }
-
+    
     public function getCity(Request $request) {
         
         $stateId = $request->input('state_id');

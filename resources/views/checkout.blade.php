@@ -1178,20 +1178,20 @@ function placeOrder() {
     }
 
     // Get user location from localStorage
-    const userLocation = localStorage.getItem('userLocation');
+    // const userLocation = localStorage.getItem('userLocation');
 
-    // Check if location is available in localStorage
-    if (!userLocation) {
-        requestLocation();
-        alert("Location is not available. Please enable location access.");
-        return; // Stop the order process if location is not available
-    }
+    // // Check if location is available in localStorage
+    // if (!userLocation) {
+    //     requestLocation();
+    //     alert("Location is not available. Please enable location access.");
+    //     return; // Stop the order process if location is not available
+    // }
 
     // Prepare the data to send with the AJAX request
     $.ajax({
         url: "{{ route('checkout.place-order') }}",
         type: 'POST',
-        data: $('#placeOrder').serialize() + '&address_id=' + addressId + '&user_location=' + userLocation,
+        data: $('#placeOrder').serialize() + '&address_id=' + addressId + '&user_location=',
         success: function(response) {
             if (!response.success) {
                 showNotification(response.message, 'error');
@@ -1242,46 +1242,7 @@ function placeOrder() {
     });
 
     // Function to get the user's location if not already stored
-    function requestLocation() {
-        if (localStorage.getItem("userLocation")) {
-            console.log("Location already stored:", localStorage.getItem("userLocation"));
-            return; // Exit the function if location is already stored
-        }
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    // Store the location in local storage
-                    const userLocation = JSON.stringify({ latitude, longitude });
-                    localStorage.setItem("userLocation", userLocation);
-
-                    console.log("Location stored:", userLocation);
-                },
-                (error) => {
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            alert("User denied the request for Geolocation.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            alert("Location information is unavailable.");
-                            break;
-                        case error.TIMEOUT:
-                            alert("The request to get user location timed out.");
-                            break;
-                        default:
-                            alert("An unknown error occurred.");
-                    }
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-    requestLocation();
+    
 }
 
 

@@ -37,6 +37,10 @@
         .form-group button:hover {
             background-color: #218838;
         }
+        #map {
+      height: 500px;
+      width: 100%;
+    }
     </style>
 
     <div class="container">
@@ -151,6 +155,8 @@
 
                 @enderror
             </div>
+            <input type="hidden" name="latitude" id="latitudeInput">
+    <input type="hidden" name="longitude" id="longitudeInput">
 
             <div class="form-group">
 
@@ -160,6 +166,123 @@
 
         </form>
 
+        <!-- <h1>Google Maps Location Picker</h1>
+  <div id="map"></div>
+  <p>Selected Location: <span id="location"></span></p> -->
+
+  <!-- Load Google Maps API -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U&callback=initMap&libraries=places" async defer></script> -->
+
+  <!-- Main Script -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+        // Retrieve location from localStorage
+        const userLocation = localStorage.getItem("userLocation");
+        if (userLocation) {
+            const location = JSON.parse(userLocation);
+            const latitude = location.latitude;
+            const longitude = location.longitude;
+
+            console.log("Latitude:", latitude);
+            console.log("Longitude:", longitude);
+
+            // Populate hidden inputs
+            document.getElementById("latitudeInput").value = latitude;
+            document.getElementById("longitudeInput").value = longitude;
+        } else {
+            console.error("No location data found in localStorage.");
+        }
+    });
+
+   document.addEventListener("DOMContentLoaded", () => {
+        // Function to request and store location
+        function requestLocation() {
+            // Check if location is already stored in local storage
+            if (localStorage.getItem("userLocation")) {
+                console.log("Location already stored:", localStorage.getItem("userLocation"));
+                return; // Exit the function if location is already stored
+            }
+
+            // If location is not stored, request the user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        // Store the location in local storage
+                        const userLocation = JSON.stringify({ latitude, longitude });
+                        localStorage.setItem("userLocation", userLocation);
+
+                        console.log("Location stored:", userLocation);
+                    },
+                    (error) => {
+                        // Handle location access errors
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                alert("User denied the request for Geolocation.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                alert("Location information is unavailable.");
+                                break;
+                            case error.TIMEOUT:
+                                alert("The request to get user location timed out.");
+                                break;
+                            default:
+                                alert("An unknown error occurred.");
+                        }
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Call the function to request location
+        requestLocation();
+    });
+
+
+    // let map, marker;
+
+    // function initMap() {
+    //   const initialPosition = { lat: 37.7749, lng: -122.4194 }; // Default position (San Francisco)
+
+    //   // Initialize the map
+    //   map = new google.maps.Map(document.getElementById('map'), {
+    //     center: initialPosition,
+    //     zoom: 13,
+    //   });
+
+    //   // Add a draggable marker
+    //   marker = new google.maps.Marker({
+    //     position: initialPosition,
+    //     map: map,
+    //     draggable: true,
+    //   });
+
+    //   // Update location on marker drag
+    //   marker.addListener('dragend', updateLocation);
+
+    //   // Update location on map click
+    //   map.addListener('click', (event) => {
+    //     marker.setPosition(event.latLng);
+    //     updateLocation();
+    //   });
+
+    //   // Display the initial location
+    //   updateLocation();
+    // }
+
+    // function updateLocation() {
+    //   const position = marker.getPosition();
+    //   const lat = position.lat();
+    //   const lng = position.lng();
+
+    //   // Display the latitude and longitude
+    //   document.getElementById('location').textContent = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
+    // }
+  </script>
     </div>
 
 @endsection

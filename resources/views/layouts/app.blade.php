@@ -92,50 +92,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <script>
     // Function to get the user's location
-    function requestLocation() {
-        // Check if location is already stored in local storage
-        if (localStorage.getItem("userLocation")) {
-            console.log("Location already stored:", localStorage.getItem("userLocation"));
-            return; // Exit the function if location is already stored
-        }
-
-        // If location is not stored, request the user's location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    // Store the location in local storage
-                    const userLocation = JSON.stringify({ latitude, longitude });
-                    localStorage.setItem("userLocation", userLocation);
-
-                    console.log("Location stored:", userLocation);
-                },
-                (error) => {
-                    // Handle location access errors
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            // alert("User denied the request for Geolocation.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            alert("Location information is unavailable.");
-                            break;
-                        case error.TIMEOUT:
-                            alert("The request to get user location timed out.");
-                            break;
-                        default:
-                            alert("An unknown error occurred.");
-                    }
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-
-    requestLocation();
+    
 </script>
 
     
