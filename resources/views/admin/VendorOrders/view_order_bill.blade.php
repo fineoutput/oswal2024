@@ -113,8 +113,8 @@
               <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
               <td>
                 @if($address->state == 29)
-                  Rs. {{ ($item->vendortype->gst_percentage_price * $item->quantity) / 2 }}<br>
-                  Rs. {{ ($item->vendortype->gst_percentage_price * $item->quantity) / 2 }}
+                  Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}<br>
+                  Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}
                 @else
                   Rs. {{ $item->vendortype->gst_percentage_price * $item->quantity }}
                 @endif
