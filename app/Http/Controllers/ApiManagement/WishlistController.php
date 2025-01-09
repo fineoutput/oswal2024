@@ -393,6 +393,7 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'message' => 'This Product Already Exists In Cart', 'data' =>  $cartItem], 200);
         }
 
+        if($user->role_type == 1){
         $typeData = Type::where('product_id', $product->id)
                         ->where('is_active', 1)
                         ->where(function ($query) use ($data) {
@@ -407,6 +408,23 @@ class WishlistController extends Controller
                             $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
+                    }else{
+                        $typeData = VendorType::where('product_id', $product->id)
+                        ->where('is_active', 1)
+                        ->where(function ($query) use ($data) {
+                            if ($data['state_id']) {
+                                $query->where('state_id', $data['state_id']);
+                            }
+                            if ($data['city_id']) {
+                                $query->where('city_id', $data['city_id']);
+                            }
+                        })
+                        ->orWhere(function ($query) use ($data, $wishlist) {
+                            $query->where('id', $data['type_id'] ?? $wishlist->type_id);
+                        })
+                        ->first();
+
+                    }
 
         if (!$typeData) {
             return response()->json(['success' => false, 'message' => 'Type data not found'], 404);
