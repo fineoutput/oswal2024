@@ -423,6 +423,7 @@ class WishlistController extends Controller
                             $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
+                        return $typeData;
                     }
 
         if (!$typeData) {
