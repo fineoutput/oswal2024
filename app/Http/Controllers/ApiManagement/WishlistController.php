@@ -58,6 +58,7 @@ class WishlistController extends Controller
         }
 
         $user = User::where('id', $user_id)->first();
+        return $user;
         
         if($user->role_type == 2){
             
