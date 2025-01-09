@@ -82,7 +82,7 @@ class AppController extends Controller
             }
 
             // If the user is logged in and role_type is not 2 (i.e. role_type == 1 or user is logged in)
-            if ($role_type == 1 || $user) {
+            if ($role_type == 1 || $user->id == 0) {
                 // Check if there is a valid popup image
                 if ($latestPopupImage) {
                     $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
@@ -103,6 +103,7 @@ class AppController extends Controller
             // Return a failure response if the user is not logged in and role type is undefined
             return response()->json([
                 'success' => false,
+                'image_url' => $imageUrl,
                 'message' => 'User not logged in or role type not found'
             ], 401);  
     }
