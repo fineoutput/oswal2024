@@ -450,6 +450,7 @@ class WishlistController extends Controller
                 'curr_date' => $curDate,
             ];
         }else{
+            return 'hello';
             $cartData = [
                 'device_id' => $device_id,
                 'user_id' => $user_id,
