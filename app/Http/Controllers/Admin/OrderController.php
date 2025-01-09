@@ -495,6 +495,7 @@ foreach ($orders as $order) {
         $giftCard = $order->gift;
         $giftCardSec = $order->gift1 ?? null;
         $promocode = $order->promocodes;
+        // $type_price = DB::table('type_subs')->where('id',$orderItems->)->get();
 
         if($routeName == 'order.vendor.view-bill'){
 

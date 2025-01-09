@@ -810,13 +810,13 @@ class OrderController extends Controller
         else{
             $codCharge = getConstant()->cod_charge;
         }
-
+        $newtotal = $codCharge + $order->total_amount;
         $order->update([
             'order_status'   => 1,
             'payment_type'   => 1,
             'payment_status' => 1,
             'cod_charge'     => $codCharge,
-            'total_amount'   => $order->total_amount,
+            'total_amount'   => $newtotal,
         ]);
 
         $invoiceNumber = generateInvoiceNumber($orderId);
@@ -1657,11 +1657,12 @@ class OrderController extends Controller
                         }
                     }
                     
+                    $rating_avg = 0;
+                        if($order->order_status == 4){
+                            $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
+                            $rating_avg = number_format((float)$rating_avg, 1, '.', '');
+                        }
                     
-
-                    $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
-                    
-                    $rating_avg = number_format((float)$rating_avg, 1, '.', '');
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
                     $track_status = $tracktransfer ? $tracktransfer->status : null;
                     // return $tracktransfer->status;
