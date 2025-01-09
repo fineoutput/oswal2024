@@ -106,9 +106,9 @@
               <td>{{ $item->product->name ?? 'N/A' }}</td>
               <td>{{ $item->product->hsn_code ?? 'N/A' }}</td>
               <td>{{ $item->vendortype->type_name ?? 'N/A' }}</td>
-              <td>Rs. {{ $item->vendortype->mrp ?? 'N/A' }}</td>
+              <td>Rs. {{ $item->vendortype->del_mrp ?? 'N/A' }}</td>
               <td>{{ $item->quantity }}</td>
-              <td>Rs. {{ $item->vendortype->mrp * $item->quantity }}</td>
+              <td>Rs. {{ $item->vendortype->del_mrp * $item->quantity }}</td>
               <td>{{ $item->vendortype->gst_percentage ?? 18}}%</td>
               <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
               <td>
