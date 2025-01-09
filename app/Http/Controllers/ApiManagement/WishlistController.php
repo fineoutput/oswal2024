@@ -408,7 +408,6 @@ class WishlistController extends Controller
                             $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
-                        return 'hello';
                     }else{
                         $typeData = VendorType::where('product_id', $product->id)
                         ->where('is_active', 1)
@@ -424,7 +423,6 @@ class WishlistController extends Controller
                             $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
-                        return $typeData;
                     }
 
         if (!$typeData) {
