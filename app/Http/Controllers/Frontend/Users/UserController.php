@@ -425,6 +425,7 @@ class UserController extends Controller
 
     public function storeAddress(Request $request)
     {
+
         // Validation rules
         // return $request;    
         $rules = [
@@ -435,7 +436,47 @@ class UserController extends Controller
             'address'   => 'required|string',
             'landmark'  => 'required|string',
         ];
-    
+        $api_key = "VGHKwklhelqkwhe2113kxmcfbJHGBJKG_tYGF78";
+        $lat = $request->latitude;
+        $long = $request->longitude;
+        $apiKey = config('constants.GOOGLE_MAP_KEY');
+
+        if($api_key){
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $lat . ',' . $long . '&key=' . $apiKey,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET', // Change to GET
+            ));
+            
+            $response = curl_exec($curl);
+            
+            curl_close($curl);
+         
+            $r = json_decode($response);
+            $r2 = $r->results[0]->formatted_address;
+        
+           
+            // print_r($r2);
+
+        // if (!getLatLngFromAddress($custom_address)) {
+        //     $live_location = "not able to get from google";
+        //     // return response()->json(['success' => false, 'message' => 'Address Not Found.'], 400);
+        // }
+        // else{
+        //     $live_location =
+        // }
+
+
+        }
+
         // Check if user_location is provided in the request
         // $latitude = $request->input('latitude');
         // $longitude = $request->input('longitude');
@@ -486,6 +527,7 @@ class UserController extends Controller
         // If latitude and longitude are provided, set them; otherwise, set default values
         $address->latitude = $latitude ?? $request->latitude ?? '131';  // Default to '131' if not provided
         $address->longitude = $longitude ?? $request->longitude ?? '131'; // Default to '131' if not provided
+        $address->location_address =  $r2; // Default to '131' if not provided
     
         // Set user_id and current date
         $address->user_id = Auth::user()->id;
