@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 use App\Services\FirebaseService;
+use App\Services\DeliveryBoyService;
 
 use App\Models\UserDeviceToken;
 
@@ -46,10 +47,12 @@ class OrderController extends Controller
     protected $googleAccessTokenService;
 
     protected $firebaseService;
+    protected $firebaseServiceDelivery;
 
-    public function __construct(FirebaseService $firebaseService)
+    public function __construct(FirebaseService  $firebaseService, DeliveryBoyService $firebaseServiceDelivery)
     {
         $this->firebaseService = $firebaseService;
+        $this->firebaseServiceDelivery = $firebaseServiceDelivery;
     }
 
 
@@ -349,7 +352,7 @@ foreach ($orders as $order) {
 
         if($fcm_token != null){
 
-            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+            $response = $this->firebaseServiceDelivery->sendNotificationToUser($fcm_token, $title, $message);
     
             if(!$response['success']) {
                 
