@@ -424,6 +424,8 @@ class WishlistController extends Controller
                         })
                         ->first();
                         $type_price = DB::table('type_subs')->where('type_id',$typeData->id)->get();
+                        //  return $type_price;
+                        $typeData->selling_price = $type_price;
                     }
 
         if (!$typeData) {
@@ -454,7 +456,7 @@ class WishlistController extends Controller
                 'category_id' => $wishlist->category_id,
                 'product_id' => $wishlist->product_id,
                 'type_id' => $typeData->id,
-                'type_price' => $type_price->selling_price,
+                'type_price' => $typeData->selling_price,
                 'quantity' => $quantity->min_qty ?? 1,
                 'total_qty_price' => $totalQtyPrice,
                 'cart_from' => 7,
