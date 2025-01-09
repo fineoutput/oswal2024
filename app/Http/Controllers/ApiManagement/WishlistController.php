@@ -360,6 +360,7 @@ class WishlistController extends Controller
         ]);
 
         $user = User::where('id',$user_id)->first();
+        
 
         $ip = $request->ip();
         $device_id = $user->device_id;
@@ -423,7 +424,6 @@ class WishlistController extends Controller
                             $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
-
                     }
 
         if (!$typeData) {
