@@ -436,12 +436,10 @@ class UserController extends Controller
             'address'   => 'required|string',
             'landmark'  => 'required|string',
         ];
-        $api_key = "VGHKwklhelqkwhe2113kxmcfbJHGBJKG_tYGF78";
+       
         $lat = $request->latitude;
         $long = $request->longitude;
-        $apiKey = config('constants.GOOGLE_MAP_KEY');
-
-        if($api_key){
+        $apiKey = config('constants.GOOGLE_MAP_KEY2');
 
             $curl = curl_init();
 
@@ -463,7 +461,7 @@ class UserController extends Controller
             $r = json_decode($response);
             
             $r2 = $r->results[0]->formatted_address;
-        
+            
             // if(!empty($r2 )){
             //     return response()->json(['status' => 'Success', 'message' => $r2]);
             // }
@@ -478,7 +476,7 @@ class UserController extends Controller
         // }
 
 
-        }
+    
 
         // Check if user_location is provided in the request
         // $latitude = $request->input('latitude');
