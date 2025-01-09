@@ -413,7 +413,7 @@ class WishlistController extends Controller
         }
 
         $totalQtyPrice = $data['type_price'] * 1;
-        $quantity = VendorType::where('product_id',$wishlist->product_id)->first();
+        $quantity = VendorType::where('id',$typeData->id)->where('product_id',$wishlist->product_id)->first();
 
         $cartData = [
             'device_id' => $device_id,
