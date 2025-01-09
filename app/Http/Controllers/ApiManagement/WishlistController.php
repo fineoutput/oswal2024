@@ -424,7 +424,7 @@ class WishlistController extends Controller
                         })
                         ->first();
                         $type_price = DB::table('type_subs')->where('type_id',$typeData->id)->get();
-                         return $type_price;
+                        //  return $type_price;
                         $typeData->selling_price = $type_price;
                     }
 
