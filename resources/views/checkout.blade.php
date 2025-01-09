@@ -1076,212 +1076,212 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
         return parseFloat(cleanedValue);
     }
 
-//     function placeOrder() {
-//         const userInfo = document.getElementById('user-info');
-//         const name = userInfo.getAttribute('data-name');
-//         const email = userInfo.getAttribute('data-email');
-//         const phone = userInfo.getAttribute('data-phone');
-//         // console.log(phone);
-//         // Get the current URL
-//         const currentUrl = window.location.href;
+    function placeOrder() {
+        const userInfo = document.getElementById('user-info');
+        const name = userInfo.getAttribute('data-name');
+        const email = userInfo.getAttribute('data-email');
+        const phone = userInfo.getAttribute('data-phone');
+        // console.log(phone);
+        // Get the current URL
+        const currentUrl = window.location.href;
 
-//         // Parse the query string for address_id
-//         const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
-//         let addressId = urlParams.get('address_id'); // Use let to allow reassignment
-//         console.log('Extracted addressId:', addressId);
+        // Parse the query string for address_id
+        const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
+        let addressId = urlParams.get('address_id'); // Use let to allow reassignment
+        console.log('Extracted addressId:', addressId);
 
-//         // Fallback to 0 if addressId is missing
-//         if (!addressId) {
-//             addressId = 0;
-//         }
+        // Fallback to 0 if addressId is missing
+        if (!addressId) {
+            addressId = 0;
+        }
 
-//         $.ajax({
-//             url: "{{ route('checkout.place-order') }}",
-//             type: 'POST',
-//             data: $('#placeOrder').serialize() + '&address_id=' + addressId,
-//             success: function(response) {
-//                 // console.log();
-//                 if (!response.success) {
+        $.ajax({
+            url: "{{ route('checkout.place-order') }}",
+            type: 'POST',
+            data: $('#placeOrder').serialize() + '&address_id=' + addressId,
+            success: function(response) {
+                // console.log();
+                if (!response.success) {
 
-// showNotification(response.message, 'error');
-// return;
-// }
+showNotification(response.message, 'error');
+return;
+}
 
-//                 if (response.data.form != 1) {
+                if (response.data.form != 1) {
 
-//                     var options = {
-//                         "key": "{{ config('services.razorpay.key_id') }}",
-//                         "amount": response.data.amount,
-//                         "currency": "INR",
-//                         "name": "OSwal",
-//                         "description": "Test Transaction",
-//                         "image": "{{ asset('images/oswal-logo.png') }}",
-//                         "order_id": response.data.razor_order_id, // Razorpay Order ID
-//                         "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
-//                         "prefill": {
-//                             "name": name,
-//                             "email": email,
-//                             "phone": phone
-//                         },
-//                         "notes": {
-//                             "address": "Razorpay Corporate Office"
-//                         },
-//                         "theme": {
-//                             "color": "#3399cc"
-//                         }
-//                     };
+                    var options = {
+                        "key": "{{ config('services.razorpay.key_id') }}",
+                        "amount": response.data.amount,
+                        "currency": "INR",
+                        "name": "OSwal",
+                        "description": "Test Transaction",
+                        "image": "{{ asset('images/oswal-logo.png') }}",
+                        "order_id": response.data.razor_order_id, // Razorpay Order ID
+                        "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+                        "prefill": {
+                            "name": name,
+                            "email": email,
+                            "phone": phone
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
 
-//                     // Initialize and open the Razorpay payment gateway
-//                     var rzp1 = new Razorpay(options);
-//                     rzp1.open();
-//                 } else {
-
-
-//                     // Construct the route dynamically
-//                     const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
-//                     const orderId = response.data.order_id; // Use the order_id from the response
-//                     const redirectUrl = `${baseUrl}/${orderId}`;
-
-//                     console.log('Redirecting to:', redirectUrl);
-
-//                     // Perform the redirect
-//                     window.location.href = redirectUrl;
-//                 }
+                    // Initialize and open the Razorpay payment gateway
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } else {
 
 
-//             },
-//             error: function(xhr) {
-//                 console.error('An error occurred while processing the payment option.');
-//             }
-//         });
+                    // Construct the route dynamically
+                    const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
+                    const orderId = response.data.order_id; // Use the order_id from the response
+                    const redirectUrl = `${baseUrl}/${orderId}`;
 
+                    console.log('Redirecting to:', redirectUrl);
+
+                    // Perform the redirect
+                    window.location.href = redirectUrl;
+                }
+
+
+            },
+            error: function(xhr) {
+                console.error('An error occurred while processing the payment option.');
+            }
+        });
+
+    }
+
+
+// function placeOrder() {
+//     const userInfo = document.getElementById('user-info');
+//     const name = userInfo.getAttribute('data-name');
+//     const email = userInfo.getAttribute('data-email');
+//     const phone = userInfo.getAttribute('data-phone');
+
+//     // Get the current URL
+//     const currentUrl = window.location.href;
+
+//     // Parse the query string for address_id
+//     const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
+//     let addressId = urlParams.get('address_id'); // Use let to allow reassignment
+//     console.log('Extracted addressId:', addressId);
+
+//     // Fallback to 0 if addressId is missing
+//     if (!addressId) {
+//         addressId = 0;
 //     }
 
+//     // Get user location from localStorage
+//     const userLocation = localStorage.getItem('userLocation');
 
-function placeOrder() {
-    const userInfo = document.getElementById('user-info');
-    const name = userInfo.getAttribute('data-name');
-    const email = userInfo.getAttribute('data-email');
-    const phone = userInfo.getAttribute('data-phone');
+//     // Check if location is available in localStorage
+//     if (!userLocation) {
+//         alert("Location is not available. Please enable location access.");
+//         return; // Stop the order process if location is not available
+//     }
 
-    // Get the current URL
-    const currentUrl = window.location.href;
+//     // Prepare the data to send with the AJAX request
+//     $.ajax({
+//         url: "{{ route('checkout.place-order') }}",
+//         type: 'POST',
+//         data: $('#placeOrder').serialize() + '&address_id=' + addressId + '&user_location=' + userLocation,
+//         success: function(response) {
+//             if (!response.success) {
+//                 showNotification(response.message, 'error');
+//                 return;
+//             }
 
-    // Parse the query string for address_id
-    const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
-    let addressId = urlParams.get('address_id'); // Use let to allow reassignment
-    console.log('Extracted addressId:', addressId);
+//             if (response.data.form != 1) {
+//                 var options = {
+//                     "key": "{{ config('services.razorpay.key_id') }}",
+//                     "amount": response.data.amount,
+//                     "currency": "INR",
+//                     "name": "OSwal",
+//                     "description": "Test Transaction",
+//                     "image": "{{ asset('images/oswal-logo.png') }}",
+//                     "order_id": response.data.razor_order_id, // Razorpay Order ID
+//                     "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
+//                     "prefill": {
+//                         "name": name,
+//                         "email": email,
+//                         "phone": phone
+//                     },
+//                     "notes": {
+//                         "address": "Razorpay Corporate Office"
+//                     },
+//                     "theme": {
+//                         "color": "#3399cc"
+//                     }
+//                 };
 
-    // Fallback to 0 if addressId is missing
-    if (!addressId) {
-        addressId = 0;
-    }
+//                 // Initialize and open the Razorpay payment gateway
+//                 var rzp1 = new Razorpay(options);
+//                 rzp1.open();
+//             } else {
+//                 // Construct the route dynamically
+//                 const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
+//                 const orderId = response.data.order_id; // Use the order_id from the response
+//                 const redirectUrl = `${baseUrl}/${orderId}`;
 
-    // Get user location from localStorage
-    const userLocation = localStorage.getItem('userLocation');
+//                 console.log('Redirecting to:', redirectUrl);
 
-    // Check if location is available in localStorage
-    if (!userLocation) {
-        alert("Location is not available. Please enable location access.");
-        return; // Stop the order process if location is not available
-    }
-
-    // Prepare the data to send with the AJAX request
-    $.ajax({
-        url: "{{ route('checkout.place-order') }}",
-        type: 'POST',
-        data: $('#placeOrder').serialize() + '&address_id=' + addressId + '&user_location=' + userLocation,
-        success: function(response) {
-            if (!response.success) {
-                showNotification(response.message, 'error');
-                return;
-            }
-
-            if (response.data.form != 1) {
-                var options = {
-                    "key": "{{ config('services.razorpay.key_id') }}",
-                    "amount": response.data.amount,
-                    "currency": "INR",
-                    "name": "OSwal",
-                    "description": "Test Transaction",
-                    "image": "{{ asset('images/oswal-logo.png') }}",
-                    "order_id": response.data.razor_order_id, // Razorpay Order ID
-                    "callback_url": "{{ url('/checkout/verify-payment') }}", // Callback for payment verification
-                    "prefill": {
-                        "name": name,
-                        "email": email,
-                        "phone": phone
-                    },
-                    "notes": {
-                        "address": "Razorpay Corporate Office"
-                    },
-                    "theme": {
-                        "color": "#3399cc"
-                    }
-                };
-
-                // Initialize and open the Razorpay payment gateway
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            } else {
-                // Construct the route dynamically
-                const baseUrl = "{{ url('checkout/order-success') }}"; // Base URL without parameters
-                const orderId = response.data.order_id; // Use the order_id from the response
-                const redirectUrl = `${baseUrl}/${orderId}`;
-
-                console.log('Redirecting to:', redirectUrl);
-
-                // Perform the redirect
-                window.location.href = redirectUrl;
-            }
-        },
-        error: function(xhr) {
-            console.error('An error occurred while processing the payment option.');
-        }
-    });
+//                 // Perform the redirect
+//                 window.location.href = redirectUrl;
+//             }
+//         },
+//         error: function(xhr) {
+//             console.error('An error occurred while processing the payment option.');
+//         }
+//     });
 
     // Function to get the user's location if not already stored
-    function requestLocation() {
-        if (localStorage.getItem("userLocation")) {
-            console.log("Location already stored:", localStorage.getItem("userLocation"));
-            return; // Exit the function if location is already stored
-        }
+//     function requestLocation() {
+//         if (localStorage.getItem("userLocation")) {
+//             console.log("Location already stored:", localStorage.getItem("userLocation"));
+//             return; // Exit the function if location is already stored
+//         }
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+//         if (navigator.geolocation) {
+//             navigator.geolocation.getCurrentPosition(
+//                 (position) => {
+//                     const latitude = position.coords.latitude;
+//                     const longitude = position.coords.longitude;
 
-                    // Store the location in local storage
-                    const userLocation = JSON.stringify({ latitude, longitude });
-                    localStorage.setItem("userLocation", userLocation);
+//                     // Store the location in local storage
+//                     const userLocation = JSON.stringify({ latitude, longitude });
+//                     localStorage.setItem("userLocation", userLocation);
 
-                    console.log("Location stored:", userLocation);
-                },
-                (error) => {
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            alert("User denied the request for Geolocation.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            alert("Location information is unavailable.");
-                            break;
-                        case error.TIMEOUT:
-                            alert("The request to get user location timed out.");
-                            break;
-                        default:
-                            alert("An unknown error occurred.");
-                    }
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
+//                     console.log("Location stored:", userLocation);
+//                 },
+//                 (error) => {
+//                     switch (error.code) {
+//                         case error.PERMISSION_DENIED:
+//                             alert("User denied the request for Geolocation.");
+//                             break;
+//                         case error.POSITION_UNAVAILABLE:
+//                             alert("Location information is unavailable.");
+//                             break;
+//                         case error.TIMEOUT:
+//                             alert("The request to get user location timed out.");
+//                             break;
+//                         default:
+//                             alert("An unknown error occurred.");
+//                     }
+//                 }
+//             );
+//         } else {
+//             alert("Geolocation is not supported by this browser.");
+//         }
+//     }
 
-    requestLocation();
-}
+//     requestLocation();
+// }
 
 
     function convertCurrencyToFloat(value) {
