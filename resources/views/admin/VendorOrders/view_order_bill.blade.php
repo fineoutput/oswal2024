@@ -112,16 +112,12 @@
               <td>{{ $item->vendortype->gst_percentage ?? 18}}%</td>
               <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
               <td>
-                @if($address && $address->state == 29 && $item->orderDetails && $item->orderDetails->gst_percentage_price && $item->quantity)
-                Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}<br>
-                Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}
-            @else
-                @if($item->orderDetails && $item->orderDetails->gst_percentage_price && $item->quantity)
-                    Rs. {{ $item->orderDetails->gst_percentage_price * $item->quantity }}
+                @if($address->state == 29)
+                  Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}<br>
+                  Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}
                 @else
-                    Rs. 0
+                  Rs. {{ $item->orderDetails->gst_percentage_price * $item->quantity }}
                 @endif
-            @endif
               </td>
               <td>Rs. {{ $item->amount }}</td>
             </tr>
