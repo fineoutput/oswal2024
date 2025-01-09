@@ -1657,10 +1657,12 @@ class OrderController extends Controller
                         }
                     }
                     
-                    $rating_avg = 0;
+                   
                         if($order->order_status == 4){
                             $rating_avg = DB::table('order_ratings')->where('order_id', $order->id)->avg('rating');
                             $rating_avg = number_format((float)$rating_avg, 1, '.', '');
+                        }else{
+                            $rating_avg = 0;
                         }
                     
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
