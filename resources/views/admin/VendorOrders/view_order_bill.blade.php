@@ -116,7 +116,7 @@
                   Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}<br>
                   Rs. {{ ($item->orderDetails->gst_percentage_price * $item->quantity) / 2 }}
                 @else
-                  Rs. {{ $item->vendortype->gst_percentage_price * $item->quantity }}
+                  Rs. {{ $item->orderDetails->gst_percentage_price * $item->quantity }}
                 @endif
               </td>
               <td>Rs. {{ $item->amount }}</td>
