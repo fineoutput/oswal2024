@@ -121,6 +121,8 @@
 
                                                     <th data-priority="6">Order Status</th>
 
+                                                    <th data-priority="6">Total Order Weight</th>
+
                                                     <th data-priority="6">Delivery Status</th>
 
                                                     <th data-priority="6">Order Track Id</th>
@@ -218,6 +220,8 @@
                                                                     style="font-size:13px;">Rejected</span>
                                                             @endif
                                                         </td>
+
+                                                        <td>{{$order->total_order_weight ?? ''}}</td>
 
                                                         <td>
                                                             @if ($order->delivery_status == 0)
