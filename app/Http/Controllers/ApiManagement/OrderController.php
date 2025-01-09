@@ -399,12 +399,18 @@ class OrderController extends Controller
         }
         if($user->role_type == 2){
       
-    $cod_final_amount = formatPrice(($finalAmount),false);
+        $cod_final_amount = formatPrice(($finalAmount),false);
+        $get_online_payment_status = 0;
+        $save_total = 0;
 
         }
         else{
             $cod_final_amount = formatPrice(($finalAmount + getConstant()->cod_charge),false);
+            $get_online_payment_status = 1;
+            $save_total = formatPrice(($totalSaveAmount - $totalAmount) , false);
         }
+
+
 
         $reponse['wallet_per']  = $constant->wallet_use_amount;
         $reponse['wallet_discount']  = round($walletDescount, 2);
@@ -413,11 +419,11 @@ class OrderController extends Controller
         $reponse['wallet_amount']    = round($totalwalletAmount, 2);
         $reponse['total_discount' ]  = $promo_discount + $walletDescount;
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
-        $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
+        $reponse['save_total' ]      = $save_total;
         $reponse['prepaid_final_amount']    = formatPrice($finalAmount,false);
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
-        $reponse['get_online_payment_status' ]    = 1;
+        $reponse['get_online_payment_status' ]    = $get_online_payment_status;
         
         return response()->json($reponse);
     }
@@ -489,11 +495,11 @@ class OrderController extends Controller
 
                 $query->where('is_active', 1)
     
-                    ->when($stateId, fn ($query) => $query->where('state_id', 29))
-    
-                    ->when($cityId, fn ($query) => $query->where('city_id', 629))
-    
-                    ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
+                ->when($stateId, fn ($query) => $query->where('state_id', 29))
+
+                ->when($cityId, fn ($query) => $query->where('city_id', 629))
+
+                ->when(is_null($stateId) || is_null($cityId), fn ($query) => $query->groupBy('type_name'));
     
             }])->where(function ($query) use ($userId, $deviceId) {
     
@@ -713,7 +719,7 @@ class OrderController extends Controller
         
         Order::where('id', $order->id)->update([
             'user_id'                    => $userId ?? $user->id,
-            'total_amount'               => $request->total_amount ?? $totalAmount,
+            'total_amount'               => $totalAmount,
             'sub_total'                  => $subtotal,
             'address_id'                 => $addressId,
             'promocode'                  => $promocodeId ?? '',
@@ -1823,6 +1829,10 @@ class OrderController extends Controller
                 'quantity'         => $detail->quantity,
                 'quantity_price'   => $detail->amount,
             ];
+        }
+
+        if($order->order_status = 4){
+            $deleveryBoy = [];
         }
 
         $data = [
