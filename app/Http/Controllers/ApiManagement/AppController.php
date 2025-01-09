@@ -52,14 +52,24 @@ use App\Models\Popupimage;
 class AppController extends Controller
 {
 
-    public function popupimage()
+    public function popupimage(Request $request)
     {
-        // Retrieve the latest popup image
+
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        return $user_id;
+
         $latestPopupImage = Popupimage::where('status','1')->latest()->first();
-    
-        // Check if there is any image available
         if ($latestPopupImage) {
-            // Generate the full URL for the image stored in 'uploads/popup_images' directory
             $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
     
             // Return a JSON response with the image URL
