@@ -423,7 +423,7 @@ class WishlistController extends Controller
                             $query->where('id', $data['type_id'] ?? $wishlist->type_id);
                         })
                         ->first();
-                        return $typeData;
+                        $type_price = DB::table('type_subs')->where('type_id',$typeData->id)->get();
                     }
 
         if (!$typeData) {
@@ -433,19 +433,35 @@ class WishlistController extends Controller
         $totalQtyPrice = $data['type_price'] * 1;
         $quantity = VendorType::where('id',$typeData->id)->where('product_id',$wishlist->product_id)->first();
 
-        $cartData = [
-            'device_id' => $device_id,
-            'user_id' => $user_id,
-            'category_id' => $wishlist->category_id,
-            'product_id' => $wishlist->product_id,
-            'type_id' => $typeData->id,
-            'type_price' => $typeData->selling_price,
-            'quantity' => $quantity->min_qty ?? 1,
-            'total_qty_price' => $totalQtyPrice,
-            'cart_from' => 7,
-            'ip' => $ip,
-            'curr_date' => $curDate,
-        ];
+        if($user->role_type == 1){
+            $cartData = [
+                'device_id' => $device_id,
+                'user_id' => $user_id,
+                'category_id' => $wishlist->category_id,
+                'product_id' => $wishlist->product_id,
+                'type_id' => $typeData->id,
+                'type_price' => $typeData->selling_price,
+                'quantity' => $quantity->min_qty ?? 1,
+                'total_qty_price' => $totalQtyPrice,
+                'cart_from' => 7,
+                'ip' => $ip,
+                'curr_date' => $curDate,
+            ];
+        }else{
+            $cartData = [
+                'device_id' => $device_id,
+                'user_id' => $user_id,
+                'category_id' => $wishlist->category_id,
+                'product_id' => $wishlist->product_id,
+                'type_id' => $typeData->id,
+                'type_price' => $type_price->selling_price,
+                'quantity' => $quantity->min_qty ?? 1,
+                'total_qty_price' => $totalQtyPrice,
+                'cart_from' => 7,
+                'ip' => $ip,
+                'curr_date' => $curDate,
+            ];
+        }
 
         DB::transaction(function () use ($cartData, $data) {
             Cart::create($cartData);
