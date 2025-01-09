@@ -607,9 +607,23 @@ class AppController extends Controller
             ], 400);
         }
 
+        
+        $user_id = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
+        $user = User::where('id',$user_id)->first();
+
         $data = [
-            'device_id'     =>  auth()->user()->device_id,
-            'user_id'       =>  auth()->user()->id,
+            'device_id'     =>  $user->device_id,
+            'user_id'       =>  $user->id,
             'order_id'      => $request->input('order_id'),
             'rating'        => (float) $request->input('rating'),
             'description'   => $request->input('description'),
