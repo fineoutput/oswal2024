@@ -282,7 +282,8 @@ function updateLocation() {
   const position = marker.getPosition();
   const lat = position.lat();
   const lng = position.lng();
-
+    console.log(lng, lat, "thudjfbjasdjsdbhjsbdjbk");
+    
   // Display the latitude and longitude
   document.getElementById('location').textContent = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
 }
