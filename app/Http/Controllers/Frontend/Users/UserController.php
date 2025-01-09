@@ -461,9 +461,12 @@ class UserController extends Controller
             curl_close($curl);
          
             $r = json_decode($response);
+            
             $r2 = $r->results[0]->formatted_address;
         
-           
+            // if(!empty($r2 )){
+            //     return response()->json(['status' => 'Success', 'message' => $r2]);
+            // }
             // print_r($r2);
 
         // if (!getLatLngFromAddress($custom_address)) {
