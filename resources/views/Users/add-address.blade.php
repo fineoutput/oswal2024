@@ -166,12 +166,13 @@
 
         </form>
 
-        <!-- <h1>Google Maps Location Picker</h1>
-  <div id="map"></div>
-  <p>Selected Location: <span id="location"></span></p> -->
+        <h1>Google Maps Location Picker</h1>
+<div id="map" style="height: 500px;"></div>
+<p>Selected Location: <span id="location"></span></p>
+<button class="animated-button" id="locateButton">Get current location</button>
 
-  <!-- Load Google Maps API -->
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk8VcdFTCgvhaUtTiTk_I2c3D84Rsmt_U&callback=initMap&libraries=places" async defer></script> -->
+<!-- Load Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ5Ns4p7EPERf63-neMQvYI8EqYnW3Vns&callback=initMap&libraries=places" async defer></script>
 
   <!-- Main Script -->
   <script>
@@ -243,45 +244,77 @@
     });
 
 
-    // let map, marker;
+    let map, marker;
 
-    // function initMap() {
-    //   const initialPosition = { lat: 37.7749, lng: -122.4194 }; // Default position (San Francisco)
+function initMap() {
+  const initialPosition = { lat: 37.7749, lng: -122.4194 }; // Default position (San Francisco)
 
-    //   // Initialize the map
-    //   map = new google.maps.Map(document.getElementById('map'), {
-    //     center: initialPosition,
-    //     zoom: 13,
-    //   });
+  // Initialize the map
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: initialPosition,
+    zoom: 13,
+  });
 
-    //   // Add a draggable marker
-    //   marker = new google.maps.Marker({
-    //     position: initialPosition,
-    //     map: map,
-    //     draggable: true,
-    //   });
+  // Add a draggable marker
+  marker = new google.maps.Marker({
+    position: initialPosition,
+    map: map,
+    draggable: true,
+  });
 
-    //   // Update location on marker drag
-    //   marker.addListener('dragend', updateLocation);
+  // Update location on marker drag
+  marker.addListener('dragend', updateLocation);
 
-    //   // Update location on map click
-    //   map.addListener('click', (event) => {
-    //     marker.setPosition(event.latLng);
-    //     updateLocation();
-    //   });
+  // Update location on map click
+  map.addListener('click', (event) => {
+    marker.setPosition(event.latLng);
+    updateLocation();
+  });
 
-    //   // Display the initial location
-    //   updateLocation();
-    // }
+  // Display the initial location
+  updateLocation();
 
-    // function updateLocation() {
-    //   const position = marker.getPosition();
-    //   const lat = position.lat();
-    //   const lng = position.lng();
+  // Add the "Go to My Location" button functionality
+  document.getElementById('locateButton').addEventListener('click', goToCurrentLocation);
+}
 
-    //   // Display the latitude and longitude
-    //   document.getElementById('location').textContent = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
-    // }
+function updateLocation() {
+  const position = marker.getPosition();
+  const lat = position.lat();
+  const lng = position.lng();
+
+  // Display the latitude and longitude
+  document.getElementById('location').textContent = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
+}
+
+// Function to navigate to the user's current location
+function goToCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        // Set the map center to the user's current location
+        map.setCenter(userLocation);
+        map.setZoom(15);
+
+        // Move the marker to the user's location
+        marker.setPosition(userLocation);
+
+        // Update the displayed location information
+        updateLocation();
+      },
+      () => {
+        alert('Unable to retrieve your location.');
+      }
+    );
+  } else {
+    alert('Geolocation is not supported by this browser.');
+  }
+}
   </script>
     </div>
 
