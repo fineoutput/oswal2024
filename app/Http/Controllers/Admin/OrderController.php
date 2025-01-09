@@ -232,8 +232,8 @@ foreach ($orders as $order) {
             $dilivery_boy = DeliveryBoy::where('id',$dilivery_order->user_id)->first();
 
             if ($dilivery_boy) {
-                $this->sendPushNotification($dilivery_boy->fcm_token, $order_status);
-                $this->sendEmailNotification($dilivery_boy, $order, $order_status);
+                $this->sendPushNotifications($dilivery_boy->fcm_token, $order_status);
+                // $this->sendEmailNotification($dilivery_boy, $order, $order_status);
             }
 
         }
@@ -276,6 +276,63 @@ foreach ($orders as $order) {
             case 5:
                 $title = 'Order Cancelled';
                 $message = 'Your order has been cancelled.';
+                break;
+            // Add cases for other types if needed
+        }
+
+        // $payload = [
+        //     'message' => [
+        //         'token' => $fcm_token,
+        //         'notification' => [
+        //             'body' => $message,
+        //             'title' => $title,
+        //         ],
+        //     ],
+        // ];
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+       
+        // if ($response->successful()) {
+
+        //     // return $response->body(); 
+        //     return true;
+        // } else {
+
+        //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+        // }
+     
+    }
+
+    private function sendPushNotifications($fcm_token, $type)
+    {
+
+        $title = '';
+        $message = '';
+
+        switch ($type) {
+            case 3:
+                $title = 'Order Dispatched';
+                $message = 'Your have Received an Order.';
+                break;
+            case 4:
+                $title = 'Order Delivered';
+                $message = 'Order delivered successfully.';
                 break;
             // Add cases for other types if needed
         }
