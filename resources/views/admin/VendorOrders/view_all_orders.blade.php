@@ -221,7 +221,7 @@
                                                             @endif
                                                         </td>
 
-                                                        <td>{{$order->total_order_weight ?? ''}}</td>
+                                                        <td>{{ number_format($order->total_order_weight / 1000, 2) ?? '' }} kg</td>
 
                                                         <td>
                                                             @if ($order->delivery_status == 0)
