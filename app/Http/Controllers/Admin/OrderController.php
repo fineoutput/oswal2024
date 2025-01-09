@@ -170,7 +170,7 @@ foreach ($orders as $order) {
 
         $order->save();
 
-        if ($order_status == 2 || $order_status == 3 || $order_status == 4) {
+        if ($order_status == 2) {
             $dilivery_order = TransferOrder::where('order_id',$order->id)->first();
             return $dilivery_order;
             $dilivery_boy = DeliveryBoy::where('id',$dilivery_order->user_id)->first();
