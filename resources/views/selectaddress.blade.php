@@ -125,7 +125,7 @@
                                     class="fa fa-spinner fa-spin"></i>Loading</button>
 
                             <a href="{{ route('user.add-address', ['redirect' => 'checkout']) }}">
-                                <button onclick="requestLocation()" class="animated-button">
+                                <button class="animated-button">
                                     <span>Add New Address</span>
                                     <span></span>
                                 </button>
@@ -256,47 +256,47 @@
 @endsection
 <script>
 
-function requestLocation() {
-        // Check if location is already stored in local storage
-        if (localStorage.getItem("userLocation")) {
-            console.log("Location already stored:", localStorage.getItem("userLocation"));
-            return; // Exit the function if location is already stored
-        }
+// function requestLocation() {
+//         // Check if location is already stored in local storage
+//         if (localStorage.getItem("userLocation")) {
+//             console.log("Location already stored:", localStorage.getItem("userLocation"));
+//             return; // Exit the function if location is already stored
+//         }
 
-        // If location is not stored, request the user's location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+//         // If location is not stored, request the user's location
+//         if (navigator.geolocation) {
+//             navigator.geolocation.getCurrentPosition(
+//                 (position) => {
+//                     const latitude = position.coords.latitude;
+//                     const longitude = position.coords.longitude;
 
-                    // Store the location in local storage
-                    const userLocation = JSON.stringify({ latitude, longitude });
-                    localStorage.setItem("userLocation", userLocation);
+//                     // Store the location in local storage
+//                     const userLocation = JSON.stringify({ latitude, longitude });
+//                     localStorage.setItem("userLocation", userLocation);
 
-                    console.log("Location stored:", userLocation);
-                },
-                (error) => {
-                    // Handle location access errors
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            // alert("User denied the request for Geolocation.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            alert("Location information is unavailable.");
-                            break;
-                        case error.TIMEOUT:
-                            alert("The request to get user location timed out.");
-                            break;
-                        default:
-                            alert("An unknown error occurred.");
-                    }
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
+//                     console.log("Location stored:", userLocation);
+//                 },
+//                 (error) => {
+//                     // Handle location access errors
+//                     switch (error.code) {
+//                         case error.PERMISSION_DENIED:
+//                             // alert("User denied the request for Geolocation.");
+//                             break;
+//                         case error.POSITION_UNAVAILABLE:
+//                             alert("Location information is unavailable.");
+//                             break;
+//                         case error.TIMEOUT:
+//                             alert("The request to get user location timed out.");
+//                             break;
+//                         default:
+//                             alert("An unknown error occurred.");
+//                     }
+//                 }
+//             );
+//         } else {
+//             alert("Geolocation is not supported by this browser.");
+//         }
+//     }
 
 
     
