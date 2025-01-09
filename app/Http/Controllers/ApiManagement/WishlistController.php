@@ -207,8 +207,6 @@ class WishlistController extends Controller
             }
     
     
-           
-    
             // Process each type data
             foreach ($typeData as $type) {
     
@@ -219,7 +217,7 @@ class WishlistController extends Controller
                     foreach ($subTypes as $subType) {
                         $percentOff = round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp);
                         $sub_percent_off = ($subType->mrp > 0) ? round((($subType->mrp - $subType->selling_price) * 100) / $subType->mrp) : 0;
-                        $range[] = [
+                        $range = [
                             'type_mrp' => $subType->mrp,
                             'gst_percentage' => $subType->gst_percentage ?? 0,
                             'gst_percentage_price' => $subType->gst_percentage_price ?? 0,
