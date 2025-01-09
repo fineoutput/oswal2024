@@ -65,10 +65,16 @@ class AppController extends Controller
                 $role_type = $userDetails->role_type;
             }
         }
-
-        return $user_id;
-
+        $user = User::where('id',$user_id)->first();
         $latestPopupImage = Popupimage::where('status','1')->latest()->first();
+
+        if($user->role_type == 2){
+            return response()->json([
+                'success' => false,
+                // 'image_url' => $imageUrl
+            ], 200);
+        }else{
+
         if ($latestPopupImage) {
             $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
     
@@ -78,6 +84,7 @@ class AppController extends Controller
                 'image_url' => $imageUrl
             ], 200);
         }
+    }
     
         // Return a failure response if no image is found
         return response()->json([
