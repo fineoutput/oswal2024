@@ -340,7 +340,6 @@ class WishlistController extends Controller
                 $role_type = $userDetails->role_type;
             }
         }
-        return $user_id;
 
         $validator = Validator::make($request->all(), [
             
