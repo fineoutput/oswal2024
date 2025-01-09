@@ -228,6 +228,7 @@ class WishlistController extends Controller
                             'start_range' => $subType->start_range ?? 1,
                             'end_range' => $subType->end_range ?? 1000,
                             'percent_off' => $percentOff,
+                            'min_qty' => $type->min_qty,
 
                         ];
                     }
