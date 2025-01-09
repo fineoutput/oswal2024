@@ -80,9 +80,9 @@ class AppController extends Controller
                     'message' => 'Role type 2 does not have permission to view image'
                 ], 403);  // You can use a 403 Forbidden HTTP status code
             }
-
+            return $user_id;
             // If the user is logged in and role_type is not 2 (i.e. role_type == 1 or user is logged in)
-            if ($role_type == 1 || $user->id == 0) {
+            if ($role_type == 1 || $user_id == 0) {
                 // Check if there is a valid popup image
                 if ($latestPopupImage) {
                     $imageUrl = asset('uploads/popup_images/' . basename($latestPopupImage->image));
