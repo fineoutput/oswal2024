@@ -245,7 +245,7 @@ foreach ($orders as $order) {
                 ->first();
     
             if ($vendorStatus) {
-                if ($vendorStatus->status == 1) {
+                if ($vendorStatus->status == 1 && $fineltotalweight >= $reward->weight) {
                     $status = 'applied';
                 } elseif ($vendorStatus->status == 2) {
                     $status = 'accepted';
