@@ -658,18 +658,18 @@ class CheckOutController extends Controller
     //     $longitude = $location['longitude'];
     // }
 
-    // // Check if address_id is not 0
-    // if ($request->address_id != 0) {
-    //     // Fetch the order based on order_id
-    //     $order = Order::where('id', $request->order_id)->first();
+    // Check if address_id is not 0
+    if ($request->address_id != 0) {
+        // Fetch the order based on order_id
+        $order = Order::where('id', $request->order_id)->first();
 
-    //     // Update the order with address_id, latitude, and longitude
-    //     $order->update([
-    //         'address_id' => $request->address_id,
-    //         'latitude' => $latitude,
-    //         'longitude' => $longitude,
-    //     ]);
-    // }
+        // Update the order with address_id, latitude, and longitude
+        $order->update([
+            'address_id' => $request->address_id,
+            // 'latitude' => $latitude,
+            // 'longitude' => $longitude,
+        ]);
+    }
 
     // Process payment options
     if ($request->payment_option == 1) {
