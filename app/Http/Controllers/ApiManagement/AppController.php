@@ -79,7 +79,7 @@ class AppController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Role type 2 does not have permission to view image'
-            ], 403);  // HTTP status code 403 (Forbidden)
+            ], 200);  // HTTP status code 403 (Forbidden)
         }
         
         // If the user is logged in with role_type 1 or user_id is 0 (non-logged-in user)
