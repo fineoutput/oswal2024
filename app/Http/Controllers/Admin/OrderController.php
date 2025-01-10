@@ -384,8 +384,54 @@ foreach ($orders as $order) {
     }
 
 
-    private function sendPushNotificationss($fcm_token) {
+    private function sendPushNotificationDelivery($fcm_token,$type) {
 
+        $title = '';
+        $message = '';
+
+        switch ($type) {
+            case 2:
+                $title = 'Order Accepted';
+                $message = 'Order Received.';
+                break;
+            case 3:
+                $title = 'Order Dispatched';
+                $message = 'Your order has been dispatched.';
+                break;
+            case 4:
+                $title = 'Order Delivered';
+                $message = 'Your order has been delivered successfully.';
+                break;
+            case 5:
+                $title = 'Order Cancelled';
+                $message = 'Your order has been cancelled.';
+                break;
+            // Add cases for other types if needed
+        }
+
+        // $payload = [
+        //     'message' => [
+        //         'token' => $fcm_token,
+        //         'notification' => [
+        //             'body' => $message,
+        //             'title' => $title,
+        //         ],
+        //     ],
+        // ];
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseServiceDelivery->sendNotificationToDelivery($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
        
         
     }
@@ -700,8 +746,21 @@ foreach ($orders as $order) {
                 'added_by' => $addedby,
                 'date' => $cur_date
             ];
-
+            $deliveryfcm = DeliveryBoy::where('id', $delivery_user_id)->first();
+            $deliverytype = Order::where('id', $order_id)->first();
+            
             $last_id = TransferOrder::create($data_insert)->id;
+
+            if ($deliveryfcm && $deliverytype) {
+                $this->sendPushNotificationDelivery($deliveryfcm->fcm_token, $deliverytype->order_status);
+            } else {
+                if (!$deliveryfcm) {
+                    Log::warning("DeliveryBoy not found for user ID: $delivery_user_id");
+                }
+                if (!$deliverytype) {
+                    Log::warning("Order not found for order ID: $order_id");
+                }
+            }
 
             $order->update(['delivery_status' => 1]);
 

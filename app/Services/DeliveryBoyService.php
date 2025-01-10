@@ -94,7 +94,7 @@ function sendPushNotification($token, $title, $body)
 
     // send a notification to a specific user
 
-    public function sendNotificationToUser(string $fcmToken, string $title, string $body, string $image = null , array $data = [])
+    public function sendNotificationToDelivery(string $fcmToken, string $title, string $body, string $image = null , array $data = [])
     {
         
         $message = CloudMessage::withTarget('token', $fcmToken)
