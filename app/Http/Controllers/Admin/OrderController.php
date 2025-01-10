@@ -222,16 +222,18 @@ foreach ($orders as $order) {
                         }
                     }
 
+                    if($role_type == 2 ){
+
+                        $this->checkEligibleAndNotify($vendor_user_id);
+                    }
+
                     }
                 }
 
                 } //role type end
 
                 
-            if($role_type == 2 ){
-
-                $this->checkEligibleAndNotify($user->id);
-            }
+         
 
             }
 
