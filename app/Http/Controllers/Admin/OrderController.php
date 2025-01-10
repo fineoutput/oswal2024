@@ -391,20 +391,12 @@ foreach ($orders as $order) {
 
         switch ($type) {
             case 2:
-                $title = 'Order Accepted';
-                $message = 'Order Received.';
-                break;
-            case 3:
-                $title = 'Order Dispatched';
-                $message = 'Your order has been dispatched.';
+                $title = 'Received';
+                $message = 'You have Received an Order.';
                 break;
             case 4:
                 $title = 'Order Delivered';
-                $message = 'Your order has been delivered successfully.';
-                break;
-            case 5:
-                $title = 'Order Cancelled';
-                $message = 'Your order has been cancelled.';
+                $message = 'You Have delivered Order successfully.';
                 break;
             // Add cases for other types if needed
         }
