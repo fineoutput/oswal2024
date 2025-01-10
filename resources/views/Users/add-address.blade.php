@@ -170,7 +170,7 @@
 <div id="map" style="height: 500px;"></div>
 <p>Selected Location: <span id="location"></span></p>
 <button class="animated-button" id="locateButton">Get current location</button>
-
+</div>
 <!-- Load Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ5Ns4p7EPERf63-neMQvYI8EqYnW3Vns&callback=initMap&libraries=places" async defer></script>
 
@@ -195,53 +195,79 @@
         }
     });
 
-   document.addEventListener("DOMContentLoaded", () => {
-        // Function to request and store location
-        function requestLocation() {
-            // Check if location is already stored in local storage
-            if (localStorage.getItem("userLocation")) {
-                console.log("Location already stored:", localStorage.getItem("userLocation"));
-                return; // Exit the function if location is already stored
-            }
-
-            // If location is not stored, request the user's location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
-
-                        // Store the location in local storage
-                        const userLocation = JSON.stringify({ latitude, longitude });
-                        localStorage.setItem("userLocation", userLocation);
-
-                        console.log("Location stored:", userLocation);
-                    },
-                    (error) => {
-                        // Handle location access errors
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                alert("User denied the request for Geolocation.");
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                alert("Location information is unavailable.");
-                                break;
-                            case error.TIMEOUT:
-                                alert("The request to get user location timed out.");
-                                break;
-                            default:
-                                alert("An unknown error occurred.");
-                        }
+    document.addEventListener("DOMContentLoaded", () => {
+    // Function to request and store location
+    function requestLocation() {
+        // Clear previously denied state if present
+        if (navigator.permissions) {
+            navigator.permissions
+                .query({ name: "geolocation" })
+                .then((permissionStatus) => {
+                    // If permission was previously denied or prompt was dismissed, ask again
+                    if (permissionStatus.state === "denied") {
+                        console.log("Clearing previous denied state for Geolocation.");
+                        localStorage.removeItem("userLocation"); // Remove stored location if any
                     }
-                );
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
+
+                    // Request location
+                    getLocation();
+                })
+                .catch((error) => {
+                    console.error("Error checking permissions:", error);
+                    // Fallback to requesting location
+                    getLocation();
+                });
+        } else {
+            // Fallback if `permissions` API is not supported
+            getLocation();
+        }
+    }
+
+    function getLocation() {
+        // Check if location is already stored in local storage
+        if (localStorage.getItem("userLocation")) {
+            console.log("Location already stored:", localStorage.getItem("userLocation"));
+            return; // Exit the function if location is already stored
         }
 
-        // Call the function to request location
-        requestLocation();
-    });
+        // If location is not stored, request the user's location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Store the location in local storage
+                    const userLocation = JSON.stringify({ latitude, longitude });
+                    localStorage.setItem("userLocation", userLocation);
+
+                    console.log("Location stored:", userLocation);
+                },
+                (error) => {
+                    // Handle location access errors
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("User denied the request for Geolocation.");
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            alert("Location information is unavailable.");
+                            break;
+                        case error.TIMEOUT:
+                            alert("The request to get user location timed out.");
+                            break;
+                        default:
+                            alert("An unknown error occurred.");
+                    }
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    // Call the function to request location
+    requestLocation();
+});
 
 
     let map, marker;
@@ -317,53 +343,11 @@ function goToCurrentLocation() {
   }
 }
   </script>
-    </div>
+   
 
 
-    <script>
-        function requestLocation() {
-        // Check if location is already stored in local storage
-        if (localStorage.getItem("userLocation")) {
-            console.log("Location already stored:", localStorage.getItem("userLocation"));
-            return; // Exit the function if location is already stored
-        }
-
-        // If location is not stored, request the user's location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    // Store the location in local storage
-                    const userLocation = JSON.stringify({ latitude, longitude });
-                    localStorage.setItem("userLocation", userLocation);
-
-                    console.log("Location stored:", userLocation);
-                },
-                (error) => {
-                    // Handle location access errors
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            // alert("User denied the request for Geolocation.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            alert("Location information is unavailable.");
-                            break;
-                        case error.TIMEOUT:
-                            alert("The request to get user location timed out.");
-                            break;
-                        default:
-                            alert("An unknown error occurred.");
-                    }
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-    requestLocation();
-    </script>
+    
+    
 
 @endsection
 
