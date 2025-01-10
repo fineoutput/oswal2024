@@ -230,16 +230,21 @@ foreach ($orders as $order) {
         }
 
         if ($order_status == 3) {
-            $dilivery_order = TransferOrder::where('order_id',$order->id)->first();
-            // return $dilivery_order;
-            if($dilivery_order->user_id){
-            $dilivery_boy = DeliveryBoy::where('id',$dilivery_order->user_id)->first();
-        }
-            if ($dilivery_boy) {
-                $this->sendPushNotifications($dilivery_boy->fcm_token, $order_status);
-                // $this->sendEmailNotification($dilivery_boy, $order, $order_status);
+            // Attempt to get the delivery order
+            $dilivery_order = TransferOrder::where('order_id', $order->id)->first();
+        
+            // Check if the delivery order exists
+            if ($dilivery_order && $dilivery_order->user_id) {
+                // Attempt to get the delivery boy
+                $dilivery_boy = DeliveryBoy::where('id', $dilivery_order->user_id)->first();
+        
+                // If the delivery boy is found, send a push notification
+                if ($dilivery_boy) {
+                    $this->sendPushNotifications($dilivery_boy->fcm_token, $order_status);
+                    // Optionally send email notification
+                    // $this->sendEmailNotification($dilivery_boy, $order, $order_status);
+                }
             }
-
         }
 
         if($routeName == 'order.vendor.update-status'){
