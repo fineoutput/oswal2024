@@ -194,9 +194,10 @@ foreach ($orders as $order) {
 
                 if($role_type == 2){
                 $vendortotalWeight = DB::table('tbl_order1')->where('order_status', 4)->where('user_id', $vendor_user_id)->sum('total_order_weight'); 
+                $finelvendortotalWeight =  $vendortotalWeight / 1000;
                 // Log::info("Total Weight: " . $vendortotalWeight);
-                if($vendortotalWeight > 0){
-                $rewards = Reward::where('weight', '<=', $vendortotalWeight)->where('is_active',1)
+                if($finelvendortotalWeight > 0){
+                $rewards = Reward::where('weight', '<=', $finelvendortotalWeight)->where('is_active',1)
                 ->orderBy('weight', 'desc')
                 ->get(); 
                 if ($rewards) {
