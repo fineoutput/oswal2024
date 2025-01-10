@@ -226,7 +226,7 @@ foreach ($orders as $order) {
 
                         $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
                     $user = User::where('id',$vendor_user_id)->first();
-                    // return $user; 
+                    return $user; 
     
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'User not authenticated']);
