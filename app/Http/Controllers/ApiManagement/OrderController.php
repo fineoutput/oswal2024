@@ -972,7 +972,7 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            if($user->role_type == 2){
+            if($user->role_type == 2 ){
 
                 $this->checkEligibleAndNotify($user->id);
             }
@@ -2019,6 +2019,7 @@ class OrderController extends Controller
         }
 
         $totalWeight = $user->orders->sum('total_order_weight');
+        $fineltotalweight = $totalWeight / 1000;
         $eligibleRewards = [];
         $notificationSent = false;
     
@@ -2033,13 +2034,13 @@ class OrderController extends Controller
                     $status = 'applied';
                 } elseif ($vendorStatus->status == 2) {
                     $status = 'accepted';
-                } elseif ($totalWeight >= $reward->weight) {
+                } elseif ($fineltotalweight >= $reward->weight) {
                     $status = 'eligible';
                     $eligibleRewards[] = $reward; 
                 } else {
                     $status = 'not eligible';
                 }
-            } elseif ($totalWeight >= $reward->weight) {
+            } elseif ($fineltotalweight >= $reward->weight) {
                 $status = 'eligible';
                 $eligibleRewards[] = $reward; 
             } else {
@@ -2059,7 +2060,7 @@ class OrderController extends Controller
 
     private function sendPushNotification($fcm_token) {
 
-        $title = 'ðŸŽ‰ Reward Alert! ðŸŽ‰';
+        $title = 'Reward Alert!';
         $message = 'Congratulations! You are now eligible for a special reward! Tap to claim it now.';
 
         if($fcm_token != null){
