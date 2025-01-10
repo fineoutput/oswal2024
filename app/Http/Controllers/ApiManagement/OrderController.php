@@ -972,11 +972,6 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            if($user->role_type == 2 ){
-
-                $this->checkEligibleAndNotify($user->id);
-            }
-
             return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
         }
 
@@ -1039,6 +1034,8 @@ class OrderController extends Controller
         return response()->json(['status'=>true ,'message' => 'Order successfully created', 'data'=> $data],200);   
     }
 
+    
+   
     
 
     public function verify_payment()
@@ -1559,10 +1556,10 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            if($user->role_type == 2){
+            // if($user->role_type == 2){
 
-                $this->checkEligibleAndNotify($user->id);
-            }
+            //     $this->checkEligibleAndNotify($user->id);
+            // }
 
             return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
         } else {
