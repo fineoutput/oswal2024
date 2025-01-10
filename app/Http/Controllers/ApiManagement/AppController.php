@@ -824,6 +824,7 @@ class AppController extends Controller
         // }
 
         $totalWeight = $user->orders->sum('total_order_weight');
+        $fineltotalweight = $totalWeight / 1000;
 
         $data = [];
 
@@ -849,7 +850,7 @@ class AppController extends Controller
                 }
 
                 
-            } elseif ($totalWeight >= $reward->weight) {
+            } elseif ($fineltotalweight >= $reward->weight) {
 
                 $status = 'eligible';
 
@@ -864,7 +865,7 @@ class AppController extends Controller
                 'image'  => asset($reward->image),
                 'price' => $reward->price,
                 'weight' => $reward->weight.'KG',
-                'order_weight' => $totalWeight.'KG',
+                'order_weight' => $fineltotalweight.'KG',
                 'status' => $status,
             ];
         }
