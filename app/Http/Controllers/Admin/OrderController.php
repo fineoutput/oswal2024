@@ -202,26 +202,6 @@ foreach ($orders as $order) {
                 ->get(); 
                 if ($rewards) {
 
-                    foreach ($rewards as $reward) {
-                        // Log::info("Reward Name: " . $reward->name);
-
-                        $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
-    
-                        if(!$AlreadyReward){   
-                            // Log::info("Reward Given: " . $reward->name);           
-                        DB::table('vendor_rewards')->insert([
-                        'vendor_id'     => $vendor_user_id,
-                        'order_id'      => $orderId,
-                        'reward_name'   => $reward->name,
-                        'reward_image'  => $reward->image,
-                        'reward_id'     => $reward->id,
-                        'status'     => 1,
-                        'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
-                         ]);
-    
-                        }
-                    }
-
                     if($role_type == 2 ){
 
                         $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
@@ -245,7 +225,7 @@ foreach ($orders as $order) {
                 ->first();
     
             if ($vendorStatus) {
-                if ($vendorStatus->status == 1 && $fineltotalweight >= $reward->weight) {
+                if ($vendorStatus->status == 1 ) {
                     $status = 'applied';
                 } elseif ($vendorStatus->status == 2) {
                     $status = 'accepted';
@@ -292,6 +272,28 @@ foreach ($orders as $order) {
                         
                         // $this->checkEligibleAndNotify($vendor_user_id);
                     }
+
+                    foreach ($rewards as $reward) {
+                        // Log::info("Reward Name: " . $reward->name);
+
+                        $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
+    
+                        if(!$AlreadyReward){   
+                            // Log::info("Reward Given: " . $reward->name);           
+                        DB::table('vendor_rewards')->insert([
+                        'vendor_id'     => $vendor_user_id,
+                        'order_id'      => $orderId,
+                        'reward_name'   => $reward->name,
+                        'reward_image'  => $reward->image,
+                        'reward_id'     => $reward->id,
+                        'status'     => 1,
+                        'achieved_at'   => now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'),
+                         ]);
+    
+                        }
+                    }
+
+                    
 
                     }
                 }
