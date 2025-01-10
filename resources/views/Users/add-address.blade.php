@@ -247,7 +247,7 @@
                     // Handle location access errors
                     switch (error.code) {
                         case error.PERMISSION_DENIED:
-                            requestLocation();
+                            alert('Please enable location access');
                             break;
                         case error.POSITION_UNAVAILABLE:
                             alert("Location information is unavailable.");
@@ -335,7 +335,7 @@ function goToCurrentLocation() {
         updateLocation();
       },
       () => {
-        alert('Unable to retrieve your location.');
+        alert('Please enable location access');
       }
     );
   } else {
