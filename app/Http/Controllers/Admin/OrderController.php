@@ -224,7 +224,73 @@ foreach ($orders as $order) {
 
                     if($role_type == 2 ){
 
-                        $this->checkEligibleAndNotify($vendor_user_id);
+                        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+                    $user = User::where('id',$vendor_user_id)->first();
+                    // return $user; 
+    
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        }
+
+        $totalWeight = $user->orders->sum('total_order_weight');
+        $fineltotalweight = $totalWeight / 1000;
+        
+        $eligibleRewards = [];
+        $notificationSent = false;
+    
+        foreach ($rewardlists as $reward) {
+          
+            $vendorStatus = VendorReward::where('reward_id', $reward->id)
+                ->where('vendor_id', $user->id)
+                ->first();
+    
+            if ($vendorStatus) {
+                if ($vendorStatus->status == 1) {
+                    $status = 'applied';
+                } elseif ($vendorStatus->status == 2) {
+                    $status = 'accepted';
+                } elseif ($fineltotalweight >= $reward->weight) {
+                    $status = 'eligible';
+                    $eligibleRewards[] = $reward; 
+                } else {
+                    $status = 'not eligible';
+                }
+            } elseif ($fineltotalweight >= $reward->weight) {
+                $status = 'eligible';
+                $eligibleRewards[] = $reward; 
+            } else {
+                $status = 'not eligible';
+            }
+    
+        }
+        
+    
+        if (!empty($eligibleRewards) && !$notificationSent) {
+         
+            $title = 'Reward Alert!';
+            $message = 'Congratulations! You are now eligible for a special reward! Tap to claim it now.';
+    
+            if($user->fcm_token != null){
+                // return 'hello';
+                $response = $this->firebaseService->sendNotificationToUser($user->fcm_token, $title, $message);
+                // return $response;
+        
+                if(!$response['success']) {
+                    
+                    if (!$response['success']) {
+        
+                        Log::error('FCM send error: ' . $response['error']);
+                        
+                    }
+                }
+            }
+            // $this->sendPushNotificationss($user->fcm_token);
+
+            $notificationSent = true; 
+            // return 'bye';
+        }
+                        
+                        // $this->checkEligibleAndNotify($vendor_user_id);
                     }
 
                     }
@@ -274,7 +340,7 @@ foreach ($orders as $order) {
     }
 
     private function checkEligibleAndNotify($userid) {
-      
+      return $userid;
         $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
         $user = User::where('id',$userid)->first();
     
@@ -325,22 +391,7 @@ foreach ($orders as $order) {
 
     private function sendPushNotificationss($fcm_token) {
 
-        $title = 'Reward Alert!';
-        $message = 'Congratulations! You are now eligible for a special reward! Tap to claim it now.';
-
-        if($fcm_token != null){
-
-            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
-    
-            if(!$response['success']) {
-                
-                if (!$response['success']) {
-    
-                    Log::error('FCM send error: ' . $response['error']);
-                    
-                }
-            }
-        }
+       
         
     }
 
