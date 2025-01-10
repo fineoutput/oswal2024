@@ -17,7 +17,7 @@ class DeliveryBoyService
     public function __construct()
     {
         
-        $serviceAccountPath = public_path('admin/assets/serviceaccount.json');
+        $serviceAccountPath = public_path('admin/assets/servicesaccountdelivery.json');
 
         $firebase = (new Factory)->withServiceAccount($serviceAccountPath);
 
@@ -28,7 +28,7 @@ class DeliveryBoyService
 function sendPushNotification($token, $title, $body)
 {
 
-    $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS_Dilivery')));
+    $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS_DILIVERY')));
     $messaging = $firebase->createMessaging();
     $topic = 'OswalSoap';
     // Build the message
