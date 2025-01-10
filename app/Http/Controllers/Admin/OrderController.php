@@ -292,17 +292,10 @@ foreach ($orders as $order) {
     
                         }
                     }
-
-                    
-
                     }
                 }
 
-                } //role type end
-
-                
-         
-
+                } 
             }
 
         }
