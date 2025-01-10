@@ -474,10 +474,11 @@ foreach ($orders as $order) {
         switch ($type) {
             case 2:
                 // Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.orderaccepted', 'Order Accepted'));
+                return $this->transferOrderProcess($order->id);
                 break;
             case 3:
                 // Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.dispatch', 'Order Dispatched'));
-                return $this->transferOrderProcess($order->id);
+                // return $this->transferOrderProcess($order->id);
                 break;
             case 4:
                 // Mail::to('abhi242singh@gmail.com')->send(new OrderStatusMail($data, 'admin.Emails.email-container.order-delivered', 'Order Successfully Delivered'));
