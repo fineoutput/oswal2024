@@ -457,10 +457,15 @@ class UserController extends Controller
             $response = curl_exec($curl);
             
             curl_close($curl);
-         
+          
             $r = json_decode($response);
             
-            $r2 = $r->results[0]->formatted_address;
+            if (!empty($r->results) && isset($r->results[0])) {
+                $r2 = $r->results[0]->formatted_address;
+            } else {
+                $r2 = 'Address not found';
+            }
+            
             
             // if(!empty($r2 )){
             //     return response()->json(['status' => 'Success', 'message' => $r2]);
