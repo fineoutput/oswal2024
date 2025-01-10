@@ -232,8 +232,9 @@ foreach ($orders as $order) {
         if ($order_status == 3) {
             $dilivery_order = TransferOrder::where('order_id',$order->id)->first();
             // return $dilivery_order;
+            if($dilivery_order->user_id){
             $dilivery_boy = DeliveryBoy::where('id',$dilivery_order->user_id)->first();
-
+        }
             if ($dilivery_boy) {
                 $this->sendPushNotifications($dilivery_boy->fcm_token, $order_status);
                 // $this->sendEmailNotification($dilivery_boy, $order, $order_status);
