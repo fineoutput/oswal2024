@@ -264,7 +264,7 @@ foreach ($orders as $order) {
     
         }
         
-    
+    return $status;
         if (!empty($eligibleRewards) && !$notificationSent) {
          
             $title = 'Reward Alert!';
