@@ -22,6 +22,7 @@ use App\Models\Order;
 
 use App\Models\State;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\City;
 use App\Models\TransferOrder;
 
@@ -456,9 +457,9 @@ class UserController extends Controller
             
             $response = curl_exec($curl);
             
+            Log::error("THSUIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
-            
             $r2 = $r->results[0]->formatted_address;
             // $r = json_decode($response);
             
