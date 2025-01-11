@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EcomCategory;
+use App\Models\User;
 
 class CategoryController extends Controller
 {
@@ -16,6 +17,33 @@ class CategoryController extends Controller
         $categorys = EcomCategory::orderby('id', 'desc')->get();
 
         return view('admin.Ecommerce.Categorys.category-index', compact('categorys'));
+    }
+
+    function testuser(Request $request){
+         // Step 1: Fetch all contacts
+        $contacts = User::pluck('contact')->toArray();
+
+        // Step 2: Count occurrences of each contact
+        $contactCounts = array_count_values($contacts);
+
+        // Step 3: Separate unique and repeated contacts
+        $repeatedContacts = [];
+        $allContacts = [];
+
+        foreach ($contactCounts as $contact => $count) {
+            if ($count > 1) {
+                // Add to repeated contacts if more than 1 occurrence
+                $repeatedContacts[] = $contact;
+            }
+            // Add the contact to allContacts (even if repeated, only once)
+            $allContacts[] = $contact;
+        }
+
+        // Step 4: Return the results
+        return response()->json([
+            'all_contacts' => array_unique($allContacts),  // Unique contacts only
+            'repeated_contacts' => $repeatedContacts,  // Repeated contacts
+        ]);
     }
 
     public function create(Request $request, $id = null)

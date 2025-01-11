@@ -94,7 +94,7 @@ Route::prefix('home')->name('home.')->group(function () {
     
 
 });
-
+Route::get('/arrary-check', [CategoryController::class, 'testuser'])->name('testuser');
 Route::prefix('setting')->name('setting.')->group(function() {
 
     Route::any('set-constant' ,[HomeController::class, 'constant'])->name('constant');
@@ -123,6 +123,9 @@ Route::get('popup/{id}/edit', [UsersController::class, 'editpopup'])->name('popu
 Route::put('popup/{id}', [UsersController::class, 'updatepopup'])->name('popup.update');
 Route::delete('popup/{id}', [UsersController::class, 'destroypopup'])->name('popup.destroy');
 Route::patch('popupimage/{id}/update-status', [UsersController::class, 'updateStatus'])->name('popupimage.updateStatus');
+
+
+
 
 
 // Admin Team routes
