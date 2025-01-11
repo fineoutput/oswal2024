@@ -105,7 +105,7 @@
                                 <th>Final Amount</th>
                                 <th>Status</th>
                                 <th>Action</th>
-                                <th>Track</th>
+                                <!-- <th>Track</th> -->
                                 <th>Cancel</th>
                                 <th>Rating</th>
                             </tr>
@@ -126,7 +126,7 @@
                                 <td>{{ $order['order_status'] }}</td>
                                 <td><a href="{{ route('user.get-order-details',['id' => encrypt($order['order_id'])]) }}"><button class="btn btn-warning btn-sm">View</button< /a>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     @php
                                         $track = $order['track']->firstWhere('order_id', $order['order_id']);
                                     @endphp
@@ -136,7 +136,7 @@
                                     @else
                                        
                                     @endif
-                                </td>
+                                </td> -->
 
                                 <td onclick="window.alert()">
     @if(in_array($order['order_status'], ['Confirmed', 'Dispatched', 'Delivered', 'Rejected']))
