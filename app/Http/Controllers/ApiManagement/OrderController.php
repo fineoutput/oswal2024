@@ -1777,13 +1777,14 @@ class OrderController extends Controller
         if($order->delivery_status != 0 ){
 
           $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)->first();
-            if(!empty($delivery)){
-            $deleveryBoy = [
-                'id' => $delivery->deliveryBoy->id,
-                'name' => $delivery->deliveryBoy->name,
-                'phone' => $delivery->deliveryBoy->phone,
-            ];
-        }
+          $deleveryBoy = null;
+          if (!empty($delivery) && $delivery->deliveryBoy) {
+              $deleveryBoy = [
+                  'id' => $delivery->deliveryBoy->id,
+                  'name' => $delivery->deliveryBoy->name,
+                  'phone' => $delivery->deliveryBoy->phone,
+              ];
+          }
 
         }
 
