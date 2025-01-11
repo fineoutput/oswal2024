@@ -256,7 +256,16 @@ class UserAuthController extends Controller
             }
         }
 
-            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $user ,'message' =>  $message], 200);
+        $data = [
+            'id' => $user->id,
+            'auth' => $user->auth,
+            'first_name' => $user->first_name,
+            'contact' => $user->contact,
+            'referral_code' => $user->referral_code,
+            'role_type' => $user->role_type,
+        ];
+
+            return response()->json([ 'status' => 200, 'token' => $token, 'data' => $data ,'message' =>  $message], 200);
             
         } else {
 

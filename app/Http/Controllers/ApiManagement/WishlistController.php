@@ -143,7 +143,7 @@ class WishlistController extends Controller
         $user = User::where('id',$user_id)->first();
 
     
-        $device_id = $user->device_id;  
+        $device_id = $user?->device_id;
         if ($device_id === null) {
             Log::info('Device ID is null', [
                 'user' => auth()->user() ? auth()->user()->id : 'Guest', 
