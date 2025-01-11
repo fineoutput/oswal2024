@@ -126,15 +126,26 @@ $orders = $orders->whereHas('user', function ($query) {
 $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states', 'gift', 'gift1', 'promocodes', 'invoices', 'rating')->get();
 
 // Loop through each order and calculate its individual average rating
-foreach ($orders as $order) {
-    // Calculate the average rating for this specific order
-    $rating_avg = DB::table('order_ratings')
-        ->where('order_id', $order->id)
-        ->avg('rating'); // Get the average of the 'rating' column for this order_id
+    // foreach ($orders as $order) {
+    //     // Calculate the average rating for this specific order
+    //     $rating_avg = DB::table('order_ratings')
+    //         ->where('order_id', $order->id)
+    //         ->avg('rating'); // Get the average of the 'rating' column for this order_id
+        
+    //     // Store the average rating in the order instance
+    //     $order->average_rating = $rating_avg; // Adding a custom attribute to the order
+    // }
+    foreach ($orders as $order) {
+        // Fetch the average rating and description for this specific order
+        $ratingData = DB::table('order_ratings')
+            ->where('order_id', $order->id)
+            ->selectRaw('AVG(rating) as average_rating, GROUP_CONCAT(description SEPARATOR ", ") as descriptions')
+            ->first();
     
-    // Store the average rating in the order instance
-    $order->average_rating = $rating_avg; // Adding a custom attribute to the order
-}
+        // Store the average rating and descriptions in the order instance
+        $order->average_rating = $ratingData->average_rating; // Adding the average rating
+        $order->ratingdescriptions = $ratingData->descriptions; // Adding the concatenated descriptions
+    }
 
        
         return view('admin.Orders.view_all_orders', compact('orders', 'pageTitle'));

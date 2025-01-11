@@ -137,6 +137,7 @@
                                                     <th data-priority="6">Order From</th>
 
                                                     <th data-priority="6">Order Rating</th>
+                                                    <th data-priority="6">Order Rating Description</th>
 
                                                     <th data-priority="6">Gift</th>
 
@@ -337,6 +338,7 @@
                                                                 No Rating Found
                                                                 @endif
                                                           </td>
+                                                          <td>{{$order->ratingdescriptions ?? ''}}</td>
 
                                                         <td>
                                                              @if($order->gift_id != null && $order->gift_id != '' && $order->gift_id != 0)
@@ -399,7 +401,7 @@
                                                                             Reject
                                                                         </a>
                                                                     </li>
-                                                                    
+
                                                                         <li>
                                                                             <a href="{{ route('order.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(3)]) }}">
                                                                                 Dispatch Order
