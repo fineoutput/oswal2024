@@ -137,22 +137,21 @@
 }
  }
     </style>
-
+@if($latestPopupImage->web_image)
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-left">
             {{-- <h4 style="text-align: center;">Oswal Products</h4> --}}
         </div>
         <div class="modal-right">
-            @if($latestPopupImage->web_image)
+            
             <img src="{{ asset($latestPopupImage->web_image) }}" alt="Popup Image" style="width:100%;">
-            @else
-            <p>No Image Found</p>
-            @endif
+            
         </div>
         <span class="close">&times;</span>
     </div>
 </div>
+@endif
 <section class="module"
 
     style="background-image: url('{{ asset('images/3.webp') }}'); margin-top: -160px; z-index: 9; background-size: cover; background-position: 30% 50%; text-align: center;">
