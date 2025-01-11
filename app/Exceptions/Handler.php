@@ -3,8 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Throwable;
-use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -27,6 +28,30 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+         /**
+     * Report or log an exception.
+     *
+     * @param Throwable $exception
+     * @return void
+     */
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception)) {
+            // Log the URL and request data
+            $requestData = [
+                'url' => Request::fullUrl(),
+                'input' => Request::all(), // Logs all request data (inputs)
+            ];
+
+            Log::error('Exception Details:', [
+                'request' => $requestData,
+                'exception' => $exception,
+            ]);
+        }
+
+        parent::report($exception);
+    }
 
     /**
      * Register the exception handling callbacks for the application.
