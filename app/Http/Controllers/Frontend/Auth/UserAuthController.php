@@ -66,15 +66,15 @@ class UserAuthController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()]);
         }
 
-        $dlt = config('constants.SMS_SIGNUP_DLT');
-        $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
+        $dlt = config('constants.SMS_LOGIN_DLT');
+        $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
 
         if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
 
             $OTP = generateOtp();
 
             // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
-            $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
+            $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone.";
 
             sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); 
             
