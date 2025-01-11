@@ -57,6 +57,8 @@ class UserAuthController extends Controller
             $rules['contact'] = 'required|digits:10|unique:users,contact';
         }
 
+        Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+
         // $request->validate($rules);
 
         $validator = Validator::make($request->all(),  $rules);
@@ -68,8 +70,8 @@ class UserAuthController extends Controller
 
         $dlt = config('constants.SMS_LOGIN_DLT');
         $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
-
-        if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
+        Log::error('sender id no found',$sender_id);
+        if(session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
 
             $OTP = generateOtp();
 
