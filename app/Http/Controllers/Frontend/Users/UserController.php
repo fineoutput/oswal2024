@@ -457,7 +457,7 @@ class UserController extends Controller
             
             $response = curl_exec($curl);
             
-            Log::error("THSUIS IS THE ADDRESS" . $response);
+            Log::info("THSUIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
             $r2 = $r->results[0]->formatted_address;
