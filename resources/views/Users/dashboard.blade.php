@@ -138,12 +138,12 @@
                                     @endif
                                 </td> -->
 
-                                <td onclick="window.alert()">
+                                <td>
     @if(in_array($order['order_status'], ['Confirmed', 'Dispatched', 'Delivered', 'Rejected']))
-        -----
+        Order-canceled
     @else
         <a href="{{ route('user.cancle-order', ['id' => encrypt($order['order_id'])]) }}" onclick="return confirmCancel(event)">
-            <button class="btn btn-danger btn-sm">Cancel</button>
+            <button  class="btn btn-danger btn-sm">Cancel</button>
         </a>
     @endif
 </td>
