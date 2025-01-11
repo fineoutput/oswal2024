@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 use App\Models\EcomProduct;
 use App\Models\User;
 
@@ -143,8 +143,16 @@ class WishlistController extends Controller
         $user = User::where('id',$user_id)->first();
 
     
-        // Retrieve request parameters
-        $device_id = $user->device_id;
+        $device_id = $user->device_id;  
+        if ($device_id === null) {
+            Log::info('Device ID is null', [
+                'user' => auth()->user() ? auth()->user()->id : 'Guest', 
+                'timestamp' => now(),  
+                'message' => 'Device ID is missing in the request.'
+            ]);
+        }
+    
+
         $user_id   = $user->id;
         $lang      = $request->lang;
         $state_id  = $request->state_id ?? null;
@@ -152,17 +160,18 @@ class WishlistController extends Controller
     
         
         $productData = [];
-    
+        $device_id = null;
+
       
-        if (empty($user_id)) {
+        // if (empty($user_id)) {
         
-            $wishlistData = Wishlist::where('device_id', $device_id)->get();
-        } else {
+        //     $wishlistData = Wishlist::where('device_id', $device_id)->get();
+        // } else {
        
             $wishlistData = Wishlist::where('user_id', $user_id)->get();
            
 
-        }
+        // }
     
         foreach ($wishlistData as $wishlistItem) {
 
