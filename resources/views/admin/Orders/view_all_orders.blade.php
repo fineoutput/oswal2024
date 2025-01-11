@@ -137,7 +137,7 @@
                                                     <th data-priority="6">Order From</th>
 
                                                     <th data-priority="6">Order Rating</th>
-                                                    <th data-priority="6">Order Rating Description</th>
+                                                    <th data-priority="6">Rating Description</th>
 
                                                     <th data-priority="6">Gift</th>
 
