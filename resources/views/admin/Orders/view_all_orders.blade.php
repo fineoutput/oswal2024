@@ -144,6 +144,7 @@
 
                                                     <th data-priority="6">Remark</th>
                                                     <th data-priority="7">Order Weight</th>
+                                                    <th data-priority="7">Order Status</th>
 
                                                     <th data-priority="8">Action</th>
 
@@ -355,6 +356,19 @@
 
                                                        <td>{{  $order->remarks }}</td>
                                                        <td>{{  $order->total_order_weight }}</td>
+                                                       <td>
+                                                        @if($order->order_status == 1)
+                                                        New Order
+                                                        @elseif($order->order_status == 2)
+                                                        Accept Order Confirm
+                                                        @elseif($order->order_status == 3)
+                                                        Dispatch Order
+                                                        @elseif($order->order_status == 4)
+                                                        Completed Order
+                                                        @else
+                                                        Rejected Order
+                                                        @endif
+                                                       </td>
 
                                                        <td>
                                                         <div class="btn-group" id="btns{{ $key }}">
