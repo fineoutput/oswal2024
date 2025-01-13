@@ -457,10 +457,16 @@ class UserController extends Controller
             
             $response = curl_exec($curl);
             
-            Log::info("THSUIS IS THE ADDRESS" . $response);
+            Log::info("THIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
-            $r2 = $r->results[0]->formatted_address;
+            if($r->status == "INVALID_REQUEST"){
+                Log::info("address error" . $r->error_messag." lat-".$lat." long-".$long);
+            }
+            else{
+                $r2 = $r->results[0]->formatted_address;
+
+            }
             // $r = json_decode($response);
             
             // if (!empty($r->results) && isset($r->results[0])) {

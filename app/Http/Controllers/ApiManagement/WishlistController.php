@@ -130,6 +130,7 @@ class WishlistController extends Controller
         }
 
         $user_id = 0;
+        $device_id = "";
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $userDetails = User::where('auth', $auth_token)->first();
@@ -144,15 +145,13 @@ class WishlistController extends Controller
 
     
         // $device_id = $user->device_id;
-        if ($user->device_id === null) {
+        if (empty($user->device_id)) {
             Log::info('Device ID is null', [
                 'user' => $user->id ?? 'Guest',
                 'timestamp' => now(),
                 'message' => 'Device ID is missing in the request.'
             ]);
-            $device_id = null;
-        } else {
-            $device_id = $user->device_id;
+            Log::info("Wishlist error: " . $user_id." auth-".$auth_token);
         }
     
 
@@ -163,7 +162,6 @@ class WishlistController extends Controller
     
         
         $productData = [];
-        $device_id = null;
 
       
         // if (empty($user_id)) {
@@ -271,13 +269,8 @@ class WishlistController extends Controller
     
             // Fetch cart data
             $cartDataQuery = Cart::where('product_id', $product_id);
-    
-            if (empty($user_id)) {
-                $cartDataQuery->where('device_id', $device_id);
-            } else {
                 $cartDataQuery->where('user_id', $user_id);
-            }
-    
+
             $cartData = $cartDataQuery->first();
     
             // Prepare cart information
