@@ -716,7 +716,7 @@ class VendorAuthController extends Controller
             return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.']);
         }
 
-        Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+        // Log::warning('Login failed for Phone No.: ' . $request->phone_no);
     }
 
     public function logout(Request $request)

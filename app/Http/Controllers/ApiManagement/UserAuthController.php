@@ -327,7 +327,7 @@ class UserAuthController extends Controller
 
         }
 
-        Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+        // Log::warning('Login failed for Phone No.: ' . $request->phone_no);
 
     }
 

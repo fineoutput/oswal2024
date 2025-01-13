@@ -685,7 +685,6 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             return view('admin.VendorOrders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode' ,'giftCardSec'));
 
         }else{
-
             return view('admin.Orders.view_order_bill', compact('order', 'user', 'address', 'city', 'state', 'zipcode', 'orderItems', 'invoice', 'giftCard' ,'promocode' ,'giftCardSec'));
         }
     }
