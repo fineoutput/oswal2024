@@ -317,7 +317,7 @@
                 <div class="header_input-container">
 
                 <form action="{{ route('search') }}" method="get">
-                    <input class="input-simple" type="text" placeholder="Search" name="query"/>
+                    <input class="input-simple" type="text" required placeholder="Search" name="query"/>
                     <span class="search-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                             <path fill="#838D99" d="M13.22 14.63a8 8 0 1 1 1.41-1.41l4.29 4.29a1 1 0 1 1-1.41 1.41l-4.29-4.29zm-.66-2.07a6 6 0 1 0-8.49-8.49 6 6 0 0 0 8.49 8.49z"></path>
@@ -486,7 +486,7 @@
             <div class="text-center">
                 <div class="header_input-container mt-3">
                 <form action="{{ route('search') }}" method="get">
-                    <input class="input-simple" type="text" placeholder="Search"  name="query" />
+                    <input class="input-simple" required type="text" placeholder="Search"  name="query" />
                     <span class="search-icon position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                             <path fill="#838D99" d="M13.22 14.63a8 8 0 1 1 1.41-1.41l4.29 4.29a1 1 0 1 1-1.41 1.41l-4.29-4.29zm-.66-2.07a6 6 0 1 0-8.49-8.49 6 6 0 0 0 8.49 8.49z"></path>
