@@ -70,7 +70,7 @@ class UserAuthController extends Controller
 
         $dlt = config('constants.SMS_LOGIN_DLT');
         $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
-        Log::error('sender id no found',$sender_id);
+        // Log::error('sender id no found',$sender_id);
         if(session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
 
             $OTP = generateOtp();
