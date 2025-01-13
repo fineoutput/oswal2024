@@ -33,45 +33,240 @@ class VendorAuthController extends Controller
 
  
 
+    // public function register(Request $request)
+    // {
+    //     $rules = [
+    //         'first_name'        => 'required|string|max:255',
+    //         'last_name'         => 'required|string|max:255',
+    //         'email'             => 'required|string|email',
+    //         'device_id'         => 'required|string',
+    //         'device_token'      => 'nullable|string',
+    //         'referral_code'     => 'nullable|string|exists:users,referral_code',
+    //         'shopname'          => 'required|string',
+    //         'pincode'           => 'required|integer|digits:6',
+    //         'city'              => 'required|integer',
+    //         'state'             => 'required|integer',
+    //         'address'           => 'required|string',
+    //         'addhar_front_image'=> 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    //         'addhar_back_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    //         // 'gstno'             => 'nullable|string|size:15',
+    //     ];
+
+    //     if (session()->has('user_contact') && session()->get('user_contact') == $request->phone_no) {
+
+    //         if (session()->has('user_otp_id') && session()->has('user_id')) {
+
+    //             $rules['phone_no'] = 'required|digits:10';
+
+    //             $rules['addhar_front_image'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+    //             $rules['addhar_back_image']  = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+
+    //         } else {
+
+    //             $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+
+    //             $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+    //             $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+    //         }
+
+    //     } else {
+
+    //         session()->flush();
+
+    //         $rules['phone_no'] = 'required|digits:10|unique:users,contact';
+
+    //         $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+    //         $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+    //     }
+
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+
+    //         return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
+    //     }
+
+    //     $dlt = config('constants.SMS_SIGNUP_DLT');
+
+    //     $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
+
+    //     if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
+    //         $OTP = generateOtp();
+
+    //         // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
+    //         $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
+
+    //         sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Uncomment this line to send the OTP SMS
+
+    //         // Update the existing OTP record
+    //         $otpData = Otp::updateOrCreate(
+    //             ['id' => session()->get('user_otp_id')],
+    //             [
+    //                 'otp' => $OTP,
+    //                 'ip' => $request->ip(),
+    //                 'date' => now()
+    //                     ->setTimezone('Asia/Kolkata')
+    //                     ->format('Y-m-d H:i:s'),
+    //             ]
+    //         );
+
+    //         return response()->json([
+    //             'status' => 200,
+    //             'message' => 'Your OTP has been regenerated successfully. Please check your phone for the new code',
+    //             'data' => ['contact_no' => session()->get('user_contact')],
+    //         ]);
+    //     }
+    //     $referral = [];
+
+    //     $name = $request->first_name . ' ' . $request->last_name;
+
+        
+    //     // $date = [
+    //     //     'role_type'     => 2,
+    //     //     'first_name'    => $name,
+    //     //     'first_name_hi' => lang_change($name),
+    //     //     'device_id'     => $request->device_id,
+    //     //     'auth'          => generateRandomString(),
+    //     //     'email'         => $request->email,
+    //     //     'contact'       => $request->phone_no,
+    //     //     'password'      => Hash::make($request->password) ?? null,
+    //     //     'status'        => 0,
+    //     //     'referral_code' => User::generateReferralCode(),
+    //     //     'added_by'      => 1,
+    //     //     'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+    //     //     'ip'            => $request->ip(),
+    //     //     'is_active'     => 0,
+    //     // ];
+
+    //     // $user = User::create($date);
+
+    //     if($request->hasFile('addhar_front_image')){
+
+    //         $addhar_front_image = uploadImage($request->file('addhar_front_image'), 'vendor' ,'Addhar' , 'front');
+
+    //     }
+    //     if($request->hasFile('addhar_back_image')){
+
+    //         $addhar_back_image = uploadImage($request->file('addhar_back_image'), 'vendor' ,'Addhar' , 'back');
+
+    //     }
+    //     $vendorData = [
+    //         'role_type'     => 2, // Assuming vendor role type is 2
+    //         'first_name'    => $request->first_name,
+    //         'first_name_hi' => lang_change($request->first_name), // Assuming lang_change() is used for translation
+    //         'device_id'     => $request->device_id,
+    //         'auth'          => generateAuthString(), // Assuming generateRandomString() generates a unique string
+    //         'email'         => $request->email,
+    //         'contact'       => $request->phone_no,
+    //         'password'      => Hash::make($request->password) ?? null, // Hash the password
+    //         'status'        => 0, // Vendor is initially inactive
+    //         'referral_code' => User::generateReferralCode(),
+    //         'added_by'      => 1,
+    //         'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+    //         'ip'            => $request->ip(),
+    //         'is_active'     => 0, // Vendor is inactive until further processing
+    //         'shopname'      => $request->shopname,
+    //         'pincode'       => $request->pincode,
+    //         'city_id'       => $request->city,
+    //         'state_id'      => $request->state,
+    //         'address'       => $request->address,
+    //         'addhar_front_image' => $addhar_front_image,
+    //         'addhar_back_image'  => $addhar_back_image,
+    //         'gstno'         => $request->gstno,
+    //     ];
+    
+    //     // Insert the vendor record into the temporary vendor table
+    //     // return $vendorData;
+    //     $vendortemp = Vendortemp::create($vendorData);
+    
+    //     // Optional: Handle referral logic (if referral code exists)
+    //     if ($request->referral_code != null && $request->referral_code != '') {
+    //         $referral = handleReferral($request->referral_code, $vendortemp->id);
+    //     }
+    
+    //     // Store the device token for the vendor
+    //     UserDeviceToken::create([
+    //         'device_id'   => $request->device_id,
+    //         'device_token' => $request->device_token ?? '', // Default to empty string if no token
+    //         'user_id'     => $vendortemp->id,
+    //     ]);
+
+    //     $OTP = generateOtp();
+
+    //     // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
+
+    //     $msg = "Dear User,
+    //             Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+
+    //             Welcome!!
+
+    //             Regards,
+    //             OSWAL SOAP";
+
+    //     sendOtpSms($msg, $vendortemp->contact, $OTP, $dlt, $sender_id);
+
+    //     $otpData = Otp::create([
+    //         'name' => $name,
+    //         'contact_no' => $vendortemp->contact,
+    //         'email' => $request->email,
+    //         'otp' => $OTP,
+    //         'ip' => $request->ip(),
+    //         'added_by' => 1,
+    //         'date' => now()
+    //             ->setTimezone('Asia/Kolkata')
+    //             ->format('Y-m-d H:i:s'),
+    //     ]);
+
+    //     if ($otpData) {
+
+    //         session()->put('user_otp_id', $otpData->id);
+
+    //         session()->put('user_id', $vendortemp->id);
+
+    //         session()->put('user_contact', $vendortemp->contact);
+
+    //         if ($request->referral_code != null && $request->referral_code != '') {
+                
+    //             session()->put('referrer_tr_id', $referral['referrer_tr_id']);
+
+    //             session()->put('referee_tr_id', $referral['referee_tr_id']);
+    //         }
+
+    //         return response()->json(['status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $vendortemp->contact]]);
+    //     } else {
+    //         return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
+    //     }
+    // }
+
+
     public function register(Request $request)
-    {
-        $rules = [
-            'first_name'        => 'required|string|max:255',
-            'last_name'         => 'required|string|max:255',
-            'email'             => 'required|string|email',
-            'device_id'         => 'required|string',
-            'device_token'      => 'nullable|string',
-            'referral_code'     => 'nullable|string|exists:users,referral_code',
-            'shopname'          => 'required|string',
-            'pincode'           => 'required|integer|digits:6',
-            'city'              => 'required|integer',
-            'state'             => 'required|integer',
-            'address'           => 'required|string',
-            'addhar_front_image'=> 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'addhar_back_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            // 'gstno'             => 'nullable|string|size:15',
-        ];
+{
+    $rules = [
+        'first_name'        => 'required|string|max:255',
+        'last_name'         => 'required|string|max:255',
+        'email'             => 'required|string|email',
+        'device_id'         => 'required|string',
+        'device_token'      => 'nullable|string',
+        'referral_code'     => 'nullable|string|exists:users,referral_code',
+        'shopname'          => 'required|string',
+        'pincode'           => 'required|integer|digits:6',
+        'city'              => 'required|integer',
+        'state'             => 'required|integer',
+        'address'           => 'required|string',
+        'addhar_front_image'=> 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'addhar_back_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    ];
 
-        if (session()->has('user_contact') && session()->get('user_contact') == $request->phone_no) {
+    if (session()->has('user_contact') && session()->get('user_contact') == $request->phone_no) {
 
-            if (session()->has('user_otp_id') && session()->has('user_id')) {
+        if (session()->has('user_otp_id') && session()->has('user_id')) {
 
-                $rules['phone_no'] = 'required|digits:10';
+            $rules['phone_no'] = 'required|digits:10';
 
-                $rules['addhar_front_image'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-                $rules['addhar_back_image']  = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-
-            } else {
-
-                $rules['phone_no'] = 'required|digits:10|unique:users,contact';
-
-                $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-                $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-            }
+            $rules['addhar_front_image'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            $rules['addhar_back_image']  = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
         } else {
-
-            session()->flush();
 
             $rules['phone_no'] = 'required|digits:10|unique:users,contact';
 
@@ -79,165 +274,141 @@ class VendorAuthController extends Controller
             $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
         }
 
-        $validator = Validator::make($request->all(), $rules);
+    } else {
 
-        if ($validator->fails()) {
+        session()->flush();
 
-            return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
-        }
+        $rules['phone_no'] = 'required|digits:10|unique:users,contact';
 
-        $dlt = config('constants.SMS_SIGNUP_DLT');
-
-        $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
-
-        if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
-            $OTP = generateOtp();
-
-            // $msg = "Welcome to Oswal. Your new OTP is {$OTP} for registration.";
-            $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
-
-            sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Uncomment this line to send the OTP SMS
-
-            // Update the existing OTP record
-            $otpData = Otp::updateOrCreate(
-                ['id' => session()->get('user_otp_id')],
-                [
-                    'otp' => $OTP,
-                    'ip' => $request->ip(),
-                    'date' => now()
-                        ->setTimezone('Asia/Kolkata')
-                        ->format('Y-m-d H:i:s'),
-                ]
-            );
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Your OTP has been regenerated successfully. Please check your phone for the new code',
-                'data' => ['contact_no' => session()->get('user_contact')],
-            ]);
-        }
-        $referral = [];
-
-        $name = $request->first_name . ' ' . $request->last_name;
-
-        
-        // $date = [
-        //     'role_type'     => 2,
-        //     'first_name'    => $name,
-        //     'first_name_hi' => lang_change($name),
-        //     'device_id'     => $request->device_id,
-        //     'auth'          => generateRandomString(),
-        //     'email'         => $request->email,
-        //     'contact'       => $request->phone_no,
-        //     'password'      => Hash::make($request->password) ?? null,
-        //     'status'        => 0,
-        //     'referral_code' => User::generateReferralCode(),
-        //     'added_by'      => 1,
-        //     'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
-        //     'ip'            => $request->ip(),
-        //     'is_active'     => 0,
-        // ];
-
-        // $user = User::create($date);
-
-        if($request->hasFile('addhar_front_image')){
-
-            $addhar_front_image = uploadImage($request->file('addhar_front_image'), 'vendor' ,'Addhar' , 'front');
-
-        }
-        if($request->hasFile('addhar_back_image')){
-
-            $addhar_back_image = uploadImage($request->file('addhar_back_image'), 'vendor' ,'Addhar' , 'back');
-
-        }
-        $vendorData = [
-            'role_type'     => 2, // Assuming vendor role type is 2
-            'first_name'    => $request->first_name,
-            'first_name_hi' => lang_change($request->first_name), // Assuming lang_change() is used for translation
-            'device_id'     => $request->device_id,
-            'auth'          => generateAuthString(), // Assuming generateRandomString() generates a unique string
-            'email'         => $request->email,
-            'contact'       => $request->phone_no,
-            'password'      => Hash::make($request->password) ?? null, // Hash the password
-            'status'        => 0, // Vendor is initially inactive
-            'referral_code' => User::generateReferralCode(),
-            'added_by'      => 1,
-            'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
-            'ip'            => $request->ip(),
-            'is_active'     => 0, // Vendor is inactive until further processing
-            'shopname'      => $request->shopname,
-            'pincode'       => $request->pincode,
-            'city_id'       => $request->city,
-            'state_id'      => $request->state,
-            'address'       => $request->address,
-            'addhar_front_image' => $addhar_front_image,
-            'addhar_back_image'  => $addhar_back_image,
-            'gstno'         => $request->gstno,
-        ];
-    
-        // Insert the vendor record into the temporary vendor table
-        // return $vendorData;
-        $vendortemp = Vendortemp::create($vendorData);
-    
-        // Optional: Handle referral logic (if referral code exists)
-        if ($request->referral_code != null && $request->referral_code != '') {
-            $referral = handleReferral($request->referral_code, $vendortemp->id);
-        }
-    
-        // Store the device token for the vendor
-        UserDeviceToken::create([
-            'device_id'   => $request->device_id,
-            'device_token' => $request->device_token ?? '', // Default to empty string if no token
-            'user_id'     => $vendortemp->id,
-        ]);
-
-        $OTP = generateOtp();
-
-        // $msg="Welcome to Oswal and Your OTP is".$OTP."for Register." ;
-
-        $msg = "Dear User,
-                Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
-
-                Welcome!!
-
-                Regards,
-                OSWAL SOAP";
-
-        sendOtpSms($msg, $vendortemp->contact, $OTP, $dlt, $sender_id);
-
-        $otpData = Otp::create([
-            'name' => $name,
-            'contact_no' => $vendortemp->contact,
-            'email' => $request->email,
-            'otp' => $OTP,
-            'ip' => $request->ip(),
-            'added_by' => 1,
-            'date' => now()
-                ->setTimezone('Asia/Kolkata')
-                ->format('Y-m-d H:i:s'),
-        ]);
-
-        if ($otpData) {
-
-            session()->put('user_otp_id', $otpData->id);
-
-            session()->put('user_id', $vendortemp->id);
-
-            session()->put('user_contact', $vendortemp->contact);
-
-            if ($request->referral_code != null && $request->referral_code != '') {
-                
-                session()->put('referrer_tr_id', $referral['referrer_tr_id']);
-
-                session()->put('referee_tr_id', $referral['referee_tr_id']);
-            }
-
-            return response()->json(['status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $vendortemp->contact]]);
-        } else {
-            return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
-        }
+        $rules['addhar_front_image'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+        $rules['addhar_back_image']  = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
     }
 
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
+    }
+
+    $dlt = config('constants.SMS_SIGNUP_DLT');
+    $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
+
+    // If phone number is 1234567890, set OTP to 123456
+    if ($request->phone_no == '1234567890') {
+        $OTP = '123456';  // Hardcoded OTP
+    } else {
+        $OTP = generateOtp();  // Generate OTP for other phone numbers
+    }
+
+    if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
+        $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
+
+        sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Send the OTP SMS
+
+        // Update the existing OTP record
+        $otpData = Otp::updateOrCreate(
+            ['id' => session()->get('user_otp_id')],
+            [
+                'otp' => $OTP,
+                'ip' => $request->ip(),
+                'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            ]
+        );
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Your OTP has been regenerated successfully. Please check your phone for the new code',
+            'data' => ['contact_no' => session()->get('user_contact')],
+        ]);
+    }
+
+    $referral = [];
+
+    $name = $request->first_name . ' ' . $request->last_name;
+
+    if ($request->hasFile('addhar_front_image')) {
+        $addhar_front_image = uploadImage($request->file('addhar_front_image'), 'vendor', 'Addhar', 'front');
+    }
+
+    if ($request->hasFile('addhar_back_image')) {
+        $addhar_back_image = uploadImage($request->file('addhar_back_image'), 'vendor', 'Addhar', 'back');
+    }
+
+    $vendorData = [
+        'role_type'     => 2, // Assuming vendor role type is 2
+        'first_name'    => $request->first_name,
+        'first_name_hi' => lang_change($request->first_name), // Assuming lang_change() is used for translation
+        'device_id'     => $request->device_id,
+        'auth'          => generateAuthString(), // Assuming generateRandomString() generates a unique string
+        'email'         => $request->email,
+        'contact'       => $request->phone_no,
+        'password'      => Hash::make($request->password) ?? null, // Hash the password
+        'status'        => 0, // Vendor is initially inactive
+        'referral_code' => User::generateReferralCode(),
+        'added_by'      => 1,
+        'date'          => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+        'ip'            => $request->ip(),
+        'is_active'     => 0, // Vendor is inactive until further processing
+        'shopname'      => $request->shopname,
+        'pincode'       => $request->pincode,
+        'city_id'       => $request->city,
+        'state_id'      => $request->state,
+        'address'       => $request->address,
+        'addhar_front_image' => $addhar_front_image,
+        'addhar_back_image'  => $addhar_back_image,
+        'gstno'         => $request->gstno,
+    ];
+
+    // Insert the vendor record into the temporary vendor table
+    $vendortemp = Vendortemp::create($vendorData);
+
+    // Optional: Handle referral logic (if referral code exists)
+    if ($request->referral_code != null && $request->referral_code != '') {
+        $referral = handleReferral($request->referral_code, $vendortemp->id);
+    }
+
+    // Store the device token for the vendor
+    UserDeviceToken::create([
+        'device_id'   => $request->device_id,
+        'device_token' => $request->device_token ?? '', // Default to empty string if no token
+        'user_id'     => $vendortemp->id,
+    ]);
+
+    $msg = "Dear User,
+            Your OTP for signup on OSWALMART is $OTP and is valid for 30 minutes. Please do not share this OTP with anyone.
+
+            Welcome!!
+
+            Regards,
+            OSWAL SOAP";
+
+    sendOtpSms($msg, $vendortemp->contact, $OTP, $dlt, $sender_id);
+
+    $otpData = Otp::create([
+        'name' => $name,
+        'contact_no' => $vendortemp->contact,
+        'email' => $request->email,
+        'otp' => $OTP,
+        'ip' => $request->ip(),
+        'added_by' => 1,
+        'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+    ]);
+
+    if ($otpData) {
+        session()->put('user_otp_id', $otpData->id);
+        session()->put('user_id', $vendortemp->id);
+        session()->put('user_contact', $vendortemp->contact);
+
+        if ($request->referral_code != null && $request->referral_code != '') {
+            session()->put('referrer_tr_id', $referral['referrer_tr_id']);
+            session()->put('referee_tr_id', $referral['referee_tr_id']);
+        }
+
+        return response()->json(['status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $vendortemp->contact]]);
+    } else {
+        return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
+    }
+}
 
 
     public function verifyOtpProcess(Request $request)
@@ -665,59 +836,122 @@ class VendorAuthController extends Controller
     //     }
     // }
 
+
+
+
     public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), ['phone_no' => 'required|digits:10']);
+{
+    $validator = Validator::make($request->all(), ['phone_no' => 'required|digits:10']);
 
-        if ($validator->fails()) {
-
-            return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
-        }
-
-        $user = User::where('contact', $request->phone_no)->where('role_type', 2)->first();
-        
-        if ($user) {
-            if ($user->is_active != 1) {
-
-                return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
-            }
-            $OTP = generateOtp();
-
-            $dlt = config('constants.SMS_LOGIN_DLT');
-            $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
-
-            // $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
-            $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
-
-            sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
-
-            $otpData = Otp::create([
-                'name' => $user->first_name,
-                'contact_no' => $user->contact,
-                'email' => $user->email,
-                'otp' => $OTP,
-                'ip' => $request->ip(),
-                'added_by' => 1,
-                'date' => now()
-                    ->setTimezone('Asia/Kolkata')
-                    ->format('Y-m-d H:i:s'),
-            ]);
-
-            if ($otpData) {
-                session()->put('user_otp_id', $otpData->id);
-
-                session()->put('user_id', $user->id);
-
-                return response()->json(['status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]], 200);
-            } else {
-                return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
-            }
-        } else {
-            return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.']);
-        }
-
-        // Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+    if ($validator->fails()) {
+        return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
     }
+
+    // Check for the phone number
+    $user = User::where('contact', $request->phone_no)->where('role_type', 2)->first();
+    
+    if ($user) {
+        if ($user->is_active != 1) {
+            return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
+        }
+
+        // Check if the phone number is '1234567890' and set OTP to '123456'
+        if ($request->phone_no == '1234567890') {
+            $OTP = '123456';  // Hardcoded OTP
+        } else {
+            $OTP = generateOtp();  // Generate OTP for other phone numbers
+        }
+
+        $dlt = config('constants.SMS_LOGIN_DLT');
+        $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
+
+        // Prepare the OTP message
+        $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
+
+        // Send the OTP SMS
+        sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
+
+        // Save OTP data to the database
+        $otpData = Otp::create([
+            'name' => $user->first_name,
+            'contact_no' => $user->contact,
+            'email' => $user->email,
+            'otp' => $OTP,
+            'ip' => $request->ip(),
+            'added_by' => 1,
+            'date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+        ]);
+
+        if ($otpData) {
+            session()->put('user_otp_id', $otpData->id);
+            session()->put('user_id', $user->id);
+
+            return response()->json([ 
+                'status' => 200, 
+                'message' => 'OTP sent successfully', 
+                'data' => ['contact_no' => $user->contact]
+            ], 200);
+        } else {
+            return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
+        }
+    } else {
+        return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.']);
+    }
+}
+
+    // public function login(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), ['phone_no' => 'required|digits:10']);
+
+    //     if ($validator->fails()) {
+
+    //         return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
+    //     }
+
+    //     $user = User::where('contact', $request->phone_no)->where('role_type', 2)->first();
+        
+    //     if ($user) {
+    //         if ($user->is_active != 1) {
+
+    //             return response()->json(['status' => 400, 'message' => 'Please contact the admin for approval.']);
+    //         }
+    //         $OTP = generateOtp();
+
+    //         $dlt = config('constants.SMS_LOGIN_DLT');
+    //         $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
+
+    //         // $msg="Welcome to fineoutput and Your OTP is".$OTP."for Login." ;
+    //         $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
+
+    //         sendOtpSms($msg, $user->contact, $OTP, $dlt, $sender_id);
+
+    //         $otpData = Otp::create([
+    //             'name' => $user->first_name,
+    //             'contact_no' => $user->contact,
+    //             'email' => $user->email,
+    //             'otp' => $OTP,
+    //             'ip' => $request->ip(),
+    //             'added_by' => 1,
+    //             'date' => now()
+    //                 ->setTimezone('Asia/Kolkata')
+    //                 ->format('Y-m-d H:i:s'),
+    //         ]);
+
+    //         if ($otpData) {
+    //             session()->put('user_otp_id', $otpData->id);
+
+    //             session()->put('user_id', $user->id);
+
+    //             return response()->json(['status' => 200, 'message' => 'OTP sent successfully', 'data' => ['contact_no' => $user->contact]], 200);
+    //         } else {
+    //             return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
+    //         }
+    //     } else {
+    //         return response()->json(['status' => 401, 'message' => 'The provided credentials do not match our records.']);
+    //     }
+
+    //     // Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+    // }
 
     public function logout(Request $request)
     {
