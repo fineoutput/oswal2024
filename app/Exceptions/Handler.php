@@ -3,8 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Throwable;
-use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -28,6 +29,24 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+     /**
+     * Report or log an exception.
+     *
+     * @param Throwable $exception
+     * @return void
+     */
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception)) {
+            // Log the exception along with the URL
+            Log::error('Error occurred on URL: ' . Request::fullUrl(), [
+                'exception' => $exception,
+            ]);
+        }
+
+        parent::report($exception);
+    }
+
     /**
      * Register the exception handling callbacks for the application.
      *
@@ -38,23 +57,5 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
-    }
-
-    /**
-     * Handle unauthenticated users.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Auth\AuthenticationException $exception
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        // Check if the request is specifically an API request
-        if ($request->is('api/*') || $request->expectsJson()) {
-            return response()->json(['message' => 'You are not authorized to access this resource.'], 401);
-        }
-
-        // Allow admin panel or web routes to redirect to login
-        return redirect()->guest(route('login')); // Adjust 'login' route as needed
     }
 }

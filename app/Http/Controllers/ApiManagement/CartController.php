@@ -437,7 +437,7 @@ class CartController extends Controller
         $subtotal = 0;
 
         foreach ($cart_subtotal as $cartItem) {
-            $subtotal += $cartItem->quantity * $cartItem->total_qty_price;
+            $subtotal += $cartItem->total_qty_price;
         }
 
     $subtotal = round($subtotal, 2);
