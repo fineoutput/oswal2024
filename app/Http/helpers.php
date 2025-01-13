@@ -237,6 +237,8 @@ if (!function_exists('sendOtpSms')) {
 
         curl_close($ch);
 
+        Log::info("cURL Response: " . $response);
+
         // dd($response);
 
         if ($err) {
