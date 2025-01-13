@@ -71,7 +71,7 @@
           <p>Order Date: {{ $order->created_at->format('F j, Y, g:i a') ?? 'N/A' }}</p>
         </div>
         <div class="col-sm-6 invoice_content">
-          Invoice No: OSPL/24-25/{{ $invoice->invoice_no < 10 ? '0'.$invoice->invoice_no : $invoice->invoice_no ?? '00' }}<br>
+          Invoice No: OSPL/24-25/{{ $invoice && $invoice->invoice_no ? ( $invoice->invoice_no < 10 ? '0'.$invoice->invoice_no : $invoice->invoice_no ) : '00' }}<br>
         </div>
       </div>
     </div>
