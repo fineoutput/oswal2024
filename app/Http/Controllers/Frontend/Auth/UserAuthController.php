@@ -57,7 +57,7 @@ class UserAuthController extends Controller
             $rules['contact'] = 'required|digits:10|unique:users,contact';
         }
 
-        Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+        // Log::warning('Login failed for Phone No.: ' . $request->phone_no);
 
         // $request->validate($rules);
 
@@ -382,7 +382,7 @@ if ($storeuser) {
 
         }
 
-        Log::warning('Login failed for Phone No.: ' . $request->phone_no);
+        // Log::warning('Login failed for Phone No.: ' . $request->phone_no);
 
     }
 
