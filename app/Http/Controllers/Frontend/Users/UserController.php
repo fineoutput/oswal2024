@@ -460,6 +460,7 @@ class UserController extends Controller
             Log::info("THIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
+            $r2 = null;
             if($r->status == "INVALID_REQUEST"){
                 Log::info("address error" . $r->error_message." lat-".$lat." long-".$long);
             }
@@ -518,37 +519,29 @@ class UserController extends Controller
             //     ]);
             // }
         // }
-    
-        // Validate the incoming request data
+
         $request->validate($rules);
     
-        // Find existing address if address_id is provided, or create a new one
         $address = isset($request->address_id) ? Address::find($request->address_id) : new Address;
     
-        // If address doesn't exist, return an error
         if (isset($request->address_id) && !$address) {
             return redirect()->back()->with('error', 'Address not found.');
         }
-    
-        // Check if shipping data exists for the given city
+
         $shippingData = ShippingCharge::where('city_id', $request->city)->first();
         if (!$shippingData) {
             return redirect()->back()->with('error', 'Shipping services not available in this area.');
         }
-    
-        // Fill the address fields with the request data
+
         $address->fill($request->except('latitude', 'longitude'));
-    
-        // If latitude and longitude are provided, set them; otherwise, set default values
-        $address->latitude = $latitude ?? $request->latitude ?? '131';  // Default to '131' if not provided
-        $address->longitude = $longitude ?? $request->longitude ?? '131'; // Default to '131' if not provided
-        $address->location_address =  $r2; // Default to '131' if not provided
-    
-        // Set user_id and current date
+
+        $address->latitude = $latitude ?? $request->latitude ?? '131'; 
+        $address->longitude = $longitude ?? $request->longitude ?? '131'; 
+        $address->location_address =  $r2; 
+
         $address->user_id = Auth::user()->id;
         $address->date = now()->setTimezone('Asia/Calcutta')->toDateTimeString();
-    
-        // Save the address and return the appropriate response
+
         if ($address->save()) {
             $message = isset($request->address_id) ? 'Address updated successfully.' : 'Address inserted successfully.';
     
