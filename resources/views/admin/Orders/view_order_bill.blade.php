@@ -101,9 +101,17 @@
           @php $total_tax += $item->type->gst_percentage_price * $item->quantity @endphp
             <tr class="product_table2">
               <td>{{ $loop->iteration }}</td>
-              <td>{{ $item->product->name ?? 'N/A' }}</td>
+              <td>{{ $item->product->name ?? 'N/A' }}
+                @if($item->combo_product != null)
+                 ,{{ $item->combo_product ?? 'N/A' }}
+                @endif
+              </td>
               <td>{{ $item->product->hsn_code ?? 'N/A' }}</td>
-              <td>{{ $item->type->type_name ?? 'N/A' }}</td>
+              <td>{{ $item->type->type_name ?? 'N/A' }}
+                @if($item->combo_product != null)
+                ,{{ $item->combo_name ?? 'N/A' }}
+                @endif
+              </td>
               <td>Rs. {{ $item->type_mrp ?? 'N/A' }}</td>
               <td>{{ $item->quantity }}</td>
               <td>Rs. {{ $item->type_mrp * $item->quantity }}</td>
@@ -119,13 +127,13 @@
               </td>
               <td>Rs. {{ $item->amount }}</td>
             </tr>
-            @if ($item->combo_product != null)
+            {{-- @if ($item->combo_product != null)
               <tr class="product_table2">
-                {{-- <td  colspan="3">Free </td> --}}
+                <td  colspan="3">Free </td>
                 <td  colspan="6">{{ $item->combo_product ?? 'N/A' }}</td>
                 <td>{{ $item->combo_name ?? 'N/A' }}</td>
               </tr>
-            @endif
+            @endif --}}
           @endforeach
           @if($order->gift_id != 0)
             <tr class="product_table2">
