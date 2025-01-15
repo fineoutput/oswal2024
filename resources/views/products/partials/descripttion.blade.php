@@ -56,7 +56,14 @@ $isInCart = !is_null($cart);
 
     <div class="details-product-price">
 
-        <p class="details-last-price">MRP: <span>{{ formatPrice($productType->first()->del_mrp) }}</span></p>
+        <p class="details-last-price">
+            MRP: 
+            @if($productType->first() && $productType->first()->del_mrp)
+                <span>{{ formatPrice($productType->first()->del_mrp) }}</span>
+            @else
+                <span>Price not available</span>
+            @endif
+        </p>
 
         <p class="details-new-price">Selling Price: <span>{{ formatPrice($productType->first()->selling_price) }}</span></p>
 
