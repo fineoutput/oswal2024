@@ -95,16 +95,16 @@ $isInCart = !is_null($cart);
         </ul>
     </div>
 
-    <input type="hidden" name="type_id" value="{{ $productType->first()->id }}">
+    <input type="hidden" name="type_id" value="{{ $productType->first()->id ?? '' }}">
 
-    <select name="type_{{ $product->id }}" style="width: 30%; border: 1px solid #d1caca;" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id }}')">
+    <select name="type_{{ $product->id ?? '' }}" style="width: 30%; border: 1px solid #d1caca;" onchange="renderProduct('{{ $product->id }}', '{{ route('home.getproduct') }}', 'type_{{ $product->id ?? '' }}')">
 
         <option value="type">Type</option>
 
         @foreach ($productType as $type)
             <option value="{{ $type->id }}"
                 {{ $loop->first ? 'selected' : '' }}>
-                {{ $type->type_name }}
+                {{ $type->type_name ?? '' }}
             </option>
         @endforeach
 
