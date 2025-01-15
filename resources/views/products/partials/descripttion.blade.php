@@ -65,9 +65,16 @@ $isInCart = !is_null($cart);
             @endif
         </p>
 
-        <p class="details-new-price">Selling Price: <span>{{ formatPrice($productType->first()->selling_price) }}</span></p>
+        <p class="details-new-price">
+            Selling Price: 
+            @if($productType->first() && $productType->first()->selling_price)
+                <span>{{ formatPrice($productType->first()->selling_price) }}</span>
+            @else
+                <span>Price not available</span>
+            @endif
+        </p>
 
-        <input type="hidden" name="type_price" value="{{ $productType->first()->selling_price }}">
+        <input type="hidden" name="type_price" value="{{ $productType->first() && $productType->first()->selling_price ? $productType->first()->selling_price : '' }}">
 
     </div>
 
@@ -75,14 +82,14 @@ $isInCart = !is_null($cart);
         <h2>about this item:</h2>
         {{-- <button class="accordion-toggle">Show More</button> --}}
         <div class="collapsible-content">
-            <p>{{ $product->long_desc }}</p>
+            <p>{{ $product->long_desc ?? '' }}</p>
             {{-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius.
                 Dignissimos, labore suscipit. Unde.</p> --}}
         </div>
         <ul>
             {{-- <li>Type: <span>Cleaner</span></li> --}}
             <li>Available: <span>in stock</span></li>
-            <li>Category: <span> {{ $product->category->name }}</span></li>
+            <li>Category: <span> {{ $product->category->name ?? '' }}</span></li>
             {{-- <li>Shipping Area: <span>All over the world</span></li> --}}
             <li>Shipping Fee: <span>Free</span></li>
         </ul>
