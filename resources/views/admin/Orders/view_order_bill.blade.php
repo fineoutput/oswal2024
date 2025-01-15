@@ -121,7 +121,7 @@
             </tr>
             @if ($item->combo_product != null)
               <tr class="product_table2">
-                <td  colspan="3">Free </td>
+                {{-- <td  colspan="3">Free </td> --}}
                 <td  colspan="6">{{ $item->combo_product ?? 'N/A' }}</td>
                 <td>{{ $item->combo_name ?? 'N/A' }}</td>
               </tr>
