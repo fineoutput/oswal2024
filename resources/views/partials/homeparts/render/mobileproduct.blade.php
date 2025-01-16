@@ -16,7 +16,11 @@
 
     <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central" fill="#ffffff" dy=".3em">
 
+        @isset($seltedType)
         {{ percentOff($seltedType->del_mrp, $seltedType->selling_price, true) }}
+        @else
+            N/A
+        @endisset
 
     </text>
 
@@ -24,7 +28,7 @@
 
 <div class="upper_txt mobile_upper_txt">
 
-    <h4>{{ $product->name }}</h4>
+    <h4>{{ $product->name ?? '' }}</h4>
 
     <div class="rates mobile_rates">
 
