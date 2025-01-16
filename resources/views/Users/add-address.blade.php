@@ -198,6 +198,8 @@
 //     });
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Ensure the DOM is fully loaded before attempting to manipulate elements
+
     // Retrieve location from localStorage
     const userLocation = localStorage.getItem("userLocation");
 
@@ -214,12 +216,19 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Latitude:", latitude);
         console.log("Longitude:", longitude);
 
-        // Populate the hidden input fields with the latitude and longitude values
-        let lat = document.getElementById("latitudeInput").value = latitude;
-        document.getElementById("longitudeInput").value = longitude;
+        // Ensure that the input fields are available before setting their values
+        const latitudeInput = document.getElementById("latitudeInput");
+        const longitudeInput = document.getElementById("longitudeInput");
 
-        console.log(lat, 'fddfssdsdf');
+        if (latitudeInput && longitudeInput) {
+            // Set the values for the hidden inputs
+            latitudeInput.value = latitude;
+            longitudeInput.value = longitude;
 
+            console.log(latitudeInput.value, longitudeInput.value, 'Inputs Updated');
+        } else {
+            console.error("Hidden input elements not found.");
+        }
     } else {
         console.error("No location data found in localStorage.");
     }

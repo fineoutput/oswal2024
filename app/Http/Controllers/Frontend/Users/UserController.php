@@ -440,8 +440,8 @@ class UserController extends Controller
        
         $lat = $request->latitude;
         $long = $request->longitude;
-        return $long;
-        $apiKey = config('constants.GOOGLE_MAP_KEY2');
+        // return $lat;
+        $apiKey = config('constants.GOOGLE_MAP_KEY');
 
             $curl = curl_init();
 
@@ -457,7 +457,7 @@ class UserController extends Controller
             ));
             
             $response = curl_exec($curl);
-            
+             
             Log::info("THIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
