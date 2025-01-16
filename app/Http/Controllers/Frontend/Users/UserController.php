@@ -440,6 +440,7 @@ class UserController extends Controller
        
         $lat = $request->latitude;
         $long = $request->longitude;
+        return $long;
         $apiKey = config('constants.GOOGLE_MAP_KEY2');
 
             $curl = curl_init();

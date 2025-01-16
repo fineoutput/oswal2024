@@ -178,24 +178,49 @@
 
   <!-- Main Script -->
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-        // Retrieve location from localStorage
-        const userLocation = localStorage.getItem("userLocation");
-        if (userLocation) {
-            const location = JSON.parse(userLocation);
-            const latitude = location.latitude;
-            const longitude = location.longitude;
+//   document.addEventListener("DOMContentLoaded", () => {
+//         // Retrieve location from localStorage
+//         const userLocation = localStorage.getItem("userLocation");
+//         if (userLocation) {
+//             const location = JSON.parse(userLocation);
+//             const latitude = location.latitude;
+//             const longitude = location.longitude;
 
-            console.log("Latitude:", latitude);
-            console.log("Longitude:", longitude);
+//             console.log("Latitude:", latitude);
+//             console.log("Longitude:", longitude);
 
-            // Populate hidden inputs
-            document.getElementById("latitudeInput").value = latitude;
-            document.getElementById("longitudeInput").value = longitude;
-        } else {
-            console.error("No location data found in localStorage.");
-        }
-    });
+//             // Populate hidden inputs
+//             document.getElementById("latitudeInput").value = latitude;
+//             document.getElementById("longitudeInput").value = longitude;
+//         } else {
+//             console.error("No location data found in localStorage.");
+//         }
+//     });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Retrieve location from localStorage
+    const userLocation = localStorage.getItem("userLocation");
+
+    // Check if the location exists in localStorage
+    if (userLocation) {
+        // Parse the JSON string to an object
+        const location = JSON.parse(userLocation);
+
+        // Extract latitude and longitude from the parsed object
+        const latitude = location.latitude;
+        const longitude = location.longitude;
+
+        // Log the values to the console for debugging
+        console.log("Latitude:", latitude);
+        console.log("Longitude:", longitude);
+
+        // Populate the hidden input fields with the latitude and longitude values
+        document.getElementById("latitudeInput").value = latitude;
+        document.getElementById("longitudeInput").value = longitude;
+    } else {
+        console.error("No location data found in localStorage.");
+    }
+});
 
     document.addEventListener("DOMContentLoaded", () => {
     // Function to request and store location
