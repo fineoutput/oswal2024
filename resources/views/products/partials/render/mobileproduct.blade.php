@@ -15,7 +15,7 @@
 
     <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central"fill="#ffffff" dy=".3em">
 
-        {{ percentOff($seltedType->del_mrp, $seltedType->selling_price, true) }}
+        {{ percentOff($seltedType->del_mrp ?? 0, $seltedType->selling_price ?? 0, true) }}
 
     </text>
 
@@ -23,7 +23,7 @@
 
 <div class="upper_txt det_txt mobile_det">
 
-    <h4>{{ $product->name }}</h4>
+    <h4>{{ $product->name ?? '' }}</h4>
 
 </div>
 
@@ -33,9 +33,9 @@
 
         <del style="color: red;">{{ formatPrice($seltedType->del_mrp) }}</del>
 
-        <p>{{ formatPrice($seltedType->selling_price) }}</p>
+        <p>{{ formatPrice($seltedType->selling_price ?? 0) }}</p>
 
-        <input type="hidden" name="type_price" value="{{ $seltedType->selling_price }}">
+        <input type="hidden" name="type_price" value="{{ $seltedType->selling_price ?? '' }}">
 
     </div>
 
@@ -45,17 +45,17 @@
 
     <div class="upper_txt_input mobile_input">
 
-        <input type="hidden" name="type_id" value="{{ $seltedType->id }}">
+        <input type="hidden" name="type_id" value="{{ $seltedType->id ?? '' }}">
 
-        <select name="mob_type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'mob_type_{{ $product->id }}')">
+        <select name="mob_type_{{ $product->id ?? '' }}" onchange="renderProduct('{{ $product->id ?? '' }}', '{{ route('getproduct') }}', 'mob_type_{{ $product->id ?? '' }}')">
 
             <option value="type">Type</option>
 
             @foreach ($productType as $type)
 
-                <option value="{{ $type->id }}" {{ $type->id == $seltedType->id ? 'selected' : '' }}>
+                <option value="{{ $type->id ?? '' }}" {{ $type->id == $seltedType->id ? 'selected' : '' }}>
 
-                    {{ $type->type_name }}
+                    {{ $type->type_name ?? '' }}
 
                 </option>
 
@@ -67,19 +67,19 @@
 
     <div class="button-container addButton">
 
-        <span class="buttonText" id="mob_add-to-cart-section{{ $product->id }}" @if($cart) style="display: none;" @endif onclick="manageCart({{ $product->id }})">Add</span>
+        <span class="buttonText" id="mob_add-to-cart-section{{ $product->id ?? '' }}" @if($cart) style="display: none;" @endif onclick="manageCart({{ $product->id ?? '' }})">Add</span>
 
-        <div class="controlButtons" @if(!$cart) style="display: none;" @endif id="mob_quantity-section{{ $product->id }}">
+        <div class="controlButtons" @if(!$cart) style="display: none;" @endif id="mob_quantity-section{{ $product->id ?? '' }}">
 
             <div class="increment-decrement">
 
-                <button class="btn-decrease" id="btn-decrement{{ $product->id }}"  onclick="decrement({{ $product->id }})">-</button>
+                <button class="btn-decrease" id="btn-decrement{{ $product->id ?? '' }}"  onclick="decrement({{ $product->id ?? '' }})">-</button>
 
-                <span class="number-display{{ $product->id }}">1</span>
+                <span class="number-display{{ $product->id ?? '' }}">1</span>
 
-                <input id="mob_quantity-input{{ $product->id }}" type="hidden" name="quantity" value="{{ $cart->quantity ?? 0 }}" size="1" />
+                <input id="mob_quantity-input{{ $product->id ?? '' }}" type="hidden" name="quantity" value="{{ $cart->quantity ?? 0 }}" size="1" />
 
-                <button class="btn-increase" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
+                <button class="btn-increase" id="btn-increment{{ $product->id ?? '' }}" onclick="increment({{ $product->id ?? '' }})">+</button>
 
             </div>
 
