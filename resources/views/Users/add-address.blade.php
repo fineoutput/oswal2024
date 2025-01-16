@@ -51,7 +51,9 @@
 
             @csrf
 
-            @if ($address != null) <input type="hidden" name="address_id" value="{{$address->id}}"> @endif
+            @if ($address != null)
+             <input type="hidden" name="address_id" value="{{$address->id}}">
+              @endif
 
             <input type="hidden" value="{{ $redirect }}" name="redirect">
             
@@ -156,7 +158,7 @@
                 @enderror
             </div>
             <input type="hidden" name="latitude" id="latitudeInput">
-    <input type="hidden" name="longitude" id="longitudeInput">
+            <input type="hidden" name="longitude" id="longitudeInput">
 
             <div class="form-group">
 
