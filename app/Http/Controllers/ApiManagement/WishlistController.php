@@ -400,40 +400,77 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'message' => 'This Product Already Exists In Cart', 'data' =>  $cartItem], 200);
         }
 
-        if($user->role_type == 1){
-        $typeData = Type::where('product_id', $product->id)
-                        ->where('is_active', 1)
-                        ->where(function ($query) use ($data) {
-                            if ($data['state_id']) {
-                                $query->where('state_id', $data['state_id']);
-                            }
-                            if ($data['city_id']) {
-                                $query->where('city_id', $data['city_id']);
-                            }
-                        })
-                        ->orWhere(function ($query) use ($data, $wishlist) {
-                            $query->where('id', $data['type_id'] ?? $wishlist->type_id);
-                        })
-                        ->first();
-                    }else{
-                        $typeData = VendorType::where('product_id', $product->id)
-                        ->where('is_active', 1)
-                        ->where(function ($query) use ($data) {
-                            if ($data['state_id']) {
-                                $query->where('state_id', $data['state_id']);
-                            }
-                            if ($data['city_id']) {
-                                $query->where('city_id', $data['city_id']);
-                            }
-                        })
-                        ->orWhere(function ($query) use ($data, $wishlist) {
-                            $query->where('id', $data['type_id'] ?? $wishlist->type_id);
-                        })
-                        ->first();
-                        $type_price = DB::table('type_subs')->where('type_id',$typeData->id)->get();
-                        //  return $type_price;
-                        $typeData->selling_price = $type_price;
-                    }
+        // if($user->role_type == 1){
+        // $typeData = Type::where('product_id', $product->id)
+        //                 ->where('is_active', 1)
+        //                 ->where(function ($query) use ($data) {
+        //                     if ($data['state_id']) {
+        //                         $query->where('state_id', $data['state_id']);
+        //                     }
+        //                     if ($data['city_id']) {
+        //                         $query->where('city_id', $data['city_id']);
+        //                     }
+        //                 })
+        //                 ->orWhere(function ($query) use ($data, $wishlist) {
+        //                     $query->where('id', $data['type_id'] ?? $wishlist->type_id);
+        //                 })
+        //                 ->first();
+        //             }else{
+        //                 $typeData = VendorType::where('product_id', $product->id)
+        //                 ->where('is_active', 1)
+        //                 ->where(function ($query) use ($data) {
+        //                     if ($data['state_id']) {
+        //                         $query->where('state_id', $data['state_id']);
+        //                     }
+        //                     if ($data['city_id']) {
+        //                         $query->where('city_id', $data['city_id']);
+        //                     }
+        //                 })
+        //                 ->orWhere(function ($query) use ($data, $wishlist) {
+        //                     $query->where('id', $data['type_id'] ?? $wishlist->type_id);
+        //                 })
+        //                 ->first();
+        //                 $type_price = DB::table('type_subs')->where('type_id',$typeData->id)->get();
+        //                 //  return $type_price;
+        //                 $typeData->selling_price = $type_price;
+        //             }
+
+        if ($user->role_type == 1) {
+            // Code for role_type 1
+            $typeData = Type::where('product_id', $product->id)
+                            ->where('is_active', 1)
+                            ->where(function ($query) use ($data) {
+                                if ($data['state_id']) {
+                                    $query->where('state_id', $data['state_id']);
+                                }
+                                if ($data['city_id']) {
+                                    $query->where('city_id', $data['city_id']);
+                                }
+                            })
+                            ->orWhere(function ($query) use ($data, $wishlist) {
+                                $query->where('id', $data['type_id'] ?? $wishlist->type_id);
+                            })
+                            ->first();
+        } else {
+            // Code for other role_type
+            $typeData = VendorType::where('product_id', $product->id)
+                                  ->where('is_active', 1)
+                                  ->where(function ($query) use ($data) {
+                                      if ($data['state_id']) {
+                                          $query->where('state_id', $data['state_id']);
+                                      }
+                                      if ($data['city_id']) {
+                                          $query->where('city_id', $data['city_id']);
+                                      }
+                                  })
+                                  ->orWhere(function ($query) use ($data, $wishlist) {
+                                      $query->where('id', $data['type_id'] ?? $wishlist->type_id);
+                                  })
+                                  ->first();
+        
+            $type_price = DB::table('type_subs')->where('type_id', $typeData->id)->get();
+            $typeData->selling_price = $type_price;
+        }
 
         if (!$typeData) {
             return response()->json(['success' => false, 'message' => 'Type data not found'], 404);
