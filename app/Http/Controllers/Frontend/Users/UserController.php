@@ -460,7 +460,7 @@ class UserController extends Controller
             Log::info("THIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
-            return $r;
+            // return $r;
             $r2 = null;
             if($r->status == "INVALID_REQUEST"){
                 Log::info("address error" . $r->error_message." lat-".$lat." long-".$long);
