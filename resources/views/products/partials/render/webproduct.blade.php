@@ -19,7 +19,7 @@
 
     <text x="50%" y="50%" font-size="6" text-anchor="middle" alignment-baseline="central" fill="#ffffff" dy=".3em">
 
-        {{ percentOff($seltedType->del_mrp, $seltedType->selling_price, true) }}
+        {{ percentOff($seltedType->del_mrp ?? 0, $seltedType->selling_price ?? 0, true) }}
 
     </text>
 
@@ -27,19 +27,31 @@
 
 <div class="upper_txt det_txt">
 
-    <h4>{{ $product->name }}</h4>
+    <h4>{{ $product->name ?? '' }}</h4>
 
     <div class="rates">
 
         <del>
 
-            <p class="prev_rate">{{ formatPrice($seltedType->del_mrp) }}</p>
+            <p class="prev_rate">
+                @isset($seltedType->del_mrp)
+                    {{ formatPrice($seltedType->del_mrp) }}
+                @else
+                    N/A
+                @endisset
+            </p>
 
         </del>
 
-        <p>{{ formatPrice($seltedType->selling_price) }}</p>
+        <p>
+            @isset($seltedType->selling_price)
+                {{ formatPrice($seltedType->selling_price) }}
+            @else
+                N/A
+            @endisset
+        </p>
 
-        <input type="hidden" name="type_price" value="{{ $seltedType->selling_price }}">
+        <input type="hidden" name="type_price" value="{{ $seltedType->selling_price ?? '' }}">
 
     </div>
 
@@ -49,16 +61,16 @@
 
     <div class="upper_txt_input">
 
-        <input type="hidden" name="type_id" value="{{ $seltedType->id }}">
+        <input type="hidden" name="type_id" value="{{ $seltedType->id ?? '' }}">
 
-        <select name="type_{{ $product->id }}" onchange="renderProduct('{{ $product->id }}', '{{ route('getproduct') }}', 'type_{{ $product->id }}')">
+        <select name="type_{{ $product->id ?? '' }}" onchange="renderProduct('{{ $product->id ?? '' }}', '{{ route('getproduct') }}', 'type_{{ $product->id ?? '' }}')">
 
             <option value="type">Type</option>
 
             @foreach ($productType as $type)
 
-                <option value="{{ $type->id }}" {{ $type->id == $seltedType->id ? 'selected' : '' }}>
-                    {{ $type->type_name }}
+                <option value="{{ $type->id ?? '' }}" {{ $type->id == $seltedType->id ? 'selected' : '' }}>
+                    {{ $type->type_name ?? '' }}
                 </option>
 
             @endforeach
@@ -69,22 +81,22 @@
 
     <div class="upper_txt_qty det_txt_qnt">
 
-        <div class="quant" id="quantity-section{{ $product->id }}"
+        <div class="quant" id="quantity-section{{ $product->id ?? '' }}"
             @if ($cart == null) style="display: none;" @endif>
 
             <div class="input-group det_input_grp" style="display: flex; align-items: center;">
 
-                <button type="button" class="btn btn-outline-secondary btn-decrement" style="margin-right: 5px;"id="btn-decrement{{ $product->id }}" onclick="decrement({{ $product->id }})">-</button>
+                <button type="button" class="btn btn-outline-secondary btn-decrement" style="margin-right: 5px;"id="btn-decrement{{ $product->id ?? '' }}" onclick="decrement({{ $product->id ?? '' }})">-</button>
 
                 <input class="qv-quantity form-control quantity-input" id="quantity-input{{ $product->id }}" type="number" name="quantity" min="0" value="{{ $cart->quantity ?? 0 }}" max="5" size="1" step="1" style="width: 60px; text-align: center;" />
 
-                <button type="button" class="btn btn-outline-secondary btn-increment" style="margin-left: 5px;" id="btn-increment{{ $product->id }}" onclick="increment({{ $product->id }})">+</button>
+                <button type="button" class="btn btn-outline-secondary btn-increment" style="margin-left: 5px;" id="btn-increment{{ $product->id ?? '' }}" onclick="increment({{ $product->id ?? '' }})">+</button>
 
             </div>
 
         </div>
 
-        <div class="add_to_cart_button" id="add-to-cart-section{{ $product->id }}" @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id }})">
+        <div class="add_to_cart_button" id="add-to-cart-section{{ $product->id ?? '' }}" @if ($cart != null) style="display: none;" @endif onclick="manageCart({{ $product->id ?? '' }})">
 
             <button> <span>Add</span> </button>
 
