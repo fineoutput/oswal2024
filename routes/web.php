@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\adminlogincontroller;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckOutController;
+use App\Http\Controllers\Frontend\WebhookController;
 use App\Http\Controllers\Frontend\Auth\UserAuthController;
 use App\Http\Controllers\Frontend\Users\UserController;
 use App\Http\Controllers\Frontend\Users\WishlistController;
@@ -34,6 +35,7 @@ Route::get('/clear-cache', function () {
 Route::group(['prefix' => '/'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('/');
+    Route::post('/webhook', [WebhookController::class, 'handleWebhook']);
 
     Route::get('/category-list/{type?}', [HomeController::class, 'category'])->name('category-list');
 
