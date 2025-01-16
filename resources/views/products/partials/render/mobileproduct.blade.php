@@ -31,7 +31,7 @@
 
     <div class="d-flex" style="font-size: 0.8rem; gap: 5px;">
 
-        <del style="color: red;">{{ formatPrice($seltedType->del_mrp) }}</del>
+        <del style="color: red;">{{ formatPrice($seltedType->del_mrp ?? 0) }}</del>
 
         <p>{{ formatPrice($seltedType->selling_price ?? 0) }}</p>
 
