@@ -215,8 +215,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Longitude:", longitude);
 
         // Populate the hidden input fields with the latitude and longitude values
-        document.getElementById("latitudeInput").value = latitude;
+        let lat = document.getElementById("latitudeInput").value = latitude;
         document.getElementById("longitudeInput").value = longitude;
+
+        console.log(lat, 'fddfssdsdf');
+
     } else {
         console.error("No location data found in localStorage.");
     }
