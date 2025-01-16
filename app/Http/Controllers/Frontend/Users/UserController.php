@@ -457,7 +457,7 @@ class UserController extends Controller
             
             $response = curl_exec($curl);
             
-            // Log::info("THIS IS THE ADDRESS" . $response);
+            Log::info("THIS IS THE ADDRESS" . $response);
             curl_close($curl);
             $r = json_decode($response);
             $r2 = null;
