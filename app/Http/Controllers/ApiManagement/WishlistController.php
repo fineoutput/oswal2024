@@ -142,6 +142,7 @@ class WishlistController extends Controller
         }
 
         $user = User::where('id',$user_id)->first();
+        return $user; 
 
     
         // $device_id = $user->device_id;
