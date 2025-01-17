@@ -41,10 +41,26 @@
       height: 500px;
       width: 100%;
     }
+    .locc{
+        border: none;
+        color: #00b17a;
+        font-weight: bold;
+    }
+    .mu_loc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
     </style>
 
     <div class="container">
         <div class="row">
+        <div class="col-lg-6">
+            <h1>Google Maps Location Picker</h1>
+<div id="map" style="height: 500px;"></div>
+<p>Selected Location: <span id="location"></span></p>
+
+</div>
             <div class="col-lg-6">
             <h2>Add Address</h2>
 
@@ -158,24 +174,25 @@
 
         @enderror
     </div>
+
+    <div class="lo_mis mb-2">
+        <div class="mu_loc">
+            <img src="{{asset('images/send-location.png')}}" alt="">
+            <button class="locc" id="locateButton">use my current location</button>
+        </div>
+    </div>
     <input type="hidden" name="latitude" id="latitudeInput">
     <input type="hidden" name="longitude" id="longitudeInput">
 
     <div class="form-group">
 
-        <button type="">Update Information</button>
+        <button type="" class="hillo">Update Information</button>
 
     </div>
 
 </form>
             </div>
-            <div class="col-lg-6">
-            <h1>Google Maps Location Picker</h1>
-<div id="map" style="height: 500px;"></div>
-<p>Selected Location: <span id="location"></span></p>
-<button class="animated-button" id="locateButton">Get current location</button>
-
-</div>
+            
 <!-- Load Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ5Ns4p7EPERf63-neMQvYI8EqYnW3Vns&callback=initMap&libraries=places" async defer></script>
 
