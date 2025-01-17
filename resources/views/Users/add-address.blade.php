@@ -163,7 +163,7 @@
 
     <div class="form-group">
 
-        <button type="">Update Information</button>
+        <button type="submit">Update Information</button>
 
     </div>
 
@@ -173,7 +173,8 @@
             <h1>Google Maps Location Picker</h1>
 <div id="map" style="height: 500px;"></div>
 <p>Selected Location: <span id="location"></span></p>
-<button class="animated-button" id="locateButton">Get current location</button>
+<button class="animated-button" id="locateButton" onclick="setLocationClicked()">Get current location</button>
+
 </div>
 <!-- Load Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ5Ns4p7EPERf63-neMQvYI8EqYnW3Vns&callback=initMap&libraries=places" async defer></script>
@@ -185,6 +186,22 @@
 
   <!-- Main Script -->
   <script>
+     let locationClicked = false;
+
+// Function to mark location as clicked
+function setLocationClicked() {
+    locationClicked = true;
+}
+console.log(locationClicked, "alert check for click on the button");
+
+// Function to check if location has been clicked
+function checkLocationClicked(event) {
+    if (!locationClicked) {
+        alert('Please click on "Get current location" before submitting the form.');
+        return false; // Prevent form submission
+    }
+    return true; // Allow form submission
+}
 //   document.addEventListener("DOMContentLoaded", () => {
 //         // Retrieve location from localStorage
 //         const userLocation = localStorage.getItem("userLocation");
@@ -354,7 +371,7 @@ function updateLocation() {
   const position = marker.getPosition();
   const lat = position.lat();
   const lng = position.lng();
-    console.log(lng, lat, "thudjfbjasdjsdbhjsbdjbk");
+    console.log(lng, lat, "lat long printing on button click");
     
   // Display the latitude and longitude
   document.getElementById('location').textContent = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
