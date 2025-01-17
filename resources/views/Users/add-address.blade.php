@@ -45,6 +45,7 @@
         border: none;
         color: #00b17a;
         font-weight: bold;
+        cursor: pointer;
     }
     .mu_loc {
     display: flex;
@@ -178,7 +179,7 @@
     <div class="lo_mis mb-2">
         <div class="mu_loc">
             <img src="{{asset('images/send-location.png')}}" alt="">
-            <button class="locc" id="locateButton">use my current location</button>
+            <a class="locc" id="locateButton">use my current location</a>
         </div>
     </div>
     <input type="hidden" name="latitude" id="latitudeInput">
