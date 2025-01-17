@@ -163,7 +163,7 @@
 
     <div class="form-group">
 
-        <button type="">Update Information</button>
+        <button id="locateButton" type="">Update Information</button>
 
     </div>
 
@@ -173,7 +173,7 @@
             <h1>Google Maps Location Picker</h1>
 <div id="map" style="height: 500px;"></div>
 <p>Selected Location: <span id="location"></span></p>
-<button class="animated-button" id="locateButton">Get current location</button>
+<!-- <button class="animated-button">Get current location</button> -->
 </div>
 <!-- Load Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ5Ns4p7EPERf63-neMQvYI8EqYnW3Vns&callback=initMap&libraries=places" async defer></script>
