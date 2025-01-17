@@ -53,10 +53,10 @@
 }
     </style>
 
-    <div class="container">
+    <div class="container p-5">
         <div class="row">
         <div class="col-lg-6">
-            <h1>Google Maps Location Picker</h1>
+            <h4>Google Maps Location Picker</h4>
 <div id="map" style="height: 500px;"></div>
 <p>Selected Location: <span id="location"></span></p>
 
