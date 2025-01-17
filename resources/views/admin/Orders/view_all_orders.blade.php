@@ -297,7 +297,10 @@
                 $output = \Illuminate\Support\Str::limit($output, 50);
             @endphp
 
-            {!! $output !!}<br>
+            {!! $output !!}
+            @if ($index < $order->orderDetails->count() - 1)
+                ,<br>
+            @endif
         @endforeach
     @else
         N/A
