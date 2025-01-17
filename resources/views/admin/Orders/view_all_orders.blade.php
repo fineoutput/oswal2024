@@ -177,15 +177,11 @@
                                                             @endif
                                                         </td>
                                                         @php
-                                                            $custom_address =
-                                                                $order->address->doorflat .
-                                                                ' ' .
-                                                                $order->address->landmark .
-                                                                ' ' .
-                                                                $order->address->address .
-                                                                ' ' .
-                                                                $order->address->zipcode;
-                                                        @endphp
+                                                        $custom_address = optional($order->address)->doorflat . ' ' .
+                                                                        optional($order->address)->landmark . ' ' .
+                                                                        optional($order->address)->address . ' ' .
+                                                                        optional($order->address)->zipcode;
+                                                    @endphp
 
                                                         <td> {{ $custom_address }}</td>
 
