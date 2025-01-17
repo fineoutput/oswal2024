@@ -183,17 +183,17 @@
                                                                         optional($order->address)->zipcode;
                                                     @endphp
 
-                                                        <td> {{ $custom_address }}</td>
+                                                        <td> {{ $custom_address ?? '' }}</td>
 
-                                                        <td> {{ $order->address->location_address }}</td>
+                                                        <td> {{ $order->address->location_address ?? '' }}</td>
 
-                                                        <td> {{ $order->user->contact }}</td>
+                                                        <td> {{ $order->user->contact ?? '' }}</td>
 
-                                                        <td> {{ $order->address->citys->city_name }}</td>
+                                                        <td> {{ $order->address->citys->city_name ?? '' }}</td>
 
-                                                        <td> {{ $order->address->states->state_name }}</td>
+                                                        <td> {{ $order->address->states->state_name ?? '' }}</td>
 
-                                                        <td> {{ $order->address->zipcode }}</td>
+                                                        <td> {{ $order->address->zipcode ?? '' }}</td>
 
                                                         <td>
                                                             @if ($order->payment_type == 1)
@@ -203,7 +203,7 @@
                                                             @endif
                                                         </td>
 
-                                                        <td> {{ $order->cod_charge }}</td>
+                                                        <td> {{ $order->cod_charge ?? '' }}</td>
 
                                                         <td>
                                                             @if ($order->order_status == 1)
@@ -254,7 +254,7 @@
                                                         @endif
                                                         </td>
 
-                                                        <td> {{ $order->track_id }}</td>
+                                                        <td> {{ $order->track_id ?? '' }}</td>
 
                                                         <td>
                                                             {{ getRejectedByDetails($order->rejected_by, $order->rejected_by_id) }}
@@ -308,7 +308,7 @@
 
                                                         </td>
 
-                                                        <td> {{ $order->order_from }}</td>
+                                                        <td> {{ $order->order_from ?? '' }}</td>
                                                         <td> @if($order->average_rating == '5')
                                                                 <i class="fa-solid fa-star"></i>
                                                                 <i class="fa-solid fa-star"></i>
@@ -352,8 +352,8 @@
                                                             @endif
                                                        </td>
 
-                                                       <td>{{  $order->remarks }}</td>
-                                                       <td>{{  $order->total_order_weight }}</td>
+                                                       <td>{{  $order->remarks ?? '' }}</td>
+                                                       <td>{{  $order->total_order_weight ?? '' }}</td>
                                                        <td>
                                                         @if($order->order_status == 1)
                                                         New Order
