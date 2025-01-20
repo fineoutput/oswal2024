@@ -464,7 +464,7 @@ class UserController extends Controller
             // return $r;
             $r2 = null;
             if($r->status == "INVALID_REQUEST"){
-                Log::info("address error" . $r->error_message." lat-".$lat." long-".$long);
+                // Log::info("address error" . $r->error_message." lat-".$lat." long-".$long);
             }
             else{
                 $r2 = $r->results[0]->formatted_address;
