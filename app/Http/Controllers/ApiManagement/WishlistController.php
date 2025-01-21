@@ -146,14 +146,14 @@ class WishlistController extends Controller
 
     
         // $device_id = $user->device_id;
-        if (empty($user->device_id)) {
-            Log::info('Device ID is null', [
-                'user' => $user->id ?? 'Guest',
-                'timestamp' => now(),
-                'message' => 'Device ID is missing in the request.'
-            ]);
-            Log::info("Wishlist error: " . $user_id." auth-".$auth_token);
-        }
+        // if (empty($user->device_id)) {
+        //     Log::info('Device ID is null', [
+        //         'user' => $user->id ?? 'Guest',
+        //         'timestamp' => now(),
+        //         'message' => 'Device ID is missing in the request.'
+        //     ]);
+        //     Log::info("Wishlist error: " . $user_id." auth-".$auth_token);
+        // }
     
 
         // $user_id   = $user->id;
