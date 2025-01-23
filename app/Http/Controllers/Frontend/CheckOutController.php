@@ -86,7 +86,7 @@ class CheckOutController extends Controller
             $orderdetails = Order::with('orderDetails', 'orderDetails.product', 'orderDetails.type')->where('id', $orderId)->first();
 
             $updateprice = Type::where('product_id',$orderdetails->product_id)->get(); 
-            return $updateprice;
+            // return $updateprice;
 
             if ($orderdetails && $orderdetails->order_status == 0) {
 
