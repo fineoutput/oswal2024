@@ -50,8 +50,6 @@ class CheckOutController extends Controller
     public function checkout(Request $request)
     {
 
-        return $request;
-        
         $addressId = $request->input('address_id') ?? session('address_id');
 
         if ($addressId == null) {
@@ -86,6 +84,7 @@ class CheckOutController extends Controller
             $orderId = session('order_id');
 
             $orderdetails = Order::with('orderDetails', 'orderDetails.product', 'orderDetails.type')->where('id', $orderId)->first();
+            return $orderdetails;
 
             if ($orderdetails && $orderdetails->order_status == 0) {
 
