@@ -49,6 +49,8 @@ class CheckOutController extends Controller
 
     public function checkout(Request $request)
     {
+
+        return $request;
         
         $addressId = $request->input('address_id') ?? session('address_id');
 
