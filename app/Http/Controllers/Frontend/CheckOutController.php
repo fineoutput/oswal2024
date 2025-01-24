@@ -87,31 +87,11 @@ class CheckOutController extends Controller
 
             $userAddressid = Address::findOrFail($addressId);
 
-            echo '<pre>';
-print_r($orderdetails);
-echo '</pre>';
-            if (isset($orderdetails['order_details']) && !empty($orderdetails['order_details'])) {
-                // Check if the 'product' object exists inside the first order details
-                if (isset($orderdetails['order_details'][0]['product']['id'])) {
-                    // Access the product_id inside the 'product' object
-                    $product_id = $orderdetails['order_details'][0]['product']['id'];
-                    
-                    // Optionally, you can access the type_name as well
-                    $type_name = $orderdetails['order_details'][0]['type']['type_name'];
-                    
-                    // Return or use the values
-                    return [
-                        'product_id' => $product_id,
-                        'type_name' => $type_name
-                    ];
-                } else {
-                    return 'Product ID not found.';
-                }
-            } else {
-                return 'No order details found.';
-            }
+            $product_id = $orderdetails[0]->product_id;  // Access the product_id directly
+            // or
+            $product_id = $orderdetails[0]->getAttribute('product_id');
 
-// return $userAddressid;
+            return $product_id;
 
             $updateprice = Type::where('product_id',$orderdetails->product_id)->where('state_id',$userAddressid->state)->where('city_id',$userAddressid->city)->get(); 
             // return $updateprice;
