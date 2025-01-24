@@ -87,6 +87,9 @@ class CheckOutController extends Controller
 
             $userAddressid = Address::findOrFail($addressId);
 
+            echo '<pre>';
+print_r($orderdetails);
+echo '</pre>';
             if (isset($orderdetails['order_details']) && !empty($orderdetails['order_details'])) {
                 // Check if the 'product' object exists inside the first order details
                 if (isset($orderdetails['order_details'][0]['product']['id'])) {
@@ -107,7 +110,7 @@ class CheckOutController extends Controller
             } else {
                 return 'No order details found.';
             }
-            
+
 // return $userAddressid;
 
             $updateprice = Type::where('product_id',$orderdetails->product_id)->where('state_id',$userAddressid->state)->where('city_id',$userAddressid->city)->get(); 
