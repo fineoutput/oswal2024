@@ -87,9 +87,9 @@ class CheckOutController extends Controller
 
             $userAddressid = Address::findOrFail($addressId);
 
-return $userAddressid;
+return $orderdetails;
 
-            $updateprice = Type::where('product_id',$orderdetails->product_id)->where()->get(); 
+            $updateprice = Type::where('product_id',$orderdetails->product_id)->where('state_id',$userAddressid->state)->where('city_id',$userAddressid->city)->get(); 
             // return $updateprice;
 
             if ($orderdetails && $orderdetails->order_status == 0) {
