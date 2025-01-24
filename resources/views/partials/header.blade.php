@@ -713,12 +713,23 @@
     
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+    // Check if the user has already selected a state and city
+    const hasSelectedLocation = sessionStorage.getItem('locationSelected');
+
+    if (!hasSelectedLocation) {
         var myModal = new bootstrap.Modal(document.getElementById('basicModal'), {
             backdrop: 'static', 
             keyboard: false     
         });
         myModal.show();
+    }
+
+    // Add event listener to the form submission
+    document.querySelector('#basicModal form').addEventListener('submit', function() {
+        // Set a flag in sessionStorage to indicate the user has made a selection
+        sessionStorage.setItem('locationSelected', 'true');
     });
+});
 </script>
 
 @endif
