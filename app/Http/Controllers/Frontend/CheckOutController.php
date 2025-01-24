@@ -87,11 +87,11 @@ class CheckOutController extends Controller
 
             $userAddressid = Address::findOrFail($addressId);
 
-            $product_id = $orderdetails[0]->product_id;  // Access the product_id directly
-            // or
-            $product_id = $orderdetails[0]->getAttribute('product_id');
+            // $product_id = $orderdetails[0]->product_id;  // Access the product_id directly
+            // // or
+            // $product_id = $orderdetails[0]->getAttribute('product_id');
 
-            return $product_id;
+            // return $product_id;
 
             $updateprice = Type::where('product_id',$orderdetails->product_id)->where('state_id',$userAddressid->state)->where('city_id',$userAddressid->city)->get(); 
             // return $updateprice;
