@@ -49,7 +49,7 @@ class CheckOutController extends Controller
 
     public function checkout(Request $request)
     {
-
+        // return $request;
         $addressId = $request->input('address_id') ?? session('address_id');
 
         if ($addressId == null) {
@@ -85,7 +85,11 @@ class CheckOutController extends Controller
 
             $orderdetails = Order::with('orderDetails', 'orderDetails.product', 'orderDetails.type')->where('id', $orderId)->first();
 
-            $updateprice = Type::where('product_id',$orderdetails->product_id)->get(); 
+            $userAddressid = Address::findOrFail($addressId);
+
+return $userAddressid;
+
+            $updateprice = Type::where('product_id',$orderdetails->product_id)->where()->get(); 
             // return $updateprice;
 
             if ($orderdetails && $orderdetails->order_status == 0) {

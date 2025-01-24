@@ -349,6 +349,7 @@ class HomeController extends Controller
     public function getAddress(Request $request, $place = null) {
         // Get all addresses for the logged-in user
         // return Auth::user()->id;
+        // return $request;
         $addresses = Address::where('user_id', Auth::user()->id)->get();
         // Initialize an array to hold the address data
         $address_data = [];
