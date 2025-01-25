@@ -698,7 +698,7 @@ class AppController extends Controller
         // return $user;
 
         $data = [
-            'wallet_amount' => $user->wallet_amount,
+            'wallet_amount' => $user->wallet_amount ?? '',
         ];
 
         return response()->json(['success' => true, 'data' => $data]);
