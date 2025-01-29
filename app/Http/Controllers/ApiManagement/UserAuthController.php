@@ -410,7 +410,8 @@ class UserAuthController extends Controller
             'role_type' => $user->role_type,
         ];
 
-            return response()->json([ 'status' => 200, 'token' => $token, 'data' => $data ,'message' =>  $message], 200);
+            // return response()->json([ 'status' => 200, 'token' => $token, 'data' => $data ,'message' =>  $message], 200);
+            return response()->json([ 'status' => 200, 'token' => $token, 'user' => $data ,'message' =>  $message], 200);
             
         } else {
 
@@ -468,6 +469,7 @@ class UserAuthController extends Controller
                 'message' => 'OTP sent successfully', 
                 'data' => ['contact_no' => $user->contact]
             ], 200);
+            
 
         } else {
             return response()->json(['status' => 500, 'message' => 'Error occurred while saving OTP, please try again']);
