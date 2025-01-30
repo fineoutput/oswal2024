@@ -119,20 +119,20 @@
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
 
-                                                        <td>{{ $order->product->name }}</td>
+                                                        <td>{{ $order->product->name ?? '' }}</td>
 
-                                                        <td>{{ $order->type->type_name }}</td>
+                                                        <td>{{ $order->type->type_name ?? '' }}</td>
 
-                                                        <td> {{ $order->quantity }}</td>
+                                                        <td> {{ $order->quantity ?? '' }}</td>
 
-                                                        <td> {{ $order->amount }}</td>
+                                                        <td> {{ $order->amount ?? '' }}</td>
                                                   
                                                         <td> N/A</td>
 
                                                         <td>
 
                                                             @php
-                                                                $newDate = \Carbon\Carbon::parse($order->date);
+                                                                $newDate = \Carbon\Carbon::parse($order->date );
                                                             @endphp
                                                             {{ $newDate->format('j F, Y, g:i a') }}
 
