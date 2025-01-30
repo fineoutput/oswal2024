@@ -25,12 +25,12 @@
                 Address:
                 @php
                 // dd($user);
-                    $address = $order1_data->address;
-                    $addres = $address->address;
-                    $location_addres = $address->location_address;
-                    $doorflat = $address->doorflat;
-                    $landmark = $address->landmark;
-                    $zipcode = $address->zipcode;
+                    $address = $order1_data->address ?? '';
+                    $addres = $address->address ?? '' ;
+                    $location_addres = $address->location_address ?? '';
+                    $doorflat = $address->doorflat ?? '';
+                    $landmark = $address->landmark ?? '';
+                    $zipcode = $address->zipcode ?? '';
                     $state = $address->state->state_name ?? '';
                     $city = $address->city->city_name ?? '';
                 @endphp
