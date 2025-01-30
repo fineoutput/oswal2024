@@ -98,7 +98,9 @@
             $total_tax = 0; 
           @endphp
           @foreach($orderItems as $key => $item)
-          @php $total_tax += $item->type->gst_percentage_price * $item->quantity @endphp
+          @php 
+    $total_tax += optional($item->type)->gst_percentage_price * $item->quantity;
+@endphp
             <tr class="product_table2">
               <td>{{ $loop->iteration }}</td>
               <td>{{ $item->product->name ?? 'N/A' }}
@@ -113,7 +115,7 @@
                 @endif
               </td>
               <td>Rs. {{ $item->type_mrp ?? 'N/A' }}</td>
-              <td>{{ $item->quantity }}</td>
+              <td>{{ $item->quantity ?? '' }}</td>
               <td>Rs. {{ $item->type_mrp * $item->quantity }}</td>
               <td>{{ $item->type->gst_percentage ?? 18}}%</td>
               <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
@@ -122,10 +124,10 @@
                   Rs. {{ ($item->type->gst_percentage_price * $item->quantity) / 2 }}<br>
                   Rs. {{ ($item->type->gst_percentage_price * $item->quantity) / 2 }}
                 @else
-                  Rs. {{ $item->type->gst_percentage_price * $item->quantity }}
+                Rs. {{ $item->type ? $item->type->gst_percentage_price * $item->quantity : 0 }}
                 @endif
               </td>
-              <td>Rs. {{ $item->amount }}</td>
+              <td>Rs. {{ $item->amount ?? '' }}</td>
             </tr>
             {{-- @if ($item->combo_product != null)
               <tr class="product_table2">
