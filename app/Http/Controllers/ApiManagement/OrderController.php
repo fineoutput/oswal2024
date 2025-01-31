@@ -797,7 +797,7 @@ class OrderController extends Controller
             if ($new > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
-                    'message' => "Cod not allowed for order above ₹".formatPrice($maxCodAmount)
+                    'message' => "Cod not allowed for order above ".formatPrice($maxCodAmount)
                 ]);
             }
         }
