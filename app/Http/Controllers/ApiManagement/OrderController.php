@@ -1670,9 +1670,10 @@ class OrderController extends Controller
     public function webhook_payment()
     {
 
-        Log::info("WEBHOOK ENTRY RECIEVED: ");
+      
         $entityBody = file_get_contents('php://input');
         $body = json_decode($entityBody);
+        Log::info("WEBHOOK ENTRY RECIEVED: ".$body);
         //--- insert data in webhook table --------
         if (!empty($body->event)) {
 
