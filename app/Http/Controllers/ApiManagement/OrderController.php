@@ -406,7 +406,12 @@ class OrderController extends Controller
         }
         else{
             $cod_final_amount = formatPrice(($finalAmount + getConstant()->cod_charge),false);
-            $get_online_payment_status = 1;
+            if($user->id == 12689){
+                $get_online_payment_status = 0;
+            }
+            else{
+                $get_online_payment_status = 1;
+            }
             $save_total = formatPrice(($totalSaveAmount - $totalAmount) , false);
         }
 
