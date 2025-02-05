@@ -128,5 +128,5 @@ Route::prefix('cart')->name('cart.')->group(function () {
 });
 Route::get('unroute', [AppController::class, 'unauth'])->name('unauth.route');
 Route::post('order/orders', [OrderController::class, 'orders'])->name('order/orders');
-Route::post('order/webhook_payment', [OrderController::class, 'webhook_payment'])->name('order/webhook_payment');
+Route::get('order/webhook_payment', [OrderController::class, 'webhook_payment'])->name('order/webhook_payment');
 Route::post('get-location-from-latlong', [AppController::class, 'get_location'])->name('get-location-from-latlong');
