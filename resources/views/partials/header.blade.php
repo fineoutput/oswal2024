@@ -800,21 +800,17 @@
     });
 </script>
 
-
+<? if(config('constants.LIVE_WEBSITE') == 1){ ?>
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9B6G2XQETW"></script>
 <script>
-    // Get the LIVE_WEBSITE value from the Laravel config
-    var LIVE_WEBSITE = {{ config('constants.LIVE_WEBSITE') }};
-  
-    // Conditionally execute Google Analytics script
-    if (LIVE_WEBSITE !== 0) {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-  
-      gtag('config', 'G-9B6G2XQETW');
-    }
-  </script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9B6G2XQETW');
+</script>
+<? } ?>
   
   
 
