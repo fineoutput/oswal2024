@@ -4,6 +4,7 @@ return [
         'base_path' => 'http://localhost/laravel_basic/',
         'SITE_NAME' => 'Laravel2024',
     ],
+    'LIVE_WEBSITE' => env('LIVE_WEBSITE', 1),
 
     // Google Translate API Key
     'GOOGLE_TRANSLATE_API_KEY' => 'AIzaSyC5JGbzFNaz4i0PfF45KjcGKJERalDQGP8',
