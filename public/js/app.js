@@ -492,7 +492,7 @@ let currentRequest = null;
 
 let cache = {};
 
-function renderproductview(url) {
+function renderproductview(url,category_id) {
 
   if (currentRequest) {
 
@@ -534,6 +534,40 @@ function renderproductview(url) {
 
   });
 
+  var state_id = localStorage.getItem('state_id');  // Assuming 'state_id' is stored in localStorage
+    var city_id = localStorage.getItem('city_id');    // Assuming 'city_id' is stored in localStorage
+    var ip_address = getUserIP(); // Function to get the user's current IP address
+    var visited_at = new Date().toISOString(); // Current date-time in ISO format
+
+    // Send an AJAX request to the backend to store this information in the VisitedCategory model
+    $.ajax({
+        url: '{{ route("store.visited.category") }}',  // Define the route to store the data
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            category_id: category_id,
+            state_id: state_id,
+            city_id: city_id,
+            ip_address: ip_address,
+            visited_at: visited_at
+        },
+        success: function(response) {
+            // Handle success response
+            window.location.href = route;  // Redirect to the product view page
+        },
+        error: function(error) {
+            console.log("Error:", error);
+        }
+    });
+
+}
+
+function getUserIP() {
+  var ip = '';
+  $.getJSON('https://api.ipify.org?format=json', function(data) {
+      ip = data.ip;
+  });
+  return ip;
 }
 
 function updateUI(response) {

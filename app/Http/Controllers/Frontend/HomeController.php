@@ -21,6 +21,7 @@ use App\Models\Carrier_contact;
 use App\Models\DealerEnquiry;
 
 use App\Models\Address;
+use App\Models\VisitedCategory;
 use App\Models\VisitedUsers;
 use App\Models\Popupimage;
 use Carbon\Carbon;
@@ -54,6 +55,30 @@ class HomeController extends Controller
         $data['latestPopupImage'] = Popupimage::where('status','1')->latest()->first();
 
         return view('index',$data)->with('title', 'Oswal');
+    }
+
+    public function storecategory(Request $request)
+    {
+        // Validate the incoming request
+        $validatedData = $request->validate([
+            'category_id' => 'required|integer',
+            'state_id' => 'nullable|integer',
+            'city_id' => 'nullable|integer',
+            'ip_address' => 'required|ip',
+            'visited_at' => 'required|date',
+        ]);
+
+        // Store the visit in the database
+        VisitedCategory::create([
+            'category_id' => $request->category_id,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
+            'ip_address' => $request->ip_address,
+            'visited_at' => $request->visited_at,
+        ]);
+
+        // Return a success response
+        return response()->json(['message' => 'Visit recorded successfully!']);
     }
 
     public function category(Request $request,$type=null)
