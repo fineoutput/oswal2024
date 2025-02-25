@@ -335,14 +335,15 @@ class HomeController extends Controller
                                          ->whereDate('visited_at', $currentDate)
                                          ->first();
 
-            $statedata = DB::table('user_state_city')->latest()->get();
+         $statedata = DB::table('user_state_city')->latest()->first();
+
 
         if (!$existingVisit) {
             $visitedCategory = new VisitedCategory();
             $visitedCategory->ip_address = $ipAddress;
             $visitedCategory->category_id = $categoryId;
-            $visitedCategory->state_id = $statedata->state_id;
-            $visitedCategory->city_id = $statedata->city_id;  
+            $visitedCategory->state_id = $statedata->state_id ?? null;
+            $visitedCategory->city_id = $statedata->city_id ?? null;  
             $visitedCategory->visited_at = Carbon::now(); 
             $visitedCategory->save();
         }
