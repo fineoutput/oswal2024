@@ -33,6 +33,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {   
         $ipAddress = $request->ip();
+        return $ipAddress;
         
         $currentDate = Carbon::now()->toDateString();
 
