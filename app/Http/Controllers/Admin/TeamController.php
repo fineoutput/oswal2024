@@ -11,6 +11,9 @@ use App\adminmodel\Order1Modal;
 use App\adminmodel\UserModal;
 use App\adminmodel\CategoryModal;
 use App\adminmodel\ProductModal;
+use App\Models\VisitedUsers;
+use App\Models\VisitedCategory;
+use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
@@ -18,11 +21,30 @@ class TeamController extends Controller
 	{
 		$admin_id = $req->session()->get('admin_id');
 
+		$data['VisitedUsers'] = VisitedUsers::count();
+
+		$data['category'] = DB::table('ecom_categories')->get();
+
+		$data['category_with_count'] = [];
+
+// Loop through each category
+		foreach ($data['category'] as $category) {
+			// Get the count of visits for the current category from the VisitedCategory table
+			$visitCount = VisitedCategory::where('category_id', $category->id)
+										->count();
+			
+			// Store the category and visit count in the array
+			$data['category_with_count'][] = [
+				'category' => $category,
+				'visit_count' => $visitCount
+			];
+		}
+
 		$services = json_decode($req->session()->get('services'));
 
 		if (in_array(1, $services) || in_array(999, $services)) {
 
-			return view('admin/index');
+			return view('admin/index',$data);
 		} else {
 			$service = AdminSidebar::where('id', $services[0])->first();
 			if ($service->url == "#") {
