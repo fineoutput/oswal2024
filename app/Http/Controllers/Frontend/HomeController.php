@@ -327,26 +327,37 @@ class HomeController extends Controller
 
     private function storeCategoryVisit($categoryId)
     {
-        $ipAddress = request()->ip(); 
-        $currentDate = Carbon::today(); 
-    
+        $ipAddress = request()->ip();
+        $currentDate = Carbon::today();
+        
+        // Check if the user has already visited this category today
         $existingVisit = VisitedCategory::where('ip_address', $ipAddress)
-                                         ->where('category_id', $categoryId)
-                                         ->whereDate('visited_at', $currentDate)
-                                         ->first();
-
-         $statedata = DB::table('user_state_city')->latest()->first();
-
-
-        if (!$existingVisit) {
+            ->where('category_id', $categoryId)
+            ->whereDate('visited_at', $currentDate)
+            ->first();
+        
+        // Get the latest state and city data
+        $statedata = DB::table('user_state_city')->latest()->first();
+        
+        if ($existingVisit) {
+            // Use existing state_id and city_id from the existing visit
+            $state_id = $existingVisit->state_id;
+            $city_id = $existingVisit->city_id;
+        } else {
+            // If no previous visit, use the latest state and city from the user_state_city table
+            $state_id = $statedata->state_id ?? null;
+            $city_id = $statedata->city_id ?? null;
+        
+            // Store the visit record if it doesn't already exist
             $visitedCategory = new VisitedCategory();
             $visitedCategory->ip_address = $ipAddress;
             $visitedCategory->category_id = $categoryId;
-            $visitedCategory->state_id = $statedata->state_id ?? null;
-            $visitedCategory->city_id = $statedata->city_id ?? null;  
-            $visitedCategory->visited_at = Carbon::now(); 
+            $visitedCategory->state_id = $state_id;
+            $visitedCategory->city_id = $city_id;
+            $visitedCategory->visited_at = Carbon::now();
             $visitedCategory->save();
         }
+        
     }
     
 
