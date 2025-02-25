@@ -21,7 +21,9 @@ use App\Models\Carrier_contact;
 use App\Models\DealerEnquiry;
 
 use App\Models\Address;
+use App\Models\VisitedUsers;
 use App\Models\Popupimage;
+use Carbon\Carbon;
 
 use App\Models\Type;
 
@@ -30,7 +32,25 @@ class HomeController extends Controller
     // ============================= START INDEX ============================ 
     public function index(Request $request)
     {   
+        $ipAddress = $request->ip();
+        
+        $currentDate = Carbon::now()->toDateString();
 
+        if (!$request->session()->has('visited_ip') || $request->session()->get('visited_ip') !== $ipAddress) {
+            
+            $existingVisit = VisitedUsers::where('ip_address', $ipAddress)
+                ->whereDate('visited_at', $currentDate)
+                ->first();
+
+            if (!$existingVisit) {
+                VisitedUsers::create([
+                    'ip_address' => $ipAddress,
+                    'visited_at' => now(),
+                ]);
+
+                $request->session()->put('visited_ip', $ipAddress);
+            }
+        }
         $data['latestPopupImage'] = Popupimage::where('status','1')->latest()->first();
 
         return view('index',$data)->with('title', 'Oswal');
