@@ -21,7 +21,7 @@
 
         <div class="category mobile_category">
 
-            {{-- @foreach ($categorys as $category)
+            @foreach ($categorys as $category)
                 
                 <div class="product_lien mobile_lien"  onclick="renderproductview('{{ route('getproducts', ['slug' => $category->url, 'type' => 'category']) }}')">
 
@@ -31,15 +31,7 @@
 
                 </div>
 
-            @endforeach --}}
-
-            @foreach ($categorys as $category)
-    <div class="product_lien mobile_lien" 
-         onclick="renderproductview('{{ route('getproducts', ['slug' => $category->url, 'type' => 'category']) }}', '{{ $category->id }}')">
-        <img src="{{asset($category->image)}}" alt="" />
-        <p>{{ $category->name }}</p>
-    </div>
-@endforeach
+            @endforeach
 
         </div>
 

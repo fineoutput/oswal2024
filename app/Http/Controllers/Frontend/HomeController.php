@@ -25,6 +25,8 @@ use App\Models\VisitedCategory;
 use App\Models\VisitedUsers;
 use App\Models\Popupimage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+
 
 use App\Models\Type;
 
@@ -302,7 +304,7 @@ class HomeController extends Controller
                     'banner_image' => $category->image ? asset($category->image) : null,
                     'category_name' => $category->name,
                 ];
-                
+                $this->storeCategoryVisit($category->id);
             }
             
         } elseif ($type === 'search' && $slug) {
@@ -321,6 +323,28 @@ class HomeController extends Controller
         ]);
        
     }
+
+    private function storeCategoryVisit($categoryId)
+    {
+        $ipAddress = request()->ip(); 
+        $currentDate = Carbon::today(); 
+    
+        $existingVisit = VisitedCategory::where('ip_address', $ipAddress)
+                                         ->where('category_id', $categoryId)
+                                         ->whereDate('visited_at', $currentDate)
+                                         ->first();
+
+        if (!$existingVisit) {
+            $visitedCategory = new VisitedCategory();
+            $visitedCategory->ip_address = $ipAddress;
+            $visitedCategory->category_id = $categoryId;
+            $visitedCategory->state_id = Session::get('state_id', null); // Default to null if not set
+            $visitedCategory->city_id = Session::get('city_id', null);   // Default to null if not set
+            $visitedCategory->visited_at = Carbon::now(); 
+            $visitedCategory->save();
+        }
+    }
+    
 
 
     public function renderProduct(Request $request)
