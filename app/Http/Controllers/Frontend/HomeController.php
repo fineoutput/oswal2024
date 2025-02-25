@@ -19,6 +19,7 @@ use App\Models\ContactUs;
 use App\Models\Carrier_contact;
 
 use App\Models\DealerEnquiry;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Address;
 use App\Models\VisitedCategory;
@@ -334,12 +335,14 @@ class HomeController extends Controller
                                          ->whereDate('visited_at', $currentDate)
                                          ->first();
 
+            $statedata = DB::table('user_state_city')->latest()->get();
+
         if (!$existingVisit) {
             $visitedCategory = new VisitedCategory();
             $visitedCategory->ip_address = $ipAddress;
             $visitedCategory->category_id = $categoryId;
-            $visitedCategory->state_id = Session::get('state_id', null); // Default to null if not set
-            $visitedCategory->city_id = Session::get('city_id', null);   // Default to null if not set
+            $visitedCategory->state_id = $statedata->state_id;
+            $visitedCategory->city_id = $statedata->city_id;  
             $visitedCategory->visited_at = Carbon::now(); 
             $visitedCategory->save();
         }

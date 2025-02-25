@@ -12,8 +12,11 @@ class LocationController extends Controller
 {
     public function setLocation(Request $request)
     {
-        $state = $request->input('state', 29);
-        $city = $request->input('city' , 629);
+        // $state = $request->input('state', 29);
+        // $city = $request->input('city' , 629);
+
+        $state = $request->input('state', $request->state);
+        $city = $request->input('city' , $request->city);
 
         if (Auth::check()) {
 
