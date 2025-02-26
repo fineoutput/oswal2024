@@ -269,7 +269,7 @@
 
                     <div class="row">
 
-                        <div class="col-12"> <h4 class="mt-0 header-title">Latest Page Views</h4> </div>
+                        <div class="col-12"> <h4 class="mt-0 header-title">Category Views</h4> </div>
 
                     </div>
 
