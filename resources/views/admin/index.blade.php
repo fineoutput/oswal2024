@@ -167,7 +167,7 @@
                                     <h6 class="text-uppercase verti-label text-white-50">TODAY`S WEB USERS</h6>
                                     <div class="text-white">
                                         <h6 class="text-uppercase mt-0 text-white-50">TODAY`S WEB USERS</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h3 class="mb-3 mt-0">{{$VisitedUsersToday ?? 0}}</h3>
                                         <div class="">
                                             <span class="ml-2">TODAY`S WEB USERS</span>
                                         </div>

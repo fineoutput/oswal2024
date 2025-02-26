@@ -14,6 +14,7 @@ use App\adminmodel\ProductModal;
 use App\Models\VisitedUsers;
 use App\Models\VisitedCategory;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TeamController extends Controller
 {
@@ -23,17 +24,18 @@ class TeamController extends Controller
 
 		$data['VisitedUsers'] = VisitedUsers::count();
 
+		$startOfToday = Carbon::today()->startOfDay();
+		$endOfToday = Carbon::today()->endOfDay();
+
+		$data['VisitedUsersToday'] = VisitedUsers::whereBetween('created_at', [$startOfToday, $endOfToday])->count();
+
 		$data['category'] = DB::table('ecom_categories')->get();
 
-		  // Prepare an array to store category details with their visit counts
 		  $categoryData = [];
 
-		  // Loop through each category
 		  foreach ($data['category'] as $category) {
-			  // Get the visit count for each category from the VisitedCategory table
 			  $visitCount = VisitedCategory::where('category_id', $category->id)->count();
-			  
-			  // Add the category and its visit count to the array
+
 			  $data['categoryData'][] = [
 				  'id' => $category->id,
 				  'name' => $category->name,
