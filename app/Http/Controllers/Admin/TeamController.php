@@ -25,20 +25,23 @@ class TeamController extends Controller
 
 		$data['category'] = DB::table('ecom_categories')->get();
 
-		$data['category_with_count'] = [];
+		  // Prepare an array to store category details with their visit counts
+		  $categoryData = [];
 
-// Loop through each category
-		foreach ($data['category'] as $category) {
-			// Get the count of visits for the current category from the VisitedCategory table
-			$visitCount = VisitedCategory::where('category_id', $category->id)
-										->count();
-			
-			// Store the category and visit count in the array
-			$data['category_with_count'][] = [
-				'category' => $category,
-				'visit_count' => $visitCount
-			];
-		}
+		  // Loop through each category
+		  foreach ($data['category'] as $category) {
+			  // Get the visit count for each category from the VisitedCategory table
+			  $visitCount = VisitedCategory::where('category_id', $category->id)->count();
+			  
+			  // Add the category and its visit count to the array
+			  $data['categoryData'][] = [
+				  'id' => $category->id,
+				  'name' => $category->name,
+				  'visit_count' => $visitCount
+			  ];
+		  }
+
+		  
 
 		$services = json_decode($req->session()->get('services'));
 

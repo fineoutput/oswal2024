@@ -284,16 +284,14 @@
                                 </tr>
                             </thead>
 
-                        
-
                         <tbody>
-                            @foreach ($category as $value)
+                            @foreach ($categoryData as $value)
                             <tr>
-                                <td>{{$value->id ?? ''}}</td>
-                                <td>{{$value->name ?? ''}}</td>
-                                <td>{{$visit_count ?? 0}}</td>
+                                <td>{{$value['id'] ?? ''}}</td>
+                                <td>{{$value['name'] ?? ''}}</td>
+                                <td>{{$value['visit_count'] ?? 0}}</td>
                             </tr>
-                            @endforeach
+                        @endforeach
                   
                         </tbody>
 
