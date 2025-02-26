@@ -278,7 +278,7 @@
                         <table id="" class="table  table-striped">
                             <thead>
                                 <tr>
-                                    <th>id</th>
+                                    <th>Category id</th>
                                     <th>Category Name</th>
                                     <th>Category Count</th>
                                 </tr>
@@ -287,7 +287,7 @@
                         <tbody>
                             @foreach ($categoryData as $value)
                             <tr>
-                                <td>{{$value['id'] ?? ''}}</td>
+                                <td>#{{$value['id'] ?? ''}}</td>
                                 <td>{{$value['name'] ?? ''}}</td>
                                 <td>{{$value['visit_count'] ?? 0}}</td>
                             </tr>
