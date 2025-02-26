@@ -265,7 +265,7 @@
                 </div>
 
 {{-- /////////////////                 --}}
-                <div class="col-12 table-rep-plugin">
+                <div class="col-12 table-rep-plugin mt-5">
 
                     <div class="row">
 
