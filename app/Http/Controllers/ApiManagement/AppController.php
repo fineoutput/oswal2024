@@ -1087,15 +1087,16 @@ class AppController extends Controller
         */
         
         return response()->json([
-            'message' => 'Your data has been deleted'
+            'message' => 'Your request has been sent to the admin. Our team will contact you shortly.',
+            'status' => 200,
         ], 200);
     }
     
     // If no Authorization header provided
     return response()->json([
-        'message' => 'Unauthorized: Authentication token required',
-        'status' => 200,
-    ], 201);
+        'message' => 'Unauthorized',
+        'status' => 201,
+    ], 200);
 }
 
     public function unauth()
