@@ -1057,34 +1057,22 @@ class AppController extends Controller
 
     public function delete(Request $request)  // Add Request parameter
 {
-    // Check if Authorization header exists
     if ($request->header('Authorization')) {
         $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
         
-        // Find user by auth token
         $userDetails = User::where('auth', $auth_token)->first();
         
-        // If user not found, return unauthorized response
         if (!$userDetails) {
             return response()->json([
                 'message' => 'Unauthorized: Invalid authentication token'
             ], 401);
         }
         
-        // User found, get details
         $device_id = $userDetails->device_id;
         $user_id = $userDetails->id;
         $role_type = $userDetails->role_type;
         
-        // You might want to add additional checks here based on your requirements
-        // For example: check role_type if needed
-        /*
-        if ($role_type !== 'admin') {
-            return response()->json([
-                'message' => 'Unauthorized: Insufficient permissions'
-            ], 403);
-        }
-        */
+
         
         return response()->json([
             'message' => 'Your request has been sent to the admin. Our team will contact you shortly.',
@@ -1092,7 +1080,6 @@ class AppController extends Controller
         ], 200);
     }
     
-    // If no Authorization header provided
     return response()->json([
         'message' => 'Unauthorized',
         'status' => 201,
