@@ -1093,7 +1093,8 @@ class AppController extends Controller
     
     // If no Authorization header provided
     return response()->json([
-        'message' => 'Unauthorized: Authentication token required'
+        'message' => 'Unauthorized: Authentication token required',
+        'status' => 200,
     ], 201);
 }
 
