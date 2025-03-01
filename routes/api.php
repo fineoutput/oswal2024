@@ -29,6 +29,7 @@ Route::get('top-slider' , [AppController::class , 'headerSlider']);
 Route::get('festival-slider' , [AppController::class , 'festivalSlider']);
 Route::get('popup' , [AppController::class , 'popup']);
 Route::get('popup-image' , [AppController::class , 'popupimage']);
+Route::get('delete' , [AppController::class , 'delete']);
 
 Route::post('update-fcm',[AppController::class , 'updateFcm'])->name('update-fcm');
 Route::post('delivery-boy/update-fcm',[DeliveryBoyController::class , 'updateFcm'])->name('update-fcm'); 

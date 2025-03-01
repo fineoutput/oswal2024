@@ -1055,6 +1055,14 @@ class AppController extends Controller
 
     }
 
+    public function delete($id)
+    {
+        
+
+        return response()->json([
+            'message' => 'Your data has been deleted'
+        ], 200);
+    }
 
     public function unauth()
     {
