@@ -35,6 +35,9 @@ Route::get('/clear-cache', function () {
 Route::group(['prefix' => '/'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('/');
+    // routes/web.php
+Route::post('/store-visited-category', [HomeController::class, 'storecategory'])->name('store.visited.category');
+
     Route::post('/webhook', [WebhookController::class, 'handleWebhook']);
 
     Route::get('/category-list/{type?}', [HomeController::class, 'category'])->name('category-list');

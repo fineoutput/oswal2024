@@ -101,7 +101,7 @@
                                     <h6 class="text-uppercase verti-label text-white-50">WEBSITE USERS</h6>
                                     <div class="text-white">
                                         <h6 class="text-uppercase mt-0 text-white-50">WEBSITE USERS</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h3 class="mb-3 mt-0">{{$VisitedUsers}}</h3>
                                         <div class="">
                                             <span class="ml-2">WEBSITE USERS</span>
                                         </div>
@@ -167,7 +167,7 @@
                                     <h6 class="text-uppercase verti-label text-white-50">TODAY`S WEB USERS</h6>
                                     <div class="text-white">
                                         <h6 class="text-uppercase mt-0 text-white-50">TODAY`S WEB USERS</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h3 class="mb-3 mt-0">{{$VisitedUsersToday ?? 0}}</h3>
                                         <div class="">
                                             <span class="ml-2">TODAY`S WEB USERS</span>
                                         </div>
@@ -263,7 +263,49 @@
                     </div>
 
                 </div>
+
+{{-- /////////////////                 --}}
+                <div class="col-12 table-rep-plugin mt-5">
+
+                    <div class="row">
+
+                        <div class="col-12"> <h4 class="mt-0 header-title">Category Views</h4> </div>
+
+                    </div>
+
+                    <div class="table-responsive b-0" data-pattern="priority-columns">
+
+                        <table id="" class="table  table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Category id</th>
+                                    <th>Category Name</th>
+                                    <th>Category Count</th>
+                                </tr>
+                            </thead>
+
+                        <tbody>
+                            @foreach ($categoryData as $value)
+                            <tr>
+                                <td>#{{$value['id'] ?? ''}}</td>
+                                <td>{{$value['name'] ?? ''}}</td>
+                                <td>{{$value['visit_count'] ?? 0}}</td>
+                            </tr>
+                        @endforeach
+                  
+                        </tbody>
+
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                {{-- ////////////// --}}
+
             </div>
+
             <!-- end page content-->
         </div> <!-- container-fluid -->
     </div> <!-- content -->

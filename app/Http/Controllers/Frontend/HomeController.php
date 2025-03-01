@@ -19,11 +19,15 @@ use App\Models\ContactUs;
 use App\Models\Carrier_contact;
 
 use App\Models\DealerEnquiry;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Address;
+use App\Models\VisitedCategory;
 use App\Models\VisitedUsers;
 use App\Models\Popupimage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+
 
 use App\Models\Type;
 
@@ -54,6 +58,30 @@ class HomeController extends Controller
         $data['latestPopupImage'] = Popupimage::where('status','1')->latest()->first();
 
         return view('index',$data)->with('title', 'Oswal');
+    }
+
+    public function storecategory(Request $request)
+    {
+        // Validate the incoming request
+        $validatedData = $request->validate([
+            'category_id' => 'required|integer',
+            'state_id' => 'nullable|integer',
+            'city_id' => 'nullable|integer',
+            'ip_address' => 'required|ip',
+            'visited_at' => 'required|date',
+        ]);
+
+        // Store the visit in the database
+        VisitedCategory::create([
+            'category_id' => $request->category_id,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
+            'ip_address' => $request->ip_address,
+            'visited_at' => $request->visited_at,
+        ]);
+
+        // Return a success response
+        return response()->json(['message' => 'Visit recorded successfully!']);
     }
 
     public function category(Request $request,$type=null)
@@ -277,7 +305,7 @@ class HomeController extends Controller
                     'banner_image' => $category->image ? asset($category->image) : null,
                     'category_name' => $category->name,
                 ];
-                
+                $this->storeCategoryVisit($category->id);
             }
             
         } elseif ($type === 'search' && $slug) {
@@ -296,6 +324,42 @@ class HomeController extends Controller
         ]);
        
     }
+
+    private function storeCategoryVisit($categoryId)
+    {
+        $ipAddress = request()->ip();
+        $currentDate = Carbon::today();
+        
+        // Check if the user has already visited this category today
+        $existingVisit = VisitedCategory::where('ip_address', $ipAddress)
+            ->where('category_id', $categoryId)
+            ->whereDate('visited_at', $currentDate)
+            ->first();
+        
+        // Get the latest state and city data
+        $statedata = DB::table('user_state_city')->latest()->first();
+        
+        if ($existingVisit) {
+            // Use existing state_id and city_id from the existing visit
+            $state_id = $existingVisit->state_id;
+            $city_id = $existingVisit->city_id;
+        } else {
+            // If no previous visit, use the latest state and city from the user_state_city table
+            $state_id = $statedata->state_id ?? null;
+            $city_id = $statedata->city_id ?? null;
+        
+            // Store the visit record if it doesn't already exist
+            $visitedCategory = new VisitedCategory();
+            $visitedCategory->ip_address = $ipAddress;
+            $visitedCategory->category_id = $categoryId;
+            $visitedCategory->state_id = $state_id;
+            $visitedCategory->city_id = $city_id;
+            $visitedCategory->visited_at = Carbon::now();
+            $visitedCategory->save();
+        }
+        
+    }
+    
 
 
     public function renderProduct(Request $request)
