@@ -35,7 +35,7 @@ use App\Models\Order;
 use App\Models\Cart;
 
 use App\Models\Type;
-
+use App\Models\UserActivity;
 use Carbon\Carbon;
 
 class CheckOutController extends Controller
@@ -49,6 +49,24 @@ class CheckOutController extends Controller
 
     public function checkout(Request $request)
     {
+
+        $ipAddress = $request->ip();
+        
+        $currentDate = Carbon::now()->toDateString();
+
+            $existingVisit = UserActivity::where('ip_address', $ipAddress)->where('status', 4)
+                ->first();
+
+            if (!$existingVisit) {
+                UserActivity::create([
+                    'ip_address' => $ipAddress,
+                    'status' => 4,
+                ]);
+
+                $request->session()->put('visited_ip', $ipAddress);
+            }
+
+
         // return $request;
         $addressId = $request->input('address_id') ?? session('address_id');
 

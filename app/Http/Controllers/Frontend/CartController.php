@@ -17,12 +17,31 @@ use App\Models\CartOld;
 use App\Models\Order;
 
 use App\Models\Cart;
+use App\Models\UserActivity;
+use Carbon\Carbon;
+
 
 class CartController extends Controller
 {
 
     public function addToCart(Request $request)
     {
+
+        $ipAddress = $request->ip();
+        
+        $currentDate = Carbon::now()->toDateString();
+
+            $existingVisit = UserActivity::where('ip_address', $ipAddress)->where('status', 1)
+                ->first();
+
+            if (!$existingVisit) {
+                UserActivity::create([
+                    'ip_address' => $ipAddress,
+                    'status' => 1,
+                ]);
+
+                $request->session()->put('visited_ip', $ipAddress);
+            }
 
         // dd($request->all());
         $data = $request->only(['category_id', 'product_id', 'type_id', 'type_price', 'quantity', 'cart_from']);
@@ -110,6 +129,22 @@ class CartController extends Controller
 
     public function getCartDetails(Request $request)
     {
+        $ipAddress = $request->ip();
+        
+        $currentDate = Carbon::now()->toDateString();
+
+            $existingVisit = UserActivity::where('ip_address', $ipAddress)->where('status', 2)
+                ->first();
+
+            if (!$existingVisit) {
+                UserActivity::create([
+                    'ip_address' => $ipAddress,
+                    'status' => 2,
+                ]);
+
+                $request->session()->put('visited_ip', $ipAddress);
+            }
+
 
         if(auth::check()){
 
