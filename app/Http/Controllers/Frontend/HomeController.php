@@ -438,6 +438,7 @@ class HomeController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
             $existingVisit = UserActivity::where('ip_address', $ipAddress)->where('status', 3)
+            ->whereDate('created_at', $currentDate)
                 ->first();
 
             if (!$existingVisit) {
