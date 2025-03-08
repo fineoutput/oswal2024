@@ -94,7 +94,7 @@ class CartController extends Controller
 
             if($this->updateOrderAfterCartChange()){
 
-                return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.' , 'count' =>  $cartCount], 200);
+                return response()->json(['success' => true, 'message' => 'Product removed from Cart successfully.' , 'count' =>  $cartCount], 200);
             }
 
         } else {
@@ -249,7 +249,7 @@ class CartController extends Controller
             
             if($this->updateOrderAfterCartChange()){
 
-                return response()->json(['success' => true, 'message' => 'Product remove successfully' ,'totalAmount' =>formatPrice($totalAmount) ,'count' => $cartcount], 200);
+                return response()->json(['success' => true, 'message' => 'Product removed successfully' ,'totalAmount' =>formatPrice($totalAmount) ,'count' => $cartcount], 200);
             }
 
             // return redirect()->back()->with('success' ,'Product remove successfully');

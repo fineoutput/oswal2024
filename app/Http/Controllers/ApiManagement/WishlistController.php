@@ -332,7 +332,7 @@ class WishlistController extends Controller
 
         $wishlist->delete();
 
-        return response()->json(['success' => true,'message' => 'Wishlist remove successfully'], 200);
+        return response()->json(['success' => true,'message' => 'Product removed successfully'], 200);
     }
 
     public function moveToCart(Request $request)

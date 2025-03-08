@@ -275,7 +275,7 @@ class CartController extends Controller
 
             $cartItem->delete();
 
-            return response()->json(['success' => true, 'message' => 'Product remove to Cart successfully.'], 200);
+            return response()->json(['success' => true, 'message' => 'Product removed from Cart successfully.'], 200);
             
         } else {
 
@@ -330,7 +330,7 @@ class CartController extends Controller
 
         if ($cart) {
             $cart->delete();
-            return response()->json(['success' => true, 'message' => 'Product remove successfully'], 200);
+            return response()->json(['success' => true, 'message' => 'Product removed successfully'], 200);
         } else {
             return response()->json(['success' => true, 'message' => 'Cart not found'], 404);
         }

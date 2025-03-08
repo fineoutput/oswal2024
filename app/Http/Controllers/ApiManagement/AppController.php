@@ -276,7 +276,7 @@ class AppController extends Controller
 
         $response['custom_address'] = $custom_address;
 
-        return response()->json(['success' => true, 'message' => 'Address Add Sucessfully.', 'data' =>  $response], 201);
+        return response()->json(['success' => true, 'message' => 'Address Added Sucessfully.', 'data' =>  $response], 201);
     }
 
     public function getAddress(Request $request)
