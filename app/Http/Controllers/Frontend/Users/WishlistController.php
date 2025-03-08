@@ -182,7 +182,7 @@ class WishlistController extends Controller
 
         $Count = Wishlist::where('user_id', Auth::user()->id)->count();
 
-        return response()->json(['success' => true,'message' => 'Wishlist remove successfully','count' => $Count], 200);
+        return response()->json(['success' => true,'message' => 'Products removed successfully','count' => $Count], 200);
     }
 
     public function moveToCart(Request $request)
