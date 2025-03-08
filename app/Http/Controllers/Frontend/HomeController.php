@@ -492,7 +492,11 @@ class HomeController extends Controller
 
         $query = $request->input('query');
 
+        if (empty($query)) {
+            return redirect()->back()->with('error', 'Search query cannot be empty.');
+        }
+    
         return view('all_products', compact('query'));
-
     }
+    
 }
