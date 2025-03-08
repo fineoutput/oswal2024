@@ -32,12 +32,12 @@
                         <a href="#">
                             <div class="card-body">
                                 <div class="mini-stat-desc">
-                                    <h6 class="text-uppercase verti-label text-white-50">Most Viewed Category</h6>
+                                    <h6 class="text-uppercase verti-label text-white-50">Address Visits</h6>
                                     <div class="text-white">
-                                        <h6 class="text-uppercase mt-0 text-white-50">Most Viewed Category</h6>
-                                        <h3 class="mb-3 mt-0" style="font-size: 17px">Oswal Soap Bars</h3>
+                                        <h6 class="text-uppercase mt-0 text-white-50">Address Visits</h6>
+                                        <h3 class="mb-3 mt-0">{{$address ?? 0}}</h3>
                                         <div class="">
-                                            <span class="ml-2">Most Viewed Category</span>
+                                            <span class="ml-2">Address Visits</span>
                                         </div>
                                     </div>
                                     <div class="mini-stat-icon">
@@ -54,12 +54,12 @@
                         <a href="#">
                             <div class="card-body">
                                 <div class="mini-stat-desc">
-                                    <h6 class="text-uppercase verti-label text-white-50">TOTAL PAGE VIEWS</h6>
+                                    <h6 class="text-uppercase verti-label text-white-50">Cart Additions</h6>
                                     <div class="text-white">
-                                        <h6 class="text-uppercase mt-0 text-white-50">TOTAL PAGE VIEWS</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h6 class="text-uppercase mt-0 text-white-50">Cart Additions</h6>
+                                        <h3 class="mb-3 mt-0">{{$addtocart ?? 0}}</h3>
                                         <div class="">
-                                            <span class="ml-2">TOTAL PAGE VIEWS</span>
+                                            <span class="ml-2">Cart Additions</span>
                                         </div>
                                     </div>
                                     <div class="mini-stat-icon">
@@ -76,12 +76,12 @@
                         <a href="#">
                             <div class="card-body">
                                 <div class="mini-stat-desc">
-                                    <h6 class="text-uppercase verti-label text-white-50">TODAY`S PAGE VIEWS</h6>
+                                    <h6 class="text-uppercase verti-label text-white-50">Cart Visits</h6>
                                     <div class="text-white">
-                                        <h6 class="text-uppercase mt-0 text-white-50">TODAY`S PAGE VIEWS</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h6 class="text-uppercase mt-0 text-white-50">Cart Visits</h6>
+                                        <h3 class="mb-3 mt-0">{{$viewcart ?? 0}}</h3>
                                         <div class="">
-                                            <span class="ml-2">TODAY`S PAGE VIEWS</span>
+                                            <span class="ml-2">Cart Visits</span>
                                         </div>
                                     </div>
                                     <div class="mini-stat-icon">
@@ -120,12 +120,12 @@
                         <a href="#">
                             <div class="card-body">
                                 <div class="mini-stat-desc">
-                                    <h6 class="text-uppercase verti-label text-white-50">MOBILE USERS</h6>
+                                    <h6 class="text-uppercase verti-label text-white-50">Checkout</h6>
                                     <div class="text-white">
-                                        <h6 class="text-uppercase mt-0 text-white-50">MOBILE USERS</h6>
-                                        <h3 class="mb-3 mt-0">0</h3>
+                                        <h6 class="text-uppercase mt-0 text-white-50">Checkout</h6>
+                                        <h3 class="mb-3 mt-0">{{$checkout ?? 0}}</h3>
                                         <div class="">
-                                            <span class="ml-2">MOBILE USERS</span>
+                                            <span class="ml-2">Checkout</span>
                                         </div>
                                     </div>
                                     <div class="mini-stat-icon">
