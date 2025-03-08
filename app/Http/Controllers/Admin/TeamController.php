@@ -11,6 +11,7 @@ use App\adminmodel\Order1Modal;
 use App\adminmodel\UserModal;
 use App\adminmodel\CategoryModal;
 use App\adminmodel\ProductModal;
+use App\Models\UserActivity;
 use App\Models\VisitedUsers;
 use App\Models\VisitedCategory;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,10 @@ class TeamController extends Controller
 			  ];
 		  }
 
+		  $data['addtocart'] = UserActivity::where('status', 1)->count();
+		  $data['viewcart'] = UserActivity::where('status', 2)->count();
+		  $data['address'] = UserActivity::where('status',3)->count();
+		  $data['checkout'] = UserActivity::where('status',4)->count();
 		  
 
 		$services = json_decode($req->session()->get('services'));

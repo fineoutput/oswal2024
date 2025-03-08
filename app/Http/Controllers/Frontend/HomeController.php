@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Session;
 
 
 use App\Models\Type;
+use App\Models\UserActivity;
 
 class HomeController extends Controller
 {
@@ -431,6 +432,25 @@ class HomeController extends Controller
     // }
 
     public function getAddress(Request $request, $place = null) {
+
+        $ipAddress = $request->ip();
+        
+        $currentDate = Carbon::now()->toDateString();
+
+            $existingVisit = UserActivity::where('ip_address', $ipAddress)->where('status', 3)
+            ->whereDate('created_at', $currentDate)
+                ->first();
+
+            if (!$existingVisit) {
+                UserActivity::create([
+                    'ip_address' => $ipAddress,
+                    'status' => 3,
+                ]);
+
+                $request->session()->put('visited_ip', $ipAddress);
+            }
+
+
         // Get all addresses for the logged-in user
         // return Auth::user()->id;
         // return $request;
@@ -472,7 +492,11 @@ class HomeController extends Controller
 
         $query = $request->input('query');
 
+        if (empty($query)) {
+            return redirect()->back()->with('error', 'Search query cannot be empty.');
+        }
+    
         return view('all_products', compact('query'));
-
     }
+    
 }
