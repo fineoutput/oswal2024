@@ -290,8 +290,10 @@ class VendorAuthController extends Controller
         return response()->json(['status' => 400, 'message' => $validator->errors()->first()]);
     }
 
-    $dlt = config('constants.SMS_SIGNUP_DLT');
-    $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
+    $dlt = config('constants.SMS_LOGIN_DLT');
+    $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
+    // $dlt = config('constants.SMS_SIGNUP_DLT');
+    // $sender_id = config('constants.SMS_SIGNUP_SENDER_ID');
 
     // If phone number is 1234567890, set OTP to 123456
     if ($request->phone_no == '1234567890') {
@@ -301,9 +303,10 @@ class VendorAuthController extends Controller
     }
 
     if (session()->has('user_otp_id') && session()->has('user_id') && session()->has('user_contact')) {
-        $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
+        $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
+        // $msg = "Dear User, Your OTP for Sign Up on OSWALMART is $OTP. Do not share your OTP with anyone.";
 
-        sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); // Send the OTP SMS
+        sendOtpSms($msg, session()->get('user_contact'), $OTP, $dlt, $sender_id); 
 
         // Update the existing OTP record
         $otpData = Otp::updateOrCreate(
@@ -864,6 +867,8 @@ class VendorAuthController extends Controller
 
         $dlt = config('constants.SMS_LOGIN_DLT');
         $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
+        // $dlt = config('constants.SMS_LOGIN_DLT');
+        // $sender_id = config('constants.SMS_LOGIN_SENDER_ID');
 
         // Prepare the OTP message
         $msg = "Dear Oswal Soap user $OTP is your OTP for login to your account. Do not share this with anyone";
