@@ -1678,10 +1678,10 @@ class OrderController extends Controller
     {
        
         $orders = Order::whereNotNull('razorpay_order_id')
-                       ->where('online_payment_status', '!=', 'paid') 
-                       ->orderBy('created_at', 'desc') 
+                       ->where('online_payment_status', null) 
+                       ->orderBy('id', 'desc') 
                        ->get();
-                       return $orders;
+                    //    return $orders;
     
         // Check if there are any orders to process
         if ($orders->isEmpty()) {
@@ -1737,7 +1737,7 @@ class OrderController extends Controller
     
         return response()->json([
             'message' => 'Order statuses updated successfully.',
-            'status' => 'success'
+            'status' => '200'
         ]);
     }
     
