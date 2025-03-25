@@ -1685,7 +1685,7 @@ class OrderController extends Controller
                    ->get();
     
     // If no orders are found
-    if ($orders->isEmpty()) {
+    if (!$orders) {
         return response()->json([
             'message' => 'No orders to update.',
             'status' => 'info'
