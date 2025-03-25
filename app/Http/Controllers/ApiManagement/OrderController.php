@@ -1678,7 +1678,7 @@ class OrderController extends Controller
     {
        
         $orders = Order::whereNotNull('razorpay_order_id')
-                       ->where('online_payment_status', null) 
+                    //    ->where('online_payment_status', null) 
                        ->where('order_status', 0) 
                        ->where('payment_type', 2) 
                        ->orderBy('id', 'desc')->limit(5) 
