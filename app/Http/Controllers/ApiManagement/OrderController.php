@@ -1676,13 +1676,15 @@ class OrderController extends Controller
 
     public function test_payment()
     {
+        // Fetch orders with the specified conditions
         $orders = Order::whereNotNull('razorpay_order_id')
                        ->where('order_status', 0) 
                        ->where('payment_type', 2) 
                        ->orderBy('id', 'desc')
                        ->limit(5)
                        ->get();
-
+    
+        // If no orders are found
         if ($orders->isEmpty()) {
             return response()->json([
                 'message' => 'No orders to update.',
@@ -1690,8 +1692,12 @@ class OrderController extends Controller
             ]);
         }
     
+        // Loop through each order and update its status based on Razorpay API response
         foreach ($orders as $order) {
             $razorpayOrderId = $order->razorpay_order_id;
+    
+            // Log Razorpay Order ID for debugging
+            Log::info("Fetching Razorpay order status for Order ID: {$order->id}, Razorpay Order ID: {$razorpayOrderId}");
     
             $curl = curl_init();
     
@@ -1712,27 +1718,38 @@ class OrderController extends Controller
             $response = curl_exec($curl);
             curl_close($curl);
     
+            // Log raw response for debugging
+            Log::info("Razorpay API Response for Order ID: {$order->id}", ['response' => $response]);
+    
+            // Decode the response from Razorpay API
             $responseData = json_decode($response, true);
     
+            // Check if Razorpay order exists and status is 'paid'
             if (isset($responseData['id']) && $responseData['status'] == 'paid') {
-                $order->online_payment_status = $responseData['status'];  
-                $order->payment_status = 1; 
-                $order->order_status = 1;  
-                $order->save();
-                $invoiceNumber = generateInvoiceNumber($order->id);
-            } elseif (isset($responseData['id']) && $responseData['status'] == 'created') {
-                $order->online_payment_status = $responseData['status']; 
-                $order->save();
-            } else {
-                Log::error("Failed to fetch payment details for Order ID: {$order->id}. Status: {$responseData['status']}");
+                    $order->online_payment_status = $responseData['status'];
+                    $order->payment_status = 1;
+                    $order->order_status = 1;
+                    $order->save();
+                    // Optionally generate an invoice number
+                    $invoiceNumber = generateInvoiceNumber($order->id);
+                    Log::info("Order updated successfully for Order ID: {$order->id}");
+                } elseif ($responseData['status'] == 'created') {
+                    $order->online_payment_status = $responseData['status'];
+                    $order->save();
+                    Log::info("Order status set to 'created' for Order ID: {$order->id}");
+                } else {
+                // Log error if response is invalid or missing data
+                Log::error("Invalid Razorpay API response for Order ID: {$order->id}", ['response' => $responseData]);
             }
         }
-
+    
+        // Return a response indicating the process was successful
         return response()->json([
             'message' => 'Order statuses updated successfully.',
             'status' => '200'
         ]);
     }
+    
     
     
 
