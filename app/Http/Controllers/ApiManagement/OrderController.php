@@ -1676,22 +1676,20 @@ class OrderController extends Controller
 
     public function test_payment()
     {
-       
         $orders = Order::whereNotNull('razorpay_order_id')
-                    //    ->where('online_payment_status', null) 
                        ->where('order_status', 0) 
                        ->where('payment_type', 2) 
-                       ->orderBy('id', 'desc')->limit(5) 
+                       ->orderBy('id', 'desc')
+                       ->limit(5)
                        ->get();
-                    //    return $orders;
-    
+
         if ($orders->isEmpty()) {
             return response()->json([
                 'message' => 'No orders to update.',
                 'status' => 'info'
             ]);
         }
-   
+    
         foreach ($orders as $order) {
             $razorpayOrderId = $order->razorpay_order_id;
     
@@ -1712,40 +1710,29 @@ class OrderController extends Controller
             ));
     
             $response = curl_exec($curl);
-
             curl_close($curl);
     
             $responseData = json_decode($response, true);
-
-            if (isset($responseData['id']) && $responseData['status'] == 'paid') {
-
-                $paymentStatus = $responseData['status'];
-                return $paymentStatus;
     
-                $order->online_payment_status = $paymentStatus;
-                $order->payment_status = 1;
-                $order->order_status = 1;
+            if (isset($responseData['id']) && $responseData['status'] == 'paid') {
+                $order->online_payment_status = $responseData['status'];  
+                $order->payment_status = 1; 
+                $order->order_status = 1;  
                 $order->save();
                 $invoiceNumber = generateInvoiceNumber($order->id);
-            } elseif(isset($responseData['id']) && $responseData['status'] == 'created') {
-
-                $paymentStatus = $responseData['status'];
-
-                $order->online_payment_status = $paymentStatus;
+            } elseif (isset($responseData['id']) && $responseData['status'] == 'created') {
+                $order->online_payment_status = $responseData['status']; 
                 $order->save();
-                // $invoiceNumber = generateInvoiceNumber($order->id);
             } else {
-   
-                Log::error("Failed to fetch payment details for Order ID: {$order->id}");
+                Log::error("Failed to fetch payment details for Order ID: {$order->id}. Status: {$responseData['status']}");
             }
         }
-    
+
         return response()->json([
             'message' => 'Order statuses updated successfully.',
             'status' => '200'
         ]);
     }
-    
     
     
 
