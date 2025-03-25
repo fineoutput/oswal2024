@@ -1672,6 +1672,79 @@ class OrderController extends Controller
         
     }
 
+
+
+    public function test_payment()
+    {
+       
+        $orders = Order::whereNotNull('razorpay_order_id')
+                       ->where('online_payment_status', '!=', 'paid') 
+                       ->orderBy('created_at', 'desc') 
+                       ->get();
+                       return $orders;
+    
+        // Check if there are any orders to process
+        if ($orders->isEmpty()) {
+            return response()->json([
+                'message' => 'No orders to update.',
+                'status' => 'info'
+            ]);
+        }
+    
+        // Loop through each order and make the Razorpay API call to update the status
+        foreach ($orders as $order) {
+            $razorpayOrderId = $order->razorpay_order_id;
+    
+            // Initialize cURL
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.razorpay.com/v1/orders/' . $razorpayOrderId, // Use the dynamic Razorpay order ID here
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Basic ' . base64_encode(config('constants.RAZORPAY_KEY_ID') . ':' . config('constants.RAZORPAY_KEY_SECRET'))
+                ),
+            ));
+    
+            // Get the response from the API
+            $response = curl_exec($curl);
+    
+            // Close cURL connection
+            curl_close($curl);
+    
+            // Decode the JSON response
+            $responseData = json_decode($response, true);
+    
+            // Check if the response was successful
+            if (isset($responseData['id'])) {
+                // Get the payment status from the API response
+                $paymentStatus = $responseData['status'];
+    
+                // Update the order status in the database
+                $order->online_payment_status = $paymentStatus;
+                $order->save();
+            } else {
+                // Optionally handle error for a specific order if needed
+                Log::error("Failed to fetch payment details for Order ID: {$order->id}");
+            }
+        }
+    
+        return response()->json([
+            'message' => 'Order statuses updated successfully.',
+            'status' => 'success'
+        ]);
+    }
+    
+    
+    
+
+
     public function webhook_payment()
     {
 
