@@ -1726,6 +1726,13 @@ class OrderController extends Controller
                 $order->order_status = 1;
                 $order->save();
                 $invoiceNumber = generateInvoiceNumber($order->id);
+            } elseif(isset($responseData['id']) && $responseData['status'] == 'created') {
+
+                $paymentStatus = $responseData['status'];
+
+                $order->online_payment_status = $paymentStatus;
+                $order->save();
+                // $invoiceNumber = generateInvoiceNumber($order->id);
             } else {
    
                 Log::error("Failed to fetch payment details for Order ID: {$order->id}");
