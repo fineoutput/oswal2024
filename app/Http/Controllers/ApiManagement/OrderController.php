@@ -1679,6 +1679,8 @@ class OrderController extends Controller
        
         $orders = Order::whereNotNull('razorpay_order_id')
                        ->where('online_payment_status', null) 
+                       ->where('order_status', 0) 
+                       ->where('payment_type', 2) 
                        ->orderBy('id', 'desc')->limit(5) 
                        ->get();
                     //    return $orders;
@@ -1715,12 +1717,15 @@ class OrderController extends Controller
     
             $responseData = json_decode($response, true);
 
-            if (isset($responseData['id'])) {
+            if (isset($responseData['id']) && $responseData['status'] == 'paid') {
 
                 $paymentStatus = $responseData['status'];
     
                 $order->online_payment_status = $paymentStatus;
+                $order->payment_status = 1;
+                $order->order_status = 1;
                 $order->save();
+                $invoiceNumber = generateInvoiceNumber($order->id);
             } else {
    
                 Log::error("Failed to fetch payment details for Order ID: {$order->id}");
