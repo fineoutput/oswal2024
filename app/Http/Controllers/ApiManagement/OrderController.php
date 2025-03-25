@@ -1720,6 +1720,7 @@ class OrderController extends Controller
             if (isset($responseData['id']) && $responseData['status'] == 'paid') {
 
                 $paymentStatus = $responseData['status'];
+                return $paymentStatus;
     
                 $order->online_payment_status = $paymentStatus;
                 $order->payment_status = 1;
