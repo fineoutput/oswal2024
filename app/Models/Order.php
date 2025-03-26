@@ -71,6 +71,7 @@ class Order extends Model
         'ip',
         'date',
         'check_data',
+        'invoice',
         'invoice_year',
         'invoice_no',
         'year',
