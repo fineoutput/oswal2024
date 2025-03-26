@@ -606,7 +606,24 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
 
                 <hr class="mb-4" />
 
+                {{-- @if($userAddress->city == 629 || $orderdetails->total_amount >= 600)
+                <button onclick="showNotification(' Please keep your order above 600.', 'error');" type="button" id="showmsg" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100"><span>Place Order</span> <span></span></button>
+                @else
                 <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
+                @endif --}}
+
+                @if($userAddress->city == 629 || $orderdetails->total_amount >= 600)
+                    <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100" onclick="placeOrder()">
+                        <span>Place Order</span>
+                        <span></span>
+                    </button>
+                @else
+                    <button onclick="showNotification('Please keep your order above 600.', 'error');" type="button" id="showmsg" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100">
+                        <span>Place Order</span>
+                        <span></span>
+                    </button>
+                @endif
+
 
                 <!-- Notification Container -->
                 <div id="notification-container" class="d-none notification">
