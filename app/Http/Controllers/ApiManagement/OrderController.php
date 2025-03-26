@@ -1259,12 +1259,12 @@ class OrderController extends Controller
 
         
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
-                    return $tracktransfer;
-                    if ($tracktransfer->image) {
-
-                        $invoice_url = asset('uploads/image' . $tracktransfer->image);
-            
-                    }
+                    // return $tracktransfer;
+                    if ($tracktransfer) {
+                        if ($tracktransfer->image) {
+                            $invoice_url = asset($tracktransfer->image);
+                        }
+                    } 
                     $track_status = $tracktransfer ? $tracktransfer->status : null;
                     // return $tracktransfer->status;
                     $dataw[] = [
