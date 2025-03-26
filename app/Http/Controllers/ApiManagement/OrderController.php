@@ -1431,6 +1431,11 @@ class OrderController extends Controller
             $deleveryBoy = [];
         }
 
+        $invoice_url = null;
+        if ($order->invoice) {
+            $invoice_url = asset("storage/invoices/" . $order->invoice);
+        }
+        
         $data = [
             'product'          => $productdata,
             'order_id'         => $order->id,
@@ -1442,10 +1447,11 @@ class OrderController extends Controller
             'total_amount'     => $order->total_amount,
             'order_status'     => getOrderStatus($order->order_status),
             'address'          => $addr_string,
-            'payment_mod'      => $payment_type,
+            'payment_mod'      => $payment_type,    
             'cod_charge'       => $order->cod_charge,
             'order_datetime'   => $order->date,
-            'deleveryBoydetail'=> $deleveryBoy
+            'deleveryBoydetail'=> $deleveryBoy,
+            'invoice_url'      => $invoice_url
         ];
 
         return response()->json([
