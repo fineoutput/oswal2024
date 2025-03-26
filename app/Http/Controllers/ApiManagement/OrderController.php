@@ -1257,10 +1257,14 @@ class OrderController extends Controller
                         }
                     
         $invoice_url = null;
-        if ($order->invoice) {
-            $invoice_url = asset("storage/invoices/" . $order->invoice);
-        }
+
+        
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
+                    if ($tracktransfer->image) {
+
+                        $invoice_url = asset('uploads/image' . $tracktransfer->image);
+            
+                    }
                     $track_status = $tracktransfer ? $tracktransfer->status : null;
                     // return $tracktransfer->status;
                     $dataw[] = [
