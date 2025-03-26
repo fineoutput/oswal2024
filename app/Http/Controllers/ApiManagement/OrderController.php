@@ -1256,6 +1256,10 @@ class OrderController extends Controller
                             $rating_avg = 0;
                         }
                     
+        $invoice_url = null;
+        if ($order->invoice) {
+            $invoice_url = asset("storage/invoices/" . $order->invoice);
+        }
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
                     $track_status = $tracktransfer ? $tracktransfer->status : null;
                     // return $tracktransfer->status;
@@ -1275,6 +1279,7 @@ class OrderController extends Controller
                         'promocode'       => $promo,
                         'product_image'   => $productImage,
                         'track_status' =>  $track_status,
+                        'invoice_url'      => $invoice_url
                     ];
                 }
             }
@@ -1431,11 +1436,7 @@ class OrderController extends Controller
             $deleveryBoy = [];
         }
 
-        $invoice_url = null;
-        if ($order->invoice) {
-            $invoice_url = asset("storage/invoices/" . $order->invoice);
-        }
-        
+
         $data = [
             'product'          => $productdata,
             'order_id'         => $order->id,
@@ -1451,7 +1452,7 @@ class OrderController extends Controller
             'cod_charge'       => $order->cod_charge,
             'order_datetime'   => $order->date,
             'deleveryBoydetail'=> $deleveryBoy,
-            'invoice_url'      => $invoice_url
+            
         ];
 
         return response()->json([
