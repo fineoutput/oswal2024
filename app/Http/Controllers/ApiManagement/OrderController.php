@@ -1256,10 +1256,10 @@ class OrderController extends Controller
                             $rating_avg = 0;
                         }
                     
-        $invoice_url = null;
 
         
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
+                    return $tracktransfer;
                     if ($tracktransfer->image) {
 
                         $invoice_url = asset('uploads/image' . $tracktransfer->image);
@@ -1283,7 +1283,7 @@ class OrderController extends Controller
                         'promocode'       => $promo,
                         'product_image'   => $productImage,
                         'track_status' =>  $track_status,
-                        'invoice_url'      => $invoice_url
+                        'invoice_url'      => $invoice_url ?? null
                     ];
                 }
             }
