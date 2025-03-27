@@ -108,11 +108,15 @@
 
                                                     <th data-priority="3">Description</th>
 
+                                                    <th data-priority="3">Vendor Description</th>
+
                                                     <th data-priority="3">Image 1</th>
 
                                                     <th data-priority="3">Hot Selling</th>
 
                                                     <th data-priority="3">Featured Product</th>
+
+                                                    <th data-priority="3">Vendor Offer</th>
 
                                                     <th data-priority="6">Status</th>
 
@@ -136,6 +140,8 @@
                                                     
                                                     <td>{{ $product->long_desc }}</td>
 
+                                                    <td>{{ $product->vendor_desc }}</td>
+
                                                     <td> <img src="{{asset($product->img1)}}" alt="" width="100px" height="100px"> </td>
 
                                                     <td> 
@@ -148,6 +154,14 @@
 
                                                     <td> 
                                                         @if($product->is_featured == 1)  
+                                                           <p class="label pull-right status-active">Yes</p>  
+                                                        @else 
+                                                           <p class="label pull-right status-inactive">No</p> 
+                                                        @endif
+                                                    </td>
+                                                    
+                                                    <td> 
+                                                        @if($product->vendor_offer == 1)  
                                                            <p class="label pull-right status-active">Yes</p>  
                                                         @else 
                                                            <p class="label pull-right status-inactive">No</p> 

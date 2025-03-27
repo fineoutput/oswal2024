@@ -353,6 +353,8 @@ class EcommerceController extends Controller
             'category_id' => $product->category_id,
             'name' => $lang != "hi" ? $product->name : $product->name_hi,
             'long_desc' => $lang != "hi" ? $product->long_desc : $product->long_desc_hi,
+            'vendor_desc' => $product->vendor_desc,
+            'vendor_offer' => $product->vendor_offer == 1 ? true : false,
             'cart_type_id' => $cart->type_id ?? "",
             'cart_type_name' => $cart_type_name,
             'cart_type_price' => $cart_type_price,
