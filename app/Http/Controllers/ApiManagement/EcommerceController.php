@@ -347,14 +347,22 @@ class EcommerceController extends Controller
 
         }
 
+        if ($user->role_type == 2) {
+                $vendor_desc = $product->vendor_desc;
+                $vendor_offer = $product->vendor_offer == 1 ? true : false;
+        }else{
+            $vendor_desc = null;
+            $vendor_offer = false;
+        }
+
         // Add the product data
         $product_data[] = [
             'id' => $product->id,
             'category_id' => $product->category_id,
             'name' => $lang != "hi" ? $product->name : $product->name_hi,
             'long_desc' => $lang != "hi" ? $product->long_desc : $product->long_desc_hi,
-            'vendor_desc' => $product->vendor_desc,
-            'vendor_offer' => $product->vendor_offer == 1 ? true : false,
+            'vendor_desc' => $vendor_desc,
+            'vendor_offer' => $vendor_offer,
             'cart_type_id' => $cart->type_id ?? "",
             'cart_type_name' => $cart_type_name,
             'cart_type_price' => $cart_type_price,
