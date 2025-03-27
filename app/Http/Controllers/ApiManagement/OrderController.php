@@ -1261,20 +1261,16 @@ class OrderController extends Controller
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
                     // return $tracktransfer;
                     if ($tracktransfer && $tracktransfer->deliveryBoy && $tracktransfer->deliveryBoy->role_type == 2) {
-                        // If the deliveryBoy's role type is 2 and there is an image, assign the invoice URL
                         if ($tracktransfer->image) {
                             $invoice_url = asset($tracktransfer->image);
                         } else {
-                            // If no image exists, you can set a default message or handle accordingly
-                            $invoice_url = null; // or you can set a default image URL
+                            $invoice_url = null; 
                         }
                     } else {
-                        // Handle case where $tracktransfer or $deliveryBoy is not found, or role_type is not 2
-                        $invoice_url = null; // You can also provide a default or error message here
+                        $invoice_url = null;
                     }
                     
                     $track_status = $tracktransfer ? $tracktransfer->status : null;
-                    // return $tracktransfer->status;
                     $dataw[] = [
                         'order_id'        => $order->id,
                         'order_status'    => getOrderStatus($order->order_status),
