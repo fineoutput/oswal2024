@@ -143,7 +143,7 @@
 
                                                         <td>OrderId-{{ $order->orders->id }}, AddressId - {{  $address->id }}</td>
 
-                                                        <td>{{  $user->first_name }}</td>
+                                                        <td>{{  $user->first_name ?? '' }}</td>
 
                                                         @php
                                                             $custom_address =
