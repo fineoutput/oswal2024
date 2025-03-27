@@ -347,6 +347,7 @@ class EcommerceController extends Controller
 
         }
 
+        if(!empty($user)){
         if ($user->role_type == 2) {
                 $vendor_desc = $product->vendor_desc;
                 $vendor_offer = $product->vendor_offer == 1 ? true : false;
@@ -354,6 +355,10 @@ class EcommerceController extends Controller
             $vendor_desc = null;
             $vendor_offer = false;
         }
+    }else{
+        $vendor_desc = null;
+        $vendor_offer = false;
+    }
 
         // Add the product data
         $product_data[] = [
