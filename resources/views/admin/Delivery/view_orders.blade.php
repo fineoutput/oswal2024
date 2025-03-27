@@ -161,15 +161,15 @@
 
                                                         <td> {{ $address->latitude .' - '.$address->longitude }}</td>
 
-                                                        <td> {{ $address->doorflat }}</td>
+                                                        <td> {{ $address->doorflat ?? '' }}</td>
 
-                                                        <td> {{ $user->contact }}</td>
+                                                        <td> {{ $user->contact ?? '' }}</td>
 
-                                                        <td> {{ $address->citys->city_name }}</td>
+                                                        <td> {{ $address->citys->city_name ?? '' }}</td>
 
-                                                        <td> {{ $address->states->state_name }}</td>
+                                                        <td> {{ $address->states->state_name ?? '' }}</td>
 
-                                                        <td> {{ $address->zipcode }}</td>
+                                                        <td> {{ $address->zipcode ?? '' }}</td>
 
                                                         <td>
                                                             @if ($order->orders->payment_type == 1)
