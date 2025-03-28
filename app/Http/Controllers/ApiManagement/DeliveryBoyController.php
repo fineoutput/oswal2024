@@ -402,7 +402,7 @@ class DeliveryBoyController extends Controller
             'delivery_status'=> deliveryStatus($transferOrder->status),
              'order_detail' =>[
                 'amount' => $transferOrder->orders->total_amount,
-                'date'   => $transferOrder->orders->created_at,
+               'date' => $transferOrder->orders->created_at->format('Y-m-d'),
                 'no_of_product' => count($transferOrder->orders->OrderDetails),
                 'distance' => $dist['distance'] ?? '0',
                 'time' => $dist['time'] ?? '0',
