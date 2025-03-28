@@ -996,6 +996,7 @@ class OrderController extends Controller
             if($user){
                 if($user->role_type == 2){
                     $this->sendEmailNotification($user, $order, $order->order_status);
+                    $this->sendPushNotification($user->fcm_token, $order->order_status);
                 }
             }
 
@@ -1012,6 +1013,71 @@ class OrderController extends Controller
         return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
+    private function sendPushNotification($fcm_token, $type)
+    {
+
+        $title = '';
+        $message = '';
+
+        switch ($type) {
+            case 2:
+                $title = 'Order Accepted';
+                $message = 'Your order has been accepted.';
+                break;
+            case 3:
+                $title = 'Order Dispatched';
+                $message = 'Your order has been dispatched.';
+                break;
+            case 4:
+                $title = 'Order Delivered';
+                $message = 'Your order has been delivered successfully.';
+                break;
+            case 5:
+                $title = 'Order Cancelled';
+                $message = 'Your order has been cancelled.';
+                break;
+            // Add cases for other types if needed
+        }
+
+        // $payload = [
+        //     'message' => [
+        //         'token' => $fcm_token,
+        //         'notification' => [
+        //             'body' => $message,
+        //             'title' => $title,
+        //         ],
+        //     ],
+        // ];
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+       
+        // if ($response->successful()) {
+
+        //     // return $response->body(); 
+        //     return true;
+        // } else {
+
+        //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+        // }
+     
+    }
+    
     private function sendEmailNotification($user, $order, $type)
     {
         $data = [
