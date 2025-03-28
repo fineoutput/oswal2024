@@ -1013,6 +1013,50 @@ class OrderController extends Controller
         return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
+    private function sendPushNotificationDelivery($fcm_token,$type) {
+
+        $title = '';
+        $message = '';
+
+        switch ($type) {
+            case 2:
+                $title = 'Received';
+                $message = 'You have Received an Order.';
+                break;
+            case 4:
+                $title = 'Order Delivered';
+                $message = 'You Have delivered Order successfully.';
+                break;
+            // Add cases for other types if needed
+        }
+
+        // $payload = [
+        //     'message' => [
+        //         'token' => $fcm_token,
+        //         'notification' => [
+        //             'body' => $message,
+        //             'title' => $title,
+        //         ],
+        //     ],
+        // ];
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseServiceDelivery->sendNotificationToDelivery($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
+       
+        
+    }
+    
     private function sendPushNotifications($fcm_token, $type)
     {
 
