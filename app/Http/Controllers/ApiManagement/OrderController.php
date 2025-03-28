@@ -996,7 +996,7 @@ class OrderController extends Controller
             if($user){
                 if($user->role_type == 2){
                     $this->sendEmailNotification($user, $order, $order->order_status);
-                    $this->sendPushNotification($user->fcm_token, $order->order_status);
+                    $this->sendPushNotifications($user->fcm_token, $order->order_status);
                 }
             }
 
@@ -1013,28 +1013,20 @@ class OrderController extends Controller
         return response()->json(['message' => 'Failed to generate invoice', 'status' => 500], 500);
     }
 
-    private function sendPushNotification($fcm_token, $type)
+    private function sendPushNotifications($fcm_token, $type)
     {
 
         $title = '';
         $message = '';
 
         switch ($type) {
-            case 2:
-                $title = 'Order Accepted';
-                $message = 'Your order has been accepted.';
-                break;
             case 3:
                 $title = 'Order Dispatched';
-                $message = 'Your order has been dispatched.';
+                $message = 'Your have Received an Order.';
                 break;
             case 4:
                 $title = 'Order Delivered';
-                $message = 'Your order has been delivered successfully.';
-                break;
-            case 5:
-                $title = 'Order Cancelled';
-                $message = 'Your order has been cancelled.';
+                $message = 'Order delivered successfully.';
                 break;
             // Add cases for other types if needed
         }
@@ -1051,7 +1043,7 @@ class OrderController extends Controller
 
         if($fcm_token != null){
 
-            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+            $response = $this->firebaseServiceDelivery->sendNotificationToUser($fcm_token, $title, $message);
     
             if(!$response['success']) {
                 
@@ -1077,7 +1069,8 @@ class OrderController extends Controller
         // }
      
     }
-    
+
+
     private function sendEmailNotification($user, $order, $type)
     {
         $data = [
