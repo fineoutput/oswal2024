@@ -353,10 +353,12 @@ class EcommerceController extends Controller
                 $vendor_offer = $product->vendor_offer == 1 ? true : false;
         }else{
             $vendor_desc = null;
+            
             $vendor_offer = false;
         }
     }else{
         $vendor_desc = null;
+        
         $vendor_offer = false;
     }
 
@@ -590,6 +592,7 @@ class EcommerceController extends Controller
                     'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
                     'type_category_id' => $type->category_id ?? null,
                     'type_product_id' => $type->product_id,
+                    'type_qty_desc' => $type->qty_desc,
                     'range' => $range,
                     'min_qty' => $type->min_qty ?? 1,
                 ];

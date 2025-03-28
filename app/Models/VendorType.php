@@ -16,6 +16,7 @@ class VendorType extends Model
         'product_id',
         'category_id',
         'type_name',
+        'qty_desc',
         'type_name_hi',
         'min_qty',
         // 'start_range',

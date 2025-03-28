@@ -138,6 +138,24 @@
 
                                         </div>
 
+                                        <div class="col-sm-4">
+
+                                            <div class="form-floating">
+
+                                                <input type="text" class="form-control" value="{{ $type ? $type->qty_desc : old('qty_desc') }}" name="qty_desc"  required>
+
+                                                <label for="qty_desc">Quantity Description &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('min_qty')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
                                         {{-- <div class="col-sm-4">
 
                                             <div class="form-floating">
