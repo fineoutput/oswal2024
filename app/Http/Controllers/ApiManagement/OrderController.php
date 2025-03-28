@@ -567,18 +567,6 @@ class OrderController extends Controller
 
         $walletDescount = 0;
 
-        if($user->role_type == 2)
-        {
-            $order =  Order::create([
-                'order_status'    => 2,
-                'delivery_status' => 0,
-                'payment_type'    => 0,
-                'payment_status'  => 0,
-                'ip'              => $request->ip(),
-                'order_from'      => 'Application',
-                'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
-            ]);
-        }else{
         $order =  Order::create([
             'order_status'    => 0,
             'delivery_status' => 0,
@@ -588,7 +576,6 @@ class OrderController extends Controller
             'order_from'      => 'Application',
 			'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
         ]);
-    }
 
 
         foreach ($cartData as $cartItem) {
@@ -829,13 +816,24 @@ class OrderController extends Controller
             $codCharge = getConstant()->cod_charge;
         }
         $newtotal = $codCharge + $order->total_amount;
-        $order->update([
-            'order_status'   => 1,
-            'payment_type'   => 1,
-            'payment_status' => 1,
-            'cod_charge'     => $codCharge,
-            'total_amount'   => $newtotal,
-        ]);
+        if($user->role_type == 2){
+            $order->update([
+                'order_status'   => 2,
+                'payment_type'   => 1,
+                'payment_status' => 1,
+                'cod_charge'     => $codCharge,
+                'total_amount'   => $newtotal,
+            ]);
+        }else{
+            $order->update([
+                'order_status'   => 1,
+                'payment_type'   => 1,
+                'payment_status' => 1,
+                'cod_charge'     => $codCharge,
+                'total_amount'   => $newtotal,
+            ]);
+        }
+      
 
         $invoiceNumber = generateInvoiceNumber($orderId);
 
