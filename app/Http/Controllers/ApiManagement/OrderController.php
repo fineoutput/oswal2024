@@ -816,24 +816,13 @@ class OrderController extends Controller
             $codCharge = getConstant()->cod_charge;
         }
         $newtotal = $codCharge + $order->total_amount;
-        if($user->role_type == 2){
-            $order->update([
-                'order_status'   => 2,
-                'payment_type'   => 1,
-                'payment_status' => 1,
-                'cod_charge'     => $codCharge,
-                'total_amount'   => $newtotal,
-            ]);
-        }else{
-            $order->update([
-                'order_status'   => 1,
-                'payment_type'   => 1,
-                'payment_status' => 1,
-                'cod_charge'     => $codCharge,
-                'total_amount'   => $newtotal,
-            ]);
-        }
-      
+        $order->update([
+            'order_status'   => 1,
+            'payment_type'   => 1,
+            'payment_status' => 1,
+            'cod_charge'     => $codCharge,
+            'total_amount'   => $newtotal,
+        ]);
 
         $invoiceNumber = generateInvoiceNumber($orderId);
 
