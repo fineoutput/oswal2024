@@ -303,6 +303,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     if($roleType == 1){
@@ -312,6 +313,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
                     }
                     else{
                         $selected_type_id = '0';
@@ -320,6 +322,7 @@ class EcommerceController extends Controller
                         $selected_type_mrp = 00;
                         $selected_type_percent_off = 00;
                         $selected_min_qty = 00;
+                        $selected_qty_desc = null;
                     }
                     // return response()->json([
                     //     'message' => '"type  not found"',
@@ -336,6 +339,7 @@ class EcommerceController extends Controller
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
+                $selected_qty_desc = null;
                 // return response()->json([
                 //     'message' => '"type  not found"',
                 //     'status' => 201,
@@ -396,6 +400,7 @@ class EcommerceController extends Controller
             'selected_type_mrp' => $selected_type_mrp,
             'selected_type_percent_off' => $selected_type_percent_off,
             'selected_min_qty' => $selected_min_qty,
+            'selected_qty_desc' => $selected_qty_desc,
         ];
     }
 
