@@ -796,6 +796,7 @@ class DeliveryBoyController extends Controller
                         'delivery_status'=> deliveryStatus(2),
                         'start_location' => $deliveryOrder->start_location,
                         'start_time' => $deliveryOrder->start_time,
+                        'vendor' => 'vendor',
                         'user_address' => [
                             'name' => $userAddress->name,
                             'address' => $userAddress->address,
