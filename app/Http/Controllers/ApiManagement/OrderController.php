@@ -992,10 +992,10 @@ class OrderController extends Controller
         // // } else {
         // //     return redirect()->route('admin_login');
         // // }
-        return $order->status;
+        // return $order->status;
             if($user){
                 if($user->role_type == 2){
-                    $this->sendEmailNotification($user, $order, $order->status);
+                    $this->sendEmailNotification($user, $order, $order->order_status);
                 }
             }
 
