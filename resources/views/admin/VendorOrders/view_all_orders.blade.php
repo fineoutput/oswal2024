@@ -344,10 +344,24 @@
                                                     
                                                                     @if ($order->order_status == 1)
                                                                     @if($order->user->role_type == 2)
-                                                                            <script>
-                                                                                window.location.href = "{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(2)]) }}";
-                                                                            </script>
-                                                                        @endif
+                                                                    <script>
+                                                                        $(document).ready(function() {
+                                                                            $.ajax({
+                                                                                url: "{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(2)]) }}",
+                                                                                method: "GET", // or POST depending on your route
+                                                                                success: function(response) {
+                                                                                    console.log('Order status updated successfully.');
+                                                                                    // Optionally, you can show a success message or update the UI without refreshing the page
+                                                                                    // For example, updating a status on the page
+                                                                                    $('#order-status').text('Order Accepted');
+                                                                                },
+                                                                                error: function(xhr, status, error) {
+                                                                                    console.log('Error updating order status:', error);
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    </script>
+                                                                @endif
                                                                         <li>
                                                                             <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(2)]) }}">
                                                                                 Accept Order Confirm
