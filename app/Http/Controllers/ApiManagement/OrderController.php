@@ -816,24 +816,13 @@ class OrderController extends Controller
             $codCharge = getConstant()->cod_charge;
         }
         $newtotal = $codCharge + $order->total_amount;
-        if($user->role_type == 2){
-            $order->update([
-                'order_status'   => 2,
-                'payment_type'   => 1,
-                'payment_status' => 1,
-                'cod_charge'     => $codCharge,
-                'total_amount'   => $newtotal,
-            ]);
-        }else{
-            $order->update([
-                'order_status'   => 1,
-                'payment_type'   => 1,
-                'payment_status' => 1,
-                'cod_charge'     => $codCharge,
-                'total_amount'   => $newtotal,
-            ]);
-        }
-      
+        $order->update([
+            'order_status'   => 1,
+            'payment_type'   => 1,
+            'payment_status' => 1,
+            'cod_charge'     => $codCharge,
+            'total_amount'   => $newtotal,
+        ]);
 
         $invoiceNumber = generateInvoiceNumber($orderId);
 
@@ -1270,18 +1259,14 @@ class OrderController extends Controller
 
         
                     $tracktransfer = TransferOrder::orderBy('id','DESC')->where('order_id',$order->id)->first();
-                    // return $tracktransfer;
-                    if ($tracktransfer && $tracktransfer->deliveryBoy && $tracktransfer->deliveryBoy->role_type == 2) {
-                        if ($tracktransfer->image) {
-                            $invoice_url = asset($tracktransfer->image);
-                        } else {
-                            $invoice_url = null; 
-                        }
-                    } else {
-                        $invoice_url = null;
+                    return $tracktransfer;
+                    if ($tracktransfer->image) {
+
+                        $invoice_url = asset('uploads/image' . $tracktransfer->image);
+            
                     }
-                    
                     $track_status = $tracktransfer ? $tracktransfer->status : null;
+                    // return $tracktransfer->status;
                     $dataw[] = [
                         'order_id'        => $order->id,
                         'order_status'    => getOrderStatus($order->order_status),
@@ -1469,7 +1454,7 @@ class OrderController extends Controller
             'address'          => $addr_string,
             'payment_mod'      => $payment_type,    
             'cod_charge'       => $order->cod_charge,
-            'order_datetime'   => ($order->date)->format('Y-m-d H:i:s'),
+            'order_datetime'   => $order->date,
             'deleveryBoydetail'=> $deleveryBoy,
             
         ];
