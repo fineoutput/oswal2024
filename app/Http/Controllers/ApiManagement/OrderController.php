@@ -1454,7 +1454,7 @@ class OrderController extends Controller
             'address'          => $addr_string,
             'payment_mod'      => $payment_type,    
             'cod_charge'       => $order->cod_charge,
-            'order_datetime'   => $order->date,
+            'order_datetime'   => ($order->date)->format('Y-m-d H:i:s'),
             'deleveryBoydetail'=> $deleveryBoy,
             
         ];
