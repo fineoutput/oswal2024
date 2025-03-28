@@ -143,7 +143,7 @@
 
                                                         <td>OrderId-{{ $order->orders->id }}, AddressId - {{  $address->id }}</td>
 
-                                                        <td>{{  $user->first_name }}</td>
+                                                        <td>{{  $user->first_name ?? '' }}</td>
 
                                                         @php
                                                             $custom_address =
@@ -161,15 +161,15 @@
 
                                                         <td> {{ $address->latitude .' - '.$address->longitude }}</td>
 
-                                                        <td> {{ $address->doorflat }}</td>
+                                                        <td> {{ $address->doorflat ?? '' }}</td>
 
-                                                        <td> {{ $user->contact }}</td>
+                                                        <td> {{ $user->contact ?? '' }}</td>
 
-                                                        <td> {{ $address->citys->city_name }}</td>
+                                                        <td> {{ $address->citys->city_name ?? '' }}</td>
 
-                                                        <td> {{ $address->states->state_name }}</td>
+                                                        <td> {{ $address->states->state_name ?? '' }}</td>
 
-                                                        <td> {{ $address->zipcode }}</td>
+                                                        <td> {{ $address->zipcode ?? '' }}</td>
 
                                                         <td>
                                                             @if ($order->orders->payment_type == 1)

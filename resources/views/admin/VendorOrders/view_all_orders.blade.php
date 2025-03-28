@@ -142,6 +142,7 @@
                                                     <th data-priority="6">Gift 1</th>
 
                                                     <th data-priority="6">Remark</th>
+                                                    <th data-priority="6">Delivery Invoice</th>
 
                                                     <th data-priority="6">Action</th>
 
@@ -319,6 +320,19 @@
                                                        </td>
 
                                                        <td>{{  $order->remarks }}</td>
+
+                                                <td>
+                                        @if ($order->transferOrder && $order->transferOrder->image)
+                                                <!-- Display the image download button -->
+                                        <a href="{{ asset( $order->transferOrder->image) }}" download="{{ basename($order->transferOrder->image) }}">
+                                            <button class="btn btn-primary">Download Image</button>
+                                                            </a>
+                                                        @else
+                                                            <!-- If image is not available, show a message -->
+                                                            <span>No image available</span>
+                                                        @endif
+                                                    </td>
+
 
                                                        <td>
                                                         <div class="btn-group" id="btns{{ $key }}">

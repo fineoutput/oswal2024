@@ -303,6 +303,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     if($roleType == 1){
@@ -312,6 +313,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
                     }
                     else{
                         $selected_type_id = '0';
@@ -320,6 +322,7 @@ class EcommerceController extends Controller
                         $selected_type_mrp = 00;
                         $selected_type_percent_off = 00;
                         $selected_min_qty = 00;
+                        $selected_qty_desc = null;
                     }
                     // return response()->json([
                     //     'message' => '"type  not found"',
@@ -336,6 +339,7 @@ class EcommerceController extends Controller
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
+                $selected_qty_desc = null;
                 // return response()->json([
                 //     'message' => '"type  not found"',
                 //     'status' => 201,
@@ -347,12 +351,29 @@ class EcommerceController extends Controller
 
         }
 
+        if(!empty($user)){
+        if ($user->role_type == 2) {
+                $vendor_desc = $product->vendor_desc;
+                $vendor_offer = $product->vendor_offer == 1 ? true : false;
+        }else{
+            $vendor_desc = null;
+            
+            $vendor_offer = false;
+        }
+    }else{
+        $vendor_desc = null;
+        
+        $vendor_offer = false;
+    }
+
         // Add the product data
         $product_data[] = [
             'id' => $product->id,
             'category_id' => $product->category_id,
             'name' => $lang != "hi" ? $product->name : $product->name_hi,
             'long_desc' => $lang != "hi" ? $product->long_desc : $product->long_desc_hi,
+            'vendor_desc' => $vendor_desc,
+            'vendor_offer' => $vendor_offer,
             'cart_type_id' => $cart->type_id ?? "",
             'cart_type_name' => $cart_type_name,
             'cart_type_price' => $cart_type_price,
@@ -379,6 +400,7 @@ class EcommerceController extends Controller
             'selected_type_mrp' => $selected_type_mrp,
             'selected_type_percent_off' => $selected_type_percent_off,
             'selected_min_qty' => $selected_min_qty,
+            'selected_qty_desc' => $selected_qty_desc,
         ];
     }
 
@@ -575,6 +597,7 @@ class EcommerceController extends Controller
                     'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
                     'type_category_id' => $type->category_id ?? null,
                     'type_product_id' => $type->product_id,
+                    'type_qty_desc' => $type->qty_desc,
                     'range' => $range,
                     'min_qty' => $type->min_qty ?? 1,
                 ];

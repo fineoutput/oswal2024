@@ -135,6 +135,10 @@ class ProductController extends Controller
 
             'is_featured'   => $request->is_featured,
 
+            'vendor_offer'   => $request->vendor_offer,
+
+            'vendor_desc'   => $request->vendor_desc,
+
             'product_view'   => $request->product_view,
 
         ]);

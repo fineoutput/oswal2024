@@ -179,6 +179,7 @@
 
                                         </div>
 
+
                                         <div class="col-sm-4">
 
                                             <div class="form-floating">
@@ -190,6 +191,25 @@
                                             </div>
 
                                             @error('long_desc_hi')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+
+                                        <div class="col-sm-4">
+
+                                            <div class="form-floating">
+
+                                                <input class="form-control" type="text" value="{{ $product ? $product->vendor_desc : old('vendor_desc') }}" id="vendor_desc" name="vendor_desc" placeholder="Description Hindi">
+
+                                                <label for="vendor_desc">Vendor Description</label>
+
+                                            </div>
+
+                                            @error('vendor_desc')
 
                                                 <div style="color:red">{{ $message }}</div>
 
@@ -541,6 +561,33 @@
 
                                             @enderror
 
+                                        </div>
+
+
+                                        <div class="col-sm-2">
+                                            <div class="form-floating">
+                                                <select class="form-control" name="vendor_offer" id="vendor_offer">
+                                                    <!-- Default option -->
+                                                    <option value="" {{ (!isset($product) || is_null($product->vendor_offer)) && is_null(old('vendor_offer')) ? 'selected' : '' }}>
+                                                        ----Please select-----
+                                                    </option>
+                                        
+                                                    <!-- Yes option -->
+                                                    <option value="1" {{ (isset($product) && $product->vendor_offer == 1) || (!isset($product) && old('vendor_offer') == 1) ? 'selected' : '' }}>
+                                                        Yes
+                                                    </option>
+                                        
+                                                    <!-- No option -->
+                                                    <option value="0" {{ (isset($product) && $product->vendor_offer == 0) || (!isset($product) && old('vendor_offer') == 0) ? 'selected' : '' }}>
+                                                        No
+                                                    </option>
+                                                </select>
+                                                <label for="vendor_offer">Vendor Offer &nbsp;<span style="color:red;">*</span></label>
+                                            </div>
+                                        
+                                            @error('vendor_offer')
+                                                <div style="color:red">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                     </div>

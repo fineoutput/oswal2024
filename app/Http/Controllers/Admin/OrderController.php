@@ -879,7 +879,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $query->where('role_type', 2);
         });
 
-        $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices' )->get();
+        $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices','transferOrder' )->get();
 
        
         return view('admin.VendorOrders.view_all_orders', compact('orders', 'pageTitle'));

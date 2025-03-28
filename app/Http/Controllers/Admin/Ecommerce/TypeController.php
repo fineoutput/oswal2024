@@ -522,6 +522,7 @@ class TypeController extends Controller
             'type_name'     => $request->name,
             'min_qty'       => $request->min_qty,
             'weight'       => $request->weight,
+            'qty_desc'       => $request->qty_desc,
 
         ]);
 
