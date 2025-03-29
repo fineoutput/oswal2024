@@ -362,7 +362,7 @@
                                                                     @if ($order->order_status == 2)
                                                                     @if($order->user->role_type == 2)
                                                                     <li>
-<a href="{{ route('vendor.reject_vendor_order', ['id' => base64_encode($order->id)]) }}">
+                                                                        <a href="{{ route('order.vendor.reject_vendor_order', ['id' => base64_encode($order->id)]) }}">
                                                                             Reject
                                                                         </a>
                                                                            </li>
