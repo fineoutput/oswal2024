@@ -778,7 +778,6 @@ class DeliveryBoyController extends Controller
 
         // Handle ride = 2 (check if rider is within 500 meters)
         if ($ride == 2) {
-            Order::where('id',$order->order_id)->update(['order_status' => 4]);
             // Calculate distance using the Haversine formula
             $distance = $this->calculateDistance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
 
