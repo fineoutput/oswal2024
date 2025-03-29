@@ -733,7 +733,7 @@ class DeliveryBoyController extends Controller
             ]);
         }
 
-        Order::where('id',$order->order_id)->update(['delivery_status' => 2, 'order_status' => 3]);
+        Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2, 'order_status' => 3]);
 
         $userAddress = $order->address;
         if (!$userAddress) {
