@@ -1236,7 +1236,13 @@ $cartItems = $cartQuery->get();
                     $selectedType = [];
                 }
                 
-                $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+                $defaultWeight = 0.0;
+
+                if ($cartItem->type !== null) {
+                    $totalWeight += $cartItem->quantity * (float)$cartItem->type->weight;
+                } else {
+                    $totalWeight += $cartItem->quantity * $defaultWeight;
+                }
             }
 
             $totalAmount += $cartItem->total_qty_price;

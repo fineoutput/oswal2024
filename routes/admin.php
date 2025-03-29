@@ -732,6 +732,8 @@ Route::prefix('order')->name('order.')->group(function () {
 
 
     Route::get('update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('update-status');
+    
+    Route::get('update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('update-status');
 
     Route::get('vendor/update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('vendor.update-status');
 
