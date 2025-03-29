@@ -733,7 +733,7 @@ class DeliveryBoyController extends Controller
             ]);
         }
 
-        Order::where('id',$order->order_id)->update(['delivery_status' => 2]);
+        Order::where('id',$order->order_id)->update(['delivery_status' => 2, 'order_status' => 3]);
 
         $userAddress = $order->address;
         if (!$userAddress) {
@@ -745,7 +745,7 @@ class DeliveryBoyController extends Controller
 
         // Handle ride = 1 (just start delivery without location check)
         if ($ride == 1) {
-            Order::where('id',$order->order_id)->update(['order_status' => 3]);
+            // Order::where('id',$order->order_id)->update(['order_status' => 3]);
             $deliveryOrder->update([
                 'status' => 2, 
                 'start_location' => "$latitude,$longitude",
