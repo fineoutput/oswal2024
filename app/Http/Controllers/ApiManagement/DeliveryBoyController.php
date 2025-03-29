@@ -733,8 +733,11 @@ class DeliveryBoyController extends Controller
             ]);
         }
 
+        if($user->role_type == 2){
         Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2, 'order_status' => 3]);
-
+        }else{
+            Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2]);
+        }
         $userAddress = $order->address;
         if (!$userAddress) {
             return response()->json([
