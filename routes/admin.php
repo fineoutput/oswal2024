@@ -732,8 +732,8 @@ Route::prefix('order')->name('order.')->group(function () {
 
 
     Route::get('update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('update-status');
-    
-    Route::get('update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('update-status');
+
+    Route::match(['get', 'post'], 'vendor/reject-remark/{id}', [OrderController::class, 'rejectvendororder'])->name('vendor.reject_vendor_order');
 
     Route::get('vendor/update-status/{id}/{status}', [OrderController::class, 'update_status'])->name('vendor.update-status');
 

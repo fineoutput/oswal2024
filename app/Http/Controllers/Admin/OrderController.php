@@ -152,6 +152,31 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
        
     }
 
+    
+    public function rejectvendororder(Request $request, $id)
+    {
+        $decodedId = base64_decode($id);
+        $order = Order::find($decodedId);
+    
+        if (!$order) {
+            return redirect()->back()->with('error', 'Order not found');
+        }
+        if ($request->method() == 'POST') {
+            $validated = $request->validate([
+                'remarks' => 'required|string|max:255', 
+            ]);
+            $addedBy = Auth::user()->id;
+            $order->rejected_by = 2;  
+            $order->order_status = 5;  
+            $order->rejected_by_id = $addedBy;
+            $order->remarks = $validated['remarks'];
+            $order->save();
+        }
+    
+        return view('admin.VendorOrders.reject_remark', compact('order'));
+    }
+    
+
     public function update_status(Request $request, $id , $status)
     {
         $routeName = Route::currentRouteName();
