@@ -295,6 +295,7 @@ class EcommerceController extends Controller
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
 // dd($typedata[0]['min_qty']);
 // exit;
+// return $vendorSelectedType;
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata[0]['type_id'] ?? '';
@@ -303,7 +304,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
+                    $selected_qty_desc = $vendorSelectedType->qty_desc ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     if($roleType == 1){
@@ -313,7 +314,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
+                    $selected_qty_desc = $vendorSelectedType->qty_desc ?? '';
                     }
                     else{
                         $selected_type_id = '0';
@@ -322,7 +323,7 @@ class EcommerceController extends Controller
                         $selected_type_mrp = 00;
                         $selected_type_percent_off = 00;
                         $selected_min_qty = 00;
-                        $selected_qty_desc = null;
+                        $selected_qty_desc = 'Def';
                     }
                     // return response()->json([
                     //     'message' => '"type  not found"',
@@ -339,7 +340,7 @@ class EcommerceController extends Controller
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
-                $selected_qty_desc = null;
+                $selected_qty_desc = 'Def';
                 // return response()->json([
                 //     'message' => '"type  not found"',
                 //     'status' => 201,
