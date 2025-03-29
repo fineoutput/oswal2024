@@ -343,11 +343,15 @@
                                                                 <ul class="dropdown-menu" role="menu">
                                                     
                                                                     @if ($order->order_status == 1)
+                                                                    @if($order->user->role_type == 2)
+                                                                       
+                                                                        @else
                                                                         <li>
                                                                             <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(2)]) }}">
                                                                                 Accept Order Confirm
                                                                             </a>
                                                                         </li>
+                                                                        @endif
                                                                         <li>
                                                                             <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(5)]) }}">
                                                                                 Reject
@@ -356,11 +360,16 @@
                                                                     @endif
                                                     
                                                                     @if ($order->order_status == 2)
-                                                                        <li>
-                                                                            <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(3)]) }}">
-                                                                                Dispatch Order
-                                                                            </a>
-                                                                        </li>
+                                                                    @if($order->user->role_type == 2)
+
+                                                                    @else
+                                                                    <li>
+                                                                        <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(3)]) }}">
+                                                                            Dispatch Order
+                                                                        </a>
+                                                                    </li>
+                                                                    @endif
+
                                                     
                                                                         {{-- @if ($order->delivery_status == 0)
                                                                             <li>
@@ -372,11 +381,16 @@
                                                                     @endif
                                                     
                                                                     @if ($order->order_status == 3)
-                                                                        <li>
-                                                                            <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(4)]) }}">
-                                                                                Deliver Order
-                                                                            </a>
-                                                                        </li>
+                                                                    @if($order->user->role_type == 2)
+
+                                                                    @else
+                                                                    <li>
+                                                                        <a href="{{ route('order.vendor.update-status', ['id' => base64_encode($order->id), 'status' => base64_encode(4)]) }}">
+                                                                            Deliver Order
+                                                                        </a>
+                                                                    </li>
+                                                                    @endif
+
                                                                     @endif
                                                     
                                                                     <li>
