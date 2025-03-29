@@ -39,19 +39,13 @@
                             <!-- End show success and error messages -->
                             <h4 class="mt-0 header-title">Add Popup Image</h4>
                             <hr style="margin-bottom: 50px;background-color: darkgrey;">
-                            <form action="{{route('add_popup_image')}}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('order.vendor.reject_vendor_order', ['id' => base64_encode($order->id)]) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group row">
                                     <div class="form-group row">
-                                        <div class="col-sm-4"><br>
-                                            <label class="form-label" style="margin-left: 10px" for="power">Image</label>
-                                            <input class="form-control" style="margin-left: 10px" type="file" value="" id="img" name="image">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-4"><br>
-                                            <label class="form-label" style="margin-left: 10px" for="power">Web Image</label>
-                                            <input class="form-control" style="margin-left: 10px" type="file" value="" id="img" name="web_image">
+                                        <div class="col-sm-12"><br>
+                                            <label class="form-label" style="margin-left: 10px" for="power">Remarks</label>
+                                            <input class="form-control" style="margin-left: 10px" type="text" value="" id="img" name="remarks">
                                         </div>
                                     </div>
                                     <div class="form-group">
