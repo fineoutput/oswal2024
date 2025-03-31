@@ -156,6 +156,16 @@ class CheckOutController extends Controller
 
         }
 
+        $user = Auth::user();
+        if($user){
+            if($user->role_type == 2){
+                $user_type = 'Vendor';
+            }else{
+                $user_type = 'User';
+            }
+            }else{
+                $user_type = null;
+            }
         $order =  Order::create([
             'order_status'    => 0,
             'delivery_status' => 0,
@@ -163,7 +173,8 @@ class CheckOutController extends Controller
             'payment_status'  => 0,
             'ip'              => $request->ip(),
             'order_from'      => 'WebSite',
-            'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s')
+            'date'            => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            'user_type'       => $user_type,
         ]);
 
         session()->put('order_id', $order->id);
