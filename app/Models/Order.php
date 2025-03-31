@@ -78,6 +78,7 @@ class Order extends Model
         'remarks',
         'latitude',
         'longitude',
+        'user_type',
     ];
 
     // Define relationships
