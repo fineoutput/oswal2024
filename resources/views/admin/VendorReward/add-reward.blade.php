@@ -104,11 +104,12 @@
                                                     <option selected disabled value="">Select</option>
                                                     @foreach($products as $value)
                                                         <option value="{{$value->id ?? ''}}"
-                                                            @if($value->id == $sticker->product->id) selected @endif>
+                                                            @if($value->id == $sticker?->product?->id ?? $sticker->id) selected @endif>
                                                             {{$value->name ?? ''}}
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                   
                                                 
                                                 <label for="product_id">Select Product &nbsp;<span style="color:red;">*</span></label>
                                             </div>
