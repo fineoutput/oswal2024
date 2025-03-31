@@ -95,13 +95,14 @@
 
                                                     <th>#</th>
 
+                                                    <th data-priority="1">Order ID</th>
                                                     <th data-priority="1">BY Admin</th>
 
                                                     <th data-priority="3">User</th>
 
                                                     <th data-priority="3">Total Amount</th>
 
-                                                    <th data-priority="6">Promocode</th>
+                                                    {{-- <th data-priority="6">Promocode</th> --}}
 
                                                     <th data-priority="6">User Address</th>
 
@@ -156,6 +157,7 @@
                         
                                                     <tr>
                                                         <td>{{ ++$key }}</td>
+                                                        <td>{{ $order->id ?? '' }}</td>
 
                                                         <td>{{ $order->user->first_name }}</td>
 
@@ -163,13 +165,13 @@
 
                                                         <td> {{ $order->total_amount }}</td>
 
-                                                        <td>
+                                                        {{-- <td>
                                                             @if ($order->promocodes != null && $order->promocodes != '' )
                                                                 
                                                                 {{ $order->promocodes->promocode }}
 
                                                             @endif
-                                                        </td>
+                                                        </td> --}}
                                                         @php
                                                             $custom_address =
                                                                 $order->address->doorflat .
@@ -183,7 +185,7 @@
 
                                                         <td> {{ $custom_address }}</td>
 
-                                                        <td> {{ $order->address->location_address  }}</td>
+                                                        <td> {{ $order->address->location_address }}</td>
 
                                                         <td> {{ $order->user->contact }}</td>
 
@@ -413,11 +415,16 @@
                                                                         </a>
                                                                     </li>
                                                     
+                                                                    @if($order->user->role_type == 2)
+
+                                                                    @else
                                                                     <li>
                                                                         <a href="{{ route('order.vendor.view-delivery-challan', ['id' => base64_encode($order->id)]) }}">
                                                                             View Delivery Challan
                                                                         </a>
                                                                     </li>
+                                                                    @endif
+
                                                     
                                                                     {{-- @if (empty($order->track_id))
                                                                         <li>

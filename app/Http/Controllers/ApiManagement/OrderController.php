@@ -847,7 +847,16 @@ class OrderController extends Controller
         }
 
 
-        $invoiceNumber = generateInvoiceNumber($orderId);
+        if($user){
+            if($user->role_type == 2){
+                $invoiceNumber = null; 
+            }else{
+                $invoiceNumber = generateInvoiceNumber($orderId);
+            }
+        }else{
+            $invoiceNumber = null;
+        }
+        
 
         // Ensure invoice number is generated successfully
         if ($invoiceNumber) {

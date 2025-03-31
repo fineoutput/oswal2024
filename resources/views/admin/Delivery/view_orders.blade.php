@@ -101,7 +101,7 @@
 
                                                     <th data-priority="6">User Address</th>
 
-                                                    <th data-priority="6">Long./Lat.</th>
+                                                    <th data-priority="6">Lat./Long.</th>
 
                                                     <th data-priority="6">DoorFlat</th>
 
