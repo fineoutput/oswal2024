@@ -108,15 +108,15 @@
                                                 <tr>
                                                     <td class="text-center">{{ ++$key }}</td>
 
-                                                    <td class="text-center">{{  $first_name }}</td>
+                                                    <td class="text-center">{{  $first_name ?? '' }}</td>
 
-                                                    <td class="text-center">{{ $value->product->name }}</td>
+                                                    <td class="text-center">{{ $value->product->name ?? '' }}</td>
 
-                                                    <td class="text-center">{{ $value->type->type_name }}</td>
+                                                    <td class="text-center">{{ $value->type->type_name ?? '' }}</td>
                                                     
                                                     <td class="text-center">{{ formatPrice($value->type->selling_price)  }}</td>
 
-                                                    <td class="text-center">{{ $value->quantity }}  </td>
+                                                    <td class="text-center">{{ $value->quantity ?? '' }}  </td>
 
                                                     <td class="text-center">{{ formatPrice($value->total_qty_price) }}  </td>
 
@@ -126,7 +126,7 @@
                                                         @endif  
                                                     </td>
 
-                                                    <td class="text-center">{{ $value->created_at }}  </td>
+                                                    <td class="text-center">{{ $value->created_at ?? '' }}  </td>
 
                                                 </tr>
 
