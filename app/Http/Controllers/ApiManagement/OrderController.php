@@ -860,12 +860,12 @@ class OrderController extends Controller
 
         if($user){
             if($user->role_type == 2){
-                $invoiceNumber = null; 
+                $invoiceNumber = ''; 
             }else{
                 $invoiceNumber = generateInvoiceNumber($orderId);
             }
         }else{
-            $invoiceNumber = null;
+            $invoiceNumber = '';
         }
         
 
