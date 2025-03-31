@@ -232,14 +232,22 @@
                                                                     style="font-size:13px;">None</span>
                                                             @elseif ($order->delivery_status == 1)
                                                              @php
-                                                                $order->transferOrder->load('deliveryBoy');
-                                                                $deliveryBoy = $order->transferOrder->deliveryBoy;
+                                                                if ($order->transferOrder) {
+                                                                    $order->transferOrder->load('deliveryBoy'); 
+                                                                    $deliveryBoy = $order->transferOrder->deliveryBoy; 
+                                                                } else {
+                                                                    $deliveryBoy = null;
+                                                                }
                                                              @endphp
                                                               Transfered To ({{$deliveryBoy->name}})
                                                             @elseif ($order->delivery_status == 2)
                                                                 @php
-                                                                $order->transferOrder->load('deliveryBoy');
-                                                                $deliveryBoy = $order->transferOrder->deliveryBoy;
+                                                                if ($order->transferOrder) {
+                                                                    $order->transferOrder->load('deliveryBoy'); 
+                                                                    $deliveryBoy = $order->transferOrder->deliveryBoy; 
+                                                                } else {
+                                                                    $deliveryBoy = null;
+                                                                }
                                                                 @endphp
                                                             <span class="label label-info" style="font-size:13px;">
                                                                 Accepted By ({{$deliveryBoy->name}})
