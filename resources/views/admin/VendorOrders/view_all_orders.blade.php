@@ -239,7 +239,7 @@
                                                                     $deliveryBoy = null;
                                                                 }
                                                              @endphp
-                                                              Transfered To ({{$deliveryBoy->name}})
+                                                              Transfered To ({{$deliveryBoy->name ?? ''}})
                                                             @elseif ($order->delivery_status == 2)
                                                                 @php
                                                                 if ($order->transferOrder) {
@@ -250,7 +250,7 @@
                                                                 }
                                                                 @endphp
                                                             <span class="label label-info" style="font-size:13px;">
-                                                                Accepted By ({{$deliveryBoy->name}})
+                                                                Accepted By ({{$deliveryBoy->name ?? ''}})
                                                                 </span>
                                                             @elseif ($order->delivery_status == 3)
                                                                 <span class="label label-success"
