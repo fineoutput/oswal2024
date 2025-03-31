@@ -859,7 +859,7 @@ class OrderController extends Controller
 
 
             if($user->role_type == 2){
-                $invoiceNumber = 0; 
+                $invoiceNumber = null; 
             }else{
                 $invoiceNumber = generateInvoiceNumber($orderId);
             }
@@ -1025,6 +1025,54 @@ class OrderController extends Controller
             ];
 
             return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
+
+        }else{
+
+            Cart::where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                      ->orWhere('device_id', $user->device_id);
+            })->update(['checkout_status' => 1]);
+            
+
+            Cart::where(function ($query) use ($user) {
+                $query->where('device_id', $user->device_id)
+                      ->orWhere('user_id', $user->id);
+            })->delete();
+
+            if ($user instanceof \App\Models\User) {
+
+                if($order->extra_discount != null){
+
+                    $user->wallet_amount -= $order->extra_discount;
+                    $user->save();
+    
+                    WalletTransactionHistory::createTransaction([
+                        'user_id' => $user->id,
+                        'transaction_type' => 'debit',
+                        'amount' => $order->extra_discount,
+                        'transaction_date' => now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'),
+                        'status' => WalletTransactionHistory::STATUS_COMPLETED,
+                        'description' => "Used wallet amount for order ID: {$order->id}",
+                    ]);
+
+                }
+            }
+            if($user){
+                if($user->role_type == 2){
+    
+                    $this->sendPushNotification($user->fcm_token, $order->order_status);
+            
+                    $this->sendEmailNotification($user, $order, $order->order_status);
+                }
+            }
+                $response = [
+                    'order_id' => $order->id,
+                    'amount' => formatPrice($order->total_amount,false),
+                    // 'invoice_number' => $invoiceNumber
+                ];
+    
+                return response()->json(['message' => 'Order completed successfully', 'status' => 200, 'data' => $response], 200);
+
         }
 
         // Handle case where invoice generation fails
