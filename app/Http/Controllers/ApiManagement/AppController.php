@@ -861,12 +861,14 @@ class AppController extends Controller
 
             $data[] = [
                 'id'     => $reward->id,
+                'product_id' => $reward->product_id,
                 'name'   => $reward->name,
                 'image'  => asset($reward->image),
                 'price' => $reward->price,
                 'weight' => $reward->weight.'KG',
                 'order_weight' => $fineltotalweight.'KG',
                 'status' => $status,
+                'reward_type' => $reward->reward_type,
             ];
         }
 
