@@ -233,7 +233,7 @@
                                                             @elseif ($order->delivery_status == 1)
                                                              @php
                                                                 if ($order->transferOrder) {
-                                                                    $order->transferOrder->load('deliveryBoy'); 
+                                                             $order->transferOrder->load('deliveryBoy'); 
                                                                     $deliveryBoy = $order->transferOrder->deliveryBoy; 
                                                                 } else {
                                                                     $deliveryBoy = null;
@@ -243,7 +243,7 @@
                                                             @elseif ($order->delivery_status == 2)
                                                                 @php
                                                                 if ($order->transferOrder) {
-                                                                    $order->transferOrder->load('deliveryBoy'); 
+                                                                $order->transferOrder->load('deliveryBoy'); 
                                                                     $deliveryBoy = $order->transferOrder->deliveryBoy; 
                                                                 } else {
                                                                     $deliveryBoy = null;
