@@ -101,6 +101,9 @@ class DeliveryBoyController extends Controller
    
             // Fetch total amount to collect
             $transferOrders = TransferOrder::where('status', '>=' , 1)->where('delivery_user_id', $deliveryBoy->id)->get(); 
+            $walletAmountSum = DeliveryAmount::where('deluser_id', $deliveryBoy->id)->sum('amount');
+            // return $walletAmountSum;
+
     
             $tfamount = 0;
             foreach ($transferOrders as $transferOrder) {
@@ -121,7 +124,7 @@ class DeliveryBoyController extends Controller
         
             // Prepare response data
             $data = [
-                'wallet_amount' => formatPrice($tamount),
+                'wallet_amount' => formatPrice($walletAmountSum),
                 'total_collection' => formatPrice($tfamount),
                 'pending_orders' => $pendingOrders,
                 'completed_orders' => $completedOrders,
