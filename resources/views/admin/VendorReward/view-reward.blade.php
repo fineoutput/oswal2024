@@ -73,14 +73,7 @@
 
                                     <div class="col-md-2"> 
 
-                                        <a class="btn btn-info cticket" 
-                                        href="{{ route('reward.vendor_index') }}" role="button" style="margin-left: 20px;"> Vendor Reward</a>
-
-                                    </div>
-
-                                    <div class="col-md-2"> 
-
-                                        <a class="btn btn-info cticket" href="{{ route('reward.create') }}" role="button" style="margin-left: 20px;"> Add Reward</a>
+                                        <a class="btn btn-info cticket" href="{{ route('reward.vendor_create') }}" role="button" style="margin-left: 20px;"> Add Reward</a>
 
                                     </div>
 
@@ -100,6 +93,8 @@
                                                 <tr>
 
                                                     <th>#</th>
+
+                                                    <th data-priority="1">Product Name</th>
 
                                                     <th data-priority="1">Reward Name</th>
 
@@ -124,6 +119,8 @@
                                                 @foreach ($stickers as $key => $sticker)
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
+
+                                                    <td>{{ $sticker->product->name }}</td>
 
                                                     <td>{{ $sticker->name }}</td>
 
@@ -155,15 +152,15 @@
 
                                                             @if ($sticker->is_active == 0)
 
-                                                            <a href="{{route('reward.update-status',['active',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
+                                                            <a href="{{route('reward.vendor_update-status',['active',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
 
                                                             @else
 
-                                                            <a href="{{route('reward.update-status',['inactive',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
+                                                            <a href="{{route('reward.vendor_update-status',['inactive',base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Inactive"><i class="fas fa-times danger-icon"></i></a>
 
                                                             @endif
 
-                                                            <a href="{{route('reward.create',[base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+                                                            <a href="{{route('reward.vendor_create',[base64_encode($sticker->id)])}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
 
                                                             <a href="javascript:();" class="dCnf" mydata="<?php echo $key ?>" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash danger-icon"></i></a>
 
@@ -171,7 +168,7 @@
 
                                                         <div style="display:none" id="cnfbox<?php echo $key ?>">
                                                             <p> Are you sure delete this </p>
-                                                            <a href="{{route('reward.destroy', base64_encode($sticker->id))}}" class="btn btn-danger">Yes</a>
+                                                            <a href="{{route('reward.vendor_destroy', base64_encode($sticker->id))}}" class="btn btn-danger">Yes</a>
                                                             <a href="javascript:();" class="cans btn btn-default" mydatas="<?php echo $key ?>">No</a>
                                                         </div>
                                                     </td>

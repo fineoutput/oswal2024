@@ -16,6 +16,8 @@ class Reward extends Model
 
     protected $fillable = [
         'name',
+        'product_id',
+        'reward_type',
         'image',
         'quantity',
         'price',
@@ -26,10 +28,10 @@ class Reward extends Model
         'is_active',
     ];
 
-    // public function category()
-    // {
-    //     return $this->belongsTo(EcomCategory::class, 'category_id');
-    // }
+    public function product()
+    {
+        return $this->belongsTo(EcomProduct::class, 'product_id');
+    }
 
     // public function product()
     // {

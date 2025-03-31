@@ -58,6 +58,8 @@ use App\Http\Controllers\Admin\ThemeTrendingController;
 
 use App\Http\Controllers\Admin\RewardController;
 
+use App\Http\Controllers\Admin\VendorRewardController;
+
 use App\Http\Controllers\Admin\UsersController;
 
 use App\Http\Controllers\Admin\GiftCardController;
@@ -625,6 +627,22 @@ Route::prefix('rewards')->name('reward.')->group(function () {
     Route::get('applied', [RewardController::class, 'applied'])->name('applied');
 
     Route::get('status/{status}/{id}', [RewardController::class, 'accepted'])->name('status');
+
+    // vendor
+
+    Route::get('vendor/index', [VendorRewardController::class, 'index'])->name('vendor_index');
+
+    Route::get('vendor/create/{id?}', [VendorRewardController::class, 'create'])->name('vendor_create');
+
+    Route::post('vendor/store', [VendorRewardController::class, 'store'])->name('vendor_store');
+
+    Route::get('vendor/update-status/{status}/{id}', [VendorRewardController::class, 'update_status'])->name('vendor_update-status');
+
+    Route::get('vendor/destroy/{id}', [VendorRewardController::class, 'destroy'])->name('vendor_destroy');
+
+    Route::get('vendor/applied', [VendorRewardController::class, 'applied'])->name('vendor_applied');
+
+    Route::get('vendor/status/{status}/{id}', [VendorRewardController::class, 'accepted'])->name('vendor_status');
 
 });
 

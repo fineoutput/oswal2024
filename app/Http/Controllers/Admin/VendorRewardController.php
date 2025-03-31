@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\EcomProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reward;
@@ -10,15 +11,15 @@ use App\Models\Order;
 use App\Models\VendorReward;
 use Illuminate\Support\Facades\DB;
 
-class RewardController extends Controller
+class VendorRewardController extends Controller
 {
 
     public function index()
     {
 
-        $stickers = Reward::orderBy('id', 'desc')->where('reward_type','reward')->get();
+        $stickers = Reward::orderBy('id', 'desc')->where('reward_type','vendor_reward')->get();
 
-        return view('admin.Rewards.view-reward', compact('stickers'));
+        return view('admin.VendorReward.view-reward', compact('stickers'));
     }
 
     public function create(Request $request, $id=null)
@@ -39,7 +40,9 @@ class RewardController extends Controller
             $sticker = Reward::find(base64_decode($id));
         }
 
-        return view('admin.Rewards.add-reward', compact('sticker'));
+        $products = EcomProduct::where('product_view', 2)->orWhere('product_view', 3)->get();
+
+        return view('admin.VendorReward.add-reward', compact('sticker','products'));
     }
 
 
@@ -68,7 +71,7 @@ class RewardController extends Controller
             
             if (!$sticker) {
                 
-                return redirect()->route('reward.index')->with('error', 'Sticker not found.');
+                return redirect()->route('reward.vendor_index')->with('error', 'Sticker not found.');
                 
             }
 
@@ -85,7 +88,8 @@ class RewardController extends Controller
         }
 
         $sticker->ip = $request->ip();
-        $sticker->reward_type = 'reward';
+        $sticker->product_id = $request->product_id;
+        $sticker->reward_type = 'vendor_reward';
 
         $sticker->date = now();
 
@@ -178,7 +182,7 @@ class RewardController extends Controller
         ->join('tbl_order1', 'vendor_rewards.order_id', '=', 'tbl_order1.id')
         ->get();
 
-      return view('admin.Rewards.applied-reward' , compact('rewards'));
+      return view('admin.VendorReward.applied-reward' , compact('rewards'));
 
     }
 
