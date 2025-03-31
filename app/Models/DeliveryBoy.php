@@ -47,7 +47,7 @@ class DeliveryBoy extends Authenticatable
     
     public function deliveryAmount() {
 
-       return $this->hasOne(DeliveryAmount::class, 'deluser_id', 'id');
+       return $this->hasMany(DeliveryAmount::class, 'deluser_id', 'id');
 
     }
 
