@@ -114,7 +114,14 @@
 
                                                     <td class="text-center">{{ $value->type->type_name ?? '' }}</td>
                                                     
-                                                    <td class="text-center">{{ formatPrice($value->type->selling_price)  }}</td>
+                                                    <td class="text-center">
+                                                        @if ($value->type)
+                                                            {{ formatPrice($value->type->selling_price) }}
+                                                        @else
+                                                            <span class="text-danger">N/A</span>
+                                                        @endif
+                                                    </td>
+                                                    
 
                                                     <td class="text-center">{{ $value->quantity ?? '' }}  </td>
 
