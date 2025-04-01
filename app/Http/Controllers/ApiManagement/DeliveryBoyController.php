@@ -264,8 +264,16 @@ class DeliveryBoyController extends Controller
         $user = Auth::user();
     
         // Get the latitude and longitude of the delivery boy
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
+        $validated = $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        // $latitude = $user->latitude;
+        // $longitude = $user->longitude;
     
         // Fetch all transfer orders assigned to the current delivery boy
         $transferOrders = TransferOrder::where('status', '!=', 4) // Exclude canceled orders
@@ -388,6 +396,7 @@ class DeliveryBoyController extends Controller
         }
 
         $latitude =  $user->latitude;
+       
 
         $longitude =  $user->longitude;
         
