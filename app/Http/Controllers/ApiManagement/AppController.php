@@ -262,8 +262,8 @@ class AppController extends Controller
             'state'            => strval($state_id),
             'zipcode'          => $request->zipcode,
             'address'          => $request->address,
-            'latitude'         => $request->latitude,
-            'longitude'        => $request->longitude,
+            'latitude'         => round($request->latitude, 6),
+            'longitude'        => round($request->longitude, 6),
             'location_address' => $request->location_address,
             'date'             => now()->setTimezone('Asia/Calcutta')->toDateTimeString(),
         ];
