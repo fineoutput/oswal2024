@@ -1,7 +1,12 @@
 @extends('admin.base_template')
-
 @section('main')
     {{-- @dd($sticker) --}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+
     <div class="content">
 
         <div class="container-fluid">
@@ -100,6 +105,17 @@
                                         <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
+
+                                                <select id="select_page" style="width:200px;" class="operator"> 
+                                                    @foreach($products as $value)
+                                                        <option value="{{$value->id ?? ''}}"
+                                                            @if($value->id == $sticker?->product?->id ?? $sticker->id) selected @endif>
+                                                            {{$value->name ?? ''}}
+                                                        </option>
+                                                    @endforeach
+                                             </select>
+                                                {{-- <input type="text" id="product-search" placeholder="Search for a product..." onkeyup="filterProducts()">
+
                                                 <select class="form-control" name="product_id" id="product_id">
                                                     <option selected disabled value="">Select</option>
                                                     @foreach($products as $value)
@@ -108,10 +124,10 @@
                                                             {{$value->name ?? ''}}
                                                         </option>
                                                     @endforeach
-                                                </select>
+                                                </select> --}}
                                                    
                                                 
-                                                <label for="product_id">Select Product &nbsp;<span style="color:red;">*</span></label>
+                                                {{-- <label for="product_id">Select Product &nbsp;<span style="color:red;">*</span></label> --}}
                                             </div>
 
                                             @error('name')
@@ -247,6 +263,33 @@
         </div> <!-- container-fluid -->
 
     </div> <!-- content -->
+
+<script>
+  function filterProducts() {
+    var searchQuery = document.getElementById('product-search').value.toLowerCase();
+
+    var optionItems = document.querySelectorAll('#product_id option');
+
+    optionItems.forEach(function(option) {
+      var optionText = option.textContent.toLowerCase();
+      
+      if (optionText.includes(searchQuery)) {
+        option.style.display = 'block';
+      } else {
+        option.style.display = 'none';
+      }
+    });
+  }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+//change selectboxes to selectize mode to be searchable
+   $("select").select2();
+});
+</script>
+
 
 
 @endsection
