@@ -2,9 +2,82 @@
 @section('main')
     {{-- @dd($sticker) --}}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <!-- Add jQuery library first -->
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script> --}}
+
+    <style>
+        
+.selectpicker option
+{
+        border: none;
+        background-color: white;
+        outline: none;
+        -webkit-appearance: none;
+        -moz-appearance : none;
+        color: #14B1B2;
+        font-weight: bold;
+        font-size: 30px;
+        margin: 0;
+        padding-left: 0;
+        margin-top: -20px;
+        background: none;
+    }
+.selectpicker
+{
+        border: none;
+        background-color: white;
+        outline: none;
+        -webkit-appearance: none;
+        -moz-appearance : none;
+        color: #14B1B2;
+        font-weight: bold;
+        font-size: 30px;
+        margin: 0;
+        padding-left: 0;
+        margin-top: -20px;
+        background: none;
+    }
+    </style>
+      <style>
+        .selectpicker option
+        {
+                border: none;
+                background-color: white;
+                outline: none;
+                -webkit-appearance: none;
+                -moz-appearance : none;
+                color: #14B1B2;
+                font-weight: bold;
+                font-size: 30px;
+                margin: 0;
+                padding-left: 0;
+                margin-top: -20px;
+                background: none;
+            }
+        select.selectpicker
+        {
+                border: none;
+                background-color: white;
+                outline: none;
+                -webkit-appearance: none;
+                -moz-appearance : none;
+                color: #14B1B2;
+                font-weight: bold;
+                font-size: 30px;
+                margin: 0;
+                padding-left: 0;
+                margin-top: -20px;
+                background: none;
+            }</style>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js">
+    </script>
 
 
     <div class="content">
@@ -105,15 +178,21 @@
                                         <div class="col-sm-6 mb-3">
 
                                             <div class="form-floating">
-
-                                                <select id="select_page" style="width:200px;" class="operator"> 
-                                                    @foreach($products as $value)
+      
+                                            <div class="box">
+                                            <select name="product_id" class="selectpicker des" data-show-subtext="false" data-live-search="true" style="-webkit-appearance: none;">
+                                                <option selected disabled>Select Product</option>
+                                                @foreach($products as $value)
                                                         <option value="{{$value->id ?? ''}}"
                                                             @if($value->id == $sticker?->product?->id ?? $sticker->id) selected @endif>
                                                             {{$value->name ?? ''}}
                                                         </option>
                                                     @endforeach
-                                             </select>
+                                            </select>
+                                                
+                                                </div>
+     
+                                            
                                                 {{-- <input type="text" id="product-search" placeholder="Search for a product..." onkeyup="filterProducts()">
 
                                                 <select class="form-control" name="product_id" id="product_id">
@@ -264,7 +343,7 @@
 
     </div> <!-- content -->
 
-<script>
+{{-- <script>
   function filterProducts() {
     var searchQuery = document.getElementById('product-search').value.toLowerCase();
 
@@ -281,14 +360,8 @@
     });
   }
 
-</script>
+</script> --}}
 
-<script>
-    $(document).ready(function () {
-//change selectboxes to selectize mode to be searchable
-   $("select").select2();
-});
-</script>
 
 
 
