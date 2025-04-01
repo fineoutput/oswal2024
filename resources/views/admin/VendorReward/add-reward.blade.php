@@ -180,7 +180,7 @@
                                             <div class="form-floating">
       
                                             <div class="box">
-                                            <select name="product_id" class="selectpicker des" data-show-subtext="false" data-live-search="true" style="-webkit-appearance: none;">
+                                            <select name="product_id" class="selectpicker des form-control" data-show-subtext="false" data-live-search="true" style="-webkit-appearance: none;">
                                                 <option selected disabled>Select Product</option>
                                                 @foreach($products as $value)
                                                         <option value="{{$value->id ?? ''}}"
@@ -205,8 +205,8 @@
                                                     @endforeach
                                                 </select> --}}
                                                    
-                                                
-                                                {{-- <label for="product_id">Select Product &nbsp;<span style="color:red;">*</span></label> --}}
+{{--                                                 
+                                                <label for="product_id">Select Product &nbsp;<span style="color:red;">*</span></label> --}}
                                             </div>
 
                                             @error('name')
