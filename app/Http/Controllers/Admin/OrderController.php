@@ -157,7 +157,9 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
     {
         $decodedId = base64_decode($id);
         $order = Order::find($decodedId);
+
         $users = User::find($order->user_id);
+        return $users;
 
     
         if (!$order) {
