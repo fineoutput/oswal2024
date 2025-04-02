@@ -1014,6 +1014,8 @@ class OrderController extends Controller
             if($user->role_type == 2){
 
                 $this->sendPushNotification($user->fcm_token, $order->order_status);
+
+                $this->sendPushNotificationVendor($user->fcm_token, $order->order_status);
         
                 $this->sendEmailNotification($user, $order, $order->order_status);
             }
@@ -1965,6 +1967,27 @@ class OrderController extends Controller
 
         $title = 'Reward Alert!';
         $message = 'Congratulations! You are now eligible for a special reward! Tap to claim it now.';
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
+        
+    }
+
+    private function sendPushNotificationVendor($fcm_token) {
+
+        $title = 'Order Alert!';
+        $message = 'Your order has been accepted.';
 
         if($fcm_token != null){
 
