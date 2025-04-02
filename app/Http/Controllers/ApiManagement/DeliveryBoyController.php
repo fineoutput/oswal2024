@@ -282,7 +282,7 @@ class DeliveryBoyController extends Controller
         $longitude = $user->longitude;
     
         // Fetch all transfer orders assigned to the current delivery boy
-        $transferOrders = TransferOrder::where('status', '!=', 4) // Exclude canceled orders
+        $transferOrders = TransferOrder::OrderBy('id','DESC')->where('status', '!=', 4) 
             ->where('delivery_user_id', $user->id) // Filter by delivery boy
             ->with(['orders.user', 'orders.address'])
             ->get();
