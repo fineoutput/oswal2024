@@ -1015,7 +1015,7 @@ class OrderController extends Controller
 
                 $this->sendPushNotification($user->fcm_token, $order->order_status);
 
-                $this->sendPushNotificationVendor($user->fcm_token, $order->order_status);
+                $this->sendPushNotificationVendor($user->fcm_token);
         
                 $this->sendEmailNotification($user, $order, $order->order_status);
             }
@@ -1984,25 +1984,41 @@ class OrderController extends Controller
         
     }
 
-    private function sendPushNotificationVendor($fcm_token) {
+    // private function sendPushNotificationVendor($fcm_token) {
 
+    //     $title = 'Order Accept!';
+    //     $message = 'Your order has been accepted.';
+
+    //     if($fcm_token != null){
+
+    //         $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+    //         if(!$response['success']) {
+                
+    //             if (!$response['success']) {
+    
+    //                 Log::error('FCM send error: ' . $response['error']);
+                    
+    //             }
+    //         }
+    //     }
+        
+    // }
+
+    private function sendPushNotificationVendor($fcm_token) {
         $title = 'Order Accept!';
         $message = 'Your order has been accepted.';
-
-        if($fcm_token != null){
-
+    
+        if ($fcm_token != null) {
             $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
     
-            if(!$response['success']) {
-                
-                if (!$response['success']) {
-    
-                    Log::error('FCM send error: ' . $response['error']);
-                    
-                }
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
+                Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
             }
+        } else {
+            Log::error('FCM token is null or invalid.');
         }
-        
     }
 
 
