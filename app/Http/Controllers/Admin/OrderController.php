@@ -188,7 +188,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
     private function sendPushNotificationVendor($fcm_token) {
 
         $title = 'Order Alert!';
-        $message = 'Your order has been accepted.';
+        $message = 'Your order has been Reject.';
 
         if($fcm_token != null){
 
