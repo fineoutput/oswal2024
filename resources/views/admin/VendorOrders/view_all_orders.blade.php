@@ -417,11 +417,11 @@
                                                                         </a>
                                                                     </li>
                                                     
-                                                                    <li>
+                                                                    {{-- <li>
                                                                         <a href="{{ route('order.vendor.view-bill', ['id' => base64_encode($order->id)]) }}">
                                                                             View Bill
                                                                         </a>
-                                                                    </li>
+                                                                    </li> --}}
                                                     
                                                                     @if($order->user->role_type == 2)
 
