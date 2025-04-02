@@ -176,7 +176,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->remarks = $validated['remarks'];
 
             // return $users->fcm_token;
-            // $order->save();
+            $order->save();
 
             $this->sendPushNotificationVendor($users->fcm_token, $order->order_status);
 
