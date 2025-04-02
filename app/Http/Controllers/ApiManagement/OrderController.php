@@ -1986,7 +1986,7 @@ class OrderController extends Controller
 
     private function sendPushNotificationVendor($fcm_token) {
 
-        $title = 'Order Alert!';
+        $title = 'Order Accept!';
         $message = 'Your order has been accepted.';
 
         if($fcm_token != null){
