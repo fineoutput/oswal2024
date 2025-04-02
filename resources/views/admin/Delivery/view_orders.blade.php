@@ -297,18 +297,18 @@
                                                                     </li>
                                                                     @endif
                                                     
-                                                                    <li>
+                                                                    {{-- <li>
                                                                         <a href="{{ route('order.view-bill', ['id' => base64_encode($order->id)]) }}">
                                                                             View Bill
                                                                         </a>
-                                                                    </li>
+                                                                    </li> --}}
                                                     
-                                                                    <li>
+                                                                    {{-- <li>
                                                                         <a href="{{ route('order.view-delivery-challan', ['id' => base64_encode($order->id)]) }}">
                                                                             View Delivery Challan
                                                                         </a>
                                                                     </li>
-                                                    
+                                                     --}}
                                                                     {{-- @if (empty($order->track_id))
                                                                         <li>
                                                                             <a href="{{ route('order.addTrackOrderView', ['id' => base64_encode($order->id)]) }}">
