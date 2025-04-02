@@ -1272,7 +1272,7 @@ class OrderController extends Controller
                 
                 if (!$response['success']) {
     
-                    Log::error('FCM send errorsd: ' . $response['error']);
+                    Log::error('FCM send error: ' . $response['error']);
                     
                 }
             }
@@ -2013,7 +2013,7 @@ class OrderController extends Controller
             $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
     
             if (!$response['success']) {
-                Log::error('FCM send error: ' . $response['error']);
+                Log::error('FCM send errors: ' . $response['error']);
                 Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
             }
         } else {
