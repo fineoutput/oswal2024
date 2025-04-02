@@ -1015,7 +1015,7 @@ class OrderController extends Controller
 
                 $this->sendPushNotification($user->fcm_token, $order->order_status);
 
-                // $this->sendPushNotificationVendor($user->fcm_token);
+                $this->sendPushNotificationVendor($user->fcm_token);
         
                 $this->sendEmailNotification($user, $order, $order->order_status);
             }
