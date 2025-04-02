@@ -157,6 +157,10 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
     {
         $decodedId = base64_decode($id);
         $order = Order::find($decodedId);
+
+        $users = User::find($order->user_id);
+        // return $users;
+
     
         if (!$order) {
             return redirect()->back()->with('error', 'Order not found');
@@ -170,12 +174,58 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->order_status = 5;  
             $order->rejected_by_id = $addedBy;
             $order->remarks = $validated['remarks'];
+
+            // return $users->fcm_token;
             $order->save();
-            return redirect()->route('order.new-order')->with('success', 'Order Rejected updated successfully');
+
+            $this->sendPushNotificationVendor($users->fcm_token, $order->order_status);
+
+            return redirect()->route('order.vendor.new-order')->with('success', 'Order Rejected updated successfully');
+
+            
+
         }
     
         return view('admin.VendorOrders.reject_remark', compact('order'));
     }
+
+    private function sendPushNotificationVendor($fcm_token) {
+        $title = 'Order Alert!';
+        $message = 'Your order has been Reject.';
+    
+        if ($fcm_token != null) {
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
+                Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
+            }
+        } else {
+            Log::error('FCM token is null or invalid.');
+        }
+    }
+
+    
+    // private function sendPushNotificationVendor($fcm_token) {
+
+    //     $title = 'Order Alert!';
+    //     $message = 'Your order has been Reject.';
+
+    //     if($fcm_token != null){
+
+    //         $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+    //         if(!$response['success']) {
+                
+    //             if (!$response['success']) {
+    
+    //                 Log::error('FCM send error: ' . $response['error']);
+                    
+    //             }
+    //         }
+    //     }
+        
+    // }
     
 
     public function update_status(Request $request, $id , $status)

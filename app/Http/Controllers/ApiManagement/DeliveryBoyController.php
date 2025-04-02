@@ -388,6 +388,7 @@ class DeliveryBoyController extends Controller
         }
 
         $latitude =  $user->latitude;
+       
 
         $longitude =  $user->longitude;
         
@@ -958,8 +959,8 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
         $user = DeliveryBoy::find(Auth::user()->id);
 
         $user->update([
-            'latitude'  => $request->latitude,
-            'longitude' => $request->longitude,
+            'latitude'  => round($request->latitude, 6),
+            'longitude' => round($request->longitude, 6), 
             'address'   => $request->address ?? ''
         ]);
 
