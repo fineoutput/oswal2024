@@ -28,6 +28,7 @@ use App\Models\Order;
 
 use App\Services\FirebaseService;
 use App\Services\DeliveryBoyService;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Log;
 class DeliveryBoyController extends Controller
@@ -921,8 +922,11 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
             ]);
 
  
-        $orderdata = Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
-        $this->sendPushNotificationVendor($orderdata->user->fcm_token, $orderdata->order_status);
+        Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
+        
+        $orderdata = Order::find($transfer->order_id);
+        $users = User::find($orderdata->user_id);
+        $this->sendPushNotificationVendor($users->fcm_token, $orderdata->order_status);
 
         if ($paymentType != 'User did not accept order') {
 
