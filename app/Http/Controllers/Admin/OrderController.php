@@ -157,6 +157,8 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
     {
         $decodedId = base64_decode($id);
         $order = Order::find($decodedId);
+        $users = User::find($order->user_id);
+
     
         if (!$order) {
             return redirect()->back()->with('error', 'Order not found');
@@ -172,9 +174,33 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->remarks = $validated['remarks'];
             $order->save();
             return redirect()->route('order.new-order')->with('success', 'Order Rejected updated successfully');
+
+            $this->sendPushNotificationVendor($$users->fcm_token, $order->order_status);
+
         }
     
         return view('admin.VendorOrders.reject_remark', compact('order'));
+    }
+
+    private function sendPushNotificationVendor($fcm_token) {
+
+        $title = 'Order Alert!';
+        $message = 'Your order has been accepted.';
+
+        if($fcm_token != null){
+
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if(!$response['success']) {
+                
+                if (!$response['success']) {
+    
+                    Log::error('FCM send error: ' . $response['error']);
+                    
+                }
+            }
+        }
+        
     }
     
 
