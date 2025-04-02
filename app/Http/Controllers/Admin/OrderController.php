@@ -159,7 +159,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
         $order = Order::find($decodedId);
 
         $users = User::find($order->user_id);
-        return $users;
+        // return $users;
 
     
         if (!$order) {
@@ -175,7 +175,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->rejected_by_id = $addedBy;
             $order->remarks = $validated['remarks'];
 
-            return $users->fcm_token;
+            // return $users->fcm_token;
             // $order->save();
 
             $this->sendPushNotificationVendor($users->fcm_token, $order->order_status);
