@@ -190,25 +190,42 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
     }
 
     private function sendPushNotificationVendor($fcm_token) {
-
         $title = 'Order Alert!';
         $message = 'Your order has been Reject.';
-
-        if($fcm_token != null){
-
+    
+        if ($fcm_token != null) {
             $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
     
-            if(!$response['success']) {
-                
-                if (!$response['success']) {
-    
-                    Log::error('FCM send error: ' . $response['error']);
-                    
-                }
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
+                Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
             }
+        } else {
+            Log::error('FCM token is null or invalid.');
         }
-        
     }
+
+    
+    // private function sendPushNotificationVendor($fcm_token) {
+
+    //     $title = 'Order Alert!';
+    //     $message = 'Your order has been Reject.';
+
+    //     if($fcm_token != null){
+
+    //         $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+    //         if(!$response['success']) {
+                
+    //             if (!$response['success']) {
+    
+    //                 Log::error('FCM send error: ' . $response['error']);
+                    
+    //             }
+    //         }
+    //     }
+        
+    // }
     
 
     public function update_status(Request $request, $id , $status)
