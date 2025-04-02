@@ -26,9 +26,22 @@ use GuzzleHttp\Client;
 
 use App\Models\Order;
 
+use App\Services\FirebaseService;
+use App\Services\DeliveryBoyService;
 
+use Illuminate\Support\Facades\Log;
 class DeliveryBoyController extends Controller
 {
+
+    protected $firebaseService;
+    protected $firebaseServiceDelivery;
+
+    public function __construct(FirebaseService  $firebaseService, DeliveryBoyService $firebaseServiceDelivery)
+    {
+        $this->firebaseService = $firebaseService;
+        $this->firebaseServiceDelivery = $firebaseServiceDelivery;
+    }
+
     public function login(Request $request)
     {
         
@@ -908,7 +921,8 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
             ]);
 
  
-        Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
+        $orderdata = Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
+        $this->sendPushNotificationVendor($orderdata->user->fcm_token, $orderdata->order_status);
 
         if ($paymentType != 'User did not accept order') {
 
@@ -936,6 +950,22 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
                 'message' => 'Error occurred',
                 'status' => 201
             ]);
+        }
+    }
+
+    private function sendPushNotificationVendor($fcm_token) {
+        $title = 'Order Complete!';
+        $message = 'Your order has been Complete.';
+    
+        if ($fcm_token != null) {
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
+                Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
+            }
+        } else {
+            Log::error('FCM token is null or invalid.');
         }
     }
 
