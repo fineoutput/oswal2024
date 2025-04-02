@@ -176,7 +176,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
 
             $this->sendPushNotificationVendor($users->fcm_token, $order->order_status);
 
-            return redirect()->route('order.new-order')->with('success', 'Order Rejected updated successfully');
+            return redirect()->route('order.vendor.new-order')->with('success', 'Order Rejected updated successfully');
 
             
 
