@@ -173,9 +173,12 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->rejected_by_id = $addedBy;
             $order->remarks = $validated['remarks'];
             $order->save();
-            return redirect()->route('order.new-order')->with('success', 'Order Rejected updated successfully');
 
             $this->sendPushNotificationVendor($users->fcm_token, $order->order_status);
+
+            return redirect()->route('order.new-order')->with('success', 'Order Rejected updated successfully');
+
+            
 
         }
     
