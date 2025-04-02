@@ -172,7 +172,9 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->order_status = 5;  
             $order->rejected_by_id = $addedBy;
             $order->remarks = $validated['remarks'];
-            $order->save();
+
+            return $users->fcm_token;
+            // $order->save();
 
             $this->sendPushNotificationVendor($users->fcm_token, $order->order_status);
 
