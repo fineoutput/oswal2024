@@ -296,6 +296,17 @@ class EcommerceController extends Controller
 // dd($typedata[0]['min_qty']);
 // exit;
 // return $vendorSelectedType;
+
+                if($user){
+                    if($user->role_type == 2){
+                       $vendorselect = $vendorSelectedType->qty_desc ?? '';
+                    }else{
+                        $vendorselect = '';
+                    }
+                }else{
+                    $vendorselect = '';
+                }
+
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata[0]['type_id'] ?? '';
@@ -304,7 +315,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $vendorSelectedType->qty_desc ?? '';
+                    $selected_qty_desc = $vendorselect ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     if($roleType == 1){
