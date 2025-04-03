@@ -297,15 +297,11 @@ class EcommerceController extends Controller
 // exit;
 // return $vendorSelectedType;
 
-                if($user){
-                    if($user->role_type == 2){
-                       $vendorselect = $vendorSelectedType->qty_desc ?? '';
-                    }else{
-                        $vendorselect = '';
-                    }
-                }else{
                     $vendorselect = '';
-                }
+
+                    if ($user && $user->role_type == 2) {
+                        $vendorselect = $vendorSelectedType->qty_desc ?? '';
+                    }
 
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
