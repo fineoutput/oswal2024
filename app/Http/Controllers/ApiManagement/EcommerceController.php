@@ -314,7 +314,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $vendorSelectedType->qty_desc ?? '';
+                    $selected_qty_desc = '';
                     }
                     else{
                         $selected_type_id = '0';
@@ -323,7 +323,7 @@ class EcommerceController extends Controller
                         $selected_type_mrp = 00;
                         $selected_type_percent_off = 00;
                         $selected_min_qty = 00;
-                        $selected_qty_desc = 'Def';
+                        $selected_qty_desc = '';
                     }
                     // return response()->json([
                     //     'message' => '"type  not found"',
@@ -340,7 +340,7 @@ class EcommerceController extends Controller
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
-                $selected_qty_desc = 'Def';
+                $selected_qty_desc = '';
                 // return response()->json([
                 //     'message' => '"type  not found"',
                 //     'status' => 201,
@@ -593,12 +593,18 @@ class EcommerceController extends Controller
                     ];
                 }
 
+                if($roleType == 2){
+                    $type_desc = $type->qty_desc;
+                }else{
+                    $type_desc = '';
+                }
+
                 return [
                     'type_id' => $type->id,
                     'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
                     'type_category_id' => $type->category_id ?? null,
                     'type_product_id' => $type->product_id,
-                    'type_qty_desc' => $type->qty_desc,
+                    'type_qty_desc' => $type_desc,
                     'range' => $range,
                     'min_qty' => $type->min_qty ?? 1,
                 ];
