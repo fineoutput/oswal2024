@@ -1013,7 +1013,8 @@ class OrderController extends Controller
         if($user){
             if($user->role_type == 2){
 
-                $this->sendPushNotification($user->fcm_token, $order->order_status);
+                // $this->sendPushNotification($user->fcm_token, $order->order_status);
+                $this->checkEligibleAndNotify($user->id);
 
                 $this->sendPushNotificationVendor($user->fcm_token);
         
@@ -1447,9 +1448,9 @@ class OrderController extends Controller
                 'invoice_number' => $invoiceNumber
             ];
 
-            if($user->role_type == 2){
-                $this->checkEligibleAndNotify($user->id);
-            }
+            // if($user->role_type == 2){
+            //     $this->checkEligibleAndNotify($user->id);
+            // }
 
             return response()->json(['message' => 'Payment successful ,Order completed successfully', 'status' => 200, 'data' => $response], 200);
         } else {
