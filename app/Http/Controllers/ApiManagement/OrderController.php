@@ -1063,7 +1063,8 @@ class OrderController extends Controller
             if($user){
                 if($user->role_type == 2){
     
-                    $this->sendPushNotification($user->fcm_token, $order->order_status);
+                    // $this->sendPushNotification($user->fcm_token, $order->order_status);
+                    $this->checkEligibleAndNotify($user->id);
             
                     $this->sendEmailNotification($user, $order, $order->order_status);
                 }
