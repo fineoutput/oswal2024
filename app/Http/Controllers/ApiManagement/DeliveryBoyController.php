@@ -753,6 +753,7 @@ class DeliveryBoyController extends Controller
 
         if($user->role_type == 2){
         Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2, 'order_status' => 3]);
+        $this->sendPushNotificationVendor($user->fcm_token, $order->order_status);
         }else{
             Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2]);
         }
@@ -957,10 +958,14 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
         }
     }
 
-    private function sendPushNotificationVendor($fcm_token) {
+    private function sendPushNotificationVendor($fcm_token,$status) {
+        if($status == 3){
         $title = 'Order Complete!';
         $message = 'Your order has been Complete.';
-    
+    }else{
+        $title = 'Order Dispatch!';
+        $message = 'Your order has been Dispatch.';
+    }
         if ($fcm_token != null) {
             $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
     
