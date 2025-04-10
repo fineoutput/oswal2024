@@ -101,6 +101,7 @@
                                                     <th data-priority="3">Combo Product</th>
 
                                                     <th data-priority="3">Combo Type</th>
+                                                    <th data-priority="3">User Type</th>
 
                                                     <th data-priority="3">Status</th>
 
@@ -123,6 +124,8 @@
                                                     <td> {{ $comboproduct->comboproduct->name ?? '' }}</td>
 
                                                     <td>{{ $comboproduct->combotype->type_name ?? '' }}</td>
+
+                                                    <td>{{ $comboproduct->user_type ?? '' }}</td>
 
                                                     <td> 
                                                         @if($comboproduct->is_active == 1)  

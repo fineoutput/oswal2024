@@ -230,6 +230,30 @@
 
                                         </div>
 
+                                        <div class="col-sm-12 mb-3">
+
+                                            <div class="form-floating">
+                                                
+                                                <select class="form-control" name="user_type" id="combo_type_container">
+                                                    <option>---- Choose Type First -----</option>
+                                                
+                                                    <option value="Vendor" {{ $comboproduct == 'Vendor' ? 'selected' : '' }}>Vendor</option>
+                                                    <option value="User" {{ $comboproduct == 'User' ? 'selected' : '' }}>User</option>
+                                                </select>
+                                                
+
+                                                <label for="combo_type"> User Type &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('user_type')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
 
                                  
 

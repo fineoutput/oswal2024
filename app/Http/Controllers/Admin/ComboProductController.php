@@ -86,6 +86,8 @@ class ComboProductController extends Controller
         $comboproduct->ip = $request->ip();
 
         $comboproduct->date = now();
+        
+        $comboproduct->user_type = $request->user_type;
 
         $comboproduct->added_by = Auth::user()->id;
 
