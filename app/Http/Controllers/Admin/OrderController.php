@@ -284,14 +284,14 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
                 $finelvendortotalWeight =  $vendortotalWeight / 1000;
                 // Log::info("Total Weight: " . $vendortotalWeight);
                 if($finelvendortotalWeight > 0){
-                $rewards = Reward::where('weight', '<=', $finelvendortotalWeight)->where('is_active',1)
+                $rewards = Reward::where('weight', '<=', $finelvendortotalWeight)->whereNull('deleted_at')->where('is_active',1)
                 ->orderBy('weight', 'desc')
                 ->get(); 
                 if ($rewards) {
 
                     if($role_type == 2 ){
 
-                        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+                        $rewardlists = Reward::where('is_active', 1)->whereNull('deleted_at')->orderBy('id', 'desc')->get();
                     $user = User::where('id',$vendor_user_id)->first();
                     // return $user; 
     
@@ -308,7 +308,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
         foreach ($rewardlists as $reward) {
           
             $vendorStatus = VendorReward::where('reward_id', $reward->id)
-                ->where('vendor_id', $user->id)
+                ->where('vendor_id', $user->id)->whereNull('deleted_at')
                 ->first();
     
             if ($vendorStatus) {
@@ -363,7 +363,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
                     foreach ($rewards as $reward) {
                         // Log::info("Reward Name: " . $reward->name);
 
-                        $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
+                        $AlreadyReward = VendorReward::where('vendor_id', $vendor_user_id)->whereNull('deleted_at')->where('reward_id', $reward->id)->whereIn('status', [1, 2, 3])->first();
     
                         if(!$AlreadyReward){   
                             // Log::info("Reward Given: " . $reward->name);           
@@ -423,7 +423,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
 
     private function checkEligibleAndNotify($userid) {
       return $userid;
-        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+        $rewardlists = Reward::where('is_active', 1)->whereNull('deleted_at')->orderBy('id', 'desc')->get();
         $user = User::where('id',$userid)->first();
     
         if (!$user) {
@@ -437,7 +437,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
     
         foreach ($rewardlists as $reward) {
           
-            $vendorStatus = VendorReward::where('reward_id', $reward->id)
+            $vendorStatus = VendorReward::where('reward_id', $reward->id)->whereNull('deleted_at')
                 ->where('vendor_id', $user->id)
                 ->first();
     
