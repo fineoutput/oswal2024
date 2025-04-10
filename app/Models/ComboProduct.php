@@ -53,12 +53,12 @@ class ComboProduct extends Model
 
     public function vendormaintype()
     {
-        return $this->belongsTo(VendorType::class, 'main_type' , 'id');
+        return $this->belongsTo(Type::class, 'main_type' , 'id');
     }
 
     public function vendorcombotype()
     {
-        return $this->belongsTo(VendorType::class, 'combo_type' , 'id');
+        return $this->belongsTo(Type::class, 'combo_type' , 'id');
     }
 
 
