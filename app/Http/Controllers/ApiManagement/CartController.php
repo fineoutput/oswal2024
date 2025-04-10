@@ -896,7 +896,7 @@ $cartItems = $cartQuery->get();
 
         if($role_type == 2){
 
-            $comboDetails = ComboProduct::with(['vendormaintype', 'vendorcombotype', 'comboproduct'])
+            $comboDetails = ComboProduct::with(['maintype', 'combotype', 'comboproduct'])
             ->where('main_product', $product->id)->where('user_type','Vendor')
             ->first();
 
