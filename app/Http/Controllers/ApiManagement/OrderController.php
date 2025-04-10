@@ -1681,7 +1681,8 @@ class OrderController extends Controller
 
         if($order->delivery_status != 0 ){
 
-          $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)->first();
+          $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)
+          ->where('status','!=',4)->first();
           $deleveryBoy = null;
           if (!empty($delivery) && $delivery->deliveryBoy) {
               $deleveryBoy = [
@@ -1690,8 +1691,11 @@ class OrderController extends Controller
                   'phone' => $delivery->deliveryBoy->phone,
               ];
           }
+          
+
 
         }
+
 
         foreach ($orderDetails as $detail) {
 
@@ -1738,9 +1742,9 @@ class OrderController extends Controller
             ];
         }
 
-        if($order->order_status = 4){
-            $deleveryBoy = [];
-        }
+        // if($order->order_status = 4){
+        //     $deleveryBoy = [];
+        // }
 
 
         $data = [
