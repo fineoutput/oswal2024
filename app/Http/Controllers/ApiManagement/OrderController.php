@@ -1916,7 +1916,7 @@ class OrderController extends Controller
     
     private function checkEligibleAndNotify($userid) {
       
-        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+        $rewardlists = Reward::where('is_active', 1)->whereNull('deleted_at')->orderBy('id', 'desc')->get();
         $user = User::where('id',$userid)->first();
     
         if (!$user) {
@@ -1930,7 +1930,7 @@ class OrderController extends Controller
     
         foreach ($rewardlists as $reward) {
           
-            $vendorStatus = VendorReward::where('reward_id', $reward->id)
+            $vendorStatus = VendorReward::where('reward_id', $reward->id)->whereNull('deleted_at')
                 ->where('vendor_id', $user->id)
                 ->first();
     
