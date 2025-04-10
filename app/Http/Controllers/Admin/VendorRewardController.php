@@ -17,7 +17,7 @@ class VendorRewardController extends Controller
     public function index()
     {
 
-        $stickers = Reward::orderBy('id', 'desc')->where('reward_type','vendor_reward')->get();
+        $stickers = VendorReward::orderBy('id', 'desc')->where('reward_type','vendor_reward')->get();
 
         return view('admin.VendorReward.view-reward', compact('stickers'));
     }
@@ -37,7 +37,7 @@ class VendorRewardController extends Controller
 
             }
 
-            $sticker = Reward::find(base64_decode($id));
+            $sticker = VendorReward::find(base64_decode($id));
         }
 
         $products = EcomProduct::where('product_view', 2)->orWhere('product_view', 3)->get();
@@ -62,12 +62,12 @@ class VendorRewardController extends Controller
 
             $rules['img'] = 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
-            $sticker = new Reward;
+            $sticker = new VendorReward;
 
         } else {
             $rules['img'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
 
-            $sticker = Reward::find($request->sticker_id);
+            $sticker = VendorReward::find($request->sticker_id);
             
             if (!$sticker) {
                 
@@ -118,7 +118,7 @@ class VendorRewardController extends Controller
 
         $admin_position = $request->session()->get('position');
 
-        $sticker = Reward::find($id);
+        $sticker = VendorReward::find($id);
 
         // if ($admin_position == "Super Admin") {
 
@@ -150,7 +150,7 @@ class VendorRewardController extends Controller
 
         // if ($admin_position == "Super Admin") {
 
-        if (Reward::where('id', $id)->delete()) {
+        if (VendorReward::where('id', $id)->delete()) {
 
             return  redirect()->route('reward.index')->with('success', 'Reward Deleted Successfully.');
         } else {
