@@ -914,7 +914,11 @@ $cartItems = $cartQuery->get();
             return $comboProduct;
         }
 
-        $type = Type::find($type_id);
+        if($role_type == 2){
+            $type = VendorType::find($type_id);
+        }else{
+            $type = Type::find($type_id);
+        }
 
         if ($type && $type->type_name === $comboDetails->maintype->type_name) {
             $comProduct = $comboDetails->comboproduct;
