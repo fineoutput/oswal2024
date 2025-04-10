@@ -116,13 +116,13 @@
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
 
-                                                    <td>{{ $comboproduct->mainproduct->name }}</td>
+                                                    <td>{{ $comboproduct->mainproduct->name ?? '' }}</td>
 
-                                                    <td>{{ $comboproduct->maintype->type_name }}</td>
+                                                    <td>{{ $comboproduct->maintype->type_name ?? '' }}</td>
 
-                                                    <td> {{ $comboproduct->comboproduct->name }}</td>
+                                                    <td> {{ $comboproduct->comboproduct->name ?? '' }}</td>
 
-                                                    <td>{{ $comboproduct->combotype->type_name }}</td>
+                                                    <td>{{ $comboproduct->combotype->type_name ?? '' }}</td>
 
                                                     <td> 
                                                         @if($comboproduct->is_active == 1)  
