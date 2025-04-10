@@ -914,40 +914,8 @@ $cartItems = $cartQuery->get();
             return $comboProduct;
         }
 
-        if($role_type == 2){
-            $type = VendorType::find($type_id);
-        }else{
-            $type = Type::find($type_id);
-        }
+        $type = Type::find($type_id);
 
-        if($role_type == 2){
-            if ($type && $type->type_name === $comboDetails->vendormaintype->type_name) {
-                $comProduct = $comboDetails->comboproduct;
-                $combotype = $comboDetails->vendorcombotype;
-    
-                $comboProduct = [
-                    'combodetail' => [
-                        'id' => $comboDetails->id,
-                        'main_type_id' => $comboDetails->vendormaintype->id,
-                        'main_type_name' => $comboDetails->vendormaintype->type_name,
-                        'combo_type_name' => $combotype->type_name,
-                        'combo_type_id' => $combotype->id,
-                    ],
-                    'product' => [
-                        'product_id' => $comProduct->id,
-                        'category_id' => $comProduct->category_id,
-                        'product_name' => $lang !== "hi" ? $comProduct->name : $comProduct->name_hi,
-                        'long_desc' => $lang !== "hi" ? $comProduct->long_desc : $comProduct->long_desc_hi,
-                        'url' => $comProduct->url,
-                        'image1' => asset($comProduct->img1),
-                        'image2' => asset($comProduct->img2),
-                        'image3' => asset($comProduct->img3),
-                        'image4' => asset($comProduct->img4),
-                        'is_active' => $comProduct->is_active,
-                    ]
-                ];
-            }
-        }else{
         if ($type && $type->type_name === $comboDetails->maintype->type_name) {
             $comProduct = $comboDetails->comboproduct;
             $combotype = $comboDetails->combotype;
@@ -974,7 +942,6 @@ $cartItems = $cartQuery->get();
                 ]
             ];
         }
-    }
 
         return $comboProduct;
 
