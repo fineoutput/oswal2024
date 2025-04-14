@@ -99,7 +99,7 @@ if(!function_exists('sendProduct')) {
 
     function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false , $paginate =false , $forproduct=false, $roleType=false )  {
         
-        $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1);
+        $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1)->with('comboproduct');
 
         if($cid){ $products = $products->where('category_id', $cid);}
 
