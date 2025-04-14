@@ -15,6 +15,7 @@ use App\Models\Type;
 use App\Models\Type_sub;
 use App\Models\User;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 class EcommerceController extends Controller
@@ -198,11 +199,26 @@ class EcommerceController extends Controller
 
     $product_data = [];
 
-    // return $products;
+     $userDetails = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
     foreach ($products as $product) {
 
-        $combo_product = $product->comboproduct;
-        // Prepare combo product data if exists
+        if($userDetails->role_type == 1){
+        $combo_product = $product->comboproduct->where('user_type','User');
+        }elseif($userDetails->role_type == 2){
+            $combo_product = $product->comboproduct->where('user_type','Vendor');
+        }else{
+            $combo_product = null;
+        }
         $combo_data = [];
         if ($combo_product && $combo_product->isNotEmpty()) {
             $combo_data = $combo_product->map(function($combo) {
