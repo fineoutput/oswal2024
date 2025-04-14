@@ -416,6 +416,12 @@ class EcommerceController extends Controller
         'message' => 'success',
         'status' => 200,
         'data' => (isset($request->product_id) && $request->product_id != null &&  $product_data != null) ? $product_data[0] : $product_data,
+        'comboproduct' => $product->comboproduct->map(function ($combo) {
+                return [
+                    'id' => $combo->id,
+                    'name' => $combo->name,
+                ];
+            }),
         'pagination' => [
             'current_page' => $page,
             'per_page' => $per_page,
