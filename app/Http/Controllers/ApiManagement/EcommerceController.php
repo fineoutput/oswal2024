@@ -198,7 +198,29 @@ class EcommerceController extends Controller
 
     $product_data = [];
 
+    // return $products;
     foreach ($products as $product) {
+
+        $combo_product = $product->comboproduct;
+        // Prepare combo product data if exists
+        $combo_data = [];
+        if ($combo_product && $combo_product->isNotEmpty()) {
+            $combo_data = $combo_product->map(function($combo) {
+                return [
+                    'combo_product_id' => $combo->comboproduct->id,
+                    'combo_product_name' => $combo->comboproduct->name,
+                    'combo_product_desc' => $combo->comboproduct->long_desc,
+                   'images' => [
+                        ['image' => asset($combo->comboproduct->img_app1) ],
+                        ['image' => asset($combo->comboproduct->img_app2) ],
+                        ['image' => asset($combo->comboproduct->img_app3) ],
+                        ['image' => asset($combo->comboproduct->img_app4) ],
+                    ],
+                ];
+            });
+        }
+        
+
         // If the user is logged in, we add extra data like wishlist, cart, ratings, etc.
         $wishlist = $user_id ? Wishlist::where('product_id', $product->id)->where('user_id', $user_id)->first() : null;
         $wish_status = $wishlist ? 1 : 0;
@@ -409,6 +431,7 @@ class EcommerceController extends Controller
             'selected_type_percent_off' => $selected_type_percent_off,
             'selected_min_qty' => $selected_min_qty,
             'selected_qty_desc' => $selected_qty_desc,
+            'combo_products' => $combo_data,
         ];
     }
 
@@ -416,12 +439,6 @@ class EcommerceController extends Controller
         'message' => 'success',
         'status' => 200,
         'data' => (isset($request->product_id) && $request->product_id != null &&  $product_data != null) ? $product_data[0] : $product_data,
-        'comboproduct' => $product->comboproduct->map(function ($combo) {
-                return [
-                    'id' => $combo->id,
-                    'name' => $combo->name,
-                ];
-            }),
         'pagination' => [
             'current_page' => $page,
             'per_page' => $per_page,
