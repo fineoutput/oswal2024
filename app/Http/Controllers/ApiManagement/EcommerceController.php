@@ -331,10 +331,9 @@ class EcommerceController extends Controller
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
-            
-                // return $vendorSelectedType;
-            // return $typedata[0]['type_name'];
-
+// dd($typedata[0]['min_qty']);
+// exit;
+// return $vendorSelectedType;
 
                     $vendorselect = '';
 
@@ -350,7 +349,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
+                    $selected_qty_desc = $vendorselect ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     if($roleType == 1){
@@ -360,7 +359,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $typedata[0]['qty_desc'] ?? '';
+                    $selected_qty_desc = '';
                     }
                     else{
                         $selected_type_id = '0';
