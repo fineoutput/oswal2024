@@ -212,29 +212,29 @@ class EcommerceController extends Controller
 
     foreach ($products as $product) {
 
-        if($userDetails->role_type == 1){
-        $combo_product = $product->comboproduct->where('user_type','User');
-        }elseif($userDetails->role_type == 2){
-            $combo_product = $product->comboproduct->where('user_type','Vendor');
-        }else{
-            $combo_product = null;
-        }
-        $combo_data = [];
-        if ($combo_product && $combo_product->isNotEmpty()) {
-            $combo_data = $combo_product->map(function($combo) {
-                return [
-                    'combo_product_id' => $combo->comboproduct->id,
-                    'combo_product_name' => $combo->comboproduct->name,
-                    'combo_product_desc' => $combo->comboproduct->long_desc,
-                   'images' => [
-                        ['image' => asset($combo->comboproduct->img_app1) ],
-                        ['image' => asset($combo->comboproduct->img_app2) ],
-                        ['image' => asset($combo->comboproduct->img_app3) ],
-                        ['image' => asset($combo->comboproduct->img_app4) ],
-                    ],
-                ];
-            });
-        }
+        // if($userDetails->role_type == 1){
+        // $combo_product = $product->comboproduct->where('user_type','User');
+        // }elseif($userDetails->role_type == 2){
+        //     $combo_product = $product->comboproduct->where('user_type','Vendor');
+        // }else{
+        //     $combo_product = null;
+        // }
+        // $combo_data = [];
+        // if ($combo_product && $combo_product->isNotEmpty()) {
+        //     $combo_data = $combo_product->map(function($combo) {
+        //         return [
+        //             'combo_product_id' => $combo->comboproduct->id,
+        //             'combo_product_name' => $combo->comboproduct->name,
+        //             'combo_product_desc' => $combo->comboproduct->long_desc,
+        //            'images' => [
+        //                 ['image' => asset($combo->comboproduct->img_app1) ],
+        //                 ['image' => asset($combo->comboproduct->img_app2) ],
+        //                 ['image' => asset($combo->comboproduct->img_app3) ],
+        //                 ['image' => asset($combo->comboproduct->img_app4) ],
+        //             ],
+        //         ];
+        //     });
+        // }
         
 
         // If the user is logged in, we add extra data like wishlist, cart, ratings, etc.
@@ -447,7 +447,7 @@ class EcommerceController extends Controller
             'selected_type_percent_off' => $selected_type_percent_off,
             'selected_min_qty' => $selected_min_qty,
             'selected_qty_desc' => $selected_qty_desc,
-            'combo_products' => $combo_data,
+            // 'combo_products' => $combo_data,
         ];
     }
 
