@@ -132,7 +132,6 @@ class CartController extends Controller
                 if ($filteredType) {
                  
                     $typePrice = $filteredType->selling_price;
-                    $typeqty = $filteredType->min_qty;
                 } else {
                     $typePrice = "";
                     if ($request->quantity < $type->min_qty) {
@@ -148,7 +147,6 @@ class CartController extends Controller
             else{
         $ty1 = Type::wherenull('deleted_at')->where('id', $typeId)->first();
         $typePrice = $ty1->selling_price;
-        $typeqty  = $ty1->min_qty;
         // print_r($typePrice);
         // exit;
                 
@@ -167,7 +165,6 @@ class CartController extends Controller
                 // dd($ty1);
                 if(!empty($ty1)){
                     $typePrice = $ty1->selling_price;
-                    $typeqty  = $ty1->min_qty;
                   
                 }
             $rules['quantity'] = 'required|integer|max:' . getConstant()->quantity;
@@ -183,7 +180,6 @@ class CartController extends Controller
             // dd($ty1);
             if(!empty($ty1)){
                 $typePrice = $ty1->selling_price;
-                $typeqty = $ty1->min_qty;
               
             }
             else{
@@ -220,8 +216,7 @@ class CartController extends Controller
 
         $data['type_price'] = $typePrice;
 
-        // $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
-        $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $typeqty;
+        $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
 
         $data['ip'] = $request->ip();
 
