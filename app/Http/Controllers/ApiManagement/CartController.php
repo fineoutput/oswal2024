@@ -216,8 +216,13 @@ class CartController extends Controller
 
         $data['type_price'] = $typePrice;
 
-        $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
-
+        // $data['total_qty_price'] = $userDetails && $userDetails->role_type == 2 ? $typePrice : $typePrice * $data['quantity'];
+        if ($userDetails && $userDetails->role_type == 2) {
+            $data['total_qty_price'] = $typePrice;
+        } else {
+            $data['total_qty_price'] = $typePrice * $data['quantity'];
+        }
+        
         $data['ip'] = $request->ip();
 
         $curDate = now()->setTimezone('Asia/Calcutta')->format('Y-m-d H:i:s'); 
