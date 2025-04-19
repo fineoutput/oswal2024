@@ -730,9 +730,10 @@ class DeliveryBoyController extends Controller
     $startTime = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
 
     $user = Auth::user();
-
-    $ongoingOrder = TransferOrder::where('status', 2)
-        ->orWhere('status', 3)
+        $ongoingOrder = TransferOrder::where(function($query) {
+            $query->where('status', 2)
+                ->orWhere('status', 3);
+        })
         ->where('delivery_user_id', $user->id)
         ->first();
 
