@@ -832,6 +832,8 @@ class DeliveryBoyController extends Controller
                         'start_location' => $deliveryOrder->start_location,
                         'start_time' => $deliveryOrder->start_time,
                         'vendor' => 'vendor',
+                        'latitude' => $latitude,
+                        'longitude' => $longitude,
                         'user_address' => [
                             'name' => $userAddress->name,
                             'address' => $userAddress->address,
