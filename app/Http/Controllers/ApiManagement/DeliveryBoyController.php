@@ -320,6 +320,8 @@ class DeliveryBoyController extends Controller
                 'transfer_order_id' => $value->id,
                 'delivery_status' => deliveryStatus($value->status),
                 'order_id' => $value->order_id,
+                'latitude' => $request->latitude ?? '',
+                'longitude' => $request->longitude ?? '',
                 'user_id' => $value->orders->user_id,
                 'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
                 'distance' => $dist['distance'] ?? '0', // Distance in km
@@ -832,8 +834,8 @@ class DeliveryBoyController extends Controller
                         'start_location' => $deliveryOrder->start_location,
                         'start_time' => $deliveryOrder->start_time,
                         'vendor' => 'vendor',
-                        'latitude' => $latitude,
-                        'longitude' => $longitude,
+                        'latitude' => $latitude ?? '',
+                        'longitude' => $longitude ?? '',
                         'user_address' => [
                             'name' => $userAddress->name,
                             'address' => $userAddress->address,
