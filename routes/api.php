@@ -69,7 +69,7 @@ Route::get('vendor/reward-claim' , [AppController::class , 'claimReward']);
 
 Route::middleware(['auth:sanctum', 'auth:deliveryboy'])->prefix('delivery-boy')->name('delivery-boy.')->group(function () {
     Route::get('dashboard', [DeliveryBoyController::class, 'dashboard'])->name('dashboard');
-    Route::get('order-list', [DeliveryBoyController::class , 'orderList'])->name('order-list');
+    Route::post('order-list', [DeliveryBoyController::class , 'orderList'])->name('order-list');
     Route::get('order-accept', [DeliveryBoyController::class, 'acceptOrder'])->name('order-accept');
     Route::get('order-detail', [DeliveryBoyController::class , 'orderDetail'])->name('order-details');
     Route::get('product-details', [DeliveryBoyController::class , 'productDetail'])->name('product-details');

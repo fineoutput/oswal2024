@@ -286,7 +286,7 @@ class DeliveryBoyController extends Controller
     
         $latitude = $request->latitude ?? $user->latitude;
         $longitude = $request->longitude ?? $user->longitude;
-
+// return $request->latitude;
         // Fetch all transfer orders assigned to the current delivery boy
         $transferOrders = TransferOrder::OrderBy('id','DESC')->where('status', '!=', 4) 
             ->where('delivery_user_id', $user->id) // Filter by delivery boy
@@ -313,8 +313,9 @@ class DeliveryBoyController extends Controller
     
             // Calculate the distance between the delivery boy and the order's address
             $dist = $this->calculate_distanceee($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
-    
-            // Add order data to the array
+            // return $latitude;
+            // return $dist;
+          
             $data[] = [
                 'transfer_order_id' => $value->id,
                 'delivery_status' => deliveryStatus($value->status),
