@@ -408,10 +408,14 @@ class DeliveryBoyController extends Controller
             $payment_type = 'All Ready Pay';
         }
 
-        $latitude =  $user->latitude;
+        // $latitude =  $user->latitude;
        
 
-        $longitude =  $user->longitude;
+        // $longitude =  $user->longitude;
+
+        $latitude = $request->latitude ?? $user->latitude;
+        $longitude = $request->longitude ?? $user->longitude;
+        // return $latitude;
         
         $dist = $this->calculate_distanceee($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
