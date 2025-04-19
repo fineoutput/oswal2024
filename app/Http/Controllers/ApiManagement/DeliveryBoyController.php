@@ -284,10 +284,13 @@ class DeliveryBoyController extends Controller
     public function orderList(Request $request) {
         $user = Auth::user();
     
-        // Get the latitude and longitude of the delivery boy
+        if($request->latitude && $request->longitude){
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+        }else{
         $latitude = $user->latitude;
         $longitude = $user->longitude;
-    
+    }
         // Fetch all transfer orders assigned to the current delivery boy
         $transferOrders = TransferOrder::OrderBy('id','DESC')->where('status', '!=', 4) 
             ->where('delivery_user_id', $user->id) // Filter by delivery boy
