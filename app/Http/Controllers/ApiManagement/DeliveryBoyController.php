@@ -415,13 +415,16 @@ class DeliveryBoyController extends Controller
         
         $dist = $this->calculate_distanceee($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
-        
+        $address = $transferOrder->orders->address;
+
+        $addressData = $address ? $address->except('address') : [];
         $data= [
             'order_id'    => $transferOrder->order_id,
             'user_id'     => $transferOrder->orders->user_id,
             'user_name'   => $transferOrder->orders->user->first_name,
             'phone_no'    => $transferOrder->orders->user->contact,
-            'address'     => $transferOrder->orders->address->except('address') ?? '',
+            // 'address'     => $transferOrder->orders->address ?? '',
+            'address'     => $addressData ?? '',
             'delivery_status'     => $transferOrder->status,
             'payment_type'=> $payment_type,
             'delivery_status'=> deliveryStatus($transferOrder->status),
