@@ -61,6 +61,13 @@ class DeliveryBoyController extends Controller
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
 
+        if (!$deliveryBoy) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Delivery Boy not found',
+            ]);
+        }
+        
         if($deliveryBoy->is_active != 1){
             return response()->json([
                 'success' => false,
