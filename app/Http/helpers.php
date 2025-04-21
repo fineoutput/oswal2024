@@ -120,8 +120,12 @@ if(!function_exists('sendProduct')) {
 
         if($is_fea){$products = $products->where('is_featured', 1);}
         
-        if($roleType == 2){
+        if($forproduct == 2){
             $products = $products->whereIn('product_view', [3, 2]);
+        }elseif($forproduct == 1){
+            $products = $products->whereIn('product_view', [3, 1]);
+        }else{
+            $products = $products->whereIn('product_view', [3, 1, 2]);
         }
         // echo $roleType;
         // // echo "hi";

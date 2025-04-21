@@ -192,6 +192,7 @@ class EcommerceController extends Controller
 
     // Fetch the products
     $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea, false, $roleType);
+    return $products;
 
     $total = $products->count();
 
