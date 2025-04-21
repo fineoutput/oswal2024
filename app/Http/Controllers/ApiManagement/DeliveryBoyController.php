@@ -379,9 +379,12 @@ class DeliveryBoyController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Orders fetched successfully.',
-            'orders' => $data,
-            'complete_Orders' => $completedata,
+            'data' => [
+                'orders' => $data,
+                'complete_orders' => $completedata,
+            ],
         ], 200);
+        
     }
 
     public function calculate_distanceee($lat1, $lon1, $lat2, $lon2) {
