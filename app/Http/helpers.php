@@ -125,7 +125,7 @@ if(!function_exists('sendProduct')) {
         }elseif($forproduct == 1){
             $products = $products->whereIn('product_view', [3, 1]);
         }else{
-            $products = $products->whereIn('product_view', [3, 1, 2]);
+            $products = $products->whereIn('product_view', [3, 1]);
         }
         // echo $roleType;
         // // echo "hi";
