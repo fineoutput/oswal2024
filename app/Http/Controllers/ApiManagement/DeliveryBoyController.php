@@ -292,6 +292,10 @@ class DeliveryBoyController extends Controller
             ->where('delivery_user_id', $user->id) // Filter by delivery boy
             ->with(['orders.user', 'orders.address'])
             ->get();
+        $completeOrders = TransferOrder::OrderBy('id','DESC')->where('status', '=', 4) 
+            ->where('delivery_user_id', $user->id) // Filter by delivery boy
+            ->with(['orders.user', 'orders.address'])
+            ->get();
     
         $data = [];
     
@@ -330,6 +334,41 @@ class DeliveryBoyController extends Controller
                 'delivery_status' => $value->status, // Distance unit
             ];
         }
+
+        foreach ($completeOrders as $value) {
+            $order = $value->orders;
+    
+            // If order does not exist, skip this iteration
+            if (!$order) {
+                continue;
+            }
+    
+            $userAddress = $order->address;
+    
+            // If user does not exist in the order, skip this iteration
+            if (!$order->user) {
+                continue;
+            }
+    
+            // Calculate the distance between the delivery boy and the order's address
+            $dist = $this->calculate_distanceee($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+            // return $latitude;
+            // return $dist;
+          
+            $completedata[] = [
+                'transfer_order_id' => $value->id,
+                'delivery_status' => deliveryStatus($value->status),
+                'order_id' => $value->order_id,
+                'latitude' => $request->latitude ?? '',
+                'longitude' => $request->longitude ?? '',
+                'user_id' => $value->orders->user_id,
+                'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
+                'distance' => $dist['distance'] ?? '0', // Distance in km
+                'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
+                'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
+                'delivery_status' => $value->status, // Distance unit
+            ];
+        }
     
         // Sort orders by distance (nearest first)
         usort($data, function ($a, $b) {
@@ -340,7 +379,8 @@ class DeliveryBoyController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Orders fetched successfully.',
-            'orders' => $data
+            'orders' => $data,
+            'complete_Orders' => $completedata,
         ], 200);
     }
 
