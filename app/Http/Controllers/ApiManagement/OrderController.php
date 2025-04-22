@@ -1679,7 +1679,7 @@ class OrderController extends Controller
 
         }
 
-        if($order->delivery_status != 0 ){
+        if($order->delivery_status != 0 && $order->delivery_status != 5){
 
           $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)
           ->where('status','!=',4)->first();
