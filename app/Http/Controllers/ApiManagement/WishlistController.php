@@ -59,20 +59,33 @@ class WishlistController extends Controller
 
         $user = User::where('id', $user_id)->first();
         
-        if($user->role_type == 2){
+        // if($user->role_type == 2){
             
-            // $Rtype = Type::find($request->type_id);
-            // return $request;
-            $type = VendorType::where('product_id', $request->product_id)
-                ->where('id', $request->type_id)
-                ->first();
-                // return $type;
-                $typeid = $type->id;
+        //     // $Rtype = Type::find($request->type_id);
+        //     // return $request;
+        //     $type = VendorType::where('product_id', $request->product_id)
+        //         ->where('id', $request->type_id)
+        //         ->first();
+        //         // return $type;
+        //         $typeid = $type->id;
 
-        }else{
+        // }else{
             
+        //     $typeid = $request->type_id;
+        // }
+        
+        if (!is_null($user) && $user->role_type == 2) {
+            $type = VendorType::where('product_id', $request->product_id)
+                              ->where('id', $request->type_id)
+                              ->first();
+        
+            $typeid = $type ? $type->id : null;
+        } else {
             $typeid = $request->type_id;
         }
+        
+
+        
         // $user = $user;
         
     
