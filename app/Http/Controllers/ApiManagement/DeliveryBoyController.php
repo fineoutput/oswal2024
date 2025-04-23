@@ -141,8 +141,10 @@ class DeliveryBoyController extends Controller
            ->count();
 
            // Count total completed orders
-            $completedOrders = TransferOrder::where('delivery_user_id', $deliveryBoy->id)->where('status', 4)->count();
-        
+           $completedOrders = TransferOrder::where('delivery_user_id', $deliveryBoy->id)
+           ->whereIn('status', [4, 5])
+           ->count();
+       
             // Prepare response data
             $data = [
                 'wallet_amount' => formatPrice($walletAmountSum),
