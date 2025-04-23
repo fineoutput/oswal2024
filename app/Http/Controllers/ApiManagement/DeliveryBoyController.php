@@ -300,13 +300,11 @@ class DeliveryBoyController extends Controller
         //     ->get();
 
         $transferOrders = TransferOrder::orderBy('id', 'DESC')
-        ->where(function ($query) {
-            $query->where('status','!=', 4)
-                ->orWhere('status','!=', 5);
-        })
+        ->whereNotIn('status', [4, 5])
         ->where('delivery_user_id', $user->id)
         ->with(['orders.user', 'orders.address'])
         ->get();
+
 
         $completeOrders = TransferOrder::orderBy('id', 'DESC')
         ->where(function ($query) {
