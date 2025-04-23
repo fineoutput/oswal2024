@@ -570,6 +570,8 @@ if (! function_exists('deliveryStatus')){
             $status = 'Ongoing';
         }elseif($sts == 4){
             $status = 'Delivered';
+        }elseif($sts == 5){
+            $status = 'Rejected';
         }
 
         return  $status;
