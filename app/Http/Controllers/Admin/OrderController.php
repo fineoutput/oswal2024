@@ -175,6 +175,11 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
             $order->rejected_by_id = $addedBy;
             $order->remarks = $validated['remarks'];
 
+            $order_transfer = TransferOrder::where('order_id', $decodedId)->first();
+
+            if ($order_transfer) {
+                $order_transfer->update(['status' => 5]);
+            }
             // return $users->fcm_token;
             $order->save();
 
