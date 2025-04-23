@@ -292,10 +292,20 @@ class DeliveryBoyController extends Controller
             ->where('delivery_user_id', $user->id) // Filter by delivery boy
             ->with(['orders.user', 'orders.address'])
             ->get();
-        $completeOrders = TransferOrder::OrderBy('id','DESC')->where('status', '=', 4) 
-            ->where('delivery_user_id', $user->id)
-            ->with(['orders.user', 'orders.address'])
-            ->get();
+        // $completeOrders = TransferOrder::OrderBy('id','DESC')->where('status', '=', 4) 
+        //     ->where('delivery_user_id', $user->id) 
+        //     ->with(['orders.user', 'orders.address'])
+        //     ->get();
+
+        $completeOrders = TransferOrder::orderBy('id', 'DESC')
+        ->where(function ($query) {
+            $query->where('status', 4)
+                ->orWhere('status', 5);
+        })
+        ->where('delivery_user_id', $user->id)
+        ->with(['orders.user', 'orders.address'])
+        ->get();
+
     
         $data = [];
         $completedata = [];
