@@ -251,6 +251,11 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
         $order->last_update_date = $curDate;
 
         if($order_status == 5){
+            $order = TransferOrder::where('order_id', $id)->first();
+
+            if ($order) {
+                $order->update(['status' => 5]);
+            }
             
             $order->rejected_by = 2;
             

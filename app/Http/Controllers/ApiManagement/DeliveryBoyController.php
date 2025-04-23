@@ -293,14 +293,14 @@ class DeliveryBoyController extends Controller
             ->with(['orders.user', 'orders.address'])
             ->get();
         $completeOrders = TransferOrder::OrderBy('id','DESC')->where('status', '=', 4) 
-            ->where('delivery_user_id', $user->id) // Filter by delivery boy
+            ->where('delivery_user_id', $user->id)
             ->with(['orders.user', 'orders.address'])
             ->get();
     
         $data = [];
         $completedata = [];
     
-        // Calculate distance for each order and add it to the data array
+       
         foreach ($transferOrders as $value) {
             $order = $value->orders;
     
