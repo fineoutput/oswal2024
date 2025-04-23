@@ -298,6 +298,7 @@ class DeliveryBoyController extends Controller
             ->get();
     
         $data = [];
+        $completedata = [];
     
         // Calculate distance for each order and add it to the data array
         foreach ($transferOrders as $value) {
