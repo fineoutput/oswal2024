@@ -1319,9 +1319,9 @@ class OrderController extends Controller
                     ->first();
 
                     if($user && $user->role_type == 1){
-                        if ($order->total_order_weight > 20) {
-                            return response()->json(['successs' => false ,'message' => 'Orders above 20 kg are not allowed.']);
-                        }
+                        if ($order->total_order_weight >= 20) {
+                            return response()->json(['success' => false, 'message' => 'Orders above 20 kg are not allowed.']);
+                        }                        
                     }
         if (!$order) {
             return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
