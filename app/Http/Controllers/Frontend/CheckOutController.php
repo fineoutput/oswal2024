@@ -736,7 +736,7 @@ class CheckOutController extends Controller
             ->first();
         
             if ($order->total_order_weight >= 20) {
-                return response()->json(['success' => false, 'message' => 'Orders above 20 kg are not allowed.']);
+                return response()->json(['success' => false, 'message' => 'Cart Weight above 20kg is not allowed.']);
             }
             
         if (!$order) {
@@ -835,7 +835,7 @@ class CheckOutController extends Controller
             ->first();
 
             if ($order->total_order_weight >= 20) {
-                return response()->json(['success' => false, 'message' => 'Orders above 20 kg are not allowed.']);
+                return response()->json(['success' => false, 'message' => 'Cart Weight above 20kg is not allowed.']);
             }
             
 

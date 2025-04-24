@@ -801,7 +801,7 @@ class OrderController extends Controller
 
         if($user && $user->role_type == 1){
         if ($order->total_order_weight > 20) {
-            return response()->json(['successs' => false ,'message' => 'Orders above 20 kg are not allowed.']);
+            return response()->json(['successs' => false ,'message' => 'Cart Weight above 20kg is not allowed.']);
         }
     }
 
@@ -1320,7 +1320,7 @@ class OrderController extends Controller
 
                     if($user && $user->role_type == 1){
                         if ($order->total_order_weight >= 20) {
-                            return response()->json(['success' => false, 'message' => 'Orders above 20 kg are not allowed.']);
+                            return response()->json(['success' => false, 'message' => 'Cart Weight above 20kg is not allowed.']);
                         }                        
                     }
         if (!$order) {
