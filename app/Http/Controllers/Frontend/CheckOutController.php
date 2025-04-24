@@ -734,7 +734,10 @@ class CheckOutController extends Controller
         $order = Order::where('id', $orderId)
             ->where('order_status', 0)
             ->first();
-
+        
+        if ($order->total_order_weight > 20) {
+            return response()->json(['successs' => false ,'message' => 'Orders above 20 kg are not allowed.']);
+        }
         if (!$order) {
             return response()->json(['successs' => false ,'message' => 'Order not found or invalid status']);
         }
@@ -829,6 +832,10 @@ class CheckOutController extends Controller
         $order = Order::where('id', $orderId)
             ->where('order_status', 0)
             ->first();
+
+            if ($order->total_order_weight > 20) {
+                return response()->json(['successs' => false ,'message' => 'Orders above 20 kg are not allowed.']);
+            }
 
         if (!$order) {
             return response()->json(['success'=> false, 'message' => 'Order not found or invalid status']);
