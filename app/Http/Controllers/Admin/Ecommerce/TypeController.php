@@ -78,7 +78,7 @@ class TypeController extends Controller
 
         $request->validate($rules);
 
-        $type = isset($request->type_id) ? Type::find($request->type_id) : new VendorType;
+        $type = isset($request->type_id) ? Type::find($request->type_id) : new Type;
 
         $type->fill([
 
