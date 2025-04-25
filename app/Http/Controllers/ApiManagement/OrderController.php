@@ -773,15 +773,15 @@ class OrderController extends Controller
 
     public function codCheckout($orderId, $paymentType,$user)
     {
-        $blockStart = now()->subHours(2);
-        $blockEnd = $blockStart->copy()->addHours(24);
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
         
-        if (now()->lessThan($blockEnd)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
-            ]);
-        }
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
         
 
         // // Define validation rules
@@ -1302,15 +1302,15 @@ class OrderController extends Controller
 
     public function paidCheckout($orderId , $paymentType, $user) {
 
-        $blockStart = now()->subHours(2);
-        $blockEnd = $blockStart->copy()->addHours(24);
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
         
-        if (now()->lessThan($blockEnd)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
-            ]);
-        }
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
 
         // Define validation rules
         // $rules = [

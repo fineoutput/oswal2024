@@ -722,15 +722,15 @@ class CheckOutController extends Controller
 
     public function codCheckout($orderId, $paymentType)
     {
-        $blockStart = now()->subHours(2);
-        $blockEnd = $blockStart->copy()->addHours(24);
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
         
-        if (now()->lessThan($blockEnd)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
-            ]);
-        }
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
         // Get authenticated user
         $user = Auth::user();
 
@@ -830,15 +830,15 @@ class CheckOutController extends Controller
     public function paidCheckout($orderId, $paymentType)
     {
 
-        $blockStart = now()->subHours(2);
-        $blockEnd = $blockStart->copy()->addHours(24);
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
         
-        if (now()->lessThan($blockEnd)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
-            ]);
-        }
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
         
         // Get authenticated user
         $user = Auth::user();

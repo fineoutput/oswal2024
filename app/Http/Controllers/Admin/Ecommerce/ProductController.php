@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\EcomCategory;
 use App\Models\EcomProduct;
 use App\Models\Cart;
+use App\Models\Type;
+use App\Models\VendorType;
 
 class ProductController extends Controller
 {
@@ -189,13 +191,48 @@ class ProductController extends Controller
         $db_view = $old_product_data->product_view;
         $req_view = $request->product_view;
 
+        // if ($db_view == 3 && $req_view == 2) {
+        //     $type_data = Type::where('product_id', $request->product_id)->get();
+        //     if ($type_data->isNotEmpty()) {
+        //         $type_data->each->delete();
+        //     }
+        // }
+        
+        // if ($db_view == 3 && $req_view == 1) {
+        //     $vendor_type = VendorType::where('product_id', $request->product_id)->get();
+        //     if ($vendor_type->isNotEmpty()) {
+        //         $vendor_type->each->delete();
+        //     }
+        // }
+        
+        // if ($db_view == 1 && $req_view == 2) {
+        //     $type_data = Type::where('product_id', $request->product_id)->get();
+        //     if ($type_data->isNotEmpty()) {
+        //         $type_data->each->delete();
+        //     }
+        // }
+        
+        // if ($db_view == 2 && $req_view == 1) {
+        //     $vendor_type = VendorType::where('product_id', $request->product_id)->get();
+        //     if ($vendor_type->isNotEmpty()) {
+        //         $vendor_type->each->delete();
+        //     }
+        // }
+        
+
         if (
             ($db_view == 1 && $req_view == 2) || 
             ($db_view == 2 && $req_view == 1) || 
             ($db_view == 3 && in_array($req_view, [1, 2]))
         ) {
             $cart_data = Cart::where('product_id', $request->product_id)->get();
-            
+
+            $type_data = Type::where('product_id', $request->product_id)->get();
+            $type_data->each->delete();
+
+            $VendorType = VendorType::where('product_id', $request->product_id)->get();
+            $VendorType->each->delete();
+
             if ($cart_data->isNotEmpty()) {
                 $cart_data->each->delete(); 
             }
