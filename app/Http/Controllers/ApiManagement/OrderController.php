@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 use App\Services\RazorpayService;
@@ -773,6 +773,17 @@ class OrderController extends Controller
 
     public function codCheckout($orderId, $paymentType,$user)
     {
+        $blockStart = now()->subHours(2);
+        $blockEnd = $blockStart->copy()->addHours(24);
+        
+        if (now()->lessThan($blockEnd)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+            ]);
+        }
+        
+
         // // Define validation rules
         // $rules = [
         //     'order_id' => 'required|integer|exists:tbl_order1,id',
@@ -1290,6 +1301,16 @@ class OrderController extends Controller
     }
 
     public function paidCheckout($orderId , $paymentType, $user) {
+
+        $blockStart = now()->subHours(2);
+        $blockEnd = $blockStart->copy()->addHours(24);
+        
+        if (now()->lessThan($blockEnd)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+            ]);
+        }
 
         // Define validation rules
         // $rules = [
