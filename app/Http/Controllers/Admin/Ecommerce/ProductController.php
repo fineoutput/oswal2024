@@ -189,18 +189,26 @@ class ProductController extends Controller
         $db_view = $old_product_data->product_view;
         $req_view = $request->product_view;
 
-        if (($db_view == 1 && $req_view == 2) || ($db_view == 2 && $req_view == 1)) {
+        if (
+            ($db_view == 1 && $req_view == 2) || 
+            ($db_view == 2 && $req_view == 1) || 
+            ($db_view == 3 && in_array($req_view, [1, 2]))
+        ) {
             $cart_data = Cart::where('product_id', $request->product_id)->get();
-            $cart_data->each->delete();
-        } 
+            
+            if ($cart_data->isNotEmpty()) {
+                $cart_data->each->delete(); // safely delete if items exist
+            }
+        }
 
         if ($req_view == 3) {
-            
+            // Continue processing - no deletion
         }
 
         if ($db_view == $req_view) {
-            
+            // Continue processing - no deletion
         }
+
 
         // $cart_data = Cart::where('product_id', $request->product_id)->get();
         // $cart_data->each->delete();
