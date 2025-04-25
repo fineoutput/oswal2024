@@ -180,10 +180,38 @@ class ProductController extends Controller
             $product->img_app4 = uploadImage($request->file('img_app4'), 'ecomm', 'product', 'img_app4');
         }
 
+        $old_product_data = EcomProduct::find($request->product_id);
+
+        if (!$old_product_data) {
+            return 'Product not found';
+        }
+
+        $db_view = $old_product_data->product_view;
+        $req_view = $request->product_view;
+
+        if (($db_view == 1 && $req_view == 2) || ($db_view == 2 && $req_view == 1)) {
+            $cart_data = Cart::where('product_id', $request->product_id)->get();
+            $cart_data->each->delete();
+        } 
+
+        if ($req_view == 3) {
+            
+        }
+
+        if ($db_view == $req_view) {
+            
+        }
+
+        // $cart_data = Cart::where('product_id', $request->product_id)->get();
+        // $cart_data->each->delete();
+        
 
         if ($product->save()) {
 
             if(isset($request->product_id)){
+
+
+                $cart_data = Cart::where('product_id',$request->product_id)->first();
 
                 return redirect()->route('product.index',encrypt($request->productCategorie))->with('success', 'product updated successfully.');
 
@@ -218,7 +246,8 @@ class ProductController extends Controller
 
             $product->updateStatus(strval(1));
         } else {
-
+            $cart_data = Cart::where('product_id', $id)->get();
+            $cart_data->each->delete();
             $product->updateStatus(strval(0));
         }
      
