@@ -197,16 +197,16 @@ class ProductController extends Controller
             $cart_data = Cart::where('product_id', $request->product_id)->get();
             
             if ($cart_data->isNotEmpty()) {
-                $cart_data->each->delete(); // safely delete if items exist
+                $cart_data->each->delete(); 
             }
         }
 
         if ($req_view == 3) {
-            // Continue processing - no deletion
+
         }
 
         if ($db_view == $req_view) {
-            // Continue processing - no deletion
+
         }
 
 
@@ -281,6 +281,8 @@ class ProductController extends Controller
         // if ($admin_position == "Super Admin") {
 
         if ($ecomproduct->delete()) {
+            $cart_data = Cart::where('product_id', $id)->get();
+            $cart_data->each->delete();
 
             return  redirect()->route('product.index',$pid)->with('success', 'Product Deleted Successfully.');
         } else {
