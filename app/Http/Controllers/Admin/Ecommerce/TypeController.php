@@ -111,6 +111,7 @@ class TypeController extends Controller
         ]);
 
         $type->product_id = $request->product_id;
+        $type->update_id = Auth::id();
 
         $type->category_id = $request->category_id;
 
@@ -131,6 +132,8 @@ class TypeController extends Controller
         $type->state_id = $request->state_id;
 
         $type->city_id = $request->city_id;
+        $type->update_id = Auth::id();
+        
         
         if ($type->save()) {
 
@@ -233,7 +236,7 @@ class TypeController extends Controller
         $admin_position = $request->session()->get('position');
 
         $type = Type::find($id);
-        
+        $type->update_id = Auth::id();
         // if ($admin_position == "Super Admin") {
 
             if ($status == "active") {
@@ -265,6 +268,15 @@ class TypeController extends Controller
         $id = decrypt($tid);
 
         $type = Type::find($id);
+        $type->update_id = Auth::id();
+
+        if (!$type->save()) {
+            return redirect()->route('type.index', [
+                'pid'  => $pid,
+                'cid'  => $cid,
+                'pcid' => $pcid,
+            ])->with('error', 'Failed to save the update_id before deleting.');
+        }
 
         // $admin_position = $request->session()->get('position');
 
@@ -334,7 +346,7 @@ class TypeController extends Controller
                     'added_by'      => Auth::user()->id,
 
                 ]);
-                
+                    $type->update_id = Auth::id();
                 $type->save();
 
             }
@@ -357,6 +369,7 @@ class TypeController extends Controller
         $p_id  = decrypt($pid);
 
         $typeData1 = Type::where('product_id', $p_id)->get();
+        $typeData1->update_id = Auth::id();
         
         $typeData = $typeData1->firstOrFail();
 
@@ -408,6 +421,8 @@ class TypeController extends Controller
             'date' => now(),
 
             'added_by' => Auth::User()->id,
+
+            'update_id' => Auth::User()->id,
 
         ];
 
@@ -527,6 +542,7 @@ class TypeController extends Controller
         ]);
 
         $type->product_id = $request->product_id;
+        $type->update_id = Auth::id();
 
         $type->category_id = $request->category_id;
 
@@ -596,6 +612,8 @@ class TypeController extends Controller
         $admin_position = $request->session()->get('position');
 
         $type = VendorType::find($id);
+        $type->update_id = Auth::id();
+
         
         // if ($admin_position == "Super Admin") {
 
@@ -628,6 +646,16 @@ class TypeController extends Controller
         $id = decrypt($tid);
 
         $type = VendorType::find($id);
+        $type->update_id = Auth::id();
+
+        if (!$type->save()) {
+            return redirect()->route('type.index', [
+                'pid'  => $pid,
+                'cid'  => $cid,
+                'pcid' => $pcid,
+            ])->with('error', 'Failed to save the update_id before deleting.');
+        }
+
 
         // $admin_position = $request->session()->get('position');
 
