@@ -364,19 +364,44 @@ class TypeController extends Controller
         // }
     }
 
-    public function updateAll ($pid, $cid , $pcid) {
-
-        $p_id  = decrypt($pid);
+    public function updateAll($pid, $cid, $pcid)
+    {
+        $p_id = decrypt($pid);
 
         $typeData1 = Type::where('product_id', $p_id)->get();
-        $typeData1->update_id = Auth::id();
-        
+
+        foreach ($typeData1 as $type) {
+            $type->update_id = Auth::id(); 
+            $type->save(); 
+        }
+
         $typeData = $typeData1->firstOrFail();
 
         $arr1 = $typeData1->pluck('type_name')->unique();
-        
-        return view('admin.Ecommerce.Type.type-update-all', ['pc_id' => $pcid, 'type' => $typeData, 'p_id' => $pid,'c_id' => $cid, 'type_data1' => $arr1 ]);
+
+        return view('admin.Ecommerce.Type.type-update-all', [
+            'pc_id' => $pcid, 
+            'type' => $typeData, 
+            'p_id' => $pid,
+            'c_id' => $cid, 
+            'type_data1' => $arr1
+        ]);
     }
+
+
+    // public function updateAll ($pid, $cid , $pcid) {
+
+    //     $p_id  = decrypt($pid);
+
+    //     $typeData1 = Type::where('product_id', $p_id)->get();
+    //     $typeData1->update_id = Auth::id();
+        
+    //     $typeData = $typeData1->firstOrFail();
+
+    //     $arr1 = $typeData1->pluck('type_name')->unique();
+        
+    //     return view('admin.Ecommerce.Type.type-update-all', ['pc_id' => $pcid, 'type' => $typeData, 'p_id' => $pid,'c_id' => $cid, 'type_data1' => $arr1 ]);
+    // }
 
     public function updateAllData(Request $request) {
 
