@@ -369,7 +369,11 @@ class TypeController extends Controller
         $p_id = decrypt($pid);
 
         $typeData1 = Type::where('product_id', $p_id)->get();
-
+        // return $typeData1; 
+        if ($typeData1->isEmpty()) {
+            return redirect()->back()->with('success', 'Type Not Found.');
+        }
+        
         foreach ($typeData1 as $type) {
             $type->update_id = Auth::id(); 
             $type->save(); 
