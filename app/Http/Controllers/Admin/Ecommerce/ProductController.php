@@ -184,54 +184,54 @@ class ProductController extends Controller
 
         $old_product_data = EcomProduct::find($request->product_id);
 
-        if (!$old_product_data) {
-            return 'Product not found';
-        }
-
+        // if (!$old_product_data) {
+        //     return 'Product not found';
+        // }
+if($old_product_data){
         $db_view = $old_product_data->product_view;
-$req_view = $request->product_view;
+        $req_view = $request->product_view;
 
-// Create a unique key for the switch
-$combination = "{$db_view}_{$req_view}";
+        // Create a unique key for the switch
+        $combination = "{$db_view}_{$req_view}";
 
-switch ($combination) {
-    case '3_2':
-        // Delete from Type
-        $type_data = Type::where('product_id', $request->product_id)->get();
-        if ($type_data->isNotEmpty()) {
-            $type_data->each->delete();
+        switch ($combination) {
+            case '3_2':
+                // Delete from Type
+                $type_data = Type::where('product_id', $request->product_id)->get();
+                if ($type_data->isNotEmpty()) {
+                    $type_data->each->delete();
+                }
+                break;
+
+            case '3_1':
+                // Delete from VendorType
+                $vendor_type = VendorType::where('product_id', $request->product_id)->get();
+                if ($vendor_type->isNotEmpty()) {
+                    $vendor_type->each->delete();
+                }
+                break;
+
+            case '1_2':
+                // Delete from Type
+                $type_data = Type::where('product_id', $request->product_id)->get();
+                if ($type_data->isNotEmpty()) {
+                    $type_data->each->delete();
+                }
+                break;
+
+            case '2_1':
+                // Delete from VendorType
+                $vendor_type = VendorType::where('product_id', $request->product_id)->get();
+                if ($vendor_type->isNotEmpty()) {
+                    $vendor_type->each->delete();
+                }
+                break;
+
+            // Optional: default case to handle others
+            default:
+                // No delete — let it continue
+                break;
         }
-        break;
-
-    case '3_1':
-        // Delete from VendorType
-        $vendor_type = VendorType::where('product_id', $request->product_id)->get();
-        if ($vendor_type->isNotEmpty()) {
-            $vendor_type->each->delete();
-        }
-        break;
-
-    case '1_2':
-        // Delete from Type
-        $type_data = Type::where('product_id', $request->product_id)->get();
-        if ($type_data->isNotEmpty()) {
-            $type_data->each->delete();
-        }
-        break;
-
-    case '2_1':
-        // Delete from VendorType
-        $vendor_type = VendorType::where('product_id', $request->product_id)->get();
-        if ($vendor_type->isNotEmpty()) {
-            $vendor_type->each->delete();
-        }
-        break;
-
-    // Optional: default case to handle others
-    default:
-        // No delete — let it continue
-        break;
-}
 
 
         if (
@@ -251,13 +251,13 @@ switch ($combination) {
 
         if ($db_view == $req_view) {
 
-        }
+        }}
 
 
         // $cart_data = Cart::where('product_id', $request->product_id)->get();
         // $cart_data->each->delete();
         
-
+        $product->update_id = Auth::id(); 
         if ($product->save()) {
 
             if(isset($request->product_id)){
@@ -292,6 +292,8 @@ switch ($combination) {
         $admin_position = $request->session()->get('position');
 
         $product = EcomProduct::find($id);
+        
+        $product->update_id = Auth::id();
         // if ($admin_position == "Super Admin") {
 
         if ($status == "active") {
@@ -322,6 +324,11 @@ switch ($combination) {
         $admin_position = $request->session()->get('position');
 
         $ecomproduct = EcomProduct::find($id);
+        $ecomproduct->update_id = Auth::id();
+
+        if (!$ecomproduct->save()) {
+            return  redirect()->route('product.index',$pid)->with('error', 'Failed to save the update_id before deleting.');
+        }
         // if ($admin_position == "Super Admin") {
 
         if ($ecomproduct->delete()) {

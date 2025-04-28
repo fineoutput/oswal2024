@@ -250,6 +250,7 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
         // if ($admin_position == "Super Admin") {
 
         $order = Order::find($id);
+        $order->update_id = Auth::id();
 
         $order->order_status = $order_status;
 
