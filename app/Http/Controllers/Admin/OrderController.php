@@ -757,12 +757,13 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
         $user = $order->user;
         $address = $order->address;
         // return $address;
-        $city = $address->city ? $address->citys->city_name : '';
-        $state = $address->state ? $address->states->state_name : '';
-        $zipcode = $address->zipcode;
-        $orderItems = $order->orderDetails;
-        $invoice = $order->invoices;
-        $giftCard = $order->gift;
+        $city = $address?->city ? $address->citys->city_name : '';
+        $state = $address?->state ? $address->states->state_name : '';
+
+        $zipcode = $address->zipcode ?? '';
+        $orderItems = $order->orderDetails ?? '';
+        $invoice = $order->invoices ?? '';
+        $giftCard = $order->gift ?? '';
         $giftCardSec = $order->gift1 ?? null;
         $promocode = $order->promocodes;
         // $type_price = DB::table('type_subs')->where('id',$orderItems->)->get();
