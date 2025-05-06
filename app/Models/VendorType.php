@@ -34,7 +34,8 @@ class VendorType extends Model
         'date',
         'added_by',
         'is_active',
-        'update_date'
+        'update_date',
+        'update_id'
     ];
 
     protected static function boot()

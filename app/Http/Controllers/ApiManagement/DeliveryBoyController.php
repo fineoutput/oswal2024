@@ -26,9 +26,23 @@ use GuzzleHttp\Client;
 
 use App\Models\Order;
 
+use App\Services\FirebaseService;
+use App\Services\DeliveryBoyService;
+use App\Models\User;
 
+use Illuminate\Support\Facades\Log;
 class DeliveryBoyController extends Controller
 {
+
+    protected $firebaseService;
+    protected $firebaseServiceDelivery;
+
+    public function __construct(FirebaseService  $firebaseService, DeliveryBoyService $firebaseServiceDelivery)
+    {
+        $this->firebaseService = $firebaseService;
+        $this->firebaseServiceDelivery = $firebaseServiceDelivery;
+    }
+
     public function login(Request $request)
     {
         
@@ -47,6 +61,13 @@ class DeliveryBoyController extends Controller
 
         $deliveryBoy = DeliveryBoy::where('email', $request->email)->first();
 
+        if (!$deliveryBoy) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Delivery Boy not found',
+            ]);
+        }
+        
         if($deliveryBoy->is_active != 1){
             return response()->json([
                 'success' => false,
@@ -120,8 +141,10 @@ class DeliveryBoyController extends Controller
            ->count();
 
            // Count total completed orders
-            $completedOrders = TransferOrder::where('delivery_user_id', $deliveryBoy->id)->where('status', 4)->count();
-        
+           $completedOrders = TransferOrder::where('delivery_user_id', $deliveryBoy->id)
+           ->whereIn('status', [4, 5])
+           ->count();
+       
             // Prepare response data
             $data = [
                 'wallet_amount' => formatPrice($walletAmountSum),
@@ -263,19 +286,42 @@ class DeliveryBoyController extends Controller
     public function orderList(Request $request) {
         $user = Auth::user();
     
-        // Get the latitude and longitude of the delivery boy
-        $latitude = $user->latitude;
-        $longitude = $user->longitude;
-    
+        $latitude = $request->latitude ?? $user->latitude;
+        $longitude = $request->longitude ?? $user->longitude;
+// return $request->latitude;
         // Fetch all transfer orders assigned to the current delivery boy
-        $transferOrders = TransferOrder::where('status', '!=', 4) // Exclude canceled orders
-            ->where('delivery_user_id', $user->id) // Filter by delivery boy
-            ->with(['orders.user', 'orders.address'])
-            ->get();
+
+        // $transferOrders = TransferOrder::OrderBy('id','DESC')->where('status', '!=', 4) 
+        //     ->where('delivery_user_id', $user->id) // Filter by delivery boy
+        //     ->with(['orders.user', 'orders.address'])
+        //     ->get();
+
+        // $completeOrders = TransferOrder::OrderBy('id','DESC')->where('status', '=', 4) 
+        //     ->where('delivery_user_id', $user->id) 
+        //     ->with(['orders.user', 'orders.address'])
+        //     ->get();
+
+        $transferOrders = TransferOrder::orderBy('id', 'DESC')
+        ->whereNotIn('status', [4, 5])
+        ->where('delivery_user_id', $user->id)
+        ->with(['orders.user', 'orders.address'])
+        ->get();
+
+
+        $completeOrders = TransferOrder::orderBy('id', 'DESC')
+        ->where(function ($query) {
+            $query->where('status', 4)
+                ->orWhere('status', 5);
+        })
+        ->where('delivery_user_id', $user->id)
+        ->with(['orders.user', 'orders.address'])
+        ->get();
+
     
         $data = [];
+        $completedata = [];
     
-        // Calculate distance for each order and add it to the data array
+       
         foreach ($transferOrders as $value) {
             $order = $value->orders;
     
@@ -293,12 +339,50 @@ class DeliveryBoyController extends Controller
     
             // Calculate the distance between the delivery boy and the order's address
             $dist = $this->calculate_distanceee($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
-    
-            // Add order data to the array
+            // return $latitude;
+            // return $dist;
+          
             $data[] = [
                 'transfer_order_id' => $value->id,
                 'delivery_status' => deliveryStatus($value->status),
                 'order_id' => $value->order_id,
+                'latitude' => $request->latitude ?? '',
+                'longitude' => $request->longitude ?? '',
+                'user_id' => $value->orders->user_id,
+                'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
+                'distance' => $dist['distance'] ?? '0', // Distance in km
+                'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
+                'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
+                'delivery_status' => $value->status, // Distance unit
+            ];
+        }
+
+        foreach ($completeOrders as $value) {
+            $order = $value->orders;
+    
+            // If order does not exist, skip this iteration
+            if (!$order) {
+                continue;
+            }
+    
+            $userAddress = $order->address;
+    
+            // If user does not exist in the order, skip this iteration
+            if (!$order->user) {
+                continue;
+            }
+    
+            // Calculate the distance between the delivery boy and the order's address
+            $dist = $this->calculate_distanceee($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
+            // return $latitude;
+            // return $dist;
+          
+            $completedata[] = [
+                'transfer_order_id' => $value->id,
+                'delivery_status' => deliveryStatus($value->status),
+                'order_id' => $value->order_id,
+                'latitude' => $request->latitude ?? '',
+                'longitude' => $request->longitude ?? '',
                 'user_id' => $value->orders->user_id,
                 'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
                 'distance' => $dist['distance'] ?? '0', // Distance in km
@@ -317,8 +401,12 @@ class DeliveryBoyController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Orders fetched successfully.',
-            'orders' => $data
+            'data' => [
+                'orders' => $data,
+                'complete_orders' => $completedata,
+            ],
         ], 200);
+        
     }
 
     public function calculate_distanceee($lat1, $lon1, $lat2, $lon2) {
@@ -387,10 +475,14 @@ class DeliveryBoyController extends Controller
             $payment_type = 'All Ready Pay';
         }
 
-        $latitude =  $user->latitude;
+        // $latitude =  $user->latitude;
        
 
-        $longitude =  $user->longitude;
+        // $longitude =  $user->longitude;
+
+        $latitude = $request->latitude ?? $user->latitude;
+        $longitude = $request->longitude ?? $user->longitude;
+        // return $latitude;
         
         $dist = $this->calculate_distanceee($latitude, $longitude, $transferOrder->orders->address->latitude, $transferOrder->orders->address->longitude);
 
@@ -709,9 +801,10 @@ class DeliveryBoyController extends Controller
     $startTime = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s'); 
 
     $user = Auth::user();
-
-    $ongoingOrder = TransferOrder::where('status', 2)
-        ->orWhere('status', 3)
+        $ongoingOrder = TransferOrder::where(function($query) {
+            $query->where('status', 2)
+                ->orWhere('status', 3);
+        })
         ->where('delivery_user_id', $user->id)
         ->first();
 
@@ -739,6 +832,7 @@ class DeliveryBoyController extends Controller
 
         if($user->role_type == 2){
         Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2, 'order_status' => 3]);
+        $this->sendPushNotificationVendor($user->fcm_token, $order->order_status);
         }else{
             Order::where('id',$deliveryOrder->order_id)->update(['delivery_status' => 2]);
         }
@@ -789,7 +883,7 @@ class DeliveryBoyController extends Controller
             $distance = $this->calculateDistance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
 
             // Check if the rider is within 500 meters
-            if ($distance <= 0.2) { // 500 meters = 0.5 kilometers
+            if ($distance <= 1.0) { // 500 meters = 0.5 kilometers
                 $deliveryOrder->update([
                     'status' => 2, 
                     'start_location' => "$latitude,$longitude",
@@ -805,6 +899,8 @@ class DeliveryBoyController extends Controller
                         'start_location' => $deliveryOrder->start_location,
                         'start_time' => $deliveryOrder->start_time,
                         'vendor' => 'vendor',
+                        'latitude' => $latitude ?? '',
+                        'longitude' => $longitude ?? '',
                         'user_address' => [
                             'name' => $userAddress->name,
                             'address' => $userAddress->address,
@@ -821,7 +917,7 @@ class DeliveryBoyController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'message' => 'Within 200 meter of delivery address to End.',
+                    'message' => 'Within 1 Kilometer of delivery address to End.',
                     'status' => 400
                 ]);
             }
@@ -909,6 +1005,10 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
 
  
         Order::where('id',$transfer->order_id)->update(['delivery_status' => 3 , 'order_status' => 4]);
+        
+        $orderdata = Order::find($transfer->order_id);
+        $users = User::find($orderdata->user_id);
+        $this->sendPushNotificationVendor($users->fcm_token, $orderdata->order_status);
 
         if ($paymentType != 'User did not accept order') {
 
@@ -936,6 +1036,26 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
                 'message' => 'Error occurred',
                 'status' => 201
             ]);
+        }
+    }
+
+    private function sendPushNotificationVendor($fcm_token,$status) {
+        if($status == 3){
+        $title = 'Order Complete!';
+        $message = 'Your order has been Complete.';
+    }else{
+        $title = 'Order Dispatch!';
+        $message = 'Your order has been Dispatch.';
+    }
+        if ($fcm_token != null) {
+            $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
+                Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
+            }
+        } else {
+            Log::error('FCM token is null or invalid.');
         }
     }
 

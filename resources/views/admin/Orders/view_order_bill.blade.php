@@ -118,9 +118,16 @@
               <td>{{ $item->quantity ?? '' }}</td>
               <td>Rs. {{ $item->type_mrp * $item->quantity }}</td>
               <td>{{ $item->type->gst_percentage ?? 18}}%</td>
-              <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td>
+              {{-- <td> @if($address->state == 29) CGST<br>SGST  @else IGST @endif</td> --}}
               <td>
-                @if($address->state == 29)
+                @if(optional($address)->state == 29)
+                    CGST<br>SGST
+                @else
+                    IGST
+                @endif
+            </td>
+              <td>
+                @if(optional($address)->state == 29)
                   Rs. {{ ($item->type->gst_percentage_price * $item->quantity) / 2 }}<br>
                   Rs. {{ ($item->type->gst_percentage_price * $item->quantity) / 2 }}
                 @else

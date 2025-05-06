@@ -99,7 +99,7 @@ if(!function_exists('sendProduct')) {
 
     function sendProduct($cid = false, $pid = false, $pcid = false , $hid = false , $trid = false , $search = false , $is_fea = false , $paginate =false , $forproduct=false, $roleType=false )  {
         
-        $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1);
+        $products =  EcomProduct::OrderBy('id', 'Desc')->where('is_active', 1)->with('comboproduct');
 
         if($cid){ $products = $products->where('category_id', $cid);}
 
@@ -122,6 +122,10 @@ if(!function_exists('sendProduct')) {
         
         if($forproduct == 2){
             $products = $products->whereIn('product_view', [3, 2]);
+        }elseif($forproduct == 1){
+            $products = $products->whereIn('product_view', [3, 1]);
+        }else{
+            $products = $products->whereIn('product_view', [3, 1]);
         }
         // echo $roleType;
         // // echo "hi";
@@ -566,6 +570,8 @@ if (! function_exists('deliveryStatus')){
             $status = 'Ongoing';
         }elseif($sts == 4){
             $status = 'Delivered';
+        }elseif($sts == 5){
+            $status = 'Rejected';
         }
 
         return  $status;

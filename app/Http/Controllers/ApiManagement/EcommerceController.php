@@ -15,6 +15,7 @@ use App\Models\Type;
 use App\Models\Type_sub;
 use App\Models\User;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 class EcommerceController extends Controller
@@ -191,6 +192,7 @@ class EcommerceController extends Controller
 
     // Fetch the products
     $products = sendProduct($category_id, $request->product_id, $request->product_cat_id, $is_hot, $is_trn, $search, $is_fea, false, $roleType);
+    // return $products;
 
     $total = $products->count();
 
@@ -198,7 +200,44 @@ class EcommerceController extends Controller
 
     $product_data = [];
 
+     $userDetails = 0;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $userDetails = User::where('auth', $auth_token)->first();
+            if ($userDetails) {
+                $device_id = $userDetails->device_id;
+                $user_id = $userDetails->id;
+                $role_type = $userDetails->role_type;
+            }
+        }
+
     foreach ($products as $product) {
+
+        // if($userDetails->role_type == 1){
+        // $combo_product = $product->comboproduct->where('user_type','User');
+        // }elseif($userDetails->role_type == 2){
+        //     $combo_product = $product->comboproduct->where('user_type','Vendor');
+        // }else{
+        //     $combo_product = null;
+        // }
+        // $combo_data = [];
+        // if ($combo_product && $combo_product->isNotEmpty()) {
+        //     $combo_data = $combo_product->map(function($combo) {
+        //         return [
+        //             'combo_product_id' => $combo->comboproduct->id,
+        //             'combo_product_name' => $combo->comboproduct->name,
+        //             'combo_product_desc' => $combo->comboproduct->long_desc,
+        //            'images' => [
+        //                 ['image' => asset($combo->comboproduct->img_app1) ],
+        //                 ['image' => asset($combo->comboproduct->img_app2) ],
+        //                 ['image' => asset($combo->comboproduct->img_app3) ],
+        //                 ['image' => asset($combo->comboproduct->img_app4) ],
+        //             ],
+        //         ];
+        //     });
+        // }
+        
+
         // If the user is logged in, we add extra data like wishlist, cart, ratings, etc.
         $wishlist = $user_id ? Wishlist::where('product_id', $product->id)->where('user_id', $user_id)->first() : null;
         $wish_status = $wishlist ? 1 : 0;
@@ -292,10 +331,17 @@ class EcommerceController extends Controller
             // exit;
             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
                 // Data is available
-                $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->first();
+                $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->where('id',$typedata[0]['type_id'])->first();
 // dd($typedata[0]['min_qty']);
 // exit;
 // return $vendorSelectedType;
+
+                    $vendorselect = '';
+
+                    if ($user && $user->role_type == 2) {
+                        $vendorselect = $vendorSelectedType->qty_desc ?? '';
+                    }
+
                 if ($vendorSelectedType != null) {
                     // Assign the values from typedata
                     $selected_type_id = $typedata[0]['type_id'] ?? '';
@@ -304,7 +350,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $vendorSelectedType->qty_desc ?? '';
+                    $selected_qty_desc = $vendorselect ?? '';
                 } else {
                     // No matching vendor type found, handle accordingly
                     if($roleType == 1){
@@ -314,7 +360,7 @@ class EcommerceController extends Controller
                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-                    $selected_qty_desc = $vendorSelectedType->qty_desc ?? '';
+                    $selected_qty_desc = '';
                     }
                     else{
                         $selected_type_id = '0';
@@ -323,7 +369,7 @@ class EcommerceController extends Controller
                         $selected_type_mrp = 00;
                         $selected_type_percent_off = 00;
                         $selected_min_qty = 00;
-                        $selected_qty_desc = 'Def';
+                        $selected_qty_desc = '';
                     }
                     // return response()->json([
                     //     'message' => '"type  not found"',
@@ -340,7 +386,7 @@ class EcommerceController extends Controller
                 $selected_type_mrp = 00;
                 $selected_type_percent_off = 00;
                 $selected_min_qty = 00;
-                $selected_qty_desc = 'Def';
+                $selected_qty_desc = '';
                 // return response()->json([
                 //     'message' => '"type  not found"',
                 //     'status' => 201,
@@ -402,6 +448,7 @@ class EcommerceController extends Controller
             'selected_type_percent_off' => $selected_type_percent_off,
             'selected_min_qty' => $selected_min_qty,
             'selected_qty_desc' => $selected_qty_desc,
+            // 'combo_products' => $combo_data,
         ];
     }
 
@@ -593,12 +640,18 @@ class EcommerceController extends Controller
                     ];
                 }
 
+                if($roleType == 2){
+                    $type_desc = $type->qty_desc;
+                }else{
+                    $type_desc = '';
+                }
+
                 return [
                     'type_id' => $type->id,
                     'type_name' => $lang != "hi" ? $type->type_name : $type->type_name_hi,
                     'type_category_id' => $type->category_id ?? null,
                     'type_product_id' => $type->product_id,
-                    'type_qty_desc' => $type->qty_desc,
+                    'type_qty_desc' => $type_desc,
                     'range' => $range,
                     'min_qty' => $type->min_qty ?? 1,
                 ];

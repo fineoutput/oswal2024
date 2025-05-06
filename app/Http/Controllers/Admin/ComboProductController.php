@@ -33,7 +33,7 @@ class ComboProductController extends Controller
 
             $admin_position = $request->session()->get('position');
 
-            if ($admin_position !== "Super Admin") {
+            if ($admin_position !== "Super Admin" && $admin_position !== "Admin") {
 
                 return redirect()->route('comboproduct.index')->with('error', "Sorry You Don't Have Permission To edit Anything.");
 
@@ -86,6 +86,8 @@ class ComboProductController extends Controller
         $comboproduct->ip = $request->ip();
 
         $comboproduct->date = now();
+        
+        $comboproduct->user_type = $request->user_type;
 
         $comboproduct->added_by = Auth::user()->id;
 

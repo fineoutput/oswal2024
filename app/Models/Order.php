@@ -79,6 +79,7 @@ class Order extends Model
         'latitude',
         'longitude',
         'user_type',
+        'update_id',
     ];
 
     // Define relationships

@@ -722,7 +722,15 @@ class CheckOutController extends Controller
 
     public function codCheckout($orderId, $paymentType)
     {
-
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
+        
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
         // Get authenticated user
         $user = Auth::user();
 
@@ -734,7 +742,11 @@ class CheckOutController extends Controller
         $order = Order::where('id', $orderId)
             ->where('order_status', 0)
             ->first();
-
+        
+            if ($order->total_order_weight >= 20) {
+                return response()->json(['success' => false, 'message' => 'Cart Weight above 20kg is not allowed.']);
+            }
+            
         if (!$order) {
             return response()->json(['successs' => false ,'message' => 'Order not found or invalid status']);
         }
@@ -818,6 +830,16 @@ class CheckOutController extends Controller
     public function paidCheckout($orderId, $paymentType)
     {
 
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
+        
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
+        
         // Get authenticated user
         $user = Auth::user();
 
@@ -829,6 +851,11 @@ class CheckOutController extends Controller
         $order = Order::where('id', $orderId)
             ->where('order_status', 0)
             ->first();
+
+            if ($order->total_order_weight >= 20) {
+                return response()->json(['success' => false, 'message' => 'Cart Weight above 20kg is not allowed.']);
+            }
+            
 
         if (!$order) {
             return response()->json(['success'=> false, 'message' => 'Order not found or invalid status']);

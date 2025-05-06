@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 use App\Services\RazorpayService;
@@ -773,6 +773,17 @@ class OrderController extends Controller
 
     public function codCheckout($orderId, $paymentType,$user)
     {
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
+        
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
+        
+
         // // Define validation rules
         // $rules = [
         //     'order_id' => 'required|integer|exists:tbl_order1,id',
@@ -798,6 +809,12 @@ class OrderController extends Controller
         $order = Order::where('id', $orderId)
                     ->where('order_status', 0)
                     ->first();
+
+        if($user && $user->role_type == 1){
+        if ($order->total_order_weight > 20) {
+            return response()->json(['successs' => false ,'message' => 'Cart Weight above 20kg is not allowed.']);
+        }
+    }
 
         if (!$order) {
             return response()->json(['message' => 'invalid status', 'status' => 404], 404);
@@ -1013,9 +1030,10 @@ class OrderController extends Controller
         if($user){
             if($user->role_type == 2){
 
-                $this->sendPushNotification($user->fcm_token, $order->order_status);
+                // $this->sendPushNotification($user->fcm_token, $order->order_status);
+                $this->checkEligibleAndNotify($user->id);
 
-                $this->sendPushNotificationVendor($user->fcm_token, $order->order_status);
+                $this->sendPushNotificationVendor($user->fcm_token);
         
                 $this->sendEmailNotification($user, $order, $order->order_status);
             }
@@ -1062,7 +1080,8 @@ class OrderController extends Controller
             if($user){
                 if($user->role_type == 2){
     
-                    $this->sendPushNotification($user->fcm_token, $order->order_status);
+                    // $this->sendPushNotification($user->fcm_token, $order->order_status);
+                    $this->checkEligibleAndNotify($user->id);
             
                     $this->sendEmailNotification($user, $order, $order->order_status);
                 }
@@ -1283,6 +1302,16 @@ class OrderController extends Controller
 
     public function paidCheckout($orderId , $paymentType, $user) {
 
+        // $blockStart = now()->subHours(2);
+        // $blockEnd = $blockStart->copy()->addHours(24);
+        
+        // if (now()->lessThan($blockEnd)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Due to a technical issue, you cannot place an order in the next 24 hours.'
+        //     ]);
+        // }
+
         // Define validation rules
         // $rules = [
         //     'order_id' => 'required|integer|exists:tbl_order1,id',
@@ -1310,6 +1339,11 @@ class OrderController extends Controller
                     ->where('order_status', 0)
                     ->first();
 
+                    if($user && $user->role_type == 1){
+                        if ($order->total_order_weight >= 20) {
+                            return response()->json(['success' => false, 'message' => 'Cart Weight above 20kg is not allowed.']);
+                        }                        
+                    }
         if (!$order) {
             return response()->json(['message' => 'Order not found or invalid status', 'status' => 404], 404);
         }
@@ -1448,7 +1482,6 @@ class OrderController extends Controller
             ];
 
             // if($user->role_type == 2){
-
             //     $this->checkEligibleAndNotify($user->id);
             // }
 
@@ -1678,9 +1711,10 @@ class OrderController extends Controller
 
         }
 
-        if($order->delivery_status != 0 ){
+        if($order->delivery_status != 0 && $order->order_status != 5){
 
-          $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)->first();
+          $delivery  = TransferOrder::with('deliveryBoy')->where('order_id' , $order->id)
+          ->where('status','!=',4)->first();
           $deleveryBoy = null;
           if (!empty($delivery) && $delivery->deliveryBoy) {
               $deleveryBoy = [
@@ -1689,8 +1723,11 @@ class OrderController extends Controller
                   'phone' => $delivery->deliveryBoy->phone,
               ];
           }
+          
+
 
         }
+
 
         foreach ($orderDetails as $detail) {
 
@@ -1737,9 +1774,9 @@ class OrderController extends Controller
             ];
         }
 
-        if($order->order_status = 4){
-            $deleveryBoy = [];
-        }
+        // if($order->order_status = 4){
+        //     $deleveryBoy = [];
+        // }
 
 
         $data = [
@@ -1916,7 +1953,7 @@ class OrderController extends Controller
     
     private function checkEligibleAndNotify($userid) {
       
-        $rewardlists = Reward::where('is_active', 1)->orderBy('id', 'desc')->get();
+        $rewardlists = Reward::where('is_active', 1)->whereNull('deleted_at')->orderBy('id', 'desc')->get();
         $user = User::where('id',$userid)->first();
     
         if (!$user) {
@@ -1930,7 +1967,7 @@ class OrderController extends Controller
     
         foreach ($rewardlists as $reward) {
           
-            $vendorStatus = VendorReward::where('reward_id', $reward->id)
+            $vendorStatus = VendorReward::where('reward_id', $reward->id)->whereNull('deleted_at')
                 ->where('vendor_id', $user->id)
                 ->first();
     
@@ -1984,25 +2021,41 @@ class OrderController extends Controller
         
     }
 
+    // private function sendPushNotificationVendor($fcm_token) {
+
+    //     $title = 'Order Accept!';
+    //     $message = 'Your order has been accepted.';
+
+    //     if($fcm_token != null){
+
+    //         $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
+    
+    //         if(!$response['success']) {
+                
+    //             if (!$response['success']) {
+    
+    //                 Log::error('FCM send error: ' . $response['error']);
+                    
+    //             }
+    //         }
+    //     }
+        
+    // }
+
     private function sendPushNotificationVendor($fcm_token) {
-
-        $title = 'Order Alert!';
+        $title = 'Order Accept!';
         $message = 'Your order has been accepted.';
-
-        if($fcm_token != null){
-
+    
+        if ($fcm_token != null) {
             $response = $this->firebaseService->sendNotificationToUser($fcm_token, $title, $message);
     
-            if(!$response['success']) {
-                
-                if (!$response['success']) {
-    
-                    Log::error('FCM send error: ' . $response['error']);
-                    
-                }
+            if (!$response['success']) {
+                Log::error('FCM send errors: ' . $response['error']);
+                Log::error('FCM full response: ' . json_encode($response)); // Log full response for debugging
             }
+        } else {
+            Log::error('FCM token is null or invalid.');
         }
-        
     }
 
 

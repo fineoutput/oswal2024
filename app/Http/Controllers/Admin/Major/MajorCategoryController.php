@@ -27,7 +27,7 @@ class MajorCategoryController extends Controller
 
             $admin_position = $request->session()->get('position');
 
-            if ($admin_position !== "Super Admin") {
+            if ($admin_position !== "Super Admin" && $admin_position !== "Admin") {
 
                 return redirect()->route('majorcategory.index')->with('error', "Sorry You Don't Have Permission To edit Anything.");
 

@@ -19,6 +19,7 @@ class ComboProduct extends Model
         'main_type',
         'combo_product',
         'combo_type',
+        'user_type',
         'ip',
         'date',
         'added_by',

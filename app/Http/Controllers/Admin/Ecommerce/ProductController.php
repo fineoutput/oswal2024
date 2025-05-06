@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\EcomCategory;
 use App\Models\EcomProduct;
 use App\Models\Cart;
+use App\Models\Type;
+use App\Models\VendorType;
 
 class ProductController extends Controller
 {
@@ -37,7 +39,7 @@ class ProductController extends Controller
 
             $admin_position = $request->session()->get('position');
 
-            if ($admin_position !== "Super Admin") {
+            if ($admin_position !== "Super Admin" && $admin_position !== "Admin") {
 
                 return redirect()->route('category.index')->with('error', "Sorry You Don't Have Permission To edit Anything.");
 
@@ -180,10 +182,88 @@ class ProductController extends Controller
             $product->img_app4 = uploadImage($request->file('img_app4'), 'ecomm', 'product', 'img_app4');
         }
 
+        $old_product_data = EcomProduct::find($request->product_id);
 
+        // if (!$old_product_data) {
+        //     return 'Product not found';
+        // }
+if($old_product_data){
+        $db_view = $old_product_data->product_view;
+        $req_view = $request->product_view;
+
+        // Create a unique key for the switch
+        $combination = "{$db_view}_{$req_view}";
+
+        switch ($combination) {
+            case '3_2':
+                // Delete from Type
+                $type_data = Type::where('product_id', $request->product_id)->get();
+                if ($type_data->isNotEmpty()) {
+                    $type_data->each->delete();
+                }
+                break;
+
+            case '3_1':
+                // Delete from VendorType
+                $vendor_type = VendorType::where('product_id', $request->product_id)->get();
+                if ($vendor_type->isNotEmpty()) {
+                    $vendor_type->each->delete();
+                }
+                break;
+
+            case '1_2':
+                // Delete from Type
+                $type_data = Type::where('product_id', $request->product_id)->get();
+                if ($type_data->isNotEmpty()) {
+                    $type_data->each->delete();
+                }
+                break;
+
+            case '2_1':
+                // Delete from VendorType
+                $vendor_type = VendorType::where('product_id', $request->product_id)->get();
+                if ($vendor_type->isNotEmpty()) {
+                    $vendor_type->each->delete();
+                }
+                break;
+
+            // Optional: default case to handle others
+            default:
+                // No delete — let it continue
+                break;
+        }
+
+
+        if (
+            ($db_view == 1 && $req_view == 2) || 
+            ($db_view == 2 && $req_view == 1) || 
+            ($db_view == 3 && in_array($req_view, [1, 2]))
+        ) {
+            $cart_data = Cart::where('product_id', $request->product_id)->get();
+            if ($cart_data->isNotEmpty()) {
+                $cart_data->each->delete(); 
+            }
+        }
+
+        if ($req_view == 3) {
+
+        }
+
+        if ($db_view == $req_view) {
+
+        }}
+
+
+        // $cart_data = Cart::where('product_id', $request->product_id)->get();
+        // $cart_data->each->delete();
+        
+        $product->update_id = Auth::id(); 
         if ($product->save()) {
 
             if(isset($request->product_id)){
+
+
+                $cart_data = Cart::where('product_id',$request->product_id)->first();
 
                 return redirect()->route('product.index',encrypt($request->productCategorie))->with('success', 'product updated successfully.');
 
@@ -212,13 +292,16 @@ class ProductController extends Controller
         $admin_position = $request->session()->get('position');
 
         $product = EcomProduct::find($id);
+        
+        $product->update_id = Auth::id();
         // if ($admin_position == "Super Admin") {
 
         if ($status == "active") {
 
             $product->updateStatus(strval(1));
         } else {
-
+            $cart_data = Cart::where('product_id', $id)->get();
+            $cart_data->each->delete();
             $product->updateStatus(strval(0));
         }
      
@@ -241,9 +324,16 @@ class ProductController extends Controller
         $admin_position = $request->session()->get('position');
 
         $ecomproduct = EcomProduct::find($id);
+        $ecomproduct->update_id = Auth::id();
+
+        if (!$ecomproduct->save()) {
+            return  redirect()->route('product.index',$pid)->with('error', 'Failed to save the update_id before deleting.');
+        }
         // if ($admin_position == "Super Admin") {
 
         if ($ecomproduct->delete()) {
+            $cart_data = Cart::where('product_id', $id)->get();
+            $cart_data->each->delete();
 
             return  redirect()->route('product.index',$pid)->with('success', 'Product Deleted Successfully.');
         } else {
