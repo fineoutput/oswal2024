@@ -76,6 +76,14 @@
             <br><br>
             In the event that the website (or a substantial portion of its assets) is acquired, your information would be considered part of those assets, and may be part of those assets that are transferred.
             <br><br>
+            <h2>Location Data</h2>
+            <br><br>
+            Our application accesses your device's location to provide essential features for delivery services. Specifically, we collect and use your location data for the following purposes: <br> <br>
+            <li><span><b>Route Navigation:</b>To enable delivery partners to view a route map to the customer's delivery location, ensuring efficient and timely deliveries.</span></li><br> 
+            <li><span><b>Location Accuracy:</b>To provide customers with accurate information about the delivery partner's current location during transit.</span></li>
+<br>
+            We collect location data only when the delivery partner is actively using the delivery features of the app. We are committed to protecting your privacy, and your location data is handled securely and in accordance with this Privacy Policy.
+            <br><br>
             <h2>Policy changes or updates</h2>
             <br><br>
             We may change this Privacy Policy from time to time. If/when changes are made to this privacy policy, we will post any changes here, so be sure to check back periodically. However, please be assured that if the Privacy Policy changes in the future, we will not use the personal information you have submitted to us under this Privacy Policy in a manner that is materially inconsistent with this Privacy Policy, without your prior consent.

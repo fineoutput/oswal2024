@@ -138,13 +138,13 @@
                             
                             <li><a href="{{route('contact')}}"class="nav-link_color">Contact US</a></li>
                             
-                            <li><a href="{{route('Privacy-Policy')}}"class="nav-link_color">Privacy Policy</a></li>
-
+                            <li><a href="{{route ('about_us')}}"class="nav-link_color">About us</a></li>
+                            
                             <li><a href="{{route('terms_conditions')}}"class="nav-link_color">Terms & Conditions</a></li>
                             
                             <li><a href="{{route ('recipes')}}"class="nav-link_color">Recipe</a></li>
-
-                            <li><a href="{{route ('about_us')}}"class="nav-link_color">About us</a></li>
+                            
+                            <li><a href="{{route('Privacy-Policy')}}"class="nav-link_color">Privacy Policy</a></li>
 
                             <li><a href="{{route ('career')}}"class="nav-link_color">Career</a></li>
                             
