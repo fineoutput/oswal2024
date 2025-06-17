@@ -301,7 +301,7 @@ class DeliveryBoyController extends Controller
         //     ->with(['orders.user', 'orders.address'])
         //     ->get();
 
-        $transferOrders = TransferOrder::orderBy('id', 'ASC')
+        $transferOrders = TransferOrder::orderBy('id', 'DESC')
         ->whereNotIn('status', [4, 5])
         ->where('delivery_user_id', $user->id)
         ->with(['orders.user', 'orders.address'])
