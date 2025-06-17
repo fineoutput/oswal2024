@@ -393,9 +393,9 @@ class DeliveryBoyController extends Controller
         }
     
         // Sort orders by distance (nearest first)
-        usort($data, function ($a, $b) {
-            return $a['distance'] <=> $b['distance'];
-        });
+        // usort($data, function ($a, $b) {
+        //     return $a['distance'] <=> $b['distance'];
+        // });
     
         // Return the sorted list of orders
         return response()->json([
