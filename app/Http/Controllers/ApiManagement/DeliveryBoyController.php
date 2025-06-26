@@ -349,7 +349,7 @@ class DeliveryBoyController extends Controller
                 'latitude' => $request->latitude ?? '',
                 'longitude' => $request->longitude ?? '',
                 'user_id' => $value->orders->user_id,
-                'user_name' => $value->orders->user->vendor->shopname ?? 'N/A',  // Check if user exists and fallback to 'N/A'
+                'user_name' => $value->orders->user->first_name ?? 'N/A',  // Check if user exists and fallback to 'N/A'
                 'shopname' => $value->orders->user->vendor->shopname ?? 'N/A',  // Check if user exists and fallback to 'N/A'
                 'distance' => $dist['distance'] ?? '0', // Distance in km
                 'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
