@@ -276,7 +276,7 @@ class HomeController extends Controller
 
         // 🔴 Product not found, redirect back with message (optional)
         if (!$product) {
-            return redirect('/')->with('error', 'Product not found.');
+            return redirect('category-list')->with('error', 'Product not found.');
         }
 
         // 🟢 If product found, build images array
