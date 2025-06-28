@@ -270,23 +270,25 @@ class HomeController extends Controller
         return redirect()->route('dealer_enq')->with('success', 'Message sent successfully');
     }
 
-    public function productDetail(Request $request, $slug)
+  public function productDetail(Request $request, $slug)
     {
         $product = EcomProduct::where('url', $slug)->first();
 
-        // Agar product null hai, toh empty images array bhej do
-        $images = [];
+        // 🔴 Product not found, redirect back with message (optional)
+        if (!$product) {
+            return redirect('/')->with('error', 'Product not found.');
+        }
 
-        if ($product) {
-            for ($i = 1; $i <= 4; $i++) {
-                $images[] = [
-                    'img' => $product->{"img$i"},
-                ];
-            }
+        // 🟢 If product found, build images array
+        $images = [];
+        for ($i = 1; $i <= 4; $i++) {
+            $images[] = [
+                'img' => $product->{"img$i"},
+            ];
         }
 
         return view('products.productdetails', compact('product', 'images'))
-                ->with('title', $product ? 'Product Details' : 'Product Not Found');
+                ->with('title', 'Product Details');
     }
 
     // public function productDetail(Request $request, $slug)
