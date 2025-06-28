@@ -269,20 +269,40 @@ class HomeController extends Controller
 
         return redirect()->route('dealer_enq')->with('success', 'Message sent successfully');
     }
+
     public function productDetail(Request $request, $slug)
     {
         $product = EcomProduct::where('url', $slug)->first();
 
+        // Agar product null hai, toh empty images array bhej do
         $images = [];
 
-        for ($i = 1; $i <= 4; $i++) {
-            $images[] = [
-                'img' => $product->{"img$i"}, 
-            ];
+        if ($product) {
+            for ($i = 1; $i <= 4; $i++) {
+                $images[] = [
+                    'img' => $product->{"img$i"},
+                ];
+            }
         }
 
-        return view('products.productdetails', compact('product', 'images'))->with('title', 'Product Details');
+        return view('products.productdetails', compact('product', 'images'))
+                ->with('title', $product ? 'Product Details' : 'Product Not Found');
     }
+
+    // public function productDetail(Request $request, $slug)
+    // {
+    //     $product = EcomProduct::where('url', $slug)->first();
+
+    //     $images = [];
+
+    //     for ($i = 1; $i <= 4; $i++) {
+    //         $images[] = [
+    //             'img' => $product->{"img$i"}, 
+    //         ];
+    //     }
+
+    //     return view('products.productdetails', compact('product', 'images'))->with('title', 'Product Details');
+    // }
 
     public function renderProducts($slug, $type = null)
     {
