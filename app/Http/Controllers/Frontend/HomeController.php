@@ -274,12 +274,10 @@ class HomeController extends Controller
     {
         $product = EcomProduct::where('url', $slug)->first();
 
-        // 🔴 Product not found, redirect back with message (optional)
         if (!$product) {
             return redirect('category-list')->with('error', 'Product not found.');
         }
 
-        // 🟢 If product found, build images array
         $images = [];
         for ($i = 1; $i <= 4; $i++) {
             $images[] = [
