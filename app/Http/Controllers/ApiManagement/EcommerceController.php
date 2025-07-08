@@ -288,23 +288,46 @@ class EcommerceController extends Controller
             
         }
         else{
-            if($user_id){
-                $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->Where('device_id', $device_id)->first();
-                $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
-                $cart_type_price = $cart ? $cart->type_price : null;
-                $cart_quantity = $cart ? $cart->quantity : null;
-                $cart_total_price = $cart ? $cart->total_qty_price : null;
-                $cart_status = $cart ? 1 : 0;
-            }
-            else{
-                $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->Where('device_id', $device_id)->first();
-                $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
-                $cart_type_price = $cart ? $cart->type_price : null;
-                $cart_quantity = $cart ? $cart->quantity : null;
-                $cart_total_price = $cart ? $cart->total_qty_price : null;
-                $cart_status = $cart ? 1 : 0;
+            // if($user_id){
+            //     $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->where('user_id', $user_id)->Where('device_id', $device_id)->first();
+            //     $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+            //     $cart_type_price = $cart ? $cart->type_price : null;
+            //     $cart_quantity = $cart ? $cart->quantity : null;
+            //     $cart_total_price = $cart ? $cart->total_qty_price : null;
+            //     $cart_status = $cart ? 1 : 0;
+            // }
+            // else{
+            //     $cart = Cart::whereNull('deleted_at')->where('product_id', $product->id)->Where('device_id', $device_id)->first();
+            //     $cart_type_name = $cart ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+            //     $cart_type_price = $cart ? $cart->type_price : null;
+            //     $cart_quantity = $cart ? $cart->quantity : null;
+            //     $cart_total_price = $cart ? $cart->total_qty_price : null;
+            //     $cart_status = $cart ? 1 : 0;
 
+            // }
+
+            if ($user_id) {
+                $cart = Cart::whereNull('deleted_at')
+                    ->where('product_id', $product->id)
+                    ->where('user_id', $user_id)
+                    ->where('device_id', $device_id)
+                    ->first();
+            } else {
+                $cart = Cart::whereNull('deleted_at')
+                    ->where('product_id', $product->id)
+                    ->where('device_id', $device_id)
+                    ->first();
             }
+
+            // Safe null checks
+            $cart_type_name = ($cart && $cart->type) 
+                ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) 
+                : '';
+
+            $cart_type_price = $cart ? $cart->type_price : null;
+            $cart_quantity = $cart ? $cart->quantity : null;
+            $cart_total_price = $cart ? $cart->total_qty_price : null;
+            $cart_status = $cart ? 1 : 0;
         
         }
 
