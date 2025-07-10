@@ -500,6 +500,11 @@ class AppController extends Controller
         }
     }
 
+    // Step 2: Agar request me explicitly role_type diya gaya ho, to use overwrite karo
+    if ($request->has('role_type')) {
+        $role_type = (int) $request->input('role_type');
+    }
+
     // ------------------------------------
     // 🎯 1. Footer Sliders
     // ------------------------------------
