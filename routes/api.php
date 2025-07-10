@@ -26,6 +26,7 @@ Route::get('state' , [AppController::class , 'GetState']);
 Route::get('city/{sid?}' , [AppController::class , 'GetCity']);
 Route::get('footer-slider' , [AppController::class , 'footerSlider']);
 Route::get('top-slider' , [AppController::class , 'headerSlider']);
+Route::get('all-sliders' , [AppController::class , 'allSliders']);
 Route::get('festival-slider' , [AppController::class , 'festivalSlider']);
 Route::get('popup' , [AppController::class , 'popup']);
 Route::get('popup-image' , [AppController::class , 'popupimage']);

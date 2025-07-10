@@ -476,6 +476,113 @@ class AppController extends Controller
         return response()->json(['success' => true, 'data' =>  $data], 200);
     }
 
+
+
+    public function allSliders(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'lang' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
+    }
+
+    $role_type = 1;
+
+    // Get role_type from Authorization token (if exists)
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $userDetails = User::where('auth', $auth_token)->first();
+
+        if ($userDetails) {
+            $role_type = $userDetails->role_type;
+        }
+    }
+
+    // ------------------------------------
+    // 🎯 1. Footer Sliders
+    // ------------------------------------
+    $footerSliders = Slider2::where('is_active', 1)->get();
+    $footerData = [];
+
+    foreach ($footerSliders as $slider) {
+        if ($role_type == 2) {
+            if (!$slider->vendor_image) continue;
+            $footerData[] = [
+                'id'          => $slider->id,
+                'slider_name' => ($request->lang == 'hi') ? $slider->vendor_slider_name_hi : $slider->vendor_slider_name,
+                'image'       => asset($slider->vendor_image),
+            ];
+        } else {
+            if (!$slider->app_image) continue;
+            $footerData[] = [
+                'id'          => $slider->id,
+                'slider_name' => ($request->lang == 'hi') ? $slider->app_slider_name_hi : $slider->app_slider_name,
+                'image'       => asset($slider->app_image),
+            ];
+        }
+    }
+
+    // ------------------------------------
+    // 🎯 2. Header Sliders
+    // ------------------------------------
+    $headerSliders = Websliders2::where('is_active', 1)->get();
+    $headerData = [];
+
+    foreach ($headerSliders as $slider) {
+        if ($role_type == 2) {
+            if (!$slider->vendor_image) continue;
+            $headerData[] = [
+                'id'    => $slider->id,
+                'url'   => $slider->vendor_link,
+                'image' => asset($slider->vendor_image),
+            ];
+        } else {
+            if (!$slider->app_img) continue;
+            $headerData[] = [
+                'id'    => $slider->id,
+                'url'   => $slider->app_link,
+                'image' => asset($slider->app_img),
+            ];
+        }
+    }
+
+    // ------------------------------------
+    // 🎯 3. Festival Sliders
+    // ------------------------------------
+    $festivalSliders = Slider::where('is_active', 1)->get();
+    $festivalData = [];
+
+    foreach ($festivalSliders as $slider) {
+        if ($role_type == 2) {
+            if (!$slider->vendor_image) continue;
+            $festivalData[] = [
+                'id'          => $slider->id,
+                'slider_name' => ($request->lang == 'hi') ? $slider->vendor_slider_name_hi : $slider->vendor_slider_name,
+                'image'       => asset($slider->vendor_image),
+            ];
+        } else {
+            if (!$slider->app_image) continue;
+            $festivalData[] = [
+                'id'          => $slider->id,
+                'slider_name' => ($request->lang == 'hi') ? $slider->app_slider_name_hi : $slider->app_slider_name,
+                'image'       => asset($slider->app_image),
+            ];
+        }
+    }
+
+    // ------------------------------------
+    // ✅ Final Combined Response
+    // ------------------------------------
+    return response()->json([
+        'success'         => true,
+        'footer_sliders'  => $footerData,
+        'header_sliders'  => $headerData,
+        'festival_sliders'=> $festivalData,
+    ], 200);
+}
+
     public function getPromoCode()
     {
 
