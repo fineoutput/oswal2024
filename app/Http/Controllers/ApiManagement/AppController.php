@@ -1150,6 +1150,7 @@ class AppController extends Controller
             curl_close($curl);
 
             $r = json_decode($response);
+             Log::error('Location Response: ' . $r);
             $r2 = $r->results[0]->formatted_address;
             if(!empty($r2 )){
                 return response()->json(['status' => 'Success', 'message' => $r2]);
