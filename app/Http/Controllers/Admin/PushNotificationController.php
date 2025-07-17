@@ -164,15 +164,14 @@ class PushNotificationController extends Controller
         $notificationPayload = [
             'title' => $notification->title,
             'body' => $notification->description,
-            'image' => $notification->image, // This is the URL to the image (must be public)
+            'image' => asset($notification->image), // This is the URL to the image (must be public)
         ];
     
         // You can also add custom data if needed
         $dataPayload = [
             'key' => 'value',
-            'image' => $notification->image, // Include the image URL in the data
+            'image' => asset($notification->image), // Include the image URL in the data
         ];
-    
         // Build the CloudMessage object
         $cloudMessage = CloudMessage::withTarget('topic', $topic)
             ->withNotification($notificationPayload) // Set the notification payload (title, body, image)
