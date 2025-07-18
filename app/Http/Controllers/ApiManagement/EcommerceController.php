@@ -488,6 +488,177 @@ class EcommerceController extends Controller
     ]);
 }
 
+
+
+
+public function fetchSpecialProducts(Request $request)
+{
+    $user = null;
+    $device_id = $request->device_id;
+    $lang = $request->lang;
+    $category_id = $request->category_id;
+    $state_id = $request->state_id;
+    $city_id = $request->city_id;
+    $type_id = $request->type_id;
+    $role_type = 1;
+
+    if ($request->header('Authorization')) {
+        $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+        $user = User::where('auth', $auth_token)->first();
+        if ($user) {
+            $role_type = $user->role_type;
+        }
+    }
+
+    // Get only top 5 products, no pagination
+    $hot = $this->fetchProductsByType('hot-product', $request, $user, $role_type, $device_id, $category_id, $state_id, $city_id, $type_id, $lang);
+    $featured = $this->fetchProductsByType('featured', $request, $user, $role_type, $device_id, $category_id, $state_id, $city_id, $type_id, $lang);
+    $trending = $this->fetchProductsByType('tranding', $request, $user, $role_type, $device_id, $category_id, $state_id, $city_id, $type_id, $lang);
+
+    // Category data
+    $categorys = sendCategory($request->id); // keep id logic as is
+    $category_data = [];
+
+    foreach ($categorys as $data) {
+        $app_img = !empty($data->app_image) ? asset($data->app_image) : "";
+        $banner_img = !empty($data->image) ? asset($data->image) : "";
+        $icon_img = !empty($data->icon) ? asset($data->icon) : "";
+
+        $category_data[] = [
+            'id' => $data->id,
+            'name' => $lang != "hi" ? $data->name : $data->name_hi,
+            'short_desc' => $lang != "hi" ? $data->short_disc : $data->short_disc_hi,
+            'long_desc' => $lang != "hi" ? $data->long_desc : $data->long_desc_hi,
+            'url' => $data->url,
+            'image' => $app_img,
+            'banner_image' => $banner_img,
+            'icon' => $icon_img,
+            'is_active' => $data->is_active,
+        ];
+    }
+
+    return response()->json([
+        'message' => 'success',
+        'status' => 200,
+        'data' => [
+            'hot_products' => $hot,
+            'featured_products' => $featured,
+            'trending_products' => $trending,
+            'ecom-category' => $category_data,
+        ]
+    ]);
+}
+
+
+private function fetchProductsByType($type, $request, $user, $role_type, $device_id, $category_id, $state_id, $city_id, $type_id, $lang)
+{
+    $is_hot = false;
+    $is_fea = false;
+    $is_trn = false;
+
+    switch ($type) {
+        case 'hot-product':
+            $is_hot = true;
+            break;
+        case 'featured':
+            $is_fea = true;
+            break;
+        case 'tranding':
+            $is_trn = true;
+            break;
+    }
+
+    $products = sendProduct($category_id, null, null, $is_hot, $is_trn, false, $is_fea, false, $role_type)->take(5);
+
+    $result = [];
+
+    foreach ($products as $product) {
+        $cart = Cart::whereNull('deleted_at')
+            ->where('product_id', $product->id)
+            ->when($user, fn ($q) => $q->where('user_id', $user->id))
+            ->where('device_id', $device_id)
+            ->first();
+
+        $cart_type_name = ($cart && $cart->type) ? ($lang !== "hi" ? $cart->type->type_name : $cart->type->type_name_hi) : '';
+        $cart_type_price = $cart?->type_price;
+        $cart_quantity = $cart?->quantity;
+        $cart_total_price = $cart?->total_qty_price;
+        $cart_status = $cart ? 1 : 0;
+
+        $wishlist = $user ? Wishlist::where('product_id', $product->id)->where('user_id', $user->id)->first() : null;
+        $wish_status = $wishlist ? 1 : 0;
+
+        $rating_avg = number_format(ProductRating::where('product_id', $product->id)->avg('rating'), 1, '.', '');
+        $total_reviews = ProductRating::where('product_id', $product->id)->count();
+
+        $typedata = $this->fetchProductTypes($product->id, $role_type, $state_id, $city_id, $lang, $type_id);
+
+        if (!empty($typedata)) {
+            $selected = $typedata[0];
+            $vendorSelectedType = vendorType::where('type_name', $selected['type_name'])->where('id', $selected['type_id'])->first();
+
+            $selected_type_id = $selected['type_id'] ?? '';
+            $selected_type_name = $selected['type_name'] ?? '';
+            $selected_type_selling_price = $selected['range'][0]['selling_price'] ?? '';
+            $selected_type_mrp = $selected['range'][0]['type_mrp'] ?? '';
+            $selected_type_percent_off = $selected['range'][0]['percent_off'] ?? '';
+            $selected_min_qty = $selected['min_qty'] ?? '';
+            $selected_qty_desc = ($user && $user->role_type == 2) ? $vendorSelectedType->qty_desc ?? '' : '';
+        } else {
+            $selected_type_id = '0';
+            $selected_type_name = 'Def';
+            $selected_type_selling_price = 0;
+            $selected_type_mrp = 0;
+            $selected_type_percent_off = 0;
+            $selected_min_qty = 0;
+            $selected_qty_desc = '';
+        }
+
+        $vendor_desc = ($user && $user->role_type == 2) ? $product->vendor_desc : null;
+        $vendor_offer = ($user && $user->role_type == 2 && $product->vendor_offer == 1);
+
+        $result[] = [
+            'id' => $product->id,
+            'category_id' => $product->category_id,
+            'name' => $lang != "hi" ? $product->name : $product->name_hi,
+            'long_desc' => $lang != "hi" ? $product->long_desc : $product->long_desc_hi,
+            'vendor_desc' => $vendor_desc,
+            'vendor_offer' => $vendor_offer,
+            'cart_type_id' => $cart->type_id ?? "",
+            'cart_type_name' => $cart_type_name,
+            'cart_type_price' => $cart_type_price,
+            'cart_quantity' => $cart_quantity,
+            'cart_total_price' => $cart_total_price,
+            'cart_status' => $cart_status,
+            'wish_status' => $wish_status,
+            'wish_id' => $wishlist?->id,
+            'rating_status' => $rating_avg > 0 ? 1 : 0,
+            'rating' => $rating_avg,
+            'total_reviews' => $total_reviews,
+            'url' => $product->url,
+            'images' => [
+                ['image' => asset($product->img_app1)],
+                ['image' => asset($product->img_app2)],
+                ['image' => asset($product->img_app3)],
+                ['image' => asset($product->img_app4)],
+            ],
+            'is_active' => $product->is_active,
+            'type' => $typedata,
+            'selected_type_id' => $selected_type_id,
+            'selected_type_name' => $selected_type_name,
+            'selected_type_selling_price' => $selected_type_selling_price,
+            'selected_type_mrp' => $selected_type_mrp,
+            'selected_type_percent_off' => $selected_type_percent_off,
+            'selected_min_qty' => $selected_min_qty,
+            'selected_qty_desc' => $selected_qty_desc,
+        ];
+    }
+
+    return $result;
+}
+
+
+
     public function type(Request $request) {
 
         $validator = Validator::make($request->all(), [

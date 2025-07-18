@@ -114,6 +114,7 @@ Route::prefix('ecomm')->name('ecomm.')->group(function () {
     Route::post('tranding-product', [EcommerceController::class, 'products'])->name('tranding-product');
     Route::post('search-product', [EcommerceController::class, 'products'])->name('search-product');
     Route::post('featured-product', [EcommerceController::class, 'products'])->name('featured-product');
+    Route::post('home-data', [EcommerceController::class, 'fetchSpecialProducts'])->name('highlightedProducts');
     Route::post('related-product', [EcommerceController::class, 'products'])->name('related-product');
     Route::post('category-product', [EcommerceController::class, 'products'])->name('category-product');
     Route::post('product-details', [EcommerceController::class, 'products'])->name('details-product');
