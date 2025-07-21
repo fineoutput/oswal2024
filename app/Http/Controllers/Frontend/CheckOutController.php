@@ -714,13 +714,13 @@ class CheckOutController extends Controller
 
     // Process payment options
     if ($request->payment_option == 1) {
-        return $this->codCheckout(intval($request->order_id), $request->payment_option);
+        return $this->codCheckout(intval($request->order_id), $request->payment_option ,$request->address_id);
     } else {
         return $this->paidCheckout(intval($request->order_id), $request->payment_option);
     }
 }
 
-    public function codCheckout($orderId, $paymentType)
+    public function codCheckout($orderId, $paymentType,$addressId)
     {
         // $blockStart = now()->subHours(2);
         // $blockEnd = $blockStart->copy()->addHours(24);
@@ -734,6 +734,7 @@ class CheckOutController extends Controller
         // Get authenticated user
         $user = Auth::user();
 
+        $userAddressid = Address::findOrFail($addressId);
         if (!$user) {
             return response()->json(['successs' => false , 'message' => 'Unauthorized']);
         }
@@ -758,6 +759,12 @@ class CheckOutController extends Controller
         $maxCodAmount = getConstant()->cod_max_process_amount;
         // return $maxCodAmount;
         $new = $order->sub_total + getConstant()->cod_charge;
+        if ($userAddressid->city != '629') {
+            return response()->json([
+                'success' => false,
+                'message' => "We don\'t deliver Cod Orders outside Jaipur."
+            ]);
+        }
         if ($new > $maxCodAmount) {
             return response()->json([
                 'success' => false,

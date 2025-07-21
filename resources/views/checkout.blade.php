@@ -612,13 +612,18 @@ $giftCardStatus = DB::table('gift_promo_status')->where('id', 2)->value('is_acti
                 <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100" onclick="placeOrder()"><span>Place Order</span> <span></span></button>
                 @endif --}}
 
-                @if($userAddress->city == 629 || $orderdetails->total_amount >= 600)
+                @if($userAddress->city == 629 || $orderdetails->total_amount >= 800)
                     <button type="button" id="fixedButton" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100" onclick="placeOrder()">
                         <span>Place Order</span>
                         <span></span>
                     </button>
+                {{-- @elseif ($userAddress->city != 629)
+                 <button onclick="showNotification('We don\'t deliver outside Jaipur.', 'error');" type="button" id="showmsg" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100">
+                        <span>Place Order</span>
+                        <span></span>
+                    </button> --}}
                 @else
-                    <button onclick="showNotification('Please keep your order above 600.', 'error');" type="button" id="showmsg" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100">
+                    <button onclick="showNotification('Please keep your order above 800.', 'error');" type="button" id="showmsg" class="btn btn-warning btn-block btn-lg butn-fxd hidden-button w-100">
                         <span>Place Order</span>
                         <span></span>
                     </button>
