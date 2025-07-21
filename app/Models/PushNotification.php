@@ -16,6 +16,7 @@ class PushNotification extends Model
         'description', 
         'image', 
         'ip', 
+        'type', 
         'added_by', 
         'is_active', 
         'date'

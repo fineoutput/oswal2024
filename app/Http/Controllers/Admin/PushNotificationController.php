@@ -68,6 +68,7 @@ class PushNotificationController extends Controller
     $rules = [
         'title'         => 'required|string',
         'description'   => 'required|string',
+        'type'   => 'required|string',
         'img'            => 'nullable|file|mimes:xlsx,csv,xls,pdf,doc,docx,txt,jpg,jpeg,png|max:25000',
     ];
 
@@ -143,6 +144,7 @@ class PushNotificationController extends Controller
         $notification->image = uploadImage($request->file('img'), 'notifaction');
     }
     
+    // return $request->type;
     // Set notification properties
     $notification->title = $request->title;
     $notification->description = $request->description;
@@ -150,6 +152,7 @@ class PushNotificationController extends Controller
     $notification->date = now();
     $notification->added_by = Auth::user()->id;
     $notification->is_active = 1;
+    $notification->type = $request->type;
     
     // Save notification to the database
     if ($notification->save()) {
@@ -158,7 +161,8 @@ class PushNotificationController extends Controller
         // Firebase push notification setup
         $firebase = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
         $messaging = $firebase->createMessaging();
-        $topic = 'OswalSoap';
+        // $topic = 'OswalSoap';
+        $topic = $notification->type;
     
         // Prepare the notification and data payloads
         $notificationPayload = [

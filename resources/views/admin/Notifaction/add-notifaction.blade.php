@@ -115,6 +115,29 @@
 
                                         </div>
 
+
+                                        <div class="col-sm-12 mb-3">
+
+                                            <div class="form-floating">
+
+                                                <select class="form-select" name="type" id="">
+                                                    <option selected disabled value="">Select Type</option>
+                                                    <option value="OswalSoap">Retailer</option>
+                                                    <option value="OswalVendor">Vendor</option>
+                                                    <option value="OswalSoap">Both</option>
+                                                </select>
+                                                <label class="mb-2" for="type">Type &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('type')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
                                         <div class="col-sm-12 mb-3">
 
                                             <div class="form-floating">
