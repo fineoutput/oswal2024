@@ -680,7 +680,13 @@ class OrderController extends Controller
 
         $type_rate_amount =  ($type_rate_amount * 5 / 100) + ($totalWeight * 5 / 100);
 
-        // Apply promocode if provided
+        if ($cityId != '629' && $totalAmount < 800) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please keep your order above ₹800.'
+            ]);
+        }
+
         if ($promocodeId) {
 
             $promocode = Promocode::findOrFail($promocodeId);
@@ -763,7 +769,7 @@ class OrderController extends Controller
         //reward work for vendor
 
         if($payment_type == 1){
-          return $this->codCheckout($order->id,$payment_type,$user);
+          return $this->codCheckout($order->id,$payment_type,$user,$userAddress);
         }else{
           return $this->paidCheckout($order->id,$payment_type,$user);
         }
@@ -771,7 +777,7 @@ class OrderController extends Controller
     }
 
 
-    public function codCheckout($orderId, $paymentType,$user)
+    public function codCheckout($orderId, $paymentType,$user,$userAddress)
     {
         // $blockStart = now()->subHours(2);
         // $blockEnd = $blockStart->copy()->addHours(24);
@@ -829,6 +835,14 @@ class OrderController extends Controller
             $maxCodAmount = getConstant()->cod_max_process_amount;
             
             $new = $order->sub_total + getConstant()->cod_charge;
+
+            if ($userAddress->city != '629') {
+                return response()->json([
+                    'success' => false,
+                    'message' => "We don\'t deliver Cod Orders outside Jaipur."
+                ]);
+            }
+
             if ($new > $maxCodAmount) {
                 return response()->json([
                     'status' => 400,
