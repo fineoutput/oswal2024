@@ -452,6 +452,8 @@ Route::prefix('notification')->name('notification.')->group(function () {
     Route::get('create/{id?}', [PushNotificationController::class, 'create'])->name('create');
 
     Route::post('store', [PushNotificationController::class, 'store'])->name('store');
+    Route::get('get-product',[PushNotificationController::class ,'GetProduct'])->name('get-product');
+
 
 });
 

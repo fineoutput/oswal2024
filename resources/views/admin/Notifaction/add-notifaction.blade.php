@@ -79,8 +79,67 @@
                                     
                                     <div class="form-group row">
 
-                                        <div class="col-sm-12 mb-3">
 
+                                            <div class="form-floating">
+
+                                                <select class="form-control" name="category_id" id="category_id" onchange="getProduct('{{ route('notification.get-product') }}')">
+
+                                                    <option>----select Category-----</option>
+
+                                                    @foreach ($categories as $categorie)
+
+                                                        <option value="{{ $categorie->id }}"{{ old('category_id') == $categorie->id || (isset($notifaction) && $notifaction->category_id == $categorie->id) ? ' selected' : '' }}>{{ $categorie->name }}</option>
+
+                                                    @endforeach
+
+                                                </select>
+
+                                                <label for="-image3">Category &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('category_id')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+
+
+                                            <div class="form-floating">
+                                                
+                                                <select class="form-control" name="product_id" id="product-container">
+
+                                                    <option>----No product-----</option>
+
+                                                    @if ($notifaction != null)
+
+                                                        @foreach ($products as $product)
+
+                                                            <option
+                                                                value="{{ $product->id }}"{{ old('product_id') == $product->id || (isset($notifaction) && $notifaction->product_id == $product->id) ? ' selected' : '' }}>
+                                                                {{ $product->name }}
+                                                            </option>
+
+                                                        @endforeach
+
+                                                    @endif
+
+                                                </select>
+
+                                                <label for="-image3">Product &nbsp;<span style="color:red;">*</span></label>
+
+                                            </div>
+
+                                            @error('product_id')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                    
                                             <div class="form-floating">
 
                                                 <input type="text" class="form-control" value="{{ $notifaction ? $notifaction->title : old('title') }}" name="title" placeholder="Enter title" required>
