@@ -886,7 +886,7 @@ class DeliveryBoyController extends Controller
             $distance = $this->calculateDistance($latitude, $longitude, $userAddress->latitude, $userAddress->longitude);
 
             // Check if the rider is within 500 meters
-            if ($distance <= 5.0) { // 500 meters = 0.5 kilometers
+            if ($distance <= 100.0) { // 500 meters = 0.5 kilometers
                 $deliveryOrder->update([
                     'status' => 2, 
                     'start_location' => "$latitude,$longitude",

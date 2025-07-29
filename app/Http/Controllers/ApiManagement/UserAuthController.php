@@ -432,6 +432,14 @@ class UserAuthController extends Controller
 
     $user = User::where('contact', $request->phone_no)->first();
 
+    if ($user && $user->role_type == 2 && $user->is_active == 0) {
+        return response()->json([
+            'status' => 401,
+            'message' => 'You do not have permission to log in with this number. Please contact the administrator for assistance.'
+        ]);
+    }
+
+
     // Check if the phone number is '0000000000' and set OTP to '123456'
     if ($request->phone_no == '0000000000') {
         $OTP = '123456';  // Hardcode OTP to '123456'
