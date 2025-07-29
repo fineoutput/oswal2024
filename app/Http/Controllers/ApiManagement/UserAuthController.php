@@ -435,7 +435,7 @@ class UserAuthController extends Controller
     if ($user && $user->role_type == 2 && $user->is_active == 0) {
         return response()->json([
             'status' => 401,
-            'message' => 'You do not have permission to log in with this number. Please contact the administrator for assistance.'
+            'message' => 'Please contact admin for approval.'
         ]);
     }
 
