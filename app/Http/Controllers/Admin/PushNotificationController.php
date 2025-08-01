@@ -121,30 +121,35 @@ class PushNotificationController extends Controller
             $topic = $notification->type;
         
             // Prepare the notification and data payloads
+            $imageUrl = asset($notification->image);
             $notificationPayload = [
                 'title' => $notification->title,
                 'body' => $notification->description,
-                'image' => asset($notification->image), // This is the URL to the image (must be public)
+                'image' => $imageUrl, // This is the URL to the image (must be public)
             ];
         
             // You can also add custom data if needed
             $dataPayload = [
                 'key' => 'value',
-                'image' => asset($notification->image), 
+                'image' => $imageUrl,
                 'category_id' => $notification->category_id,
                 'product_id' => $notification->product_id,
                 'screen' => 'ProductDetail',
             ];
-            // Build the CloudMessage object
+       
             $cloudMessage = CloudMessage::withTarget('topic', $topic)
                 ->withNotification($notificationPayload) // Set the notification payload (title, body, image)
                 ->withData($dataPayload); // Add custom data (image URL, etc.)
         
             try {
-                // Send the message
                 $response = $messaging->send($cloudMessage);
+
+                     Log::info('FCM send response:', [
+                            'response' => $response,
+                            'notification' => $notificationPayload,
+                            'dataPayload' => $dataPayload
+                        ]);
         
-                // Handle the response
                 if (isset($response['success']) && !$response['success']) {
                     Log::error('FCM send error: ' . $response['error']);
                 }
