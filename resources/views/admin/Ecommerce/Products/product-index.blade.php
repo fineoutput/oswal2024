@@ -132,17 +132,23 @@
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
 
-                                                    <td>{{ $product->name }}</td>
+                                                    <td>{{ $product->name ?? '' }}</td>
 
-                                                    <td>{{ $product->category->name }}</td>
+                                                    <td>{{ $product->category->name ?? '' }}</td>
 
-                                                    <td>{{ $product->hsn_code }}</td>
+                                                    <td>{{ $product->hsn_code ?? '' }}</td>
                                                     
-                                                    <td>{{ $product->long_desc }}</td>
+                                                    <td>{{ $product->long_desc ?? '' }}</td>
 
-                                                    <td>{{ $product->vendor_desc }}</td>
+                                                    <td>{{ $product->vendor_desc ?? '' }}</td>
 
-                                                    <td> <img src="{{asset($product->img1)}}" alt="" width="100px" height="100px"> </td>
+                                                   <td>
+                                                        @if(!empty($product->img1))
+                                                            <img src="{{ asset($product->img1) }}" alt="" width="100px" height="100px">
+                                                        @else
+                                                            <span>No Image</span> {{-- or leave it empty, or show a placeholder --}}
+                                                        @endif
+                                                    </td>
 
                                                     <td> 
                                                         @if($product->is_hot == 1)  
