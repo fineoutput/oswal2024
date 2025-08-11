@@ -69,6 +69,7 @@ use App\Http\Controllers\Admin\GiftCardSecController;
 use App\Http\Controllers\Admin\ComboProductController;
 
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OswalStoresController;
 
 use App\Http\Controllers\Admin\Delivery\DeliveryBoyController;
 
@@ -125,6 +126,20 @@ Route::get('popup/{id}/edit', [UsersController::class, 'editpopup'])->name('popu
 Route::put('popup/{id}', [UsersController::class, 'updatepopup'])->name('popup.update');
 Route::delete('popup/{id}', [UsersController::class, 'destroypopup'])->name('popup.destroy');
 Route::patch('popupimage/{id}/update-status', [UsersController::class, 'updateStatus'])->name('popupimage.updateStatus');
+
+
+Route::get('/store', [OswalStoresController::class, 'index'])->name('store.index');
+// Route::match(['get','post'],'/add/store', [OswalStoresController::class, 'store'])->name('create.store');
+// Route to delete popup image
+Route::get('/create/store', [OswalStoresController::class, 'create'])->name('store.create');
+Route::post('store/store', [OswalStoresController::class, 'store'])->name('store.store');
+// Route to delete popup image
+Route::get('store/{id}/edit', [OswalStoresController::class, 'edit'])->name('store.edit');
+Route::put('store/update/{id}', [OswalStoresController::class, 'update'])->name('store.update');
+Route::delete('store/destroy/{id}', [OswalStoresController::class, 'destroy'])->name('store.destroy');
+Route::get('store/{id}/update-status', [OswalStoresController::class, 'updateStatus'])->name('store.updateStatus');
+
+Route::get('/get-cities/{state_id}', [OswalStoresController::class, 'getCities']);
 
 
 
@@ -743,6 +758,9 @@ Route::prefix('order')->name('order.')->group(function () {
 
 
     Route::get('vendor/new', [OrderController::class, 'VendorIndex'])->name('vendor.new-order');
+
+    Route::post('transfer/order/{order_id_encoded}', [OrderController::class, 'TransferOrder'])->name('vendor.transferOrder');
+
 
     Route::get('vendor/dispatched', [OrderController::class, 'VendorIndex'])->name('vendor.dispatched-order');
 

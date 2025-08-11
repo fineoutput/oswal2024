@@ -30,6 +30,7 @@ class DeliveryBoy extends Authenticatable
         'ip',
         'date',
         'updated_date',
+        'store_id',
         'added_by',
         'is_active'
     ];
@@ -43,6 +44,12 @@ class DeliveryBoy extends Authenticatable
         'password',
         'remember_token',
     ];
+
+
+     public function store()
+    {
+        return $this->belongsTo(OswalStores::class, 'store_id');
+    }
 
     
     public function deliveryAmount() {

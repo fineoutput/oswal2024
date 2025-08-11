@@ -969,9 +969,67 @@ $orders = $orders->with('orderDetails', 'user', 'address.citys', 'address.states
 
         $orders = $orders->with('orderDetails' ,'user' , 'address.citys' ,'address.states' , 'gift' , 'gift1' , 'promocodes' ,'invoices','transferOrder' )->get();
 
+        
+        $delivery_users = DeliveryBoy::where('role_type', 2)->where('is_active', 1)->get();
        
-        return view('admin.VendorOrders.view_all_orders', compact('orders', 'pageTitle'));
+        return view('admin.VendorOrders.view_all_orders', compact('orders','delivery_users','pageTitle'));
        
+    }
+
+
+  public function TransferOrder(Request $request, $order_id_encoded)
+    {
+        $order_id = $order_id_encoded;
+
+        $ip = request()->ip();
+        $cur_date = now();
+        $addedby = Auth::id();
+
+        $order = Order::with('address', 'user')->find($order_id);
+
+        if (!$order) {
+            Session::flash('emessage', 'Order not found');
+            return redirect()->back();
+        }
+
+        $delivery_user_id = $request->input('delivery_boy_id');
+
+        if (!$delivery_user_id) {
+            Session::flash('emessage', 'Please select a delivery user');
+            return redirect()->back();
+        }
+
+        TransferOrder::where('order_id', $order_id)->delete();
+
+        $data_insert = [
+            'order_id' => $order_id,
+            'delivery_user_id' => $delivery_user_id,
+            'status' => 1,
+            'ip' => $ip,
+            'added_by' => $addedby,
+            'date' => $cur_date
+        ];
+
+        $last_id = TransferOrder::create($data_insert)->id;
+
+        $delivery_user_data = DeliveryBoy::find($delivery_user_id);
+
+        if ($delivery_user_data && $delivery_user_data->fcm_token != null) {
+            $title = "New Order Arrived";
+            $body = "New delivery order transferred to you from admin. Please check.";
+
+            $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
+
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
+            }
+        }
+
+        // Update order delivery status
+        $order->update(['delivery_status' => 1]);
+
+        Session::flash('smessage', 'Order Transferred successfully');
+        return redirect()->back();
     }
 
   

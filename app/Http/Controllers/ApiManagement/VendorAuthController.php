@@ -360,6 +360,7 @@ class VendorAuthController extends Controller
         'addhar_front_image' => $addhar_front_image,
         'addhar_back_image'  => $addhar_back_image,
         'gstno'         => $request->gstno,
+        'shop_code'         => $request->shop_code,
     ];
 
     // Insert the vendor record into the temporary vendor table
@@ -535,6 +536,7 @@ class VendorAuthController extends Controller
                         'addhar_front_image' => $uservendor->addhar_front_image,
                         'addhar_back_image'  => $uservendor->addhar_back_image,
                         'gstno'          => $uservendor->gstno,
+                        'shop_code'          => $uservendor->shop_code,
                     ]
                 ];
                 
@@ -566,6 +568,7 @@ class VendorAuthController extends Controller
                     'addhar_front_image' => $uservendorData['vendor']['addhar_front_image'],
                     'addhar_back_image' => $uservendorData['vendor']['addhar_back_image'],
                     'gstno' => $uservendorData['vendor']['gstno'],
+                    'shop_code' => $uservendorData['vendor']['shop_code'],
                 ]);
             }
     

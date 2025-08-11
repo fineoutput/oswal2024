@@ -98,6 +98,8 @@
 
                                                     <th data-priority="1">Role Type</th>
 
+                                                    <th data-priority="1">Store Name</th>
+
                                                     <th data-priority="3">Contact</th>
 
                                                     <th data-priority="3">Email</th>
@@ -137,6 +139,9 @@
                                                         @endif
 
                                                     </td>
+                                                    
+                                                    <td>{{ $user->store->store_name ?? '' }}</td>
+
 
                                                     <td>{{ $user->phone }}</td>
 

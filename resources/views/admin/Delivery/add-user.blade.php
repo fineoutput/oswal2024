@@ -120,6 +120,32 @@
 
                                             <div class="form-floating">
 
+                                                <select class="form-control" name="store_id" id="store_id">
+                                                    <option selected disabled value="">---- Select ----</option>
+                                                    @foreach ($store as $item)
+                                                        <option value="{{ $item->id ?? '' }}" {{ old('store_id', $user->store_id ?? '') == $item->id ? 'selected' : '' }}>
+                                                        {{ $item->store_name ?? '' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                
+                                                <label for="-image3">Store</label>
+
+                                            </div>
+
+                                            @error('store_id')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+
+                                        <div class="col-sm-6 mb-3">
+
+                                            <div class="form-floating">
+
                                                 <select class="form-control" name="role_type" id="role_type">
 
                                                     <option value="" {{ (!isset($user) || is_null($user->role_type)) && is_null(old('role_type')) ? 'selected' : '' }}>----select role type-----</option>

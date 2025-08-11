@@ -35,6 +35,7 @@ class Vendortemp extends Model
         'device_id',
         'first_name_hi',
         'first_name',
+        'shop_code',
         'role_type',
     ];
 

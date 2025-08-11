@@ -22,6 +22,7 @@ class Vendor extends Model
         'addhar_front_image',
         'addhar_back_image',
         'gstno',
+        'shop_code',
     ];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];

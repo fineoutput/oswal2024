@@ -141,6 +141,7 @@
                                                     <th data-priority="6">Gift</th>
 
                                                     <th data-priority="6">Gift 1</th>
+                                                    <th data-priority="6">Assigned Order</th>
 
                                                     <th data-priority="6">Remark</th>
                                                     <th data-priority="6">Delivery Invoice</th>
@@ -328,6 +329,19 @@
                                                                  No Gift Card
                                                             @endif
                                                        </td>
+
+                                                      <form action="{{ route('order.vendor.transferOrder', ['order_id_encoded' => $order->id]) }}" method="POST">
+                                                            @csrf
+                                                            <td>
+                                                                <select class="form-control" name="delivery_boy_id" required>
+                                                                    <option selected disabled value="">Select</option>
+                                                                    @foreach ($delivery_users as $value)
+                                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                 <button type="submit" class="btn btn-primary">Assign</button>
+                                                            </td>
+                                                        </form>
 
                                                        <td>{{  $order->remarks }}</td>
 

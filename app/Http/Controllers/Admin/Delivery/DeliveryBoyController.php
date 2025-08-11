@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\DeliveryBoy;
+use App\Models\OswalStores;
 
 class DeliveryBoyController extends Controller
 {
@@ -22,6 +23,7 @@ class DeliveryBoyController extends Controller
 
     {
         $user = null;
+        $store = OswalStores::all();
       
         if ($id !== null) {
 
@@ -34,9 +36,10 @@ class DeliveryBoyController extends Controller
             }
 
             $user = DeliveryBoy::find(base64_decode($id));
+            $store = OswalStores::all();
         }
 
-        return view('admin.Delivery.add-user', compact('user'));
+        return view('admin.Delivery.add-user', compact('user','store'));
     }
 
     public function store(Request $request)
@@ -47,6 +50,7 @@ class DeliveryBoyController extends Controller
             'name'              => 'required',
             'pincode'           => 'required',
             'email'             => 'required|email',
+            'store_id'             => 'required',
             'phone'             => 'required|digits:10',   
             'img'               => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ];
@@ -75,6 +79,7 @@ class DeliveryBoyController extends Controller
        
        $user->fill([
         'name'     => $request->name,
+        'store_id'     => $request->store_id,
         'role_type'=> $request->role_type,
         'email'    => $request->email,
         'phone'    => $request->phone,

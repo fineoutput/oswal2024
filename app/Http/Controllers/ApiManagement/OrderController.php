@@ -1165,8 +1165,22 @@ class OrderController extends Controller
             $pincode = $order->address->zipcode;
 
             if ($order->user->role_type == 2) {
+
+              if ($order->user->vendor->shop_code) {
+                    $delivery_users = DeliveryBoy::where('role_type', 2)
+                        ->where('pincode', 'LIKE', "%$pincode%")
+                        ->where('shop_code', $order->user->shop_code)
+                        ->where('is_active', 1)
+                        ->get();
+                } else {
+                    // Agar shop_code nahi hai to sirf role_type, pincode aur active check karo
+                    $delivery_users = DeliveryBoy::where('role_type', 2)
+                        ->where('pincode', 'LIKE', "%$pincode%")
+                        ->where('is_active', 1)
+                        ->get();
+                }
                
-                $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
+                // $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
 
             }else{
 
