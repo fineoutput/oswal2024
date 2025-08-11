@@ -1167,21 +1167,39 @@ class OrderController extends Controller
 
             if ($order->user->role_type == 2) {
 
-              if ($order->user->vendor->shop_code) {
-                $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
-                    $delivery_users = DeliveryBoy::where('role_type', 2)
-                        ->where('pincode', 'LIKE', "%$pincode%")
-                        ->where('store_id', $store->id)
-                        ->where('is_active', 1)
-                        ->get();
-                } else {
-                    // Agar shop_code nahi hai to sirf role_type, pincode aur active check karo
+            //   if ($order->user->vendor->shop_code) {
+            //     $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
+            //         $delivery_users = DeliveryBoy::where('role_type', 2)
+            //             ->where('pincode', 'LIKE', "%$pincode%")
+            //             ->where('store_id', $store->id)
+            //             ->where('is_active', 1)
+            //             ->get();
+            //     } else {
+            //         // Agar shop_code nahi hai to sirf role_type, pincode aur active check karo
+            //         $delivery_users = DeliveryBoy::where('role_type', 2)
+            //             ->where('pincode', 'LIKE', "%$pincode%")
+            //             ->where('is_active', 1)
+            //             ->get();
+            //     }
+               if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
+                    $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
+
+                    if ($store) {
+                        $delivery_users = DeliveryBoy::where('role_type', 2)
+                            ->where('pincode', 'LIKE', "%$pincode%")
+                            ->where('store_id', $store->id)
+                            ->where('is_active', 1)
+                            ->get();
+                    }
+                }
+
+                if ($delivery_users->isEmpty()) {
+                    // If no delivery users found with store filter or no store/shop_code present
                     $delivery_users = DeliveryBoy::where('role_type', 2)
                         ->where('pincode', 'LIKE', "%$pincode%")
                         ->where('is_active', 1)
                         ->get();
                 }
-               
                 // $delivery_users = DeliveryBoy::where('role_type', 2)->where('pincode', 'LIKE', "%$pincode%")->where('is_active', 1)->get();
 
             }else{
