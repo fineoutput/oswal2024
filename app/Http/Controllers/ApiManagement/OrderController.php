@@ -40,7 +40,7 @@ use App\Models\Reward;
 use App\Models\Order;
 
 use App\Models\Cart;
-
+use App\Models\OswalStores;
 use App\Models\User;
 use App\Services\DeliveryBoyService;
 
@@ -1182,7 +1182,7 @@ class OrderController extends Controller
             //             ->get();
             //     }
                if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
-                    $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
+                    $store = OswalStores::where('shop_code', $order->user->vendor->shop_code)->first();
 
                     if ($store) {
                         $delivery_users = DeliveryBoy::where('role_type', 2)
