@@ -1182,9 +1182,9 @@ class OrderController extends Controller
             //             ->get();
             //     }
                if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
-                          Log::info('store response: ' . $order->user->vendor->shop_code);
+                          Log::info('store 1 response: ' . $order->user->vendor->shop_code);
 
-                    $store = OswalStores::where('shop_code', $order->user->vendor->shop_code)->first();
+                    $store = OswalStores::where('shop_code', 'LIKE',"%$order->user->vendor->shop_code%")->first();
                           Log::info('store response: ' . $store);
 
                     if ($store) {
