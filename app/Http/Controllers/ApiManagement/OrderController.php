@@ -47,6 +47,7 @@ use App\Services\DeliveryBoyService;
 use App\Models\Type;
 use Illuminate\Support\Facades\Session;
 use App\Models\Type_sub;
+use Illuminate\Contracts\Cache\Store;
 
 class OrderController extends Controller
 {
@@ -1167,9 +1168,10 @@ class OrderController extends Controller
             if ($order->user->role_type == 2) {
 
               if ($order->user->vendor->shop_code) {
+                $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
                     $delivery_users = DeliveryBoy::where('role_type', 2)
                         ->where('pincode', 'LIKE', "%$pincode%")
-                        ->where('shop_code', $order->user->shop_code)
+                        ->where('store_id', $store->id)
                         ->where('is_active', 1)
                         ->get();
                 } else {
