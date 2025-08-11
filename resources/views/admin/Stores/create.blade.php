@@ -199,7 +199,7 @@
 
             if (stateId) {
                 $.ajax({
-                    url: '/admin/get-cities/' + stateId,
+                    url: '/oswal2024/public/admin/get-cities/' + stateId,
                     type: 'GET',
                     success: function (data) {
                         $('#city_id').empty().append('<option value="">Select City</option>');
