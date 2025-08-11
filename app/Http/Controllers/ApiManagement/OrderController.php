@@ -1313,6 +1313,7 @@ class OrderController extends Controller
         //     return redirect()->route('admin_login');
         // }
     }
+}
 
     private function sendPushNotificationDelivery($fcm_token,$type) {
 
