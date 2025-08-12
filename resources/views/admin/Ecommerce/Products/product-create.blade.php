@@ -590,7 +590,7 @@
                                             @enderror
                                         </div>
 
-                                    <div class="col-sm-4">
+                                        <div class="col-sm-4">
                                         <div class="form-floating">
                                             <select class="form-control" name="free_product_id" id="free_product_id">
                                                 <option value="">Select</option>
@@ -601,13 +601,53 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <label for="free_product_id">Select Free Product &nbsp;<span style="color:red;">*</span></label>
+                                            <label for="free_product_id">Select Free Product <span style="color:red;">*</span></label>
                                         </div>
-
                                         @error('free_product_id')
                                             <div style="color:red">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <select class="form-control" name="free_type_id" id="type_id">
+                                                <option value="">Select Type</option>
+                                            </select>
+                                            <label for="type_id">Select Type <span style="color:red;">*</span></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+
+                                            <div class="form-floating">
+                                                <input class="form-control" type="date" value="{{ $product ? $product->start_date : old('start_date') }}" id="start_date" name="start_date" placeholder="Description Hindi">
+                                                <label for="start_date">Start Date </label>
+                                            </div>
+
+                                            @error('start_date')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
+
+
+                                    <div class="col-sm-4">
+
+                                            <div class="form-floating">
+                                                <input class="form-control" type="date" value="{{ $product ? $product->end_date : old('end_date') }}" id="end_date" name="end_date" placeholder="Description Hindi">
+                                                <label for="end_date">End Date </label>
+                                            </div>
+
+                                            @error('end_date')
+
+                                                <div style="color:red">{{ $message }}</div>
+
+                                            @enderror
+
+                                        </div>
 
 
                                     </div>
@@ -641,5 +681,51 @@
         </div> <!-- container-fluid -->
 
     </div> <!-- content -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let selectedTypeId = @json(old('free_type_id', $product->free_type_id ?? ''));
+
+        function loadTypes(productId, selectedType = null) {
+            if (productId) {
+                $('#type_id').html('<option>Loading...</option>');
+                $.ajax({
+                    url: "{{ url('admin/ecom/product/get-types-by-product') }}/" + productId,
+                    method: 'GET',
+                    success: function (data) {
+                        let options = '<option value="">Select Type</option>';
+                        if (data.length > 0) {
+                            data.forEach(function (type) {
+                                options += `<option value="${type.id}" ${selectedType == type.id ? 'selected' : ''}>${type.type_name}</option>`;
+                            });
+                        } else {
+                            options = '<option value="">No types found</option>';
+                        }
+                        $('#type_id').html(options);
+                    },
+                    error: function () {
+                        $('#type_id').html('<option value="">Error loading types</option>');
+                    }
+                });
+            } else {
+                $('#type_id').html('<option value="">Select Type</option>');
+            }
+        }
+
+        // On page load, if product is selected, load types and select preselected type
+        let selectedProductId = $('#free_product_id').val();
+        if (selectedProductId) {
+            loadTypes(selectedProductId, selectedTypeId);
+        } else {
+            $('#type_id').html('<option value="">Select Type</option>');
+        }
+
+        // On product change, load types with no preselection (user has to select new type)
+        $('#free_product_id').on('change', function () {
+            let productId = $(this).val();
+            loadTypes(productId);
+        });
+    });
+</script>
 
 @endsection

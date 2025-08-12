@@ -1257,13 +1257,72 @@ $cartItems = $cartQuery->get();
 
             $totalAmount += $cartItem->total_qty_price;
 
-              $freeproduct = null;
-                if (!empty($product) && !empty($product->free_product_id)) {
-                   $freeproduct = optional($product->free_product_id) 
-                    ? EcomProduct::find($product->free_product_id) 
-                    : null;
-                }
+            // $freeproduct = null;
+            // if (!empty($product) && !empty($product->free_product_id)) {
+            //     $freeproduct = EcomProduct::find($product->free_product_id);
+
+            //     $typeDatafree = Type::query(); // start query builder
+
+            //     if ($freeproduct) {
+            //         $typeDatafree->where('product_id', $freeproduct->id);
+            //     }
+
+            //     if ($stateId) {
+            //         $typeDatafree->where('state_id', $stateId);
+            //     }
+
+            //     if ($cityId) {
+            //         $typeDatafree->where('city_id', $cityId);
+            //     }
+
+            //     // Add start_date and end_date filter based on current date
+            //     $currentDate = now()->toDateString();
+            //     $typeDatafree->whereDate('start_date', '<=', $currentDate)
+            //                 ->whereDate('end_date', '>=', $currentDate);
+
+            //     $typeDatafree->where('is_active', 1)
+            //                 ->groupBy('type_name');
+
+            //     $typeDatafree = $typeDatafree->get();
+            // }
                 
+
+            $freeproduct = null;
+
+            if (!empty($product->free_product_id)) {
+                $today = now()->toDateString();
+
+                // Check if product dates are valid
+                if (
+                    $product->start_date && $product->end_date &&
+                    ($product->start_date <= $today && $product->end_date >= $today)
+                ) {
+                    $freeproductCheck = EcomProduct::where('id', $product->free_product_id)->first();
+
+                    if ($freeproductCheck) {
+                        $freeproduct = $freeproductCheck;
+
+                        $typeDatafree = Type::where('id', $product->free_type_id);
+
+                    if ($freeproduct) {
+                        $typeDatafree->where('product_id', $freeproduct->id);
+                    }
+
+                    if ($stateId) {
+                        $typeDatafree->where('state_id', $stateId);
+                    }
+
+                    if ($cityId) {
+                        $typeDatafree->where('city_id', $cityId);
+                    }
+
+                    $typeDatafree = $typeDatafree->get();
+
+                    }
+                }
+            }
+
+
             $productData[] = [
                 'id' => $cartItem->id,
                 'product_id' => $product->id,
@@ -1271,7 +1330,8 @@ $cartItems = $cartQuery->get();
                 'free_product_name' => $freeproduct 
                     ? ($lang !== "hi" ? $freeproduct->name : $freeproduct->name_hi) 
                     : null,
-                'free_image1' => asset($freeproduct->img1),
+                'free_image1' => $freeproduct ? asset($freeproduct->img1) : '',
+                'type_free' => $typeDatafree ?? '',
                 'category_id' => $cartItem->category_id,
                 'selected_type' =>$selectedType,
                 'quantity' => $cartItem->quantity,

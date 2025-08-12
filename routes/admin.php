@@ -198,6 +198,8 @@ Route::prefix('ecom/product')->name('product.')->group(function () {
 
     Route::get('create/{id?}', [ProductController::class, 'create'])->name('create');
 
+    Route::get('/get-types-by-product/{id}', [ProductController::class, 'getTypesByProduct'])->name('get-types-by-product');
+
     Route::post('store', [ProductController::class, 'store'])->name('store');
 
     Route::get('update-status/{status}/{id}', [ProductController::class, 'update_status'])->name('update-status');

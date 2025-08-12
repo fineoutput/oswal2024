@@ -615,7 +615,11 @@ class OrderController extends Controller
                 OrderDetail::create([      
                     'main_id'               =>  $order->id,
                     'product_id'            =>  $product->id,
-                    'free_product_id'       =>  $product->free_product_id ?? '',
+                    'free_product_id' => (
+                            $product->start_date && $product->end_date &&
+                            $product->start_date <= now()->toDateString() &&
+                            $product->end_date >= now()->toDateString()
+                        ) ? $product->free_product_id : null,
                     'type_id'               =>  $cartItem->type_id,
                     'type_mrp'              =>  $cartItem->vendortype->mrp,
                     'gst'                   =>  $cartItem->vendortype->gst_percentage,
