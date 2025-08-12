@@ -1271,6 +1271,7 @@ $cartItems = $cartQuery->get();
                 'free_product_name' => $freeproduct 
                     ? ($lang !== "hi" ? $freeproduct->name : $freeproduct->name_hi) 
                     : null,
+                'free_image1' => asset($freeproduct->img1),
                 'category_id' => $cartItem->category_id,
                 'selected_type' =>$selectedType,
                 'quantity' => $cartItem->quantity,
