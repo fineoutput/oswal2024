@@ -1073,6 +1073,7 @@ $cartItems = $cartQuery->get();
                 }
 
             $productData = EcomProduct::where('id', $cd_data->product_id)->first();
+          
 
             if ($productData) {
                 // Fetch type data using type_id from product
@@ -1256,9 +1257,20 @@ $cartItems = $cartQuery->get();
 
             $totalAmount += $cartItem->total_qty_price;
 
+              $freeproduct = null;
+                if (!empty($product) && !empty($product->free_product_id)) {
+                   $freeproduct = optional($product->free_product_id) 
+                    ? EcomProduct::find($product->free_product_id) 
+                    : null;
+                }
+                
             $productData[] = [
                 'id' => $cartItem->id,
                 'product_id' => $product->id,
+                'free_product_id' => $product->free_product_id,
+                'free_product_name' => $freeproduct 
+                    ? ($lang !== "hi" ? $freeproduct->name : $freeproduct->name_hi) 
+                    : null,
                 'category_id' => $cartItem->category_id,
                 'selected_type' =>$selectedType,
                 'quantity' => $cartItem->quantity,

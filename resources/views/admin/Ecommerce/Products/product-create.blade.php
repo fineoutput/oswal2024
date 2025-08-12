@@ -590,6 +590,26 @@
                                             @enderror
                                         </div>
 
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <select class="form-control" name="free_product_id" id="free_product_id">
+                                                <option value="">Select</option>
+                                                @foreach ($products as $value)
+                                                    <option value="{{ $value->id }}"
+                                                        {{ old('free_product_id', $product->free_product_id ?? '') == $value->id ? 'selected' : '' }}>
+                                                        {{ $value->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <label for="free_product_id">Select Free Product &nbsp;<span style="color:red;">*</span></label>
+                                        </div>
+
+                                        @error('free_product_id')
+                                            <div style="color:red">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+
                                     </div>
 
                                     <div class="form-group row">

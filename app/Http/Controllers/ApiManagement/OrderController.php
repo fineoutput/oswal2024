@@ -615,6 +615,7 @@ class OrderController extends Controller
                 OrderDetail::create([      
                     'main_id'               =>  $order->id,
                     'product_id'            =>  $product->id,
+                    'free_product_id'       =>  $product->free_product_id ?? '',
                     'type_id'               =>  $cartItem->type_id,
                     'type_mrp'              =>  $cartItem->vendortype->mrp,
                     'gst'                   =>  $cartItem->vendortype->gst_percentage,

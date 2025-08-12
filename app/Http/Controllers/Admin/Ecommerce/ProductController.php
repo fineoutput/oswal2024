@@ -19,6 +19,7 @@ class ProductController extends Controller
 
        $product_categorys = EcomProductCategory::all();
 
+
        return view('admin.Ecommerce.Products.product-category' , compact('product_categorys'));
 
     }
@@ -53,7 +54,10 @@ class ProductController extends Controller
         
         $productCategories = EcomProductCategory::get();
 
-        return view('admin.Ecommerce.Products.product-create', compact('product', 'categories', 'productCategories'));
+       $products = EcomProduct::where('is_active', 1)->get();
+
+
+        return view('admin.Ecommerce.Products.product-create', compact('product','products','categories', 'productCategories'));
     }
 
     public function store(Request $request)
@@ -142,6 +146,7 @@ class ProductController extends Controller
             'vendor_desc'   => $request->vendor_desc,
 
             'product_view'   => $request->product_view,
+            'free_product_id'   => $request->free_product_id ,
 
         ]);
 
