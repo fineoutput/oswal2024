@@ -620,6 +620,11 @@ class OrderController extends Controller
                             $product->start_date <= now()->toDateString() &&
                             $product->end_date >= now()->toDateString()
                         ) ? $product->free_product_id : null,
+                    'free_type_id' => (
+                            $product->start_date && $product->end_date &&
+                            $product->start_date <= now()->toDateString() &&
+                            $product->end_date >= now()->toDateString()
+                        ) ? $product->free_type_id : null,
                     'type_id'               =>  $cartItem->type_id,
                     'type_mrp'              =>  $cartItem->vendortype->mrp,
                     'gst'                   =>  $cartItem->vendortype->gst_percentage,

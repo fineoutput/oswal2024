@@ -15,6 +15,7 @@ class OrderDetail extends Model
         'main_id',
         'product_id',
         'free_product_id',
+        'free_type_id',
         'type_id',
         'type_mrp',
         'gst',
