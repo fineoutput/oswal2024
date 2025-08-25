@@ -40,6 +40,16 @@ class OrderDetail extends Model
         return $this->belongsTo(EcomProduct::class, 'product_id');
     }
 
+    public function freeproduct()
+    {
+        return $this->belongsTo(EcomProduct::class, 'free_product_id');
+    }
+
+    public function freetype()
+    {
+        return $this->belongsTo(Type::class, 'free_type_id');
+    }
+
     public function type()
     {
         return $this->belongsTo(Type::class, 'type_id');

@@ -97,6 +97,10 @@
                                                     <th>#</th>
 
                                                     <th data-priority="1">Product</th>
+                                                    ``
+                                                    <th data-priority="1">Free Product</th>
+
+                                                    <th data-priority="1">Free Type </th>
 
                                                     <th data-priority="3">Type</th>
 
@@ -120,6 +124,10 @@
                                                         <td>{{ ++$key }}</td>
 
                                                         <td>{{ $order->product->name }}</td>
+
+                                                        <td>{{ $order->freeproduct->name }}</td>
+
+                                                        <td>{{ $order->freetype->type_name }}</td>
 
                                                         <td>{{ $order->vendortype->type_name }}</td>
 
