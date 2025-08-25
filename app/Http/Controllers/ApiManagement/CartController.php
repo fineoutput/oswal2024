@@ -1326,11 +1326,13 @@ $cartItems = $cartQuery->get();
             $productData[] = [
                 'id' => $cartItem->id,
                 'product_id' => $product->id,
-                'free_product_id' => $product->free_product_id,
-                'free_product_name' => $freeproduct 
-                    ? ($lang !== "hi" ? $freeproduct->name : $freeproduct->name_hi) 
+                'free_product_id' => $role_type == 2 ? $product->free_product_id : null,
+                'free_product_name' => ($role_type == 2 && $freeproduct)
+                    ? ($lang !== "hi" ? $freeproduct->name : $freeproduct->name_hi)
                     : null,
-                'free_image1' => $freeproduct ? asset($freeproduct->img1) : '',
+                'free_image1' => ($role_type == 2 && $freeproduct)
+                    ? asset($freeproduct->img1)
+                    : null,
                 'type_free' => $typeDatafree ?? '',
                 'category_id' => $cartItem->category_id,
                 'selected_type' =>$selectedType,
