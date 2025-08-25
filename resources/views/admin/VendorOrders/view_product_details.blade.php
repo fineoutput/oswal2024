@@ -125,9 +125,9 @@
 
                                                         <td>{{ $order->product->name }}</td>
 
-                                                        <td>{{ $order->freeproduct->name }}</td>
+                                                        <td>{{ $order->freeproduct->name ?? '' }}</td>
 
-                                                        <td>{{ $order->freetype->type_name }}</td>
+                                                        <td>{{ $order->freetype->type_name ?? '' }}</td>
 
                                                         <td>{{ $order->vendortype->type_name }}</td>
 
