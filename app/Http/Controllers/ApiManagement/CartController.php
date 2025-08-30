@@ -1308,13 +1308,13 @@ $cartItems = $cartQuery->get();
                         $typeDatafree->where('product_id', $freeproduct->id);
                     }
 
-                    if ($stateId) {
-                        $typeDatafree->where('state_id', $stateId);
-                    }
+                    // if ($stateId) {
+                    //     $typeDatafree->where('state_id', $stateId);
+                    // }
 
-                    if ($cityId) {
-                        $typeDatafree->where('city_id', $cityId);
-                    }
+                    // if ($cityId) {
+                    //     $typeDatafree->where('city_id', $cityId);
+                    // }
 
                     $typeDatafree = $typeDatafree->first();
 
