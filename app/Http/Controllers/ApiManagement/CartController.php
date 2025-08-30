@@ -1316,7 +1316,7 @@ $cartItems = $cartQuery->get();
                         $typeDatafree->where('city_id', $cityId);
                     }
 
-                    $typeDatafree = $typeDatafree->get();
+                    $typeDatafree = $typeDatafree->first();
 
                     }
                 }
