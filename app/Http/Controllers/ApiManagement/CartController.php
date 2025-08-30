@@ -1333,7 +1333,7 @@ $cartItems = $cartQuery->get();
                 'free_image1' => ($role_type == 2 && $freeproduct)
                     ? asset($freeproduct->img1)
                     : null,
-                'type_free' => $typeDatafree[0] ?? '',
+                'type_free' => $typeDatafree->type_name ?? '',
                 'category_id' => $cartItem->category_id,
                 'selected_type' =>$selectedType,
                 'quantity' => $cartItem->quantity,
