@@ -33,15 +33,7 @@ class ProductController extends Controller
     }
 
 
-    public function getTypesByProduct($id)
-    {
-        $types = Type::where('product_id', $id)
-            ->where('is_active', 1)
-            ->groupBy('type_name')
-            ->get(['id', 'type_name']);
 
-        return response()->json($types);
-    }
 
     public function create(Request $request ,$id =null )
     {
@@ -157,10 +149,10 @@ class ProductController extends Controller
             'vendor_desc'   => $request->vendor_desc,
 
             'product_view'   => $request->product_view,
-            'free_product_id'   => $request->free_product_id,
-            'free_type_id'   => $request->free_type_id,
-            'start_date'   => $request->start_date,
-            'end_date'   => $request->end_date,
+            // 'free_product_id'   => $request->free_product_id,
+            // 'free_type_id'   => $request->free_type_id,
+            // 'start_date'   => $request->start_date,
+            // 'end_date'   => $request->end_date,
 
         ]);
 

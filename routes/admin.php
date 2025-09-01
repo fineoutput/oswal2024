@@ -198,7 +198,7 @@ Route::prefix('ecom/product')->name('product.')->group(function () {
 
     Route::get('create/{id?}', [ProductController::class, 'create'])->name('create');
 
-    Route::get('/get-types-by-product/{id}', [ProductController::class, 'getTypesByProduct'])->name('get-types-by-product');
+   
 
     Route::post('store', [ProductController::class, 'store'])->name('store');
 
@@ -244,6 +244,8 @@ Route::prefix('ecom/vendor/type')->name('vendor.type.')->group(function () {
     Route::get('create/{pid}/{cid}/{pcid}', [TypeController::class, 'vendorCreate'])->name('create');
     Route::get('subtype/{id}', [TypeController::class, 'vendorsubCreate'])->name('subtype');
     Route::get('subtype/view/{id}/{optional?}', [TypeController::class, 'vendorsubView'])->name('subtype.view');
+
+    Route::get('/get-types-by-product/{id}', [TypeController::class, 'getTypesByProduct'])->name('get-types-by-product');
 
     Route::get('edit/{pid}/{cid}/{pcid}/{tid}', [TypeController::class, 'vendorEdit'])->name('edit');
   

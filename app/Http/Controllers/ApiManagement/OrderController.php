@@ -616,15 +616,16 @@ class OrderController extends Controller
                     'main_id'               =>  $order->id,
                     'product_id'            =>  $product->id,
                     'free_product_id' => (
-                            $product->start_date && $product->end_date &&
-                            $product->start_date <= now()->toDateString() &&
-                            $product->end_date >= now()->toDateString()
-                        ) ? $product->free_product_id : null,
+                            $$cartItem->vendortype->start_date && $$cartItem->vendortype->end_date &&
+                            $$cartItem->vendortype->start_date <= now()->toDateString() &&
+                            $$cartItem->vendortype->end_date >= now()->toDateString()
+                        ) ? $$cartItem->vendortype->free_product_id : null,
                     'free_type_id' => (
-                            $product->start_date && $product->end_date &&
-                            $product->start_date <= now()->toDateString() &&
-                            $product->end_date >= now()->toDateString()
-                        ) ? $product->free_type_id : null,
+                            $$cartItem->vendortype->start_date && $$cartItem->vendortype->end_date &&
+                            $$cartItem->vendortype->start_date <= now()->toDateString() &&
+                            $$cartItem->vendortype->end_date >= now()->toDateString()
+                        ) ? $$cartItem->vendortype->free_type_id : null,
+                    'free_qty'               =>  $cartItem->vendortyp->free_qty ?? '',
                     'type_id'               =>  $cartItem->type_id,
                     'type_mrp'              =>  $cartItem->vendortype->mrp,
                     'gst'                   =>  $cartItem->vendortype->gst_percentage,

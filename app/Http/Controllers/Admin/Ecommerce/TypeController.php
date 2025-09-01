@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Ecommerce;
 
 use App\Http\Controllers\Controller;
+use App\Models\EcomProduct;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\State;
@@ -500,8 +501,9 @@ class TypeController extends Controller
         $pc_id = decrypt($pcid);
 
         $type = null;
+        $products = EcomProduct::where('is_active', 1)->get();
 
-        return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
+        return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type','products'));
     }
 
     public function vendorsubCreate($id) {
@@ -520,6 +522,16 @@ class TypeController extends Controller
 }
 
 
+    public function getTypesByProduct($id)
+    {
+        $types = Type::where('product_id', $id)
+            ->where('is_active', 1)
+            ->groupBy('type_name')
+            ->get(['id', 'type_name']);
+
+        return response()->json($types);
+    }
+
     public function vendorEdit($pid, $cid , $pcid , $tid) {
 
         $p_id  = decrypt($pid);
@@ -530,9 +542,11 @@ class TypeController extends Controller
 
         $t_id = decrypt($tid);
 
+        $products = EcomProduct::where('is_active', 1)->get();
+
         $type = VendorType::with('state','city')->where('id', $t_id)->where('product_id', $p_id)->where('category_id', $c_id)->first();
 
-        return view('admin.Ecommerce.Vendor-Type.type-create' , compact('p_id', 'c_id', 'pc_id', 'type'));
+        return view('admin.Ecommerce.Vendor-Type.type-create' , compact('products','p_id', 'c_id', 'pc_id', 'type'));
     }
 
     public function vendorStore(Request $request) 
@@ -567,6 +581,11 @@ class TypeController extends Controller
             'min_qty'       => $request->min_qty,
             'weight'       => $request->weight,
             'qty_desc'       => $request->qty_desc,
+            'free_product_id'   => $request->free_product_id,
+            'free_type_id'   => $request->free_type_id,
+            'start_date'   => $request->start_date,
+            'end_date'   => $request->end_date,
+            'free_qty'   => $request->free_qty,
 
         ]);
 

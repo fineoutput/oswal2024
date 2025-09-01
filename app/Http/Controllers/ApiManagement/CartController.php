@@ -1288,22 +1288,22 @@ $cartItems = $cartQuery->get();
                 
 
             $freeproduct = null;
-            $typeDatafree = null; // ✅ Initialize to avoid "undefined variable"
+            $typeDatafree = null; 
 
-            if (!empty($product->free_product_id)) {
+            if (!empty($cartItem->vendortype->free_product_id)) {
                 $today = now()->toDateString();
 
                 // Check if product dates are valid
                 if (
-                    $product->start_date && $product->end_date &&
-                    ($product->start_date <= $today && $product->end_date >= $today)
+                    $cartItem->vendortype->start_date && $cartItem->vendortype->end_date &&
+                    ($cartItem->vendortype->start_date <= $today && $cartItem->vendortype->end_date >= $today)
                 ) {
-                    $freeproductCheck = EcomProduct::where('id', $product->free_product_id)->first();
+                    $freeproductCheck = EcomProduct::where('id', $cartItem->vendortype->free_product_id)->first();
 
                     if ($freeproductCheck) {
                         $freeproduct = $freeproductCheck;
 
-                        $typeDatafreeQuery = Type::where('id', $product->free_type_id);
+                        $typeDatafreeQuery = Type::where('id', $cartItem->vendortype->free_type_id);
 
                         if ($freeproduct) {
                             $typeDatafreeQuery->where('product_id', $freeproduct->id);
@@ -1335,6 +1335,7 @@ $cartItems = $cartQuery->get();
                     ? asset($freeproduct->img1)
                     : null,
                 'type_free' => $role_type == 2 ? $typeDatafree?->type_name : null,
+                'free_qty' => $role_type == 2 ? $cartItem->vendortype?->free_qty : null,
                 'category_id' => $cartItem->category_id,
                 'selected_type' =>$selectedType,
                 'quantity' => $cartItem->quantity,
