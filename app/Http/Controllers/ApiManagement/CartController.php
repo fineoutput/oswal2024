@@ -1288,6 +1288,7 @@ $cartItems = $cartQuery->get();
                 
 
             $freeproduct = null;
+            $typeDatafree = null; // ✅ Initialize to avoid "undefined variable"
 
             if (!empty($product->free_product_id)) {
                 $today = now()->toDateString();
@@ -1302,22 +1303,22 @@ $cartItems = $cartQuery->get();
                     if ($freeproductCheck) {
                         $freeproduct = $freeproductCheck;
 
-                        $typeDatafree = Type::where('id', $product->free_type_id);
+                        $typeDatafreeQuery = Type::where('id', $product->free_type_id);
 
-                    if ($freeproduct) {
-                        $typeDatafree->where('product_id', $freeproduct->id);
-                    }
+                        if ($freeproduct) {
+                            $typeDatafreeQuery->where('product_id', $freeproduct->id);
+                        }
 
-                    // if ($stateId) {
-                    //     $typeDatafree->where('state_id', $stateId);
-                    // }
+                        // Uncomment and use these if needed
+                        // if ($stateId) {
+                        //     $typeDatafreeQuery->where('state_id', $stateId);
+                        // }
 
-                    // if ($cityId) {
-                    //     $typeDatafree->where('city_id', $cityId);
-                    // }
+                        // if ($cityId) {
+                        //     $typeDatafreeQuery->where('city_id', $cityId);
+                        // }
 
-                    $typeDatafree = $typeDatafree->first();
-
+                        $typeDatafree = $typeDatafreeQuery->first();
                     }
                 }
             }
