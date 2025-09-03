@@ -353,203 +353,152 @@ class EcommerceController extends Controller
             // print_r($typedata);
             // exit;
 
-                $userId = null;
-                $deviceId = null;
-        if ($request->header('Authorization')) {
-            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
-            $user = User::where('auth', $auth_token)->first();
-            if(!empty($user)){
-                $user_id =  $user->id;
-                $deviceId =  $request->device_id;
-                $roleType =  $user->role_type;
-                // Log::info("Cart user_id: " . $user_id);
-                // Log::info("Cart device_id: " . $user_device_id);
-                if($roleType == 1){
-                    $updatedRows = Cart::where('device_id', $request->device_id)
-                    ->update(['user_id' => $user_id]);
-                }
-              
 
-            }
-        }
-
-
-        $selected_type_id = '';
-$selected_type_name = '';
-$selected_type_selling_price = '';
-$selected_type_mrp = '';
-$selected_type_percent_off = '';
-$selected_min_qty = '';
-$selected_qty_desc = '';
-
-    $cartItem = \App\Models\Cart::where('product_id', $product->id)
-        ->whereNull('deleted_at')
-        ->where(function ($query) use ($userId, $deviceId) {
-            if ($userId) {
-                $query->where('user_id', $userId)->orWhere('device_id', $deviceId);
-            } else {
-                $query->where('device_id', $deviceId);
-            }
-        })
-        ->first();
-
-// ✅ If product is in cart, use that data for selected type
-if ($cartItem) {
-    if ($user && $user->role_type == 2) {
-        // Vendor (type_sub based)
-        $type_sub = \App\Models\Type_sub::where('type_id', $cartItem->type_id)
+            if ($user && $user->role_type == 2) {
+    // Vendor (role_type == 2)
+    $cartItem = Cart::where('user_id', $user->id)->whereNotNull('type_id')->first();
+    
+    if ($cartItem) {
+        // Fetch type data directly from Cart's type_id
+        $type_dd = Type_sub::where('type_id', $cartItem->type_id)
             ->where('start_range', '<=', $cartItem->quantity)
             ->where('end_range', '>=', $cartItem->quantity)
             ->first();
+        $vendorType = VendorType::where('id', $cartItem->type_id)->first();
 
-        $vendor_type = \App\Models\VendorType::find($cartItem->type_id);
-
-        $selected_type_id = $type_sub->type_id ?? '';
-        $selected_type_name = $lang !== "hi"
-            ? ($vendor_type->type_name ?? '')
-            : ($vendor_type->type_name_hi ?? '');
-        $selected_type_selling_price = $type_sub->selling_price ?? '';
-        $selected_type_mrp = $type_sub->mrp ?? '';
-        $selected_type_percent_off = ($type_sub && $type_sub->mrp > 0)
-            ? round((($type_sub->mrp - $type_sub->selling_price) * 100) / $type_sub->mrp)
-            : 0;
-        $selected_min_qty = $vendor_type->min_qty ?? 1;
-        $selected_qty_desc = $vendor_type->qty_desc ?? '';
+        if ($type_dd && $vendorType) {
+            $selected_type_id = $type_dd->type_id ?? '0';
+            $selected_type_name = $lang !== "hi" ? $vendorType->type_name ?? 'Def' : $vendorType->type_name_hi ?? 'Def';
+            $selected_type_selling_price = $type_dd->selling_price ?? 0;
+            $selected_type_mrp = $type_dd->mrp ?? 0;
+            $selected_type_percent_off = ($type_dd->mrp > 0) ? round((($type_dd->mrp - $type_dd->selling_price) * 100) / $type_dd->mrp) : 0;
+            $selected_min_qty = $vendorType->min_qty ?? 0;
+            $selected_qty_desc = $vendorType->qty_desc ?? '';
+        } else {
+            // Default values if no matching type is found
+            $selected_type_id = '0';
+            $selected_type_name = 'Def';
+            $selected_type_selling_price = 0;
+            $selected_type_mrp = 0;
+            $selected_type_percent_off = 0;
+            $selected_min_qty = 0;
+            $selected_qty_desc = '';
+        }
     } else {
-        // Regular user
-        $cart_type = \App\Models\Type::find($cartItem->type_id);
+        // No cart data, retain original default behavior
+        $selected_type_id = '0';
+        $selected_type_name = 'Def';
+        $selected_type_selling_price = 0;
+        $selected_type_mrp = 0;
+        $selected_type_percent_off = 0;
+        $selected_min_qty = 0;
+        $selected_qty_desc = '';
+    }
+} else {
+    // Regular user (role_type == 1 or other)
+    $cartItem = Cart::where('user_id', $user->id)->whereNotNull('type_id')->first();
 
-        $selected_type_id = $cart_type->id ?? '';
-        $selected_type_name = $lang !== "hi"
-            ? ($cart_type->type_name ?? '')
-            : ($cart_type->type_name_hi ?? '');
-        $selected_type_selling_price = $cart_type->selling_price ?? '';
-        $selected_type_mrp = $cart_type->del_mrp ?? '';
-        $selected_type_percent_off = ($cart_type && $cart_type->del_mrp > 0)
-            ? round((($cart_type->del_mrp - $cart_type->selling_price) * 100) / $cart_type->del_mrp)
-            : 0;
-        $selected_min_qty = $cart_type->min_qty ?? 1;
+    if ($cartItem) {
+        // Fetch type data directly from Cart's type_id
+        $typeDataSelected = Type::whereNull('deleted_at')->where('id', $cartItem->type_id)->first();
+
+        if ($typeDataSelected) {
+            $selected_type_id = $typeDataSelected->id ?? '0';
+            $selected_type_name = $lang !== "hi" ? $typeDataSelected->type_name ?? 'Def' : $typeDataSelected->type_name_hi ?? 'Def';
+            $selected_type_selling_price = $typeDataSelected->selling_price ?? 0;
+            $selected_type_mrp = $typeDataSelected->del_mrp ?? 0;
+            $selected_type_percent_off = ($typeDataSelected->del_mrp > 0) ? round((($typeDataSelected->del_mrp - $typeDataSelected->selling_price) * 100) / $typeDataSelected->del_mrp) : 0;
+            $selected_min_qty = $typeDataSelected->min_qty ?? 0;
+            $selected_qty_desc = '';
+        } else {
+            // Default values if no matching type is found
+            $selected_type_id = '0';
+            $selected_type_name = 'Def';
+            $selected_type_selling_price = 0;
+            $selected_type_mrp = 0;
+            $selected_type_percent_off = 0;
+            $selected_min_qty = 0;
+            $selected_qty_desc = '';
+        }
+    } else {
+        // No cart data, retain original default behavior
+        $selected_type_id = '0';
+        $selected_type_name = 'Def';
+        $selected_type_selling_price = 0;
+        $selected_type_mrp = 0;
+        $selected_type_percent_off = 0;
+        $selected_min_qty = 0;
         $selected_qty_desc = '';
     }
 }
+//             if (!empty($typedata) && isset($typedata[0]['type_name'])) {
+//                 // Data is available
+//                 $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->where('id',$typedata[0]['type_id'])->first();
+// // dd($typedata[0]['min_qty']);
+// // exit;
+// // return $vendorSelectedType;
 
-// 🟨 Fallback to typedata logic
-else if (!empty($typedata) && isset($typedata[0]['type_name'])) {
-    $vendorSelectedType = \App\Models\VendorType::where('type_name', $typedata[0]['type_name'])
-        ->where('id', $typedata[0]['type_id'])
-        ->first();
+//                     $vendorselect = '';
 
-    $vendorselect = '';
+//                     if ($user && $user->role_type == 2) {
+//                         $vendorselect = $vendorSelectedType->qty_desc ?? '';
+//                     }
 
-    if ($user && $user->role_type == 2) {
-        $vendorselect = $vendorSelectedType->qty_desc ?? '';
-    }
-
-    if ($vendorSelectedType != null) {
-        $selected_type_id = $typedata[0]['type_id'] ?? '';
-        $selected_type_name = $typedata[0]['type_name'] ?? '';
-        $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
-        $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
-        $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
-        $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-        $selected_qty_desc = $vendorselect ?? '';
-    } else {
-        if ($roleType == 1) {
-            $selected_type_id = $typedata[0]['type_id'] ?? '';
-            $selected_type_name = $typedata[0]['type_name'] ?? '';
-            $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
-            $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
-            $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
-            $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-            $selected_qty_desc = '';
-        } else {
-            $selected_type_id = '0';
-            $selected_type_name = 'Def1';
-            $selected_type_selling_price = 00;
-            $selected_type_mrp = 00;
-            $selected_type_percent_off = 00;
-            $selected_min_qty = 00;
-            $selected_qty_desc = '';
-        }
-    }
-}
-
-// 🟥 Final fallback
-else {
-    $selected_type_id = '0';
-    $selected_type_name = 'Def';
-    $selected_type_selling_price = 00;
-    $selected_type_mrp = 00;
-    $selected_type_percent_off = 00;
-    $selected_min_qty = 00;
-    $selected_qty_desc = '';
-}
-
-        //     if (!empty($typedata) && isset($typedata[0]['type_name'])) {
-        //         // Data is available
-        //         $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->where('id',$typedata[0]['type_id'])->first();
-
-        //             $vendorselect = '';
-
-        //             if ($user && $user->role_type == 2) {
-        //                 $vendorselect = $vendorSelectedType->qty_desc ?? '';
-        //             }
-
-        //         if ($vendorSelectedType != null) {
-        //             // Assign the values from typedata
-        //             $selected_type_id = $typedata[0]['type_id'] ?? '';
-        //             $selected_type_name = $typedata[0]['type_name'] ?? '';
-        //             $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
-        //             $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
-        //             $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
-        //             $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-        //             $selected_qty_desc = $vendorselect ?? '';
-        //         } else {
-        //             // No matching vendor type found, handle accordingly
-        //             if($roleType == 1){
-        //             $selected_type_id = $typedata[0]['type_id'] ?? '';
-        //             $selected_type_name = $typedata[0]['type_name'] ?? '';  // Default Name if no match found
-        //             $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
-        //             $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
-        //             $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
-        //             $selected_min_qty = $typedata[0]['min_qty'] ?? '';
-        //             $selected_qty_desc = '';
-        //             }
-        //             else{
-        //                 $selected_type_id = '0';
-        //                 $selected_type_name = 'Def1';  // Default Name if array is empty
-        //                 $selected_type_selling_price = 00;
-        //                 $selected_type_mrp = 00;
-        //                 $selected_type_percent_off = 00;
-        //                 $selected_min_qty = 00;
-        //                 $selected_qty_desc = '';
-        //             }
-        //             // return response()->json([
-        //             //     'message' => '"type  not found"',
-        //             //     'status' => 201,
-        //             //     'data' => [],
-        //             //     ]
-        //             // );
-        //         }
-        //     } else {
-        //         // Handle case where 'regular_types' is empty or doesn't exist
-        //         $selected_type_id = '0';
-        //         $selected_type_name = 'Def';  // Default Name if array is empty
-        //         $selected_type_selling_price = 00;
-        //         $selected_type_mrp = 00;
-        //         $selected_type_percent_off = 00;
-        //         $selected_min_qty = 00;
-        //         $selected_qty_desc = '';
-        //         // return response()->json([
-        //         //     'message' => '"type  not found"',
-        //         //     'status' => 201,
-        //         //     'data' => [],
-        //         //     ]
-        //         // );
-        //     // }
+//                 if ($vendorSelectedType != null) {
+//                     // Assign the values from typedata
+//                     $selected_type_id = $typedata[0]['type_id'] ?? '';
+//                     $selected_type_name = $typedata[0]['type_name'] ?? '';
+//                     $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+//                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+//                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
+//                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+//                     $selected_qty_desc = $vendorselect ?? '';
+//                 } else {
+//                     // No matching vendor type found, handle accordingly
+//                     if($roleType == 1){
+//                     $selected_type_id = $typedata[0]['type_id'] ?? '';
+//                     $selected_type_name = $typedata[0]['type_name'] ?? '';  // Default Name if no match found
+//                     $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+//                     $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+//                     $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
+//                     $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+//                     $selected_qty_desc = '';
+//                     }
+//                     else{
+//                         $selected_type_id = '0';
+//                         $selected_type_name = 'Def1';  // Default Name if array is empty
+//                         $selected_type_selling_price = 00;
+//                         $selected_type_mrp = 00;
+//                         $selected_type_percent_off = 00;
+//                         $selected_min_qty = 00;
+//                         $selected_qty_desc = '';
+//                     }
+//                     // return response()->json([
+//                     //     'message' => '"type  not found"',
+//                     //     'status' => 201,
+//                     //     'data' => [],
+//                     //     ]
+//                     // );
+//                 }
+//             } else {
+//                 // Handle case where 'regular_types' is empty or doesn't exist
+//                 $selected_type_id = '0';
+//                 $selected_type_name = 'Def';  // Default Name if array is empty
+//                 $selected_type_selling_price = 00;
+//                 $selected_type_mrp = 00;
+//                 $selected_type_percent_off = 00;
+//                 $selected_min_qty = 00;
+//                 $selected_qty_desc = '';
+//                 // return response()->json([
+//                 //     'message' => '"type  not found"',
+//                 //     'status' => 201,
+//                 //     'data' => [],
+//                 //     ]
+//                 // );
+//             // }
 
 
-        // }
+//         }
 
         if(!empty($user)){
         if ($user->role_type == 2) {
