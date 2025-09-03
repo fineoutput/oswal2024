@@ -471,7 +471,7 @@
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
    $(document).ready(function () {
-    let selectedTypeId = @json(old('free_type_id', $product->free_type_id ?? ''));
+    let selectedTypeId = @json(old('free_type_id', $type->free_type_id ?? ''));
 
     function loadTypes(productId, selectedType = null) {
         if (productId) {
