@@ -354,13 +354,13 @@ class EcommerceController extends Controller
             // exit;
 
                 $userId = null;
-                $user_device_id = null;
+                $deviceId = null;
         if ($request->header('Authorization')) {
             $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
             $user = User::where('auth', $auth_token)->first();
             if(!empty($user)){
                 $user_id =  $user->id;
-                $user_device_id =  $request->device_id;
+                $deviceId =  $request->device_id;
                 $roleType =  $user->role_type;
                 // Log::info("Cart user_id: " . $user_id);
                 // Log::info("Cart device_id: " . $user_device_id);
@@ -382,12 +382,16 @@ $selected_type_percent_off = '';
 $selected_min_qty = '';
 $selected_qty_desc = '';
 
-$cartItem = \App\Models\Cart::where('product_id', $product->id)
-    ->where(function ($q) use ($userId, $user_device_id) {
-        $q->where('user_id', $userId)->orWhere('device_id', $user_device_id);
-    })
-    ->whereNull('deleted_at')
-    ->first();
+    $cartItem = \App\Models\Cart::where('product_id', $product->id)
+        ->whereNull('deleted_at')
+        ->where(function ($query) use ($userId, $deviceId) {
+            if ($userId) {
+                $query->where('user_id', $userId)->orWhere('device_id', $deviceId);
+            } else {
+                $query->where('device_id', $deviceId);
+            }
+        })
+        ->first();
 
 // ✅ If product is in cart, use that data for selected type
 if ($cartItem) {
