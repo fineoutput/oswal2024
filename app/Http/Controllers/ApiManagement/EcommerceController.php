@@ -573,7 +573,7 @@ if (isset($cartItem)) {
         ]
     ]);
 }
-
+}
 
 
 
