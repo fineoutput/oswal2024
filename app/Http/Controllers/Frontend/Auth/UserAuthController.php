@@ -439,6 +439,12 @@ if ($storeuser) {
     }
 
     $user = User::where('contact', $request->phone_no)->first();
+    log::info('User found: ' . json_encode($user));
+    if ($user) {
+        if ($user->is_active == 0) {
+            return response()->json(['success' => false, 'message' => 'Your account is not active. Please contact support.']);
+        }
+    }
 
     if ($user) {
         if ($user->role_type == 2) {
