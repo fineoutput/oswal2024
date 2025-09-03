@@ -355,7 +355,7 @@ class EcommerceController extends Controller
 
 
 
-            $selected_type_id = '';
+          $selected_type_id = '';
 $selected_type_name = '';
 $selected_type_selling_price = '';
 $selected_type_mrp = '';
@@ -363,10 +363,10 @@ $selected_type_percent_off = '';
 $selected_min_qty = '';
 $selected_qty_desc = '';
 
-// ✅ If product is in cart, use cart-selected type
+// ✅ If product is in cart, use cart-selected type logic
 if (isset($cartItem)) {
     if ($user && $user->role_type == 2) {
-        // Vendor role (type_sub range based)
+        // Vendor (type_sub)
         $type_sub = \App\Models\Type_sub::where('type_id', $cartItem->type_id)
             ->where('start_range', '<=', $cartItem->quantity)
             ->where('end_range', '>=', $cartItem->quantity)
@@ -385,9 +385,8 @@ if (isset($cartItem)) {
             : 0;
         $selected_min_qty = $vendor_type->min_qty ?? 1;
         $selected_qty_desc = $vendor_type->qty_desc ?? '';
-
     } else {
-        // Regular user (type-based)
+        // Regular user (Type)
         $cart_type = \App\Models\Type::find($cartItem->type_id);
 
         $selected_type_id = $cart_type->id ?? '';
@@ -404,7 +403,7 @@ if (isset($cartItem)) {
     }
 }
 
-// 🟨 Fallback: typedata logic if not found in cart
+// 🟨 Fallback to typedata if cart not found
 else if (!empty($typedata) && isset($typedata[0]['type_name'])) {
     $vendorSelectedType = \App\Models\VendorType::where('type_name', $typedata[0]['type_name'])
         ->where('id', $typedata[0]['type_id'])
@@ -445,7 +444,7 @@ else if (!empty($typedata) && isset($typedata[0]['type_name'])) {
     }
 }
 
-// 🟥 Final fallback: typedata not available at all
+// 🟥 Final fallback: typedata not available
 else {
     $selected_type_id = '0';
     $selected_type_name = 'Def';
@@ -455,7 +454,6 @@ else {
     $selected_min_qty = 00;
     $selected_qty_desc = '';
 }
-
 
         //     if (!empty($typedata) && isset($typedata[0]['type_name'])) {
         //         // Data is available
