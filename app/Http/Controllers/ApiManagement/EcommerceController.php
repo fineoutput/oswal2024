@@ -353,9 +353,28 @@ class EcommerceController extends Controller
             // print_r($typedata);
             // exit;
 
+                $userId = null;
+                $user_device_id = null;
+        if ($request->header('Authorization')) {
+            $auth_token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $user = User::where('auth', $auth_token)->first();
+            if(!empty($user)){
+                $user_id =  $user->id;
+                $user_device_id =  $request->device_id;
+                $roleType =  $user->role_type;
+                // Log::info("Cart user_id: " . $user_id);
+                // Log::info("Cart device_id: " . $user_device_id);
+                if($roleType == 1){
+                    $updatedRows = Cart::where('device_id', $request->device_id)
+                    ->update(['user_id' => $user_id]);
+                }
+              
+
+            }
+        }
 
 
-          $selected_type_id = '';
+        $selected_type_id = '';
 $selected_type_name = '';
 $selected_type_selling_price = '';
 $selected_type_mrp = '';
@@ -363,10 +382,17 @@ $selected_type_percent_off = '';
 $selected_min_qty = '';
 $selected_qty_desc = '';
 
-// ✅ If product is in cart, use cart-selected type logic
-if (isset($cartItem)) {
+$cartItem = \App\Models\Cart::where('product_id', $product->id)
+    ->where(function ($q) use ($userId, $user_device_id) {
+        $q->where('user_id', $userId)->orWhere('device_id', $user_device_id);
+    })
+    ->whereNull('deleted_at')
+    ->first();
+
+// ✅ If product is in cart, use that data for selected type
+if ($cartItem) {
     if ($user && $user->role_type == 2) {
-        // Vendor (type_sub)
+        // Vendor (type_sub based)
         $type_sub = \App\Models\Type_sub::where('type_id', $cartItem->type_id)
             ->where('start_range', '<=', $cartItem->quantity)
             ->where('end_range', '>=', $cartItem->quantity)
@@ -386,7 +412,7 @@ if (isset($cartItem)) {
         $selected_min_qty = $vendor_type->min_qty ?? 1;
         $selected_qty_desc = $vendor_type->qty_desc ?? '';
     } else {
-        // Regular user (Type)
+        // Regular user
         $cart_type = \App\Models\Type::find($cartItem->type_id);
 
         $selected_type_id = $cart_type->id ?? '';
@@ -403,7 +429,7 @@ if (isset($cartItem)) {
     }
 }
 
-// 🟨 Fallback to typedata if cart not found
+// 🟨 Fallback to typedata logic
 else if (!empty($typedata) && isset($typedata[0]['type_name'])) {
     $vendorSelectedType = \App\Models\VendorType::where('type_name', $typedata[0]['type_name'])
         ->where('id', $typedata[0]['type_id'])
@@ -444,7 +470,7 @@ else if (!empty($typedata) && isset($typedata[0]['type_name'])) {
     }
 }
 
-// 🟥 Final fallback: typedata not available
+// 🟥 Final fallback
 else {
     $selected_type_id = '0';
     $selected_type_name = 'Def';
