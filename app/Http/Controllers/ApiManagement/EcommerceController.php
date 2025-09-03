@@ -352,14 +352,10 @@ class EcommerceController extends Controller
         // } else {
             // print_r($typedata);
             // exit;
-            if (!empty($typedata) && isset($typedata[0]['type_name'])) {
-                // Data is available
-                $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->where('id',$typedata[0]['type_id'])->first();
-// dd($typedata[0]['min_qty']);
-// exit;
-// return $vendorSelectedType;
 
-$selected_type_id = '';
+
+
+            $selected_type_id = '';
 $selected_type_name = '';
 $selected_type_selling_price = '';
 $selected_type_mrp = '';
@@ -367,10 +363,10 @@ $selected_type_percent_off = '';
 $selected_min_qty = '';
 $selected_qty_desc = '';
 
-// If cartItem is set (i.e., product is added to cart), show selected type from cart
+// ✅ If product is in cart, use cart-selected type
 if (isset($cartItem)) {
     if ($user && $user->role_type == 2) {
-        // Vendor logic (role_type == 2)
+        // Vendor role (type_sub range based)
         $type_sub = \App\Models\Type_sub::where('type_id', $cartItem->type_id)
             ->where('start_range', '<=', $cartItem->quantity)
             ->where('end_range', '>=', $cartItem->quantity)
@@ -391,7 +387,7 @@ if (isset($cartItem)) {
         $selected_qty_desc = $vendor_type->qty_desc ?? '';
 
     } else {
-        // Normal user logic
+        // Regular user (type-based)
         $cart_type = \App\Models\Type::find($cartItem->type_id);
 
         $selected_type_id = $cart_type->id ?? '';
@@ -406,9 +402,14 @@ if (isset($cartItem)) {
         $selected_min_qty = $cart_type->min_qty ?? 1;
         $selected_qty_desc = '';
     }
+}
 
-} else {
-    // Fallback logic if product is not in cart (keep your original logic)
+// 🟨 Fallback: typedata logic if not found in cart
+else if (!empty($typedata) && isset($typedata[0]['type_name'])) {
+    $vendorSelectedType = \App\Models\VendorType::where('type_name', $typedata[0]['type_name'])
+        ->where('id', $typedata[0]['type_id'])
+        ->first();
+
     $vendorselect = '';
 
     if ($user && $user->role_type == 2) {
@@ -416,7 +417,6 @@ if (isset($cartItem)) {
     }
 
     if ($vendorSelectedType != null) {
-        // Assign from typedata
         $selected_type_id = $typedata[0]['type_id'] ?? '';
         $selected_type_name = $typedata[0]['type_name'] ?? '';
         $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
@@ -436,14 +436,30 @@ if (isset($cartItem)) {
         } else {
             $selected_type_id = '0';
             $selected_type_name = 'Def1';
-            $selected_type_selling_price = 0;
-            $selected_type_mrp = 0;
-            $selected_type_percent_off = 0;
-            $selected_min_qty = 0;
+            $selected_type_selling_price = 00;
+            $selected_type_mrp = 00;
+            $selected_type_percent_off = 00;
+            $selected_min_qty = 00;
             $selected_qty_desc = '';
         }
     }
 }
+
+// 🟥 Final fallback: typedata not available at all
+else {
+    $selected_type_id = '0';
+    $selected_type_name = 'Def';
+    $selected_type_selling_price = 00;
+    $selected_type_mrp = 00;
+    $selected_type_percent_off = 00;
+    $selected_min_qty = 00;
+    $selected_qty_desc = '';
+}
+
+
+        //     if (!empty($typedata) && isset($typedata[0]['type_name'])) {
+        //         // Data is available
+        //         $vendorSelectedType = vendorType::where('type_name', $typedata[0]['type_name'])->where('id',$typedata[0]['type_id'])->first();
 
         //             $vendorselect = '';
 
@@ -573,7 +589,7 @@ if (isset($cartItem)) {
         ]
     ]);
 }
-}
+
 
 
 
