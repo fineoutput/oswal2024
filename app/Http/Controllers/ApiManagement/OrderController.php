@@ -1192,11 +1192,11 @@ class OrderController extends Controller
             //             ->where('is_active', 1)
             //             ->get();
             //     }
-             $delivery_users = collect(); // ✅ Prevents "undefined variable" error
+             $delivery_users = collect();
 
                 $pincode = $order->address->zipcode;
 
-            $delivery_users = collect(); // Initialize to avoid undefined variable error
+            $delivery_users = collect(); 
             $pincode = $order->address->zipcode;
 
             if ($order->user->role_type == 2) {
@@ -1210,7 +1210,6 @@ class OrderController extends Controller
                     Log::info('Store found: ' . json_encode($store));
 
                     if ($store) {
-                        // ✅ First try: Filter by store_id (shop_code match)
                         $delivery_users = DeliveryBoy::where('role_type', 2)
                             ->where('store_id', $store->id)
                             ->where('is_active', 1)
@@ -1219,7 +1218,6 @@ class OrderController extends Controller
                 }
 
                 if ($delivery_users->isEmpty()) {
-                    // ✅ Fallback: Filter by pincode if no users from store
                     $delivery_users = DeliveryBoy::where('role_type', 2)
                         ->where('pincode', 'LIKE', "%$pincode%")
                         ->where('is_active', 1)
@@ -1227,8 +1225,7 @@ class OrderController extends Controller
                 }
 
             } else {
-                // ✅ For non role_type == 2 users
-                $delivery_users = DeliveryBoy::where('pincode', 'LIKE', "%$pincode%")
+                $delivery_users = DeliveryBoy::where('role_type', 1)->where('pincode', 'LIKE', "%$pincode%")
                     ->where('is_active', 1)
                     ->get();
             }
