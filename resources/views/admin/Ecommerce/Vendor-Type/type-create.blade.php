@@ -470,49 +470,47 @@
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        let selectedTypeId = @json(old('free_type_id', $product->free_type_id ?? ''));
+   $(document).ready(function () {
+    let selectedTypeId = @json(old('free_type_id', $product->free_type_id ?? ''));
 
-        function loadTypes(productId, selectedType = null) {
-            if (productId) {
-                $('#type_id').html('<option>Loading...</option>');
-                $.ajax({
-                    url: "{{ url('admin/ecom/vendor/type/get-types-by-product') }}/" + productId,
-                    method: 'GET',
-                    success: function (data) {
-                        let options = '<option value="">Select Type</option>';
-                        if (data.length > 0) {
-                            data.forEach(function (type) {
-                                options += `<option value="${type.id}" ${selectedType == type.id ? 'selected' : ''}>${type.type_name}</option>`;
-                            });
-                        } else {
-                            options = '<option value="">No types found</option>';
-                        }
-                        $('#type_id').html(options);
-                    },
-                    error: function () {
-                        $('#type_id').html('<option value="">Error loading types</option>');
+    function loadTypes(productId, selectedType = null) {
+        if (productId) {
+            $('#type_id').html('<option>Loading...</option>');
+            $.ajax({
+                url: "{{ url('admin/ecom/vendor/type/get-types-by-product') }}/" + productId,
+                method: 'GET',
+                success: function (data) {
+                    let options = '<option value="">Select Type</option>';
+                    if (data.length > 0) {
+                        data.forEach(function (type) {
+                            options += `<option value="${type.id}" ${selectedType == type.id ? 'selected' : ''}>${type.type_name}</option>`;
+                        });
+                    } else {
+                        options = '<option value="">No types found</option>';
                     }
-                });
-            } else {
-                $('#type_id').html('<option value="">Select Type</option>');
-            }
-        }
-
-        // On page load, if product is selected, load types and select preselected type
-        let selectedProductId = $('#free_product_id').val();
-        if (selectedProductId) {
-            loadTypes(selectedProductId, selectedTypeId);
+                    $('#type_id').html(options);
+                },
+                error: function () {
+                    $('#type_id').html('<option value="">Error loading types</option>');
+                }
+            });
         } else {
             $('#type_id').html('<option value="">Select Type</option>');
         }
+    }
 
-        // On product change, load types with no preselection (user has to select new type)
-        $('#free_product_id').on('change', function () {
-            let productId = $(this).val();
-            loadTypes(productId);
-        });
+    let selectedProductId = $('#free_product_id').val();
+    if (selectedProductId) {
+        loadTypes(selectedProductId, selectedTypeId);
+    } else {
+        $('#type_id').html('<option value="">Select Type</option>');
+    }
+
+    $('#free_product_id').on('change', function () {
+        let productId = $(this).val();
+        loadTypes(productId);
     });
+});
 </script>
 
 @endsection
