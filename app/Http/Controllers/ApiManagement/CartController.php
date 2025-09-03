@@ -1000,18 +1000,23 @@ $cartItems = $cartQuery->get();
 
         if($role_type == 2){
      
-            $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
-                $query->where('is_active', 1)
-                    ->when($stateId, function ($query, $stateId) {
-                        return $query->where('state_id', $stateId);
-                    })
-                    ->when($cityId, function ($query, $cityId) {
-                        return $query->where('city_id', $cityId);
-                    // })
-                    // ->when(is_null($stateId) || is_null($cityId), function ($query) {
-                    //     return $query->groupBy('type_name');
-                    })->with(['type_sub']);
-            }])
+            // $cartData = Cart::with(['product.vendortype' => function ($query) use ($stateId, $cityId) {
+            //     $query->where('is_active', 1)
+            //         ->when($stateId, function ($query, $stateId) {
+            //             return $query->where('state_id', $stateId);
+            //         })
+            //         ->when($cityId, function ($query, $cityId) {
+            //             return $query->where('city_id', $cityId);
+            //         // })
+            //         // ->when(is_null($stateId) || is_null($cityId), function ($query) {
+            //         //     return $query->groupBy('type_name');
+            //         })->with(['type_sub']);
+            // }])
+
+             $cartData = Cart::with(['product.vendortype' => function ($query) {
+        $query->where('is_active', 1)
+              ->with(['type_sub']);
+    }])
     
             ->where(function ($query) use ($userId, $deviceId) {
                 $query->Where('device_id', $deviceId)->orwhere('user_id', $userId);
