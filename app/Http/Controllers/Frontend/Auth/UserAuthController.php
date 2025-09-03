@@ -306,22 +306,18 @@ class UserAuthController extends Controller
         $referee_tr_id  = session()->get('referee_tr_id') ?? null;
 
         $otpRecord = Otp::find($userOtpId);
-       // First, get the store user based on the OTP provided.
-$storeuser = Otp::orderBy('id', 'DESC')->where('otp', $request->otp)->first();
+        $storeuser = Otp::orderBy('id', 'DESC')->where('otp', $request->otp)->first();
 
-// If the storeuser is found, proceed with fetching the user data.
 if ($storeuser) {
-    // Try to find the temporary user associated with this OTP.
-    $usertemp = UserTemp::orderBy('id', 'DESC')->where('name', $storeuser->name)->first();
+    $usertemp = UserTemp::orderBy('id', 'DESC')->where('contact', $storeuser->contact_no)->first();
+    log::info('UserTemp found: ' . json_encode($usertemp));
     
-    // If the temporary user is not found, check the main User table for the user.
-    if (empty($usertemp->name)) {
-        $usertempuser = User::orderBy('id', 'DESC')->where('first_name', $storeuser->name)->first();
+    if (empty($usertemp->contact_no)) {
+        $usertempuser = User::orderBy('id', 'DESC')->where('contact', $storeuser->contact_no)->first();
+        log::info('User found: ' . json_encode($usertempuser));
     }
     
-    // Check if user exists in the UserTemp table.
     if (!empty($usertemp)) {
-        // If a temporary user is found, prepare the data.
         $date = [
             'first_name'      => $usertemp->name,
             'first_name_hi'   => lang_change($usertemp->name),
@@ -337,7 +333,6 @@ if ($storeuser) {
             'ip'              => $request->ip(),
         ];
     } else {
-        // If no temporary user is found, use the main User data.
         $date = [
             'first_name'      => $usertempuser->first_name,
             'first_name_hi'   => lang_change($usertempuser->first_name),
@@ -354,11 +349,10 @@ if ($storeuser) {
         ];
     }
     
-    // Check if the contact already exists in the User table.
     $existingUser = User::orderBy('id','DESC')->where('contact', $date['contact'])->first();
+    log::info('Existing User found: ' . json_encode($existingUser));
 
     if ($existingUser) {
-        // If the contact exists, use the existing user.
         $user = $existingUser;
     } else {
         // If the contact does not exist, create a new user.
@@ -382,6 +376,7 @@ if ($storeuser) {
             $request->session()->regenerate();
 
             Auth::login($user); 
+            log::info('Login User: ' . json_encode($user));
 
             session()->forget(['user_otp_id', 'user_id', 'user_contact']);
 
