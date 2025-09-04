@@ -725,7 +725,90 @@ private function fetchProductsByType($type, $request, $user, $role_type, $device
 
         $typedata = $this->fetchProductTypes($product->id, $role_type, $state_id, $city_id, $lang, $type_id);
 
-        if (!empty($typedata)) {
+
+        
+          if ($user && $user->role_type) {
+    // Authenticated user available
+    if ($user->role_type == 2) {
+        // Vendor (role_type == 2)
+        $cartItem = Cart::where('user_id', $user->id)->whereNotNull('type_id')->first();
+
+        if ($cartItem) {
+            // Fetch type data directly from Cart's type_id
+            $type_dd = Type_sub::where('type_id', $cartItem->type_id)
+                ->where('start_range', '<=', $cartItem->quantity)
+                ->where('end_range', '>=', $cartItem->quantity)
+                ->first();
+            $vendorType = VendorType::where('id', $cartItem->type_id)->first();
+
+            if ($type_dd && $vendorType) {
+                $selected_type_id = $type_dd->type_id ?? '0';
+                $selected_type_name = $lang !== "hi" ? $vendorType->type_name ?? 'Def' : $vendorType->type_name_hi ?? 'Def';
+                $selected_type_selling_price = $type_dd->selling_price ?? 0;
+                $selected_type_mrp = $type_dd->mrp ?? 0;
+                $selected_type_percent_off = ($type_dd->mrp > 0) ? round((($type_dd->mrp - $type_dd->selling_price) * 100) / $type_dd->mrp) : 0;
+                $selected_min_qty = $vendorType->min_qty ?? 0;
+                $selected_qty_desc = $vendorType->qty_desc ?? '';
+            } else {
+                // Default values if no matching type is found
+                $selected_type_id = '0';
+                $selected_type_name = 'Def';
+                $selected_type_selling_price = 0;
+                $selected_type_mrp = 0;
+                $selected_type_percent_off = 0;
+                $selected_min_qty = 0;
+                $selected_qty_desc = '';
+            }
+        } else {
+            // No cart data, retain default behavior
+            $selected_type_id = '0';
+            $selected_type_name = 'Def';
+            $selected_type_selling_price = 0;
+            $selected_type_mrp = 0;
+            $selected_type_percent_off = 0;
+            $selected_min_qty = 0;
+            $selected_qty_desc = '';
+        }
+    } else {
+        // Regular user (role_type != 2)
+        $cartItem = Cart::where('user_id', $user->id)->whereNotNull('type_id')->first();
+
+        if ($cartItem) {
+            // Fetch type data directly from Cart's type_id
+            $typeDataSelected = Type::whereNull('deleted_at')->where('id', $cartItem->type_id)->first();
+
+            if ($typeDataSelected) {
+                $selected_type_id = $typeDataSelected->id ?? '0';
+                $selected_type_name = $lang !== "hi" ? $typeDataSelected->type_name ?? 'Def' : $typeDataSelected->type_name_hi ?? 'Def';
+                $selected_type_selling_price = $typeDataSelected->selling_price ?? 0;
+                $selected_type_mrp = $typeDataSelected->del_mrp ?? 0;
+                $selected_type_percent_off = ($typeDataSelected->del_mrp > 0) ? round((($typeDataSelected->del_mrp - $typeDataSelected->selling_price) * 100) / $typeDataSelected->del_mrp) : 0;
+                $selected_min_qty = $typeDataSelected->min_qty ?? 0;
+                $selected_qty_desc = '';
+            } else {
+                // Default values if no matching type is found
+                $selected_type_id = '0';
+                $selected_type_name = 'Def';
+                $selected_type_selling_price = 0;
+                $selected_type_mrp = 0;
+                $selected_type_percent_off = 0;
+                $selected_min_qty = 0;
+                $selected_qty_desc = '';
+            }
+        } else {
+            // No cart data, retain default behavior
+            $selected_type_id = '0';
+            $selected_type_name = 'Def';
+            $selected_type_selling_price = 0;
+            $selected_type_mrp = 0;
+            $selected_type_percent_off = 0;
+            $selected_min_qty = 0;
+            $selected_qty_desc = '';
+        }
+    }
+} else {
+    // No authenticated user, revert to original typedata processing
+     if (!empty($typedata)) {
             $selected = $typedata[0];
             $vendorSelectedType = vendorType::where('type_name', $selected['type_name'])->where('id', $selected['type_id'])->first();
 
@@ -745,6 +828,9 @@ private function fetchProductsByType($type, $request, $user, $role_type, $device
             $selected_min_qty = 0;
             $selected_qty_desc = '';
         }
+}
+
+       
 
         $vendor_desc = ($user && $user->role_type == 2) ? $product->vendor_desc : null;
         $vendor_offer = ($user && $user->role_type == 2 && $product->vendor_offer == 1);
