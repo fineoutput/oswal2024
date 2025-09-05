@@ -388,13 +388,44 @@ class EcommerceController extends Controller
             }
         } else {
             // No cart data, retain default behavior
-            $selected_type_id = '0';
-            $selected_type_name = 'Def';
-            $selected_type_selling_price = 0;
-            $selected_type_mrp = 0;
-            $selected_type_percent_off = 0;
-            $selected_min_qty = 0;
-            $selected_qty_desc = '';
+          if (!empty($typedata) && isset($typedata[0]['type_name'])) {
+        // Data is available
+        $vendorSelectedType = VendorType::where('type_name', $typedata[0]['type_name'])->where('id', $typedata[0]['type_id'])->first();
+
+        $vendorselect = '';
+        if ($user && $user->role_type == 2) {
+            $vendorselect = $vendorSelectedType->qty_desc ?? '';
+        }
+
+        if ($vendorSelectedType != null) {
+            // Assign the values from typedata
+            $selected_type_id = $typedata[0]['type_id'] ?? '';
+            $selected_type_name = $typedata[0]['type_name'] ?? '';
+            $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+            $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+            $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
+            $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+            $selected_qty_desc = $vendorselect ?? '';
+        } else {
+            // No matching vendor type found, handle accordingly
+            if ($roleType == 1) {
+                $selected_type_id = $typedata[0]['type_id'] ?? '';
+                $selected_type_name = $typedata[0]['type_name'] ?? '';
+                $selected_type_selling_price = $typedata[0]['range'][0]['selling_price'] ?? '';
+                $selected_type_mrp = $typedata[0]['range'][0]['type_mrp'] ?? '';
+                $selected_type_percent_off = $typedata[0]['range'][0]['percent_off'] ?? '';
+                $selected_min_qty = $typedata[0]['min_qty'] ?? '';
+                $selected_qty_desc = '';
+            } else {
+                $selected_type_id = '0';
+                $selected_type_name = 'Def1';
+                $selected_type_selling_price = 0;
+                $selected_type_mrp = 0;
+                $selected_type_percent_off = 0;
+                $selected_min_qty = 0;
+                $selected_qty_desc = '';
+            }
+        
         }
     } else {
         // Regular user (role_type != 2)
