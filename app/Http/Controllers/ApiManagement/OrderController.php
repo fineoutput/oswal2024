@@ -1199,6 +1199,40 @@ class OrderController extends Controller
             $delivery_users = collect(); 
             $pincode = $order->address->zipcode;
 
+            // if ($order->user->role_type == 2) {
+
+            //     if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
+
+            //         Log::info('Shop code: ' . $order->user->vendor->shop_code);
+
+            //         $store = OswalStores::where('shop_code', 'LIKE', "%{$order->user->vendor->shop_code}%")->first();
+
+            //         Log::info('Store found: ' . json_encode($store));
+
+            //         if ($store) {
+            //             $delivery_users = DeliveryBoy::where('role_type', 2)
+            //                 ->where('store_id', $store->id)
+            //                 ->where('is_active', 1)
+            //                 ->get();
+            //         }
+            //     }
+
+            //     if ($delivery_users->isEmpty()) {
+            //         $delivery_users = DeliveryBoy::where('role_type', 2)
+            //             ->where('pincode', 'LIKE', "%$pincode%")
+            //             ->where('is_active', 1)
+            //             ->get();
+            //     }
+
+            // } else {
+            //     $delivery_users = DeliveryBoy::where('role_type', 1)->where('pincode', 'LIKE', "%$pincode%")
+            //         ->where('is_active', 1)
+            //         ->get();
+            // }
+
+
+            $delivery_users = collect();
+
             if ($order->user->role_type == 2) {
 
                 if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
@@ -1217,6 +1251,7 @@ class OrderController extends Controller
                     }
                 }
 
+                // Fallback to pincode-based delivery boys if no delivery users found via shop_code
                 if ($delivery_users->isEmpty()) {
                     $delivery_users = DeliveryBoy::where('role_type', 2)
                         ->where('pincode', 'LIKE', "%$pincode%")
@@ -1225,7 +1260,9 @@ class OrderController extends Controller
                 }
 
             } else {
-                $delivery_users = DeliveryBoy::where('role_type', 1)->where('pincode', 'LIKE', "%$pincode%")
+                // For non-vendor users (e.g., admin or other roles)
+                $delivery_users = DeliveryBoy::where('role_type', 1)
+                    ->where('pincode', 'LIKE', "%$pincode%")
                     ->where('is_active', 1)
                     ->get();
             }
