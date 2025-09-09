@@ -1172,9 +1172,7 @@ class OrderController extends Controller
     $pincode = $order->address->zipcode;
     $delivery_users = collect(); // Initialize as empty collection
 
-    // ✅ Role-type based assignment
     if ($order->user->role_type == 2) {
-        // 🟢 Vendor logic
         if (!empty($order->user->vendor) && !empty($order->user->vendor->shop_code)) {
             $shopCode = $order->user->vendor->shop_code;
 
@@ -1194,7 +1192,6 @@ class OrderController extends Controller
             Log::warning("Vendor or shop_code missing for user ID: {$order->user->id}");
         }
 
-        // 🔁 Fallback to pincode-based if no delivery boys found for store
         if ($delivery_users->isEmpty()) {
             $delivery_users = DeliveryBoy::where('role_type', 2)
                 ->where('pincode', $pincode)
@@ -1203,7 +1200,6 @@ class OrderController extends Controller
         }
 
     } elseif ($order->user->role_type == 1) {
-        // 🔵 Admin logic
         $delivery_users = DeliveryBoy::where('role_type', 1)
             ->where('pincode', $pincode)
             ->where('is_active', 1)
@@ -1212,19 +1208,15 @@ class OrderController extends Controller
         Log::warning("Unexpected role_type: {$order->user->role_type} for user ID: {$order->user->id}");
     }
 
-    // ❌ No delivery users found
     if ($delivery_users->isEmpty()) {
         Session::flash('emessage', 'No delivery users available for this pincode');
         return redirect()->back();
     }
 
-    // ✅ Pick first delivery boy
     $delivery_user_id = $delivery_users->first()->id;
 
-    // 🔄 Delete any previous transfer for this order
     TransferOrder::where('order_id', $order_id)->delete();
 
-    // 📥 Create new transfer
     $data_insert = [
         'order_id' => $order_id,
         'delivery_user_id' => $delivery_user_id,
@@ -1236,7 +1228,6 @@ class OrderController extends Controller
 
     $last_id = TransferOrder::create($data_insert)->id;
 
-    // 🔔 Push notification
     $deliveryfcm = DeliveryBoy::find($delivery_user_id);
     $deliverytype = Order::find($order_id);
 
@@ -1260,10 +1251,8 @@ class OrderController extends Controller
         }
     }
 
-    // 🔄 Update order delivery status
     $order->update(['delivery_status' => 1]);
 
-    // ✅ Success response
     if ($last_id != 0) {
         Session::flash('smessage', 'Order Transferred successfully');
     } else {
