@@ -1154,222 +1154,343 @@ class OrderController extends Controller
     }
 
 
+
     public function transferOrderProcess($order_id_encoded)
-    {
-        // dd($order_id_encoded);
-        // if (Auth::check() && Auth::user()->is_admin) {
+{
+    $order_id = $order_id_encoded;
+    $ip = request()->ip();
+    $cur_date = now();
+    $addedby = Auth::id();
 
-            $order_id = $order_id_encoded;
+    $order = Order::with('address', 'user')->find($order_id);
 
-            $ip = request()->ip();
+    if (!$order) {
+        Session::flash('emessage', 'Order not found');
+        return redirect()->back();
+    }
 
-            $cur_date = now();
+    $pincode = $order->address->zipcode;
+    $delivery_users = collect(); // Initialize as empty collection
 
-            $addedby = Auth::id();
+    // ✅ Role-type based assignment
+    if ($order->user->role_type == 2) {
+        // 🟢 Vendor logic
+        if (!empty($order->user->vendor) && !empty($order->user->vendor->shop_code)) {
+            $shopCode = $order->user->vendor->shop_code;
 
-            $order = Order::with('address','user')->find($order_id);
+            // Match exact shop_code
+            $store = OswalStores::where('shop_code', $shopCode)->first();
 
-            if (!$order) {
-               Session::flash('emessage', 'Order not found');
-                return redirect()->back();
-            }
-
-            $pincode = $order->address->zipcode;
-
-            // if ($order->user->role_type == 2) {
-
-            //   if ($order->user->vendor->shop_code) {
-            //     $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
-            //         $delivery_users = DeliveryBoy::where('role_type', 2)
-            //             ->where('pincode', 'LIKE', "%$pincode%")
-            //             ->where('store_id', $store->id)
-            //             ->where('is_active', 1)
-            //             ->get();
-            //     } else {
-            //         // Agar shop_code nahi hai to sirf role_type, pincode aur active check karo
-            //         $delivery_users = DeliveryBoy::where('role_type', 2)
-            //             ->where('pincode', 'LIKE', "%$pincode%")
-            //             ->where('is_active', 1)
-            //             ->get();
-            //     }
-            //  $delivery_users = collect();
-
-            //     $pincode = $order->address->zipcode;
-
-            // $delivery_users = collect(); 
-
-            // if ($order->user->role_type == 2) {
-
-            //     if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
-
-            //         Log::info('Shop code: ' . $order->user->vendor->shop_code);
-
-            //         $store = OswalStores::where('shop_code', 'LIKE', "%{$order->user->vendor->shop_code}%")->first();
-
-            //         Log::info('Store found: ' . json_encode($store));
-
-            //         if ($store) {
-            //             $delivery_users = DeliveryBoy::where('role_type', 2)
-            //                 ->where('store_id', $store->id)
-            //                 ->where('is_active', 1)
-            //                 ->get();
-            //         }
-            //     }
-
-            //     if ($delivery_users->isEmpty()) {
-            //         $delivery_users = DeliveryBoy::where('role_type', 2)
-            //             ->where('pincode', 'LIKE', "%$pincode%")
-            //             ->where('is_active', 1)
-            //             ->get();
-            //     }
-
-            // } else {
-            //     $delivery_users = DeliveryBoy::where('role_type', 1)->where('pincode', 'LIKE', "%$pincode%")
-            //         ->where('is_active', 1)
-            //         ->get();
-            // }
-
-
-            $delivery_users = collect();
-            $pincode = $order->address->zipcode;
-
-
-            if ($order->user->role_type == 2) {
-
-                // 🟢 Vendor logic: role_type == 2
-                if (!empty($order->user->vendor) && !empty($order->user->vendor->shop_code)) {
-
-                    $shopCode = $order->user->vendor->shop_code;
-
-                    $store = OswalStores::where('shop_code', 'LIKE', "%$shopCode%")->first();
-
-                    if ($store) {
-                        // Try getting delivery boys assigned to this store
-                        $delivery_users = DeliveryBoy::where('role_type', 2)
-                            ->where('store_id', $store->id)
-                            ->where('is_active', 1)
-                            ->get();
-                    }
-                }
-
-                // 🔁 Fallback to pincode-based if no delivery boys found for store
-                if ($delivery_users->isEmpty()) {
-                    $delivery_users = DeliveryBoy::where('role_type', 2)
-                        ->where('pincode', 'LIKE', "%$pincode%")
-                        ->where('is_active', 1)
-                        ->get();
-                }
-
-            } elseif ($order->user->role_type == 1) {
-
-                // 🔵 Admin or other logic: role_type == 1
-                $delivery_users = DeliveryBoy::where('role_type', 1)
-                    ->where('pincode', 'LIKE', "%$pincode%")
+            if ($store) {
+                // Try getting delivery boys assigned to this store
+                $delivery_users = DeliveryBoy::where('role_type', 2)
+                    ->where('store_id', $store->id)
                     ->where('is_active', 1)
                     ->get();
-
             } else {
-                // Optional: Log or handle unexpected role_type
-                Log::warning("Unexpected role_type: " . $order->user->role_type);
+                Log::warning("No store found for shop_code: $shopCode");
             }
+        } else {
+            Log::warning("Vendor or shop_code missing for user ID: {$order->user->id}");
+        }
 
+        // 🔁 Fallback to pincode-based if no delivery boys found for store
+        if ($delivery_users->isEmpty()) {
+            $delivery_users = DeliveryBoy::where('role_type', 2)
+                ->where('pincode', $pincode)
+                ->where('is_active', 1)
+                ->get();
+        }
 
-            if ($delivery_users->isEmpty()) {
-                Session::flash('emessage', 'No delivery users available for this pincode');
-                return redirect()->back();
+    } elseif ($order->user->role_type == 1) {
+        // 🔵 Admin logic
+        $delivery_users = DeliveryBoy::where('role_type', 1)
+            ->where('pincode', $pincode)
+            ->where('is_active', 1)
+            ->get();
+    } else {
+        Log::warning("Unexpected role_type: {$order->user->role_type} for user ID: {$order->user->id}");
+    }
+
+    // ❌ No delivery users found
+    if ($delivery_users->isEmpty()) {
+        Session::flash('emessage', 'No delivery users available for this pincode');
+        return redirect()->back();
+    }
+
+    // ✅ Pick first delivery boy
+    $delivery_user_id = $delivery_users->first()->id;
+
+    // 🔄 Delete any previous transfer for this order
+    TransferOrder::where('order_id', $order_id)->delete();
+
+    // 📥 Create new transfer
+    $data_insert = [
+        'order_id' => $order_id,
+        'delivery_user_id' => $delivery_user_id,
+        'status' => 1,
+        'ip' => $ip,
+        'added_by' => $addedby,
+        'date' => $cur_date,
+    ];
+
+    $last_id = TransferOrder::create($data_insert)->id;
+
+    // 🔔 Push notification
+    $deliveryfcm = DeliveryBoy::find($delivery_user_id);
+    $deliverytype = Order::find($order_id);
+
+    if ($deliveryfcm && $deliverytype) {
+        $title = "New Order Arrived";
+        $body = "New delivery order transferred to you from admin. Please check.";
+
+        if (!empty($deliveryfcm->fcm_token)) {
+            $response = $this->firebaseService->sendNotificationToUser($deliveryfcm->fcm_token, $title, $body);
+
+            if (!$response['success']) {
+                Log::error('FCM send error: ' . $response['error']);
             }
+        }
+    } else {
+        if (!$deliveryfcm) {
+            Log::warning("DeliveryBoy not found for user ID: $delivery_user_id");
+        }
+        if (!$deliverytype) {
+            Log::warning("Order not found for order ID: $order_id");
+        }
+    }
 
-            $delivery_user_id = $delivery_users->first()->id;
+    // 🔄 Update order delivery status
+    $order->update(['delivery_status' => 1]);
 
-            TransferOrder::where('order_id', $order_id)->delete();
+    // ✅ Success response
+    if ($last_id != 0) {
+        Session::flash('smessage', 'Order Transferred successfully');
+    } else {
+        Session::flash('emessage', 'Sorry, an error occurred');
+    }
 
-            $data_insert = [
-                'order_id' => $order_id,
-                'delivery_user_id' => $delivery_user_id,
-                'status' => 1,
-                'ip' => $ip,
-                'added_by' => $addedby,
-                'date' => $cur_date
-            ];
-            $deliveryfcm = DeliveryBoy::where('id', $delivery_user_id)->first();
-            $deliverytype = Order::where('id', $order_id)->first();
-            
-            $last_id = TransferOrder::create($data_insert)->id;
-
-            if ($deliveryfcm && $deliverytype) {
-                $this->sendPushNotificationDelivery($deliveryfcm->fcm_token, $deliverytype->order_status);
-            } else {
-                if (!$deliveryfcm) {
-                    Log::warning("DeliveryBoy not found for user ID: $delivery_user_id");
-                }
-                if (!$deliverytype) {
-                    Log::warning("Order not found for order ID: $order_id");
-                }
-            }
-
-            $order->update(['delivery_status' => 1]);
-
-            if ($last_id != 0) {
-
-                $delivery_user_data = DeliveryBoy::find($delivery_user_id);
-
-                if ($delivery_user_data) {
-                       
-                    $title = "New Order Arrived";
-
-                    $body = "New delivery order transferred to you from admin. Please check.";
-
-                        // $payload = [
-                        //     'message' => [
-                        //         'token' => $delivery_user_data->fcm_token,
-                        //         'notification' => [
-                        //             'body' => "New delivery order transferred to you from admin. Please check.",
-                        //             'title' => "New Order Arrived",
-                        //         ],
-                        //     ],
-                        // ];
-
-                        if($delivery_user_data->fcm_token != null){
-
-                            $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
-    
-                            if(!$response['success']) {
-                
-                                if (!$response['success']) {
-                    
-                                    Log::error('FCM send error: ' . $response['error']);
-                                    
-                                }
-                            }
-                            
-                        }
-                        // $response = Http::withHeaders([
-                        //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
-                        //     'Content-Type' => 'application/json',
-                        // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
-                       
-                        // if ($response->successful()) {
-                        //     return $response->body(); 
-                        // } else {
-                        //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
-                        // }
-                    
-                    Session::flash('smessage', 'Order Transferred successfully');
-                    return redirect()->back();
-
-                } else {
-                    Session::flash('emessage', 'Delivery user not found');
-                    return redirect()->back();
-                }
-            } else {
-                Session::flash('emessage', 'Sorry, an error occurred');
-                return redirect()->back();
-            }
-        // } else {
-        //     return redirect()->route('admin_login');
-        // }
-    // }
+    return redirect()->back();
 }
+
+
+
+//     public function transferOrderProcess($order_id_encoded)
+//     {
+//         // dd($order_id_encoded);
+//         // if (Auth::check() && Auth::user()->is_admin) {
+
+//             $order_id = $order_id_encoded;
+
+//             $ip = request()->ip();
+
+//             $cur_date = now();
+
+//             $addedby = Auth::id();
+
+//             $order = Order::with('address','user')->find($order_id);
+
+//             if (!$order) {
+//                Session::flash('emessage', 'Order not found');
+//                 return redirect()->back();
+//             }
+
+//             $pincode = $order->address->zipcode;
+
+//             // if ($order->user->role_type == 2) {
+
+//             //   if ($order->user->vendor->shop_code) {
+//             //     $store = Store::where('shop_code', $order->user->vendor->shop_code)->first();
+//             //         $delivery_users = DeliveryBoy::where('role_type', 2)
+//             //             ->where('pincode', 'LIKE', "%$pincode%")
+//             //             ->where('store_id', $store->id)
+//             //             ->where('is_active', 1)
+//             //             ->get();
+//             //     } else {
+//             //         // Agar shop_code nahi hai to sirf role_type, pincode aur active check karo
+//             //         $delivery_users = DeliveryBoy::where('role_type', 2)
+//             //             ->where('pincode', 'LIKE', "%$pincode%")
+//             //             ->where('is_active', 1)
+//             //             ->get();
+//             //     }
+//             //  $delivery_users = collect();
+
+//             //     $pincode = $order->address->zipcode;
+
+//             // $delivery_users = collect(); 
+
+//             // if ($order->user->role_type == 2) {
+
+//             //     if (isset($order->user->vendor) && $order->user->vendor->shop_code) {
+
+//             //         Log::info('Shop code: ' . $order->user->vendor->shop_code);
+
+//             //         $store = OswalStores::where('shop_code', 'LIKE', "%{$order->user->vendor->shop_code}%")->first();
+
+//             //         Log::info('Store found: ' . json_encode($store));
+
+//             //         if ($store) {
+//             //             $delivery_users = DeliveryBoy::where('role_type', 2)
+//             //                 ->where('store_id', $store->id)
+//             //                 ->where('is_active', 1)
+//             //                 ->get();
+//             //         }
+//             //     }
+
+//             //     if ($delivery_users->isEmpty()) {
+//             //         $delivery_users = DeliveryBoy::where('role_type', 2)
+//             //             ->where('pincode', 'LIKE', "%$pincode%")
+//             //             ->where('is_active', 1)
+//             //             ->get();
+//             //     }
+
+//             // } else {
+//             //     $delivery_users = DeliveryBoy::where('role_type', 1)->where('pincode', 'LIKE', "%$pincode%")
+//             //         ->where('is_active', 1)
+//             //         ->get();
+//             // }
+
+
+//             $delivery_users = collect();
+//             $pincode = $order->address->zipcode;
+
+
+//             if ($order->user->role_type == 2) {
+
+//                 // 🟢 Vendor logic: role_type == 2
+//                 if (!empty($order->user->vendor) && !empty($order->user->vendor->shop_code)) {
+
+//                     $shopCode = $order->user->vendor->shop_code;
+
+//                     $store = OswalStores::where('shop_code', 'LIKE', "%$shopCode%")->first();
+
+//                     if ($store) {
+//                         // Try getting delivery boys assigned to this store
+//                         $delivery_users = DeliveryBoy::where('role_type', 2)
+//                             ->where('store_id', $store->id)
+//                             ->where('is_active', 1)
+//                             ->get();
+//                     }
+//                 }
+
+//                 // 🔁 Fallback to pincode-based if no delivery boys found for store
+//                 if ($delivery_users->isEmpty()) {
+//                     $delivery_users = DeliveryBoy::where('role_type', 2)
+//                         ->where('pincode', 'LIKE', "%$pincode%")
+//                         ->where('is_active', 1)
+//                         ->get();
+//                 }
+
+//             } elseif ($order->user->role_type == 1) {
+
+//                 // 🔵 Admin or other logic: role_type == 1
+//                 $delivery_users = DeliveryBoy::where('role_type', 1)
+//                     ->where('pincode', 'LIKE', "%$pincode%")
+//                     ->where('is_active', 1)
+//                     ->get();
+
+//             } else {
+//                 // Optional: Log or handle unexpected role_type
+//                 Log::warning("Unexpected role_type: " . $order->user->role_type);
+//             }
+
+
+//             if ($delivery_users->isEmpty()) {
+//                 Session::flash('emessage', 'No delivery users available for this pincode');
+//                 return redirect()->back();
+//             }
+
+//             $delivery_user_id = $delivery_users->first()->id;
+
+//             TransferOrder::where('order_id', $order_id)->delete();
+
+//             $data_insert = [
+//                 'order_id' => $order_id,
+//                 'delivery_user_id' => $delivery_user_id,
+//                 'status' => 1,
+//                 'ip' => $ip,
+//                 'added_by' => $addedby,
+//                 'date' => $cur_date
+//             ];
+//             $deliveryfcm = DeliveryBoy::where('id', $delivery_user_id)->first();
+//             $deliverytype = Order::where('id', $order_id)->first();
+            
+//             $last_id = TransferOrder::create($data_insert)->id;
+
+//             if ($deliveryfcm && $deliverytype) {
+//                 $this->sendPushNotificationDelivery($deliveryfcm->fcm_token, $deliverytype->order_status);
+//             } else {
+//                 if (!$deliveryfcm) {
+//                     Log::warning("DeliveryBoy not found for user ID: $delivery_user_id");
+//                 }
+//                 if (!$deliverytype) {
+//                     Log::warning("Order not found for order ID: $order_id");
+//                 }
+//             }
+
+//             $order->update(['delivery_status' => 1]);
+
+//             if ($last_id != 0) {
+
+//                 $delivery_user_data = DeliveryBoy::find($delivery_user_id);
+
+//                 if ($delivery_user_data) {
+                       
+//                     $title = "New Order Arrived";
+
+//                     $body = "New delivery order transferred to you from admin. Please check.";
+
+//                         // $payload = [
+//                         //     'message' => [
+//                         //         'token' => $delivery_user_data->fcm_token,
+//                         //         'notification' => [
+//                         //             'body' => "New delivery order transferred to you from admin. Please check.",
+//                         //             'title' => "New Order Arrived",
+//                         //         ],
+//                         //     ],
+//                         // ];
+
+//                         if($delivery_user_data->fcm_token != null){
+
+//                             $response = $this->firebaseService->sendNotificationToUser($delivery_user_data->fcm_token, $title, $body);
+    
+//                             if(!$response['success']) {
+                
+//                                 if (!$response['success']) {
+                    
+//                                     Log::error('FCM send error: ' . $response['error']);
+                                    
+//                                 }
+//                             }
+                            
+//                         }
+//                         // $response = Http::withHeaders([
+//                         //     'Authorization' => 'Bearer ' . $this->googleAccessTokenService->getAccessToken(), 
+//                         //     'Content-Type' => 'application/json',
+//                         // ])->post('https://fcm.googleapis.com/v1/projects/oswalsoap-d8508/messages:send', $payload);
+                       
+//                         // if ($response->successful()) {
+//                         //     return $response->body(); 
+//                         // } else {
+//                         //     throw new \Exception('FCM Request failed with status: ' . $response->status() . ' and error: ' . $response->body());
+//                         // }
+                    
+//                     Session::flash('smessage', 'Order Transferred successfully');
+//                     return redirect()->back();
+
+//                 } else {
+//                     Session::flash('emessage', 'Delivery user not found');
+//                     return redirect()->back();
+//                 }
+//             } else {
+//                 Session::flash('emessage', 'Sorry, an error occurred');
+//                 return redirect()->back();
+//             }
+//         // } else {
+//         //     return redirect()->route('admin_login');
+//         // }
+//     // }
+// }
 
     private function sendPushNotificationDelivery($fcm_token,$type) {
 
