@@ -420,6 +420,10 @@ class OrderController extends Controller
 
 
 
+        $user = null;
+        if($userId){
+           $user = User::where('id',$userId)->first();
+        }
         $reponse['wallet_per']  = $constant->wallet_use_amount;
         $reponse['wallet_discount']  = round($walletDescount, 2);
         $reponse['promoStatus']  = $promoStatus == 1 ? 'Active' : 'Inactive';
@@ -432,6 +436,7 @@ class OrderController extends Controller
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
         $reponse['get_online_payment_status' ]    = $get_online_payment_status;
+        $reponse['isactive' ]    = $user ? $user->is_active : null;
         
         return response()->json($reponse);
     }
@@ -1847,10 +1852,12 @@ class OrderController extends Controller
                 }
             }
 
+            
             return response()->json([
                 'message' => 'success',
                 'data' => $dataw,
-                'status' => 200
+                'status' => 200,
+                'isactive' => $userDetails ? $userDetails->is_active : null,
             ]);
         }
 
@@ -2025,7 +2032,8 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'success',
             'data' => $data,
-            'status' => 200
+            'status' => 200,
+            'isactive' => $user ? $user->is_active : null,
         ]);
     }
 

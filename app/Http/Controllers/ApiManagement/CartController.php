@@ -1427,6 +1427,11 @@ $cartItems = $cartQuery->get();
             }
             
         }
+
+        $user = null;
+        if($userId){
+            $user = User::where('id',$userId)->first();
+        }
         
         $reponse['wallet_discount']  = $walletDescount;
         $reponse['wallet_amount']    = $totalwalletAmount;
@@ -1435,8 +1440,13 @@ $cartItems = $cartQuery->get();
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
         $reponse['final_amount' ]    = formatPrice($finalAmount,false);
+        $reponse['isactive' ]    =  $user ? $user->is_active : null;
 
-        return response()->json($reponse, $status);
+        
+        return response()->json(
+            $reponse,
+             $status
+            );
     }
 
    

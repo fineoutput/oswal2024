@@ -320,8 +320,14 @@ class WishlistController extends Controller
                 'type' => ($typedata && $typedata[0] != null) ? $typedata[0] : '',
             ];
         }
+
+        $user = User::where('id',$user_id)->first();
     
-        return response()->json(['success' => true, 'data' => $productData], 200);
+        return response()->json([
+            'success' => true, 
+            'data' => $productData,
+            'isactive' => $user ? $user->is_active : null,
+        ], 200);
 
     }
     

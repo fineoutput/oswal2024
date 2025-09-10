@@ -984,7 +984,11 @@ class AppController extends Controller
             ];
         }
 
-        return response()->json(['success' =>  true, 'data' => $data], 200);
+        return response()->json([
+            'success' =>  true,
+             'data' => $data,
+             'isactive' => $userDetails ? $userDetails->is_active : null,
+            ], 200);
     }
 
     public function claimReward(Request $request)

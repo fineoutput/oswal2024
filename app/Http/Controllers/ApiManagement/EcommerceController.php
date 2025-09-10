@@ -701,7 +701,8 @@ class EcommerceController extends Controller
             'per_page' => $per_page,
             'total' => $total,
             'last_page' => ceil($total / $per_page),
-        ]
+        ],
+        'isactive' =>  $userDetails ?  $userDetails->is_active : null
     ]);
 }
 
