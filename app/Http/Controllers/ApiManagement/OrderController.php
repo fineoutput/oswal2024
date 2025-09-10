@@ -1162,7 +1162,8 @@ class OrderController extends Controller
     $cur_date = now();
     $addedby = Auth::id();
 
-    $order = Order::with('address', 'user')->find($order_id);
+    // $order = Order::with('address', 'user')->find($order_id);
+    $order = Order::with('address', 'user.vendor')->find($order_id);
 
     if (!$order) {
         Session::flash('emessage', 'Order not found');
