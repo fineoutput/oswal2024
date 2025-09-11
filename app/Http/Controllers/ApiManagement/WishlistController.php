@@ -326,7 +326,7 @@ class WishlistController extends Controller
         return response()->json([
             'success' => true, 
             'data' => $productData,
-            'isactive' => $user ? $user->is_active : null,
+            'isactive' => $user ? $user->is_active : 1,
         ], 200);
 
     }

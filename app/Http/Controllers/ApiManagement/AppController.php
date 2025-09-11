@@ -987,7 +987,7 @@ class AppController extends Controller
         return response()->json([
             'success' =>  true,
              'data' => $data,
-             'isactive' => $userDetails ? $userDetails->is_active : null,
+             'isactive' => $userDetails ? $userDetails->is_active : 1,
             ], 200);
     }
 

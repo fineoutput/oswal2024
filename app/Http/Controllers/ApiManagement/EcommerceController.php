@@ -702,7 +702,7 @@ class EcommerceController extends Controller
             'total' => $total,
             'last_page' => ceil($total / $per_page),
         ],
-        'isactive' =>  $userDetails ?  $userDetails->is_active : null
+        'isactive' =>  $userDetails ?  $userDetails->is_active : 1
     ]);
 }
 
@@ -763,7 +763,8 @@ public function fetchSpecialProducts(Request $request)
             'featured_products' => $featured,
             'trending_products' => $trending,
             'ecom-category' => $category_data,
-        ]
+        ],
+        'isactive' => $user ? $user->is_active : 1
     ]);
 }
 

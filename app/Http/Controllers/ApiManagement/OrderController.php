@@ -436,7 +436,7 @@ class OrderController extends Controller
         $reponse['cod_charge']    = $cod_char;
         $reponse['cod_final_amount' ]    = $cod_final_amount;
         $reponse['get_online_payment_status' ]    = $get_online_payment_status;
-        $reponse['isactive' ]    = $user ? $user->is_active : null;
+        $reponse['isactive' ]    = $user ? $user->is_active : 1;
         
         return response()->json($reponse);
     }
@@ -1857,7 +1857,7 @@ class OrderController extends Controller
                 'message' => 'success',
                 'data' => $dataw,
                 'status' => 200,
-                'isactive' => $userDetails ? $userDetails->is_active : null,
+                'isactive' => $userDetails ? $userDetails->is_active : 1,
             ]);
         }
 
@@ -2033,7 +2033,7 @@ class OrderController extends Controller
             'message' => 'success',
             'data' => $data,
             'status' => 200,
-            'isactive' => $user ? $user->is_active : null,
+            'isactive' => $user ? $user->is_active : 1,
         ]);
     }
 

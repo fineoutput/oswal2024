@@ -1440,7 +1440,7 @@ $cartItems = $cartQuery->get();
         $reponse['sub_total' ]       = formatPrice($totalAmount,false);
         $reponse['save_total' ]      = formatPrice(($totalSaveAmount - $totalAmount) , false);
         $reponse['final_amount' ]    = formatPrice($finalAmount,false);
-        $reponse['isactive' ]    =  $user ? $user->is_active : null;
+        $reponse['isactive' ]    =  $user ? $user->is_active : 1;
 
         
         return response()->json(
