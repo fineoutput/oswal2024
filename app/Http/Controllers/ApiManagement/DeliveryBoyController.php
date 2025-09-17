@@ -613,15 +613,15 @@ class DeliveryBoyController extends Controller
 
         $order = TransferOrder::find($request->transfer_id);
 
-        if ($order->status == 7) {
+        if ($order->status == 5) {
             return response()->json([
                 'message' => 'Order has already been rejected.',
                 'status' => 400
             ]);
         }
 
-        $order->status = 7;
-        $order->accepted_at = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
+        $order->status = 5;
+        // $order->accepted_at = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
         $order->save();
 
         Order::where('id',$order->order_id)->update(['delivery_status' => 7]);
