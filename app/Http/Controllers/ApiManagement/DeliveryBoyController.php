@@ -151,12 +151,12 @@ class DeliveryBoyController extends Controller
                 'total_collection' => formatPrice($tfamount),
                 'pending_orders' => $pendingOrders,
                 'completed_orders' => $completedOrders,
-                'isactive' => $deliveryBoy->is_active ?? 1,
             ];
     
             // Return success response
             return response()->json([
                 'message' => 'Success',
+                'isactive' => $deliveryBoy->is_active ?? 1,
                 'status' => 200,
                 'data' => $data,
             ]);
@@ -408,8 +408,8 @@ class DeliveryBoyController extends Controller
             'data' => [
                 'orders' => $data,
                 'complete_orders' => $completedata,
-                'isactive' => $user->is_active ?? 1,
             ],
+            'isactive' => $user->is_active ?? 1,
         ], 200);
         
     }
@@ -494,7 +494,6 @@ class DeliveryBoyController extends Controller
         
         $data= [
             'order_id'    => $transferOrder->order_id,
-            'isactive'    => $user->is_active ?? 1,
             'user_id'     => $transferOrder->orders->user_id,
             'user_name'   => $transferOrder->orders->user->first_name,
             'shopname'   => $transferOrder->orders->user->vendor->shopname ?? 'N/A',
@@ -513,7 +512,12 @@ class DeliveryBoyController extends Controller
              ]
         ];
         
-        return response()->json(['sucess' => true , 'message' => 'order featch SucessFully' , 'orders' => $data], 200);
+        return response()->json([
+            'sucess' => true ,
+             'message' => 'order featch SucessFully' , 
+            'isactive'    => $user->is_active ?? 1,
+             'orders' => $data
+            ], 200);
     }
 
     public function productDetail(Request $request)
