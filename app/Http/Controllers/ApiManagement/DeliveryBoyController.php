@@ -356,7 +356,7 @@ class DeliveryBoyController extends Controller
                 'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
                 'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
                 'delivery_status' => $value->status, // Distance unit
-                'isactive' => $user->is_active ?? 1, // Distance unit
+                 // Distance unit
             ];
         }
 
@@ -408,6 +408,7 @@ class DeliveryBoyController extends Controller
             'data' => [
                 'orders' => $data,
                 'complete_orders' => $completedata,
+                'isactive' => $user->is_active ?? 1,
             ],
         ], 200);
         
