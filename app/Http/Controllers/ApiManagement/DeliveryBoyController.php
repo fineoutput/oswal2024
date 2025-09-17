@@ -151,6 +151,7 @@ class DeliveryBoyController extends Controller
                 'total_collection' => formatPrice($tfamount),
                 'pending_orders' => $pendingOrders,
                 'completed_orders' => $completedOrders,
+                'isactive' => $deliveryBoy->is_active ?? 1,
             ];
     
             // Return success response
@@ -355,6 +356,7 @@ class DeliveryBoyController extends Controller
                 'time' => $dist['time'] ?? '0', // Estimated delivery time in minutes
                 'unit' => $dist['unit'] ?? 'Not Found', // Distance unit
                 'delivery_status' => $value->status, // Distance unit
+                'isactive' => $user->is_active ?? 1, // Distance unit
             ];
         }
 
@@ -491,6 +493,7 @@ class DeliveryBoyController extends Controller
         
         $data= [
             'order_id'    => $transferOrder->order_id,
+            'isactive'    => $user->is_active ?? 1,
             'user_id'     => $transferOrder->orders->user_id,
             'user_name'   => $transferOrder->orders->user->first_name,
             'shopname'   => $transferOrder->orders->user->vendor->shopname ?? 'N/A',
