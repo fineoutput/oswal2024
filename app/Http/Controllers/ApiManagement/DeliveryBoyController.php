@@ -598,6 +598,45 @@ class DeliveryBoyController extends Controller
         ]);
     }
 
+    public function rejectOrder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'transfer_id' => 'required|exists:transfer_orders,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'status' => 400
+            ]);
+        }
+
+        $order = TransferOrder::find($request->transfer_id);
+
+        if ($order->status == 7) {
+            return response()->json([
+                'message' => 'Order has already been rejected.',
+                'status' => 400
+            ]);
+        }
+
+        $order->status = 7;
+        $order->accepted_at = now()->setTimezone('Asia/Kolkata')->format('Y-m-d H:i:s');
+        $order->save();
+
+        Order::where('id',$order->order_id)->update(['delivery_status' => 7]);
+
+        return response()->json([
+            'message' => 'Order Reject successfully.',
+            'status' => 200,
+            'data' => [
+                'delivery_status'=> deliveryStatus($order->status),
+                'order_id' => $order->id,
+                'accepted_at' => $order->accepted_at,
+            ],
+        ]);
+    }
+
     public function orders(Request $request)
     {
         
