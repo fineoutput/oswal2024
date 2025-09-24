@@ -72,11 +72,19 @@ class TeamController extends Controller
 		return view('admin/team/add_team', compact('service_data'));
 	}
 
+	public function edit_team_view($id)
+	{
+		$service_data = AdminSidebar::get();
+		$Team_data = Team::wherenull('deleted_at')->where('id',$id)->first();
+		return view('admin/team/update_team', compact('service_data','Team_data'));
+	}
+
 	public function view_team(Request $req)
 	{
 		$Team_data = Team::wherenull('deleted_at')->orderBy('id', 'desc')->get();
 		return view('admin/team/view_team', ['teamdetails' => $Team_data]);
 	}
+
 	public function UpdateTeamStatus($status, $idd, Request $req)
 	{
 		$id = base64_decode($idd);
@@ -128,6 +136,7 @@ class TeamController extends Controller
 			return Redirect('admin/view_team')->with('error', "Sorry You Don't Have Permission To Delete Anything.");
 		}
 	}
+
 	public function add_team_process(Request $req)
 	{
 		$admin_id = $req->session()->get('admin_id');
@@ -176,6 +185,74 @@ class TeamController extends Controller
 		return Redirect('/admin/view_team')->with('success', 'Data Added Successfully.');
 		//return response()->json(['response' => 'OK']);
 	}
+
+
+	public function update_team_process(Request $req, $id)
+{
+    $admin_id = $req->session()->get('admin_id');
+
+    // 1. Validate request
+    $req->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:admin_teams,email,' . $id,
+        'power' => 'required',
+    ]);
+
+    $team = Team::findOrFail($id);
+
+    // 2. Services handling
+    $service = $req->input('service');
+    $services = $req->input('services');
+    if ($service == 999) {
+        $ser = '["999"]';
+    } else {
+        $ser = json_encode($services);
+    }
+
+    // 3. Image handling
+    $fullimagepath = $team->image; // default: keep old image
+
+    if (!empty($req->img)) {
+        $allowedFormats = ['jpeg', 'jpg', 'webp'];
+        $extension = strtolower($req->img->getClientOriginalExtension());
+        if (in_array($extension, $allowedFormats)) {
+            // Delete old image if exists
+            if ($team->image && file_exists(public_path($team->image))) {
+                @unlink(public_path($team->image));
+            }
+
+            $file = time() . '.' . $req->img->extension();
+            $req->img->move(public_path('uploads/image/Teams/'), $file);
+            $fullimagepath = 'uploads/image/Teams/' . $file;
+        } else {
+            return redirect()->back()->with('error', 'Invalid file format. Only jpeg, jpg, and webp files are allowed.');
+        }
+    }
+
+    // 4. Prepare data for update
+    $team->name = ucwords($req->input('name'));
+    $team->email = $req->input('email');
+    $team->phone = $req->input('phone');
+    $team->address = $req->input('address');
+    $team->services = $ser;
+    $team->power = $req->input('power');
+    $team->image = $fullimagepath;
+    $team->ip = $req->ip();
+    $team->added_by = $admin_id;
+
+    // Optional: update password only if filled
+    if (!empty($req->password)) {
+        $team->password = bcrypt($req->password);
+    }
+
+    $team->save();
+
+    return redirect('/admin/view_team')->with('success', 'Team Member Updated Successfully.');
+}
+
+
+
+
 	//
 	// public function undoDelete(Request $req,$id){
 	//

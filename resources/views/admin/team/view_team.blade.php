@@ -122,6 +122,10 @@
                         <td>
                           <div class="btn-group" id="btns<?php echo $a ?>">
 
+                              <a href="{{ route('edit_team_view', $team->id) }}" class="btn btn-sm    btn-primary">
+                                  <i class="fa fa-edit"></i> 
+                              </a>
+
                             @if ($team->is_active == 0)
                             <a href="{{route('UpdateTeamStatus',['active',base64_encode($team->id)])}}" data-toggle="tooltip" data-placement="top" title="Active"><i class="fas fa-check success-icon"></i></a>
                             @else

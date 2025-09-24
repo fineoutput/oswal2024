@@ -151,6 +151,9 @@ Route::get('/view_team', [TeamController::class, 'view_team'])->name('view_team'
 
 Route::get('/add_team_view', [TeamController::class, 'add_team_view'])->name('add_team_view');
 
+Route::get('/edit_team_view/{id}', [TeamController::class, 'edit_team_view'])->name('edit_team_view');
+
+Route::post('/update_team_process{id}', [TeamController::class, 'update_team_process'])->name('update_team_process');
 Route::post('/add_team_process', [TeamController::class, 'add_team_process'])->name('add_team_process');
 
 Route::get('/UpdateTeamStatus/{status}/{id}', [TeamController::class, 'UpdateTeamStatus'])->name('UpdateTeamStatus');

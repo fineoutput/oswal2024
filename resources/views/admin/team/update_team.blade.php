@@ -2,166 +2,171 @@
 @section('main')
 <!-- Start content -->
 <div class="content">
-<div class="container-fluid">
-
-<div class="row">
-    <div class="col-sm-12">
-        <div class="page-title-box">
-            <h4 class="page-title">Form Elements</h4>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0);">Agroxa</a></li>
-                <li class="breadcrumb-item"><a href="javascript:void(0);">Forms</a></li>
-                <li class="breadcrumb-item active">Form Elements</li>
-            </ol>
-
-            <div class="state-information d-none d-sm-block">
-                <div class="state-graph">
-                    <div id="header-chart-1"></div>
-                    <div class="info">Balance $ 2,317</div>
-                </div>
-                <div class="state-graph">
-                    <div id="header-chart-2"></div>
-                    <div class="info">Item Sold 1230</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Add Team</h4>
+                    <ol class="breadcrumb" style="display:none">
+                        <!-- <li class="breadcrumb-item"><a href="javascript:void(0);">CMS</a></li> -->
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">Team</a></li>
+                        <li class="breadcrumb-item active">Add Team</li>
+                    </ol>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- end row -->
+        <!-- end row -->
+        <div class="page-content-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card m-b-20">
+                        <div class="card-body">
+                            <!-- show success and error messages -->
+                            @if (session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                            </div>
+                            @endif
+                            @if (session('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                            </div>
+                            @endif
+                            <!-- End show success and error messages -->
+                            <h4 class="mt-0 header-title">Add Team Form</h4>
+                            <hr style="margin-bottom: 50px;background-color: darkgrey;">
 
-<div class="page-content-wrapper">
-    <div class="row">
-        <div class="col-12">
-            <div class="card m-b-20">
-                <div class="card-body">
-
-                    <h4 class="mt-0 header-title">Textual inputs</h4>
-                    <p class="text-muted m-b-30">Here are examples of <code
-                            class="highlighter-rouge">.form-control</code> applied to each
-                        textual HTML5 <code class="highlighter-rouge">&lt;input&gt;</code> <code
-                                class="highlighter-rouge">type</code>.</p>
-
-                    <div class="form-group row">
-                        <label for="example-text-input" class="col-sm-2 col-form-label">Text</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="text" value="Artisanal kale" id="example-text-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-search-input" class="col-sm-2 col-form-label">Search</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="search" value="How do I shoot web" id="example-search-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-email-input" class="col-sm-2 col-form-label">Email</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="email" value="bootstrap@example.com" id="example-email-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-url-input" class="col-sm-2 col-form-label">URL</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="url" value="https://getbootstrap.com" id="example-url-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-tel-input" class="col-sm-2 col-form-label">Telephone</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="tel" value="1-(555)-555-5555" id="example-tel-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-password-input" class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="password" value="hunter2" id="example-password-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-number-input" class="col-sm-2 col-form-label">Number</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="number" value="42" id="example-number-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-datetime-local-input" class="col-sm-2 col-form-label">Date and time</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-date-input" class="col-sm-2 col-form-label">Date</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-month-input" class="col-sm-2 col-form-label">Month</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="month" value="2011-08" id="example-month-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-week-input" class="col-sm-2 col-form-label">Week</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="week" value="2011-W33" id="example-week-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-time-input" class="col-sm-2 col-form-label">Time</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="time" value="13:45:00" id="example-time-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-color-input" class="col-sm-2 col-form-label">Color</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="color" value="#1b82ec" id="example-color-input">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Select</label>
-                        <div class="col-sm-10">
-                            <select class="form-control">
-                                <option>Select</option>
-                                <option>Large select</option>
-                                <option>Small select</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Custom Select</label>
-                        <div class="col-sm-10">
-                            <select class="custom-select">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-text-input-lg" class="col-sm-2 col-form-label">Large</label>
-                        <div class="col-sm-10">
-                            <input class="form-control form-control-lg" type="text" placeholder=".form-control-lg" id="example-text-input-lg">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="example-text-input-sm" class="col-sm-2 col-form-label">Small</label>
-                        <div class="col-sm-10">
-                            <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" id="example-text-input-sm">
-                        </div>
-                    </div>
-                </div>
+                         <form action="{{ route('update_team_process', $Team_data->id) }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('POST') {{-- or PATCH/PUT based on your route --}}
+    
+    <div class="form-group row">
+        <!-- Name -->
+        <div class="col-sm-4">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $Team_data->name) }}" placeholder="Enter name" required>
+                <label for="name">Enter Name &nbsp;<span style="color:red;">*</span></label>
             </div>
-        </div> <!-- end col -->
-    </div> <!-- end row -->
+            @error('name')
+            <div style="color:red">{{$message}}</div>
+            @enderror
+        </div>
 
+        <!-- Email -->
+        <div class="col-sm-4">
+            <div class="form-floating">
+                <input class="form-control" type="email" id="email" name="email" value="{{ old('email', $Team_data->email) }}" placeholder="Enter email" required>
+                <label for="email">Email &nbsp;<span style="color:red;">*</span></label>
+            </div>
+            @error('email')
+            <div style="color:red">{{$message}}</div>
+            @enderror
+        </div>
+
+        <!-- Phone -->
+        <div class="col-sm-4">
+            <div class="form-floating">
+                <input class="form-control" type="text" id="phone" name="phone" value="{{ old('phone', $Team_data->phone) }}" placeholder="Phone no. (Optional)" onkeypress="return isNumberKey(event)" maxlength="10" minlength="10">
+                <label for="phone">Phone (optional)</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <!-- Address -->
+        <div class="col-sm-4">
+            <div class="form-floating">
+                <input class="form-control" type="text" id="address" name="address" value="{{ old('address', $Team_data->address) }}" placeholder="Address (Optional)">
+                <label for="address">Address (optional)</label>
+            </div>
+        </div>
+
+        <!-- Password -->
+        <div class="col-sm-4">
+            <div class="form-floating">
+                <input class="form-control" type="password" id="password" name="password" placeholder="Enter Password">
+                <label for="password">Password (leave blank to keep same)</label>
+            </div>
+            @error('password')
+            <div style="color:red">{{$message}}</div>
+            @enderror
+        </div>
+
+        <!-- Power -->
+        <div class="col-sm-4 mt-2">
+            <select class="form-control" name="power" id="power" required>
+                <option value="">Please select Type</option>
+                <option value="1" {{ $Team_data->power == 1 ? 'selected' : '' }}>Super Admin</option>
+                <option value="2" {{ $Team_data->power == 2 ? 'selected' : '' }}>Admin</option>
+                <option value="3" {{ $Team_data->power == 3 ? 'selected' : '' }}>Manager</option>
+            </select>
+            @error('power')
+            <div style="color:red">{{$message}}</div>
+            @enderror
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <!-- Image -->
+        <div class="col-sm-4"><br>
+            <label class="form-label" style="margin-left: 10px" for="img">Image</label>
+            <input class="form-control" style="margin-left: 10px" type="file" id="img" name="img">
+            @if ($Team_data->image)
+                <img src="{{ asset('upload_path/' . $Team_data->image) }}" alt="Image" width="80" class="mt-2" style="margin-left: 10px;">
+            @endif
+        </div>
+
+        <!-- Services -->
+     @php
+    $selected_services = json_decode($Team_data->services, true) ?? [];
+@endphp
+
+<div class="col-sm-8 mt-3">
+    <label class="form-label" for="services">Services &nbsp;<span style="color:red;">*</span></label>
+    <div class="form-check-inline">
+        <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" name="service" value="999"
+                {{ in_array("999", $selected_services) ? 'checked' : '' }}> All
+        </label>
+    </div>
+
+    @if (!empty($service_data))
+        @foreach ($service_data as $service)
+            <div class="form-check-inline">
+                <label class="form-check-label" for="service_{{ $service->id }}">
+                    <input type="checkbox" class="form-check-input" id="service_{{ $service->id }}"
+                        name="services[]"
+                        value="{{ $service->id }}"
+                        {{ in_array($service->id, $selected_services) ? 'checked' : '' }}>
+                    {{ $service->name }}
+                </label>
+            </div>
+        @endforeach
+    @endif
 </div>
-<!-- end page content-->
 
-</div> <!-- container-fluid -->
+    </div>
 
+    <div class="form-group">
+        <div class="w-100 text-center">
+            <button type="submit" style="margin-top: 10px;" class="btn btn-primary">
+                <i class="fa fa-save"></i> Update
+            </button>
+        </div>
+    </div>
+</form>
+
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+        <!-- end page content-->
+    </div> <!-- container-fluid -->
 </div> <!-- content -->
-
 @endsection
