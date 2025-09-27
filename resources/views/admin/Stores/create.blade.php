@@ -198,8 +198,11 @@
             var stateId = $(this).val();
 
             if (stateId) {
+                  var url = "{{ route('store.getCities', ':id') }}";
+                url = url.replace(':id', stateId);
+
                 $.ajax({
-                    url: '/oswal2024/public/admin/get-cities/' + stateId,
+                    url: url,
                     type: 'GET',
                     success: function (data) {
                         $('#city_id').empty().append('<option value="">Select City</option>');

@@ -139,7 +139,7 @@ Route::put('store/update/{id}', [OswalStoresController::class, 'update'])->name(
 Route::delete('store/destroy/{id}', [OswalStoresController::class, 'destroy'])->name('store.destroy');
 Route::get('store/{id}/update-status', [OswalStoresController::class, 'updateStatus'])->name('store.updateStatus');
 
-Route::get('/get-cities/{state_id}', [OswalStoresController::class, 'getCities']);
+Route::get('/get-cities/{state_id}', [OswalStoresController::class, 'getCities'])->name('store.getCities');
 
 
 
